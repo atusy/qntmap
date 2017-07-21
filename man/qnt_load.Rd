@@ -4,10 +4,12 @@
 \alias{qnt_load}
 \title{compile quantitative data}
 \usage{
-qnt_load(wd = NULL)
+qnt_load(wd = NULL, phase_list = NULL)
 }
 \arguments{
 \item{wd}{path to the directory containing .qnt directory}
+
+\item{phase_list}{path to the csv file containing columns indicating phase of each analysis and true or false to use it for quantifying.}
 }
 \description{
 compile quantitative data

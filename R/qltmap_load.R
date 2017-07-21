@@ -11,9 +11,9 @@
 #' @importFrom data.table fread
 #' @export
 #'
-qltmap_load <- function(wd = NULL, RDS = 'qltmap.RDS', list_of = c('vector', 'matrix', 'column'), renew = FALSE, saving = TRUE) {
+qltmap_load <- function(wd = NULL, RDS = 'qltmap.RDS', list_of = c('matrix', 'vector', 'column'), renew = FALSE, saving = TRUE) {
 	#when the argument "wd" is assigned, setwd to the argument on start and to the current wd on exit.
-	if(!is.null(wd)){
+	if(!is.null(wd)) {
 		cd <- getwd()
 		on.exit(setwd(cd))
 		setwd(wd)
@@ -31,6 +31,7 @@ qltmap_load <- function(wd = NULL, RDS = 'qltmap.RDS', list_of = c('vector', 'ma
 	#stop when number of pm files and map files differ or when file names of pm files and map files are not correspondant
 	test <- mapply(function(x, y) str_replace(x, y, ''), filenames, pattern)
 	if(!is.matrix(test) || any(test[, "pm"] != test[ , "map"])) stop('There are some wrong or missing files of *.pm and/or *_map.txt')
+  rm(test)
 
 	#which element is which filenames$map?
 	names(filenames$map) <- filenames$pm %>>%
@@ -61,6 +62,7 @@ qltmap_load <- function(wd = NULL, RDS = 'qltmap.RDS', list_of = c('vector', 'ma
 				matrix = lapply(., as.matrix),
 				column = as.data.table(lapply(., unlist, use.names = FALSE, recursive = FALSE))
 			)})
+		class(qltmap) <- c('list', 'qltmap')
 
 		if(saving) saveRDS(qltmap, 'qltmap.RDS')
 	}

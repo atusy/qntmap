@@ -1,9 +1,10 @@
 #' Generate initial centroids for clustering
 #'
-#' @param path_qnt path to the csv file of quantitative analysis
-#' @param path_cnd path to the 0.cnd file  of mapping analysis
+#' @param cnd_qltmap path to the condition file of mapping data
+#' @param qnt path to the .RDS file which compiles quantitative data
 #' @param qltmap path to the .RDS file which compiles mapping data
 #' @param wd working directory which contains mapping data
+#' @param saving file name to save. FALSE if not saving.
 #'
 #' @importFrom data.table as.data.table
 #' @importFrom data.table fread
@@ -16,44 +17,47 @@
 #' @importFrom dplyr mutate
 #' @importFrom dplyr mutate_all
 #' @importFrom dplyr distinct
-#'
 #' @importFrom pipeR %>>%
 #' @importFrom stringr str_replace
 #' @importFrom stringr str_replace_all
 #' @importFrom stringr str_detect
+#' @importFrom tidyr gather
+#' @importFrom tidyr spread
 #'
 #' @export
+qltmap_cls_centers <- function(qnt = NULL, qltmap = NULL, cnd_qltmap = '0.cnd', wd = NULL, saving = 'centers_initial0.csv') {
 
+#  path_qnt = 'qnt.csv', path_cnd = '0.cnd',
 
-#prioritize(dplyr)
-
-#path of the directry containing data
-#wd <- '~/Univ/!Data_ND/epma/WDX/ND0207_160819/.map/10'
-
-qltmap_cls_centers <- function(path_qnt = 'qnt.csv', path_cnd = '0.cnd', qltmap = NULL, wd = NULL) {
 	cd <- getwd()
 	on.exit(setwd(cd))
 	if(!is.null(wd)) setwd(wd)
 
+	#qnt: import quantitative data
+	if(is.null(qnt)) qnt <- qnt_load('../../')
+  if(is.character(qnt)) qnt <- readRDS(qnt)
+  if(!all(class(qnt) == c('list', 'qnt'))) stop('illegal input of qnt')
+
 	#qltmap: import mapping data
-	qltmap <- qltmap_load()
+	if(is.null(qltmap)) qnt <- qltmap_load()
+	if(is.character(qltmap)) qltmap <- readRDS(qltmap)
+	if(!all(class(qltmap) == c('list', 'qltmap'))) stop('illegal input of qltmap')
 
 	#cnd: import analysis conditions from 0.cnd
-	cnd <- path_cnd %>>%
+	cnd <- cnd_qltmap %>>%
 		readLines %>>%
 		'['(str_detect(.,
 			'(Measurement Start Position X)|(Measurement Start Position Y)|(X-axis Step Number)|(Y-axis Step Number)|(X-axis Step Size)|(Y-axis Step Size)|(X Step Size)|(Y Step Size)'
 			)) %>>%
 		str_replace_all('[:blank:].*', '') %>>%
 		as.numeric %>>%
-		matrix(ncol=3, nrow=2, dimnames = list(NULL, c('start', 'px', 'step'))) %>>%
+		matrix(ncol = 3, nrow = 2, dimnames = list(NULL, c('start', 'px', 'step'))) %>>%
 		as.data.table
 
 	#qnt =================================================================
 	#qnt: convert stage coordinates to map coordinates
 	#qnt: and then remove points with coordinates out of maps
-	qnt <- path_qnt %>>%
-		fread(select = c('x', 'y', 'phase')) %>>%
+	qnt$cnd <- qnt$cnd %>>%
 	#	mutate(x.stage = x, y.stage = y) %>>%
 		mutate(
 			x = round((x - cnd$start[1]) * 1000 / cnd$step[1] + 1),
@@ -63,16 +67,23 @@ qltmap_cls_centers <- function(path_qnt = 'qnt.csv', path_cnd = '0.cnd', qltmap 
 		distinct(nr, .keep_all = TRUE)
 
 	#find initial centers
-	qltmap %>>%
-		lapply(`[`, qnt$nr) %>>%
+	centers <- qltmap %>>%
+		lapply(`[`, qnt$cnd$nr) %>>%
+	  lapply(as.double) %>>%
 		as.data.table %>>%
 		setcolorder(order(names(.))) %>>%
-		mutate_all(as.double) %>>%
-		mutate(phase = qnt$phase) %>>%
+		mutate(phase = qnt$cnd$phase) %>>%
+	  filter(!is.na(phase)) %>>%
 		arrange(phase) %>>%
-		group_by(phase) %>>%
-		summarise_all(median) %>>%
-		fwrite('centers_initial0.csv')
+	  gather(elm, val, -phase) %>>%
+		group_by(phase, elm) %>>%
+		summarise(val = median(val)) %>>%
+	  ungroup %>>%
+	  spread(elm, val)
+
+	if(is.character(saving)) fwrite(centers, saving)
+
+	return(centers)
 }
 
 

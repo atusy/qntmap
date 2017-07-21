@@ -4,7 +4,7 @@
 \alias{qltmap_load}
 \title{load mapping data}
 \usage{
-qltmap_load(wd = NULL, RDS = "qltmap.RDS", list_of = c("vector", "matrix",
+qltmap_load(wd = NULL, RDS = "qltmap.RDS", list_of = c("matrix", "vector",
   "column"), renew = FALSE, saving = TRUE)
 }
 \arguments{

@@ -2,11 +2,11 @@
 #'
 #' @param wd working directory which contains .qnt and .map directories
 #' @param dir_map directory containing map data to be quantified
-#' @param path_phase
-#' @param maps_x
-#' @param maps_y
+#' @param path_phase aaa
+#' @param maps_x aaa
+#' @param maps_y aaa
 #' @param RDS_cluster path to the output RDS file of clustering. NULL in default look for the newest one in dir_map/clustering
-#' @param fine_phase
+#' @param fine_phase aaa
 #' @param fine_th 0.9
 #'
 #' @importFrom data.table as.data.table
@@ -25,7 +25,7 @@
 #' @importFrom dplyr summarise
 #' @importFrom dplyr summarise_all
 #' @importFrom dplyr ungroup
-#' @importFrom purrr %>>%
+#' @importFrom pipeR %>>%
 #' @importFrom purrr map
 #' @importFrom purrr map_at
 #' @importFrom purrr map_dbl
@@ -40,39 +40,41 @@
 #' @importFrom stringr str_replace_all
 #'
 #'@export
-
-wd <- '/home/atusy/Univ/!Data_ND/epma/WDX/ND0207_160819/'
-dir_map <- './.map/10'
-RDS_cluster <- './.map/10_modified_Si_CP/clustering/170423_0207_pois_integrated_k10_CaMnMgSiTiFeNaCPKAlCr_result.RDS'
-maps_x <- 250
-maps_y <- 415
-path_phase = 'qnt_phase.csv'
-fine_phase <- c('Pl', 'Spl', 'Hem', 'Amp')
-fine_th <- 0.9
-
-if(FALSE) {
-  qntmap_quantify(
-    wd = '/home/atusy/Univ/Data_ND/epma/WDX/ND0207_160819',
-    dir_map = './.map/10',
-    maps_x = 250,
-    maps_y = 415,
-    path_phase = 'qnt_phase.csv',
-    RDS_cluster = './.map/10_modified_Si_CP/clustering/170423_0207_pois_integrated_k10_CaMnMgSiTiFeNaCPKAlCr_result.RDS',
-    fine_phase = c('Pl', 'Spl', 'Hem', 'Amp'),
-    fine_th = 0.9
-  )
-}
-
 qntmap_quantify <- function(
     wd = NULL,
     dir_map = NULL,
     maps_x = NULL,
     maps_y = NULL,
-    path_phase = 'qnt_phase.csv',
+#    path_phase = 'qnt_phase.csv',
     RDS_cluster = NULL,
     fine_phase = NULL,
     fine_th = 0.9
   ) {
+
+
+
+  if(FALSE) {
+
+    wd <- '/home/atusy/Univ/!Data_ND/epma/WDX/ND0207_160819/'
+    dir_map <- './.map/10'
+    RDS_cluster <- './.map/10_modified_Si_CP/clustering/170423_0207_pois_integrated_k10_CaMnMgSiTiFeNaCPKAlCr_result.RDS'
+    maps_x <- 250
+    maps_y <- 415
+    path_phase = 'qnt_phase.csv'
+    fine_phase <- c('Pl', 'Spl', 'Hem', 'Amp')
+    fine_th <- 0.9
+
+    qntmap_quantify(
+      wd = '/home/atusy/Univ/Data_ND/epma/WDX/ND0207_160819',
+      dir_map = './.map/10',
+      maps_x = 250,
+      maps_y = 415,
+      path_phase = 'qnt_phase.csv',
+      RDS_cluster = './.map/10_modified_Si_CP/clustering/170423_0207_pois_integrated_k10_CaMnMgSiTiFeNaCPKAlCr_result.RDS',
+      fine_phase = c('Pl', 'Spl', 'Hem', 'Amp'),
+      fine_th = 0.9
+    )
+  }
 
   cd <- getwd()
   on.exit(setwd(cd))
@@ -101,7 +103,7 @@ qntmap_quantify <- function(
   #定量結果の読み込み
   qnt <- wd %>>%
   	qnt_load %>>%
-  	map_at('cnd', inner_join, fread(path_phase)) %>>%
+#  	map_at('cnd', inner_join, fread(path_phase)) %>>%
   	map_at(
   		'cnd',
   		mutate,
@@ -115,6 +117,7 @@ qntmap_quantify <- function(
   	map_at(
   	  'cnd',
   	  mutate,
+  	  nr = ifelse(nr > 0 & nr <=  length(cluster$ytehat), nr, NA),
   		cls = names(cluster$ytehat)[nr],
   		membership = apply(cluster$membership[nr, ], 1, max)
   	)
@@ -126,7 +129,8 @@ qntmap_quantify <- function(
   	qltmap_load %>>%
   	`[`(qnt$elm$elint) %>>%
   	set_names(qnt$elm$elem) %>>%
-  	as.data.table
+    lapply(as.vector) %>>%
+    as.data.table
 
   if(is.null(maps_x)) maps_x <- cnd$px[1]
   if(is.null(maps_y)) maps_y <- cnd$px[2]
@@ -141,6 +145,7 @@ qntmap_quantify <- function(
 
   ##
   train <- qnt$cmp %>>%
+    map(select, one_of(names(qltmap))) %>>%
   	map(gather, elm, val) %>>%
   	map(select, val) %>>%
   	map(unlist, use.names = FALSE, recursive = FALSE) %>>%
@@ -196,27 +201,27 @@ qntmap_quantify <- function(
 
   rm(Qlt2Qnt, qltmap)
 
-  Bg_each <- train %>>%
+  Bg <- train %>>%
   	mutate(bg = bg * 1e-6 / beam) %>>%
   	select(bg, phase, elm) %>>%
   	group_by(phase, elm) %>>%
-  	summarise_all(funs(mean, sd, length)) %>>%
+  	summarise(mean = mean(bg), sd = sd(bg), length = length(bg)) %>>%
   	ungroup %>>%
-  	mutate(se = sd / length)
-
-  Bg_all <- train %>>%
-  	mutate(bg = bg * 1e-6 / beam) %>>%
-  	select(bg, elm) %>>%
-  	group_by(elm) %>>%
-  	summarise_all(funs(mean, sd, length)) %>>%
-  	ungroup %>>%
-  	mutate(se = sd / sqrt(length))
-
-  Bg <- phases_miss %>>%
-  	map(~ mutate(Bg_all, phase = .x)) %>>%
-  	bind_rows %>>%
-  	select(one_of(names(Bg_each))) %>>%
-  	bind_rows(Bg_each)
+  	mutate(se = sd / length) %>>%
+    (if(length(phases_miss) > 0) {
+      . %>>%
+        bind_rows %>>%
+        (train %>>%
+        	mutate(bg = bg * 1e-6 / beam) %>>%
+        	select(bg, elm) %>>%
+        	group_by(elm) %>>%
+          summarise(mean = mean(bg), sd = sd(bg), length = length(bg)) %>>%
+          ungroup %>>%
+        	mutate(se = sd / sqrt(length))
+        )
+    } else {
+      .
+    })
 
   Bg_mean <- Bg %>>%
   	select(phase, elm, mean) %>>%
@@ -226,7 +231,7 @@ qntmap_quantify <- function(
   	select(phase, elm, se) %>>%
   	spread(elm, se)
 
-  rm(Bg_each, Bg_all, Bg)
+  rm(Bg)
 
   extract <- map(names(cluster$ytehat), `==`, Bg_mean$phase) %>>% map_int(which)
 
@@ -254,25 +259,27 @@ qntmap_quantify <- function(
   	))
   }
 
-  Net2Wt_each <- train %>>%
+  Net2Wt <- train %>>%
   	filter(net >= 0) %>>%
   	group_by(phase, elm) %>>%
   	summarise(fit = fit(wt, net)) %>>%
   	ungroup
 
-  Net2Wt_all <- train %>>%
-  	filter(net >= 0) %>>%
-  	group_by(elm) %>>%
-  	summarise(fit = fit(wt, net)) %>>%
-  	ungroup
+  if(length(phases_miss > 0)) {
+    Net2Wt_all <- train %>>%
+    	filter(net >= 0) %>>%
+    	group_by(elm) %>>%
+    	summarise(fit = fit(wt, net)) %>>%
+    	ungroup
 
-  Net2Wt <- phases_miss %>>%
-  	map(~ mutate(Net2Wt_all, phase = .x)) %>>%
-  	bind_rows %>>%
-  	select(one_of(names(Net2Wt_each))) %>>%
-  	bind_rows(Net2Wt_each)
+    Net2Wt <- phases_miss %>>%
+    	map(~ mutate(Net2Wt_all, phase = .x)) %>>%
+    	bind_rows %>>%
+    	select(one_of(names(Net2Wt))) %>>%
+    	bind_rows(Net2Wt)
 
-  rm(Net2Wt_each, Net2Wt_all)
+    rm(Net2Wt_all)
+  }
 
   Net2Wt_coef <- Net2Wt %>>%
   	mutate(fit = fit %>>% map_dbl(coef)) %>>%
@@ -340,46 +347,47 @@ qntmap_quantify <- function(
   saveRDS(qntmap, 'qntmap.RDS')
 
 
-  qntmap$se %>>%
-  	map(as.vector) %>>%
-  	as.data.table %>>%
-  	mutate(phase = names(cluster$ytehat)) %>>%
-  	gather(elm, val, -phase) %>>%
-  	ggplot(aes(x = val, color = phase)) %>>%
-  	`+`(list(
-  		geom_density(),
-  		facet_wrap(~ elm, scale = 'free')
-  	))
+  # qntmap$se %>>%
+  # 	map(as.vector) %>>%
+  # 	as.data.table %>>%
+  # 	mutate(phase = names(cluster$ytehat)) %>>%
+  # 	gather(elm, val, -phase) %>>%
+  # 	ggplot(aes(x = val, color = phase)) %>>%
+  # 	`+`(list(
+  # 		geom_density(),
+  # 		facet_wrap(~ elm, scale = 'free')
+  # 	))
+  #
+  #
+  # qntmap$se %>>%
+  # 	map(as.vector) %>>%
+  # 	as.data.table %>>%
+  # 	mutate(phase = names(cluster$ytehat)) %>>%
+  # 	group_by(phase) %>>%
+  # 	summarise_all(mean) %>>%
+  # 	mutate_if(is.numeric, round, digits = 2)
+  #
+  # prof <- qntmap %>>%
+  # 	map_at('wt', map, colMeans) %>>%
+  # 	map_at('se', map, `^`, 2) %>>%
+  # #	map_at('se', map, function(x) sqrt(colSums(x))) %>>%
+  # 	map_at('se', map, function(x) sqrt(colSums(x) / nrow(x))) %>>%
+  # 	map(as.data.table) %>>%
+  # 	map_at('wt', ~ mutate(.x, x = 1:nrow(.x))) %>>%
+  # 	map_at('wt', gather, elm, wt, -x) %>>%
+  # 	map_at('se', gather, elm2, se) %>>%
+  # 	bind_cols %>>%
+  # 	select(-elm2) %>>%
+  # 	as.data.table %>>%
+  # 	mutate(upr = wt + 3 * se, lwr = wt - 3 * se) %>>%
+  # 	filter(!(((x %% 415) == 0) & (elm %in% c('SiO2', 'Total'))))
+  #
+  # ggplot(prof2, aes(x = x, y = wt)) +
+  # #	geom_ribbon(aes(ymin = lwr, ymax = upr), color = 'black', alpha = 0.5) +
+  # 	geom_line(aes(color = elm)) +
+  # 	facet_wrap(~ elm, scale = 'free')
+  #
+  # prof$Cr2O3[1:414] %>>% plot
+  # prof$Total[300:414] %>>% mean
 
-
-  qntmap$se %>>%
-  	map(as.vector) %>>%
-  	as.data.table %>>%
-  	mutate(phase = names(cluster$ytehat)) %>>%
-  	group_by(phase) %>>%
-  	summarise_all(mean) %>>%
-  	mutate_if(is.numeric, round, digits = 2)
-
-  prof <- qntmap %>>%
-  	map_at('wt', map, colMeans) %>>%
-  	map_at('se', map, `^`, 2) %>>%
-  #	map_at('se', map, function(x) sqrt(colSums(x))) %>>%
-  	map_at('se', map, function(x) sqrt(colSums(x) / nrow(x))) %>>%
-  	map(as.data.table) %>>%
-  	map_at('wt', ~ mutate(.x, x = 1:nrow(.x))) %>>%
-  	map_at('wt', gather, elm, wt, -x) %>>%
-  	map_at('se', gather, elm2, se) %>>%
-  	bind_cols %>>%
-  	select(-elm2) %>>%
-  	as.data.table %>>%
-  	mutate(upr = wt + 3 * se, lwr = wt - 3 * se) %>>%
-  	filter(!(((x %% 415) == 0) & (elm %in% c('SiO2', 'Total'))))
-
-  ggplot(prof2, aes(x = x, y = wt)) +
-  #	geom_ribbon(aes(ymin = lwr, ymax = upr), color = 'black', alpha = 0.5) +
-  	geom_line(aes(color = elm)) +
-  	facet_wrap(~ elm, scale = 'free')
-
-  prof$Cr2O3[1:414] %>>% plot
-  prof$Total[300:414] %>>% mean
 }

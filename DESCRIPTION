@@ -16,5 +16,6 @@ Imports: data.table,
     stringr,
     PoiClaClu,
     png,
-    purrr
+    purrr,
+    tidyr
 Depends: R(>= 2.10.0)

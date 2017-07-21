@@ -15,11 +15,6 @@ qltmap_cls_save <- function(result, name_write, components = NULL) {
   color <- mycolors(n = k)
   LUT <- mycolors(n = k, dec = TRUE) / 255
 
-  #save legend
-  pie(rep(1, k), labels = paste(1:k, colnames(result$membership), sep='.'), col = color)
-  dev.copy(png, paste0(name_write, "_legend.png"))
-  dev.off()
-
   #save modal map
   png::writePNG(
     image = array(
@@ -35,5 +30,10 @@ qltmap_cls_save <- function(result, name_write, components = NULL) {
   } else {
     saveRDS(result[components], paste0(name_write, "_result.RDS"))
   }
+
+  #save legend
+  pie(rep(1, k), labels = paste(1:k, colnames(result$membership), sep='.'), col = color)
+  dev.copy(png, paste0(name_write, "_legend.png"))
+  dev.off()
 
 }

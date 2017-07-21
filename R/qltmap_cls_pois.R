@@ -2,10 +2,8 @@
 #'
 #' @param centers_initial a path to csv file telling initial centers of clusters
 #' @param qltmap default to NULL
-#' @param dims default to NULL
 #' @param elements If NULL, all mapped elements are used for clustering. Specifiyng elements may reduce analytical time.
 #' @param wd Directory containing mapping data. If NULL, current directory is wd.
-#' @param path_cnd to 0.cnd of mapping analysis. If NULL, 0.cnd is considered to be present under wd
 #' @param saving TRUE or FALSE to save result
 #'
 #' @importFrom data.table as.data.table
@@ -13,20 +11,21 @@
 #' @importFrom dplyr group_by
 #' @importFrom dplyr select
 #' @importFrom dplyr summarise_all
+#' @importFrom dplyr ungroup
 #' @importFrom dplyr one_of
 #' @importFrom pipeR %>>%
 #' @importFrom PoiClaClu Classify
 #' @importFrom stringr str_extract
+#' @importFrom tidyr gather
+#' @importFrom tidyr spread
+#'
 #'
 #' @export
-
 qltmap_cls_pois <- function(
     centers_initial,
 		qltmap = NULL,
-		dims = NULL,
 		elements = NULL,
 		wd = NULL,
-		path_cnd = '0.cnd',
 		saving = TRUE
 	) {
 		cd <- getwd()
@@ -40,22 +39,16 @@ qltmap_cls_pois <- function(
 		if(!is.null(wd)) setwd(wd)
 
 		#####load data
-		if(is.null(centers_initial)) {
-			stop('specify a path of a csv file containing initial centers')
-		} else {
-			centers_initial <- fread(centers_initial)
-		}
+		if(is.character(centers_initial)) fread(centers_initial)
 
-		if(is.null(qltmap)) qltmap <- qltmap_load(list_of = 'vector')
+		#qltmap: import mapping data
+		if(is.null(qltmap)) qnt <- qltmap_load()
+		if(is.character(qltmap)) qltmap <- readRDS(qltmap)
+		if(!all(class(qltmap) == c('list', 'qltmap'))) stop('illegal input of qltmap')
 
 		if(is.null(elements)) elements <- names(qltmap)
 
-		if(is.null(dims)) {
-			dims <- readLines(path_cnd) %>>%
-				`[`(str_detect(., 'Step Number')) %>>%
-				str_extract('^[0-9]+') %>>%
-				as.integer
-		}
+		dims <- dim(qltmap[[1]])
 
 		#####check data
 		if(all(elements %in% names(qltmap)) == FALSE) stop("Specified wrong element which is not present in qltmap")
@@ -64,7 +57,10 @@ qltmap_cls_pois <- function(
 		#####initial clusters===================================================================================================
 		x <- qltmap %>>%
 			`[`(elements) %>>%
+		  lapply(as.vector) %>>%
 			as.data.table
+
+		rm(qltmap)
 
 		y <- centers_initial %>>%
 				select(one_of(elements)) %>>%
@@ -76,19 +72,22 @@ qltmap_cls_pois <- function(
 		#####Classify by PoiClaClu ===================================================================================================
 		result <- PoiClaClu::Classify(x, y, x)
 
-		rm(x, y)
+		rm(y)
 
 		#####give phase names to result$ytehat==================================================================
 		names(result$ytehat) <- centers_initial$phase[result$ytehat]
 
 		#####Find representative values of each clusters (~ centers)==================================================================
-		bw <- sapply(qltmap, sd) / (length(result$ytehat) ^ (1/3)) #Scott
-		result$center <- qltmap %>>%
+		#bw <- sapply(qltmap, sd) / (length(result$ytehat) ^ (1/3)) #Scott
+		result$center <- x %>>%
 			lapply(as.double) %>>%
 			as.data.table %>>%
 			mutate(phase = names(result$ytehat)) %>>%
-			group_by(phase) %>>%
-			summarise_all(median) %>>%
+		  gather(elm, val, -phase) %>>%
+			group_by(phase, elm) %>>%
+			summarise(val = median(val)) %>>%
+		  ungroup %>>%
+		  spread(elm, val) %>>%
 			as.data.table
 
 		#####estimate membership of each clusters ==================================================================
@@ -98,6 +97,7 @@ qltmap_cls_pois <- function(
 			`/`(rowSums(.))
 
 		if(is.vector(result$membership)) result$membership <- as.matrix(result$membership)
+
 		if(nrow(centers_initial) == ncol(result$membership)) {
 			colnames(result$membership) <- centers_initial$phase
 		} else {
