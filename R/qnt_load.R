@@ -62,7 +62,7 @@ qnt_load <- function(wd = NULL, RDS = 'qnt.RDS', phase_list = NULL, renew = FALS
 
   #extract analytical conditions of each analysis
   cnd <- qnt$stg %>>%
-    set_names(c('id', 'group', 'sample', 'id2', 'x', 'y', 'z', 'aux1', 'aux2', 'comment', 'aux3')) %>>%
+    setNames(c('id', 'group', 'sample', 'id2', 'x', 'y', 'z', 'aux1', 'aux2', 'comment', 'aux3')) %>>%
     select(id, x, y, z, comment) %>>%
     mutate(
       beam = qnt$mes$V3,

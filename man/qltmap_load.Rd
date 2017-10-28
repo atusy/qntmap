@@ -4,15 +4,12 @@
 \alias{qltmap_load}
 \title{load mapping data}
 \usage{
-qltmap_load(wd = NULL, RDS = "qltmap.RDS", list_of = c("matrix", "vector",
-  "column"), renew = FALSE, saving = TRUE)
+qltmap_load(wd = NULL, RDS = "qltmap.RDS", renew = FALSE, saving = TRUE)
 }
 \arguments{
 \item{wd}{working directory which contains mapping data}
 
 \item{RDS}{name of RDS file to be saved/readed}
-
-\item{list_of}{structure of output data}
 
 \item{renew}{if TRUE and the file specified by RDS exists, that file will be loaded}
 

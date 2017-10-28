@@ -27,8 +27,6 @@
 #' @export
 qltmap_cls_centers <- function(qnt = NULL, qltmap = NULL, cnd_qltmap = '0.cnd', wd = NULL, saving = 'centers_initial0.csv') {
 
-#  path_qnt = 'qnt.csv', path_cnd = '0.cnd',
-
 	cd <- getwd()
 	on.exit(setwd(cd))
 	if(!is.null(wd)) setwd(wd)

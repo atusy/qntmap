@@ -4,12 +4,19 @@
 \alias{qnt_load}
 \title{compile quantitative data}
 \usage{
-qnt_load(wd = NULL, phase_list = NULL)
+qnt_load(wd = NULL, RDS = "qnt.RDS", phase_list = NULL, renew = FALSE,
+  saving = TRUE)
 }
 \arguments{
 \item{wd}{path to the directory containing .qnt directory}
 
+\item{RDS}{name of RDS file to be saved/readed}
+
 \item{phase_list}{path to the csv file containing columns indicating phase of each analysis and true or false to use it for quantifying.}
+
+\item{renew}{if TRUE and the file specified by RDS exists, that file will be loaded}
+
+\item{saving}{whether or not to save the data as RDS file}
 }
 \description{
 compile quantitative data

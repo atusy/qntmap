@@ -4,21 +4,17 @@
 \alias{qltmap_cls_pois}
 \title{cluster mapping data into mineral species}
 \usage{
-qltmap_cls_pois(centers_initial, qltmap = NULL, dims = NULL,
-  elements = NULL, wd = NULL, path_cnd = "0.cnd", saving = TRUE)
+qltmap_cls_pois(centers_initial, qltmap = NULL, elements = NULL,
+  wd = NULL, saving = TRUE)
 }
 \arguments{
 \item{centers_initial}{a path to csv file telling initial centers of clusters}
 
 \item{qltmap}{default to NULL}
 
-\item{dims}{default to NULL}
-
 \item{elements}{If NULL, all mapped elements are used for clustering. Specifiyng elements may reduce analytical time.}
 
 \item{wd}{Directory containing mapping data. If NULL, current directory is wd.}
-
-\item{path_cnd}{to 0.cnd of mapping analysis. If NULL, 0.cnd is considered to be present under wd}
 
 \item{saving}{TRUE or FALSE to save result}
 }

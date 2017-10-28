@@ -4,17 +4,19 @@
 \alias{qltmap_cls_centers}
 \title{Generate initial centroids for clustering}
 \usage{
-qltmap_cls_centers(path_qnt = "qnt.csv", path_cnd = "0.cnd",
-  qltmap = NULL, wd = NULL)
+qltmap_cls_centers(qnt = NULL, qltmap = NULL, cnd_qltmap = "0.cnd",
+  wd = NULL, saving = "centers_initial0.csv")
 }
 \arguments{
-\item{path_qnt}{path to the csv file of quantitative analysis}
-
-\item{path_cnd}{path to the 0.cnd file  of mapping analysis}
+\item{qnt}{path to the .RDS file which compiles quantitative data}
 
 \item{qltmap}{path to the .RDS file which compiles mapping data}
 
+\item{cnd_qltmap}{path to the condition file of mapping data}
+
 \item{wd}{working directory which contains mapping data}
+
+\item{saving}{file name to save. FALSE if not saving.}
 }
 \description{
 Generate initial centroids for clustering
