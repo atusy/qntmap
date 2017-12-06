@@ -123,12 +123,155 @@ $(document).ready(function () {
 
 
 <div id="overview" class="section level1">
-<h1>Overview</h1>
+<h1><span class="header-section-number">1</span> Overview</h1>
+<p>This package provides functions to convert element characteristic X-ray intensity maps into element mass concentration maps.<br />
+Current version supports data from JEOL-style electron probe microanalyer (EPMA).<br />
+For conversion, you need to run spot analysis before mapping analysis.<br />
+See “How to” section for usage and Yasumoto et al. (submitted) for implementations.</p>
 </div>
 <div id="installation" class="section level1">
-<h1>Installation</h1>
-<pre class="r"><code># install.packages(&quot;devtools&quot;)
-devtools::install_github(&quot;atusy/qntmap&quot;)</code></pre>
+<h1><span class="header-section-number">2</span> Installation</h1>
+<p>Install devtools package if you haven’t.</p>
+<pre class="r"><code>install.packages(&quot;devtools&quot;)</code></pre>
+<p>Then, run following code.</p>
+<pre class="r"><code>devtools::install_github(&quot;atusy/qntmap&quot;)</code></pre>
+</div>
+<div id="how-to" class="section level1">
+<h1><span class="header-section-number">3</span> How to</h1>
+<div id="epma-analysis" class="section level2">
+<h2><span class="header-section-number">3.1</span> EPMA analysis</h2>
+<p>QntMap handles matrix effect by preparing internal standards based on spot analysis.</p>
+<div id="spot-analysis" class="section level3">
+<h3><span class="header-section-number">3.1.1</span> Spot analysis</h3>
+<ul>
+<li>Analytical conditions
+<ul>
+<li>Same as those conventionally applied in your lab.</li>
+<li>Use wavelength-dispersive X-ray spectrometer</li>
+</ul></li>
+<li>Spots to be analyzed
+<ul>
+<li><strong>20 spots per phase</strong> in the area to be mapped (the more is better).</li>
+<li>It is better but not necessary to quantify grains larger than mapping probe diameter.</li>
+<li>Make sure at least <strong>20 spots per element</strong> are analyzing grains larger than mapping probe diameter.</li>
+</ul></li>
+<li>Commenting analysis
+<ul>
+<li>Give same comments on the same phase with the similar compositions. Do not number them.</li>
+<li>e.g., quartz, plagioclase, …</li>
+<li>Otherwise, comment them with different name. This is important treatment for phase identification and handling matrix effect.</li>
+<li>e.g., garnet-core, garnet-rim</li>
+<li>If you give comments containing underscore such as “garnet_core” and “garnet_rim”, then they are treated as if different phases in phase identification, but are treated as if their matrix effect are approximately same.</li>
+<li>Alternatively, give comments manually by external file.</li>
+</ul></li>
+</ul>
+<p>Spot quantitative analytical conditions in your lab.</p>
+</div>
+<div id="mapping-analysis" class="section level3">
+<h3><span class="header-section-number">3.1.2</span> Mapping analysis</h3>
+<ul>
+<li>Analytical conditions
+<ul>
+<li>Acceralating voltage should be same as one applied in spot analysis.</li>
+<li>Probe diameter should be larger than spot analysis. The larger saves more time, but decreases spatial resolutions.</li>
+<li>Probe current is recommended to be 100 nA following Lanari et al. (2014).</li>
+<li>Dwell time is recommended to be 0.1 - 0.3 sec following Lanari et al. (2014).</li>
+<li>Note that increasing probe current accepts decreasing dwell time, but probe current must not be too high to saturate X-ray detectors. If you prefer high probe current in some reason, consider changing dispersive crystals from those chosen in spot analysis.
+<ul>
+<li>e.g., chose PET instead of TAP for Si</li>
+</ul></li>
+</ul></li>
+</ul>
+</div>
+<div id="example-of-analytical-conditions" class="section level3">
+<h3><span class="header-section-number">3.1.3</span> Example of analytical conditions</h3>
+<p>Yasumoto et al. (submitted)</p>
+<table>
+<thead>
+<tr class="header">
+<th align="left"></th>
+<th align="right">Spot</th>
+<th align="right">Map</th>
+<th align="left">Comment</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">Acceralating Voltate</td>
+<td align="right">15 kV</td>
+<td align="right">15 kV</td>
+<td align="left">Must be same in spot and map</td>
+</tr>
+<tr class="even">
+<td align="left">Probe diameter</td>
+<td align="right">3 μm</td>
+<td align="right">20 μm</td>
+<td align="left">Must be smaller in spot than map</td>
+</tr>
+<tr class="odd">
+<td align="left">Probe current</td>
+<td align="right">10 nA</td>
+<td align="right">100 nA</td>
+<td align="left"></td>
+</tr>
+<tr class="even">
+<td align="left">Peak dwell</td>
+<td align="right">10 sec</td>
+<td align="right">120 msec</td>
+<td align="left"></td>
+</tr>
+<tr class="odd">
+<td align="left">Background dwell</td>
+<td align="right">5 sec</td>
+<td align="right">NA</td>
+<td align="left">No need to analyze in map</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div id="data-processing-with-qntmap-package-on-r" class="section level2">
+<h2><span class="header-section-number">3.2</span> Data processing with QntMap package on R</h2>
+<div id="quantification" class="section level3">
+<h3><span class="header-section-number">3.2.1</span> Quantification</h3>
+<pre class="r"><code>library(qntmap)
+
+setwd(&quot;Directory which contains analytical data like .qnt directory, .map directory, and so on&quot;)
+dir_map &lt;- &quot;path to the directory containing X-ray map files (directory containing 1_map.txt, 2_map.txt, and so on)&quot;
+
+# Load mapping data
+xmap &lt;- qltmap_load(dir_map)
+
+# Compile quantitative data
+qnt &lt;- qnt_load()
+## If you want to change phase names of each analysis different from those determined preliminary given during EPMA analysis, prepare csv file that indicates phase name, and input its path to phase_list parameter.
+## qnt &lt;- qnt_load(phase_list = &quot;phase_list.csv&quot;)
+
+# Determine initial cluster centers
+centers &lt;- qltmap_cls_centers(qnt, qltmap)
+
+# Phase identification
+cls &lt;- qltmap_cls_pois(centers, xmap, wd = dir_map)
+
+# quantify X-ray maps
+qntmap &lt;- qntmap_quantify(
+  dir_map = dir_map,
+  qnt = qnt,
+  cluster = cls,
+  fine_phase = NULL #Specify phase whose grain size tend to be smaller than mapping probe diameter.
+)</code></pre>
+</div>
+</div>
+</div>
+<div id="upcoming-updates" class="section level1">
+<h1><span class="header-section-number">4</span> Upcoming updates</h1>
+<ul>
+<li>Automation
+<ul>
+<li>Instead of running each functions manually and giving parameter in R console, I am planning to add a function called “qntmap”, which runs all commands above and determines parameters based on a given text file.</li>
+</ul></li>
+<li>HTML reporting</li>
+</ul>
 </div>
 
 
