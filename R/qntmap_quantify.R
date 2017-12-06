@@ -129,8 +129,6 @@ qntmap_quantify <- function(
     mutate(stg = ifelse(str_detect(stg, 'NA'), NA, stg)) %>>%
     mutate(mem = ifelse(is.na(stg), 0, mem))
 
-  rm(qnt)
-
   #qltmap: elements -> oxides
   qltmap <- qltmap %>>%
   	`[`(qnt$elm$elint) %>>%
@@ -168,7 +166,7 @@ qntmap_quantify <- function(
   B <- epma %>>%
     filter(!is.na(stg)) %>>%
     group_by(elm) %>>%
-    mutate(fit_na = lm(pkint ~ 0 + map, weights = mem) %>>% list) %>>%
+    mutate(fit_na = lm(pkint ~ 0 + map, weights = mem, na.action = na.omit) %>>% list) %>>%
     group_by(stg, elm) %>>%
     summarise(
       fit = lm(pkint ~ 0 + map, weights = mem) %>>% list,
