@@ -25,7 +25,7 @@
 #' @importFrom tidyr spread
 #'
 #' @export
-qltmap_cls_centers <- function(qnt = NULL, qltmap = NULL, cnd_qltmap = '0.cnd', wd = NULL, saving = 'centers_initial0.csv') {
+qltmap_cls_centers <- function(qnt = NULL, qltmap = NULL, wd = NULL, dir_map = NULL, cnd_qltmap = paste0(dir_map, '/0.cnd'), saving = 'centers_initial0.csv') {
 
 	cd <- getwd()
 	on.exit(setwd(cd))
@@ -37,12 +37,13 @@ qltmap_cls_centers <- function(qnt = NULL, qltmap = NULL, cnd_qltmap = '0.cnd', 
   if(!all(class(qnt) == c('list', 'qnt'))) stop('illegal input of qnt')
 
 	#qltmap: import mapping data
-	if(is.null(qltmap)) qnt <- qltmap_load()
+	if(is.null(qltmap)) qnt <- qltmap_load(dir_map)
 	if(is.character(qltmap)) qltmap <- readRDS(qltmap)
 	if(!all(class(qltmap) == c('list', 'qltmap'))) stop('illegal input of qltmap')
 
 	#cnd: import analysis conditions from 0.cnd
-	cnd <- cnd_qltmap %>>%
+	cnd <- dir_map %>>%
+	  paste(cnd_qltmap, sep = '/') %>>%
 		readLines %>>%
 		'['(str_detect(.,
 			'(Measurement Start Position X)|(Measurement Start Position Y)|(X-axis Step Number)|(Y-axis Step Number)|(X-axis Step Size)|(Y-axis Step Size)|(X Step Size)|(Y Step Size)'
