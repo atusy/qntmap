@@ -2,3 +2,6 @@
 .Rhistory
 .RData
 .Ruserdata
+readme.Rmd
+readme.html
+qntmap_bad.R

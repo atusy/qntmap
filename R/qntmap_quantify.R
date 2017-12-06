@@ -53,35 +53,6 @@ qntmap_quantify <- function(
     cluster = readRDS(RDS_cluster)
 ) {
 
-
-
-  if(FALSE) {
-
-    wd <- "/home/atusy/Univ/!Data_ND/epma/WDX/JGb1a_170912"
-    phase_list = NULL
-    dir_map <- '/home/atusy/Univ/!Data_ND/epma/WDX/JGb1a_170912/.map/1'
-    RDS_cluster <- '/home/atusy/Univ/!Data_ND/epma/WDX/JGb1a_170912/.map/1/clustering/170916_0835_pois_integrated_k12_TiMgCaSiMnFeNaCPKAlCr_result.RDS'
-    maps_x <- NULL
-    maps_y <- NULL
-    maps_x <- 250
-    maps_y <- 250
-    fine_phase = c('Bt', 'Chl', 'Hem', 'Ilm', 'Py')
-    fine_th <- 0.9
-    qnt = qnt_load(wd, phase_list = phase_list)
-    qltmap = qltmap_load(dir_map)
-    cluster = readRDS(RDS_cluster)
-
-    qntmap_quantify(
-      wd = '/home/atusy/Univ/Data_ND/epma/WDX/ND0207_160819',
-      dir_map = './.map/10',
-      maps_x = 250,
-      maps_y = 415,
-      RDS_cluster = './.map/10_modified_Si_CP/clustering/170423_0207_pois_integrated_k10_CaMnMgSiTiFeNaCPKAlCr_result.RDS',
-      fine_phase = c('Pl', 'Spl', 'Hem', 'Amp'),
-      fine_th = 0.9
-    )
-  }
-
   cd <- getwd()
   on.exit(setwd(cd))
   if(is.character(wd)) setwd(wd)
@@ -90,14 +61,14 @@ qntmap_quantify <- function(
   cnd <- dir_map %>>%
     str_replace('/?$', '/') %>>%
     str_c('0.cnd') %>>%
-  	readLines %>>%
-  	'['(str_detect(.,
-  		'(Measurement Start Position X)|(Measurement Start Position Y)|(X-axis Step Number)|(Y-axis Step Number)|(X-axis Step Size)|(Y-axis Step Size)|(X Step Size)|(Y Step Size)'
-  		)) %>>%
-  	str_replace_all('[:blank:].*', '') %>>%
-  	as.numeric %>>%
-  	matrix(ncol=3, nrow=2, dimnames = list(NULL, c('start', 'px', 'step'))) %>>%
-  	as.data.table
+    readLines %>>%
+    '['(str_detect(.,
+      '(Measurement Start Position X)|(Measurement Start Position Y)|(X-axis Step Number)|(Y-axis Step Number)|(X-axis Step Size)|(Y-axis Step Size)|(X Step Size)|(Y Step Size)'
+      )) %>>%
+    str_replace_all('[:blank:].*', '') %>>%
+    as.numeric %>>%
+    matrix(ncol=3, nrow=2, dimnames = list(NULL, c('start', 'px', 'step'))) %>>%
+    as.data.table
 
   stg <- expand.grid(
       y = 1:cnd$px[2] - 1,
@@ -131,8 +102,8 @@ qntmap_quantify <- function(
 
   #qltmap: elements -> oxides
   qltmap <- qltmap %>>%
-  	`[`(qnt$elm$elint) %>>%
-  	set_names(qnt$elm$elem) %>>%
+    `[`(qnt$elm$elint) %>>%
+    set_names(qnt$elm$elem) %>>%
     `[`(sort(names(.)))
 
   rm(qnt)
