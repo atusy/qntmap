@@ -90,7 +90,7 @@ epma_tidy <- function(
   qltmap <- qltmap %>>%
     `[`(qnt$elm$elint) %>>%
     set_names(qnt$elm$elem) %>>%
-    lapply(as.vector) %>>%
+    lapply(unlist, use.names = FALSE) %>>%
     lapply(`[`, qnt$cnd$nr) %>>%
     as.data.table
 
