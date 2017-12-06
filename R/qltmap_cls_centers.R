@@ -26,7 +26,7 @@
 #' @importFrom tidyr spread
 #'
 #' @export
-qltmap_cls_centers <- function(qnt = NULL, qltmap = NULL, wd = NULL, dir_map = NULL, cnd_qltmap = paste0(dir_map, '/0.cnd'), saving = 'centers_initial0.csv') {
+qltmap_cls_centers <- function(qnt = NULL, qltmap = NULL, wd = NULL, dir_map = NULL, cnd_qltmap = '0.cnd', saving = 'centers_initial0.csv') {
 
 	cd <- getwd()
 	on.exit(setwd(cd))
