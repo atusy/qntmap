@@ -105,7 +105,7 @@ qnt <- qnt_load()
 centers <- qltmap_cls_centers(qnt, xmap, dir_map = dir_map)
 
 # Phase identification
-cls <- qltmap_cls_pois(centers, xmap, dir_map = dir_map)
+cls <- qltmap_cls_pois(centers, xmap, wd = dir_map)
 
 # quantify X-ray maps
 qntmap <- qntmap_quantify(
