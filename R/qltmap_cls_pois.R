@@ -57,7 +57,7 @@ qltmap_cls_pois <- function(
     #####initial clusters===================================================================================================
     x <- qltmap %>>%
       `[`(elements) %>>%
-      lapply(as.vector) %>>%
+      lapply(unlist, use.names = FALSE) %>>%
       as.data.table
 
     rm(qltmap)

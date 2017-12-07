@@ -68,6 +68,7 @@ qltmap_cls_centers <- function(qnt = NULL, qltmap = NULL, wd = NULL, dir_map = N
 
   #find initial centers
   centers <- qltmap %>>%
+    lapply(unlist, use.names = FALSE) %>>%
     lapply(`[`, qnt$cnd$nr) %>>%
     lapply(as.double) %>>%
     as.data.table %>>%
