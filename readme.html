@@ -245,13 +245,14 @@ xmap &lt;- qltmap_load(dir_map)
 # Compile quantitative data
 qnt &lt;- qnt_load()
 ## If you want to change phase names of each analysis different from those determined preliminary given during EPMA analysis, prepare csv file that indicates phase name, and input its path to phase_list parameter.
-## qnt &lt;- qnt_load(phase_list = &quot;phase_list.csv&quot;)
+## In addition, make renew = TRUE.
+## qnt &lt;- qnt_load(phase_list = &quot;phase_list.csv&quot;, renew = TRUE)
 
 # Determine initial cluster centers
-centers &lt;- qltmap_cls_centers(qnt, qltmap)
+centers &lt;- qltmap_cls_centers(qnt, xmap)
 
 # Phase identification
-cls &lt;- qltmap_cls_pois(centers, xmap, wd = dir_map)
+cls &lt;- qltmap_cls_pois(centers, xmap, dir_map = dir_map)
 
 # quantify X-ray maps
 qntmap &lt;- qntmap_quantify(

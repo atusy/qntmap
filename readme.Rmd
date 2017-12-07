@@ -125,12 +125,4 @@ qntmap <- qntmap_quantify(
       which runs all commands above and determines parameters based on a given text file.
 - HTML reporting
 
-```{r}
-d_list %>%
-  split(map_chr(., "test")) %>%
-  map(flatten) %>% str
-  # as_tibble() は重複したカラム（ここではtest）を受け付けないので省いておく
-  map(~ .[!duplicated(names(.))]) %>%
-  map_dfr(as_tibble, .id = "test")
 
-```
