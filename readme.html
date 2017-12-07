@@ -249,7 +249,7 @@ qnt &lt;- qnt_load()
 ## qnt &lt;- qnt_load(phase_list = &quot;phase_list.csv&quot;, renew = TRUE)
 
 # Determine initial cluster centers
-centers &lt;- qltmap_cls_centers(qnt, xmap)
+centers &lt;- qltmap_cls_centers(qnt, xmap, dir_map = dir_map)
 
 # Phase identification
 cls &lt;- qltmap_cls_pois(centers, xmap, dir_map = dir_map)

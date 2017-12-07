@@ -102,7 +102,7 @@ qnt <- qnt_load()
 ## qnt <- qnt_load(phase_list = "phase_list.csv", renew = TRUE)
 
 # Determine initial cluster centers
-centers <- qltmap_cls_centers(qnt, xmap)
+centers <- qltmap_cls_centers(qnt, xmap, dir_map = dir_map)
 
 # Phase identification
 cls <- qltmap_cls_pois(centers, xmap, dir_map = dir_map)
