@@ -85,6 +85,8 @@ Yasumoto et al. (submitted)
 
 ### Quantification
 
+By running following code, you'll see that phase identification result in 'clustering' directory and mass concentration data as csv files in 'qntmap' directory both under the directory contaning mapping data.
+
 ```{r eval = FALSE}
 
 library(qntmap)
