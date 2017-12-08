@@ -14,6 +14,7 @@
 #'
 #' @importFrom data.table as.data.table
 #' @importFrom data.table fread
+#' @importFrom data.table fwrite
 #' @importFrom tibble tibble
 #' @importFrom tidyr nest
 #' @importFrom tidyr unnest
@@ -212,19 +213,35 @@ qntmap_quantify <- function(
     map(map_at, 'se', sqrt) %>>%
     map2(qltmap, function(xab, i) map(xab, function(x) i * x)) %>>% #XABI
     map2(XAG, map2, `-`) %>>% #XABI - XAG
-    map(set_names, c('wt', 'se')) %>>%
-    list(Total = list(
-      wt = . %>>%
-        map(`[[`, 'wt') %>>%
-        reduce(`+`),
-      se = . %>>%
-        map(`[[`, 'se') %>>%
-        map(`^`, 2) %>>%
-        reduce(`+`) %>>%
-        sqrt
-    ))
+    map(set_names, c('wt', 'se'))
+
+  qntmap$Total$wt <- qntmap %>>%
+    map(`[[`, 'wt') %>>%
+    reduce(`+`) %>>%
+    list
+  qntmap$Total$se <- qntmap %>>%
+    map(`[[`, 'se') %>>%
+    map(`^`, 2) %>>%
+    reduce(`+`) %>>%
+    sqrt %>>%
+    list
 
   rm(qltmap, XAG)
 
+
+  setwd(dir_map)
+  dir.create('qntmap', FALSE)
+  setwd('qntmap')
+  qntmap %>>%
+    unlist(recursive = FALSE) %>>%
+    set_names(
+      names(.) %>>%
+        str_replace('\\.', '_') %>>%
+        paste0('.csv')
+    ) %>>%
+    walk2(names(.), fwrite)
+
   saveRDS(qntmap, 'qntmap.RDS')
+
+  qntmap
 }
