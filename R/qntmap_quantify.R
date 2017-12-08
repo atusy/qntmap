@@ -214,7 +214,9 @@ qntmap_quantify <- function(
     map(map_at, 'se', sqrt) %>>%
     map2(qltmap, function(xab, i) map(xab, function(x) i * x)) %>>% #XABI
     map2(XAG, map2, `-`) %>>% #XABI - XAG
-    map(set_names, c('wt', 'se'))
+    map(set_names, c('wt', 'se')) %>>%
+    map(function(x) map(x, `*`, x$wt > 0))
+
 
   qntmap$Total$wt <- qntmap %>>%
     map(`[[`, 'wt') %>>%
