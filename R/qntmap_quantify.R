@@ -33,6 +33,7 @@
 #' @importFrom purrr map_at
 #' @importFrom purrr map_dbl
 #' @importFrom purrr map2
+#' @importFrom purrr walk2
 #' @importFrom purrr reduce
 #' @importFrom rlang set_names
 #' @importFrom rlang :=
