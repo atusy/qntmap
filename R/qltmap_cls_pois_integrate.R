@@ -30,5 +30,6 @@ qltmap_cls_pois_integrate <- function(result, wd = NULL, saving = TRUE) {
 
   if(saving) qltmap_cls_save(result, 'pois_integrated')
 
+  class(result) <- c(class(result), 'integrated')
   result
 }

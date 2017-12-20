@@ -87,9 +87,11 @@ qntmap_quantify <- function(
 
 
   #tidy compilation of epma data
+  distinguished <- any(str_detect(colnames(cluster$membership), '_'))
   epma <- epma_tidy(wd = wd, dir_map = dir_map, qnt = qnt, qltmap = qltmap, cluster = cluster) %>>%
     mutate(net = ifelse(net < 0, 0, net)) %>>%
-    mutate(mem = ifelse(cls != phase2 | cls %in% fine_phase | mem < fine_th, 0, mem)) %>>%
+    mutate(phase3 = if(distinguished) phase else phase2) %>>%
+    mutate(mem = ifelse(cls != phase3 | cls %in% fine_phase | mem < fine_th, 0, mem)) %>>%
     mutate(x_stg = if(is.null(maps_x)) 1 else (x_px - 1) %/% maps_x + 1) %>>%
     mutate(x_stg = ifelse(x_stg <= 0 | x_stg > max(stg$x_stg), NA, x_stg)) %>>%
     mutate(y_stg = if(is.null(maps_y)) 1 else (y_px - 1) %/% maps_y + 1) %>>%
@@ -121,7 +123,7 @@ qntmap_quantify <- function(
   AG <- epma %>>%
     group_by(elm) %>>%
     mutate(fit_na = lm(wt ~ 0 + net) %>>% list) %>>%
-    group_by(phase2, elm) %>>%
+    group_by(phase3, elm) %>>%
     summarise(
       fit = lm(wt ~ 0 + net) %>>% list,
       fit_na = fit_na[1],
@@ -160,10 +162,10 @@ qntmap_quantify <- function(
   rm(epma)
 
   XAG <- AG %>>%
-    select(phase2, elm, ag, ag_se) %>>%
+    select(phase3, elm, ag, ag_se) %>>%
     nest(-elm) %>>%
     (.x ~ set_names(.x$data, .x$elm)) %>>%
-    map(function(x) map(x %>>% select(-phase2), set_names, x$phase2)) %>>%
+    map(function(x) map(x %>>% select(-phase3), set_names, x$phase3)) %>>%
     map(map, `*`, t(X)) %>>%
     map(set_names, c('val', 'se')) %>>%
     map(map_at, 'se', `^`, 2) %>>%
@@ -172,8 +174,8 @@ qntmap_quantify <- function(
 
 
   qntmap <- AG %>>% #AB
-    select(phase2, elm, a, a_se) %>>%
-    nest(-phase2, .key = '.A') %>>%
+    select(phase3, elm, a, a_se) %>>%
+    nest(-phase3, .key = '.A') %>>%
     mutate(
       .A = .A %>>%
         map(
@@ -195,10 +197,10 @@ qntmap_quantify <- function(
     mutate(
       val = data %>>%
         map(select, -se) %>>%
-        map(spread, phase2, val),
+        map(spread, phase3, val),
       se = data %>>%
         map(select, -val) %>>%
-        map(spread, phase2, se)
+        map(spread, phase3, se)
     ) %>>%
     select(-data) %>>%
     nest(-elm) %>>%

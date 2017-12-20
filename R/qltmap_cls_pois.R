@@ -5,6 +5,7 @@
 #' @param elements If NULL, all mapped elements are used for clustering. Specifiyng elements may reduce analytical time.
 #' @param wd Directory containing mapping data. If NULL, current directory is wd.
 #' @param saving TRUE or FALSE to save result
+#' @param integration TRUE or FALSE to integrate same phase with obiously different compositions. For example, when there are clusters named as Pl_NaRich and Pl_NaPoor, they are integrated to Pl.
 #'
 #' @importFrom data.table as.data.table
 #' @importFrom data.table fread
@@ -26,7 +27,8 @@ qltmap_cls_pois <- function(
     qltmap = NULL,
     elements = NULL,
     wd = NULL,
-    saving = TRUE
+    saving = TRUE,
+    integration = TRUE
   ) {
     cd <- getwd()
     on.exit(setwd(cd))
@@ -131,6 +133,8 @@ qltmap_cls_pois <- function(
 
     components <- c('ytehat', 'center', 'membership', 'date', 'dims', 'elements')
     if(saving) qltmap_cls_save(result, 'pois', components)
+
+    if(integration) result <- qltmap_cls_pois_integrate(result, wd = NULL, saving = saving)
 
     result
 }
