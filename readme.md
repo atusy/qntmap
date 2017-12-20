@@ -85,6 +85,8 @@ Yasumoto et al. (submitted)
 
 ### Quantification
 
+By running following code, you'll see that phase identification result in 'clustering' directory and mass concentration data as csv files in 'qntmap' directory both under the directory contaning mapping data.
+
 
 ```r
 library(qntmap)
@@ -105,7 +107,7 @@ qnt <- qnt_load()
 centers <- qltmap_cls_centers(qnt, xmap, dir_map = dir_map)
 
 # Phase identification
-cls <- qltmap_cls_pois(centers, xmap, dir_map = dir_map)
+cls <- qltmap_cls_pois(centers, xmap, wd = dir_map)
 
 # quantify X-ray maps
 qntmap <- qntmap_quantify(

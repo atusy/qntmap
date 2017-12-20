@@ -234,6 +234,7 @@ See “How to” section for usage and Yasumoto et al. (submitted) for implement
 <h2><span class="header-section-number">3.2</span> Data processing with QntMap package on R</h2>
 <div id="quantification" class="section level3">
 <h3><span class="header-section-number">3.2.1</span> Quantification</h3>
+<p>By running following code, you’ll see that phase identification result in ‘clustering’ directory and mass concentration data as csv files in ‘qntmap’ directory both under the directory contaning mapping data.</p>
 <pre class="r"><code>library(qntmap)
 
 setwd(&quot;Directory which contains analytical data like .qnt directory, .map directory, and so on&quot;)
@@ -252,7 +253,7 @@ qnt &lt;- qnt_load()
 centers &lt;- qltmap_cls_centers(qnt, xmap, dir_map = dir_map)
 
 # Phase identification
-cls &lt;- qltmap_cls_pois(centers, xmap, dir_map = dir_map)
+cls &lt;- qltmap_cls_pois(centers, xmap, wd = dir_map)
 
 # quantify X-ray maps
 qntmap &lt;- qntmap_quantify(
