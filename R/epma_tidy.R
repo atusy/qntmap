@@ -100,7 +100,7 @@ epma_tidy <- function(
     map_at('ytehat', `[`, qnt$cnd$nr) %>>%
     map_at('membership', function(x) x[qnt$cnd$nr, ])
 
-  info <- info <- c('id', 'phase', 'phase2', 'cls', 'mem', 'x_px', 'y_px')
+  info <- info <- c('id', 'phase', 'phase2', 'cls', 'mem', 'x_px', 'y_px', 'beam')
   qnt %>>%
     map_at(
       'cnd',

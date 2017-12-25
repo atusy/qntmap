@@ -3,7 +3,6 @@
 export(epma_tidy)
 export(qltmap_cls_centers)
 export(qltmap_cls_centers_random)
-export(qltmap_cls_centers_random2)
 export(qltmap_cls_pois)
 export(qltmap_cls_pois_integrate)
 export(qltmap_load)
