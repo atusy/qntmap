@@ -5,7 +5,7 @@
 \title{cluster mapping data into mineral species}
 \usage{
 qltmap_cls_pois(centers_initial, qltmap = NULL, elements = NULL,
-  wd = NULL, saving = TRUE)
+  wd = NULL, saving = TRUE, integration = TRUE)
 }
 \arguments{
 \item{centers_initial}{a path to csv file telling initial centers of clusters}
@@ -17,6 +17,8 @@ qltmap_cls_pois(centers_initial, qltmap = NULL, elements = NULL,
 \item{wd}{Directory containing mapping data. If NULL, current directory is wd.}
 
 \item{saving}{TRUE or FALSE to save result}
+
+\item{integration}{TRUE or FALSE to integrate same phase with obiously different compositions. For example, when there are clusters named as Pl_NaRich and Pl_NaPoor, they are integrated to Pl.}
 }
 \description{
 cluster mapping data into mineral species
