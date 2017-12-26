@@ -118,15 +118,12 @@ qnt_load <- function(
   cmp <- qnt %>>%
     `[`(c('bgm', 'bgp', 'krat', 'kraw', 'net', 'pkint', 'sigma', 'wt')) %>>%
     map(setNames, c('id', 'num', elm$elem, 'sum')) %>>%
-    map(select, one_of(elm$elem)) %>>%
-    c(list(
-      bgint =
-        t((t(.$bgm) * elm$bgp_pos + t(.$bgp) * elm$bgm_pos) /
-            (elm$bgp_pos + elm$bgm_pos)) %>>% as.data.table
-    ))
+    map(select, one_of(elm$elem))
 
   QNT <- list(
-      elm = elm, cnd = cnd, cmp = cmp,
+      elm = elm,
+      cnd = cnd,
+      cmp = cmp,
       raw = list(cnd = cnd0, qnt = qnt)
     )
   class(QNT) <- c('list', 'qnt')
