@@ -41,6 +41,15 @@ epma_tidy <- function(
   cluster = readRDS(RDS_cluster)
 ) {
 
+  library(qntmap)
+  wd = '/home/atusy/Univ/Data_ND/epma/WDX/ND0207_160819'
+  dir_map = '.map/10'
+  phase_list = NULL
+  RDS_cluster = '/home/atusy/Univ/Data_ND/epma/WDX/ND0207_160819/.map/10_modified_Si_CP/clustering/170423_0207_pois_integrated_k10_CaMnMgSiTiFeNaCPKAlCr_result.RDS'
+  qnt = qnt_load(wd, phase_list = phase_list)
+  qltmap = qltmap_load(dir_map)
+  cluster = readRDS(RDS_cluster)
+
   cd <- getwd()
   on.exit(setwd(cd))
   if(!is.null(wd)) setwd(wd) else wd <- cd
@@ -57,13 +66,19 @@ epma_tidy <- function(
     matrix(ncol=3,nrow=2,dimnames=list(NULL,c('start','px','step'))) %>>%
     as.data.table
 
-  dwell <- dir_map %>>%
+  cnd_detect <- c(
+    dwell = 'Dwell Time \\[msec\\]',
+    beam_map = 'Probe Current \\[A\\]'
+  )
+  cnd_map <- dir_map %>>%
     paste0('/0.cnd') %>>%
     readLines %>>%
-    `[`(str_detect(., 'Dwell')) %>>%
+    `[`(
+      map(cnd_detect, function(.p) str_detect(., .p)) %>>% map_int(which)
+    ) %>>%
     str_replace('[:blank:].*$', '') %>>%
     as.numeric %>>%
-    `*`(1e-3)
+    setNames(names(cnd_detect))
 
 
 
@@ -83,7 +98,12 @@ epma_tidy <- function(
     map_at('cnd', mutate, phase2 = str_replace(phase, '_.*', '')) %>>%
     map_at('cnd', filter, !is.na(phase)) %>>%
     map_at('cmp', map, `[`, .$cnd$id, ) %>>%
-    map_at('elm', mutate, dwell = dwell)
+    map_at(
+      'elm',
+      mutate,
+      dwell = cnd_map['dwell'] / 1000, #msec -> sec
+      beam_map = cnd_map['beam_map']
+    )
 
   #マッピングデータのうち、定量もした座標のみを選択
   #更に元素名を酸化物に変換
@@ -94,30 +114,69 @@ epma_tidy <- function(
     lapply(`[`, qnt$cnd$nr) %>>%
     as.data.table
 
-  #クラスタリング結果の読み込み
+  #Load clustering result
   cluster <- cluster %>>%
     `[`(c('ytehat', 'membership')) %>>%
     map_at('ytehat', `[`, qnt$cnd$nr) %>>%
     map_at('membership', function(x) x[qnt$cnd$nr, ])
 
-  info <- info <- c('id', 'phase', 'phase2', 'cls', 'mem', 'x_px', 'y_px', 'beam')
+  #join cmp, cnd, elem in qnt
+  #calculate 95% ci of data
+
+  ## Define function for propagating errors
+  propagate_add <- function(x, x2, y, y2)
+    sqrt((x2 - x) ^ 2 + (y2 - y) ^ 2)
+
+  ##Let's join
+  qnt_cnd <- c(names(qnt$cnd), 'cls', 'mem', names(qnt$elm))
   qnt %>>%
+    map_at('cmp', c, list(map = qltmap)) %>>%
+    map_at('cmp', map, mutate, id = .$cnd$id) %>>%
+    map_at('cmp', map, gather, elm, val, -id) %>>%
+    map_at('cmp', map2, names(.$cmp), function(x, nm) rename(x, rlang::UQ(nm) := val)) %>>%
+    map_at('cmp', reduce, left_join, by = c('id', 'elm')) %>>%
+    map_at('cnd', as_tibble) %>>%
     map_at(
       'cnd',
       mutate,
       cls = names(cluster$ytehat),
-      mem = apply(cluster$membership, 1, max)
+      mem = apply(cluster$membership, 1, max),
+      elm = list(.$elm)
     ) %>>%
-    map_at(
-      'cmp',
-      c,
-      list(map = qltmap)
+    map_at('cnd', unnest) %>>%
+    map_at('cnd', rename, elm = elem) %>>%
+    `[`(c('cmp', 'cnd')) %>>%
+    reduce(left_join, by = c('id', 'elm')) %>>%
+    mutate_at(c('beam', 'beam_map'), `*`, 1e+6) %>>% #A -> uA
+    mutate(mapint = map / dwell / beam_map) %>>%
+    cipois(
+      vars = c('pkint', 'bgm', 'bgp', 'mapint'),
+      offset = . %>>%
+        transmute(
+          pkint = pk_t * beam,
+          bgm = bg_t * beam,
+          bgp = bgm,
+          mapint = dwell * beam_map
+        )
     ) %>>%
-    map_at('cmp', map, cbind, .$cnd %>>% select(one_of(info))) %>>%
-    map_at('cmp', map, gather, elm, val, -one_of(info)) %>>%
-    (cmp) %>>%
-    map2(names(.), function(x, nm) rename(x, rlang::UQ(nm) := val)) %>>%
-    reduce(left_join)
+    mutate_at(c('beam', 'beam_map'), `/`, 1e+6) %>>% #uA -> A
+    mutate(
+      bgm2 = bgm * bgm_pos,
+      bgp2 = bgp * bgp_pos,
+      bgint = bgm2 + bgp2,
+      bgint.L =
+        bgint - propagate_add(bgm2, bgm.L * bgm_pos, bgp2, bgp.L * bgp_pos),
+      bgint.H =
+        bgint + propagate_add(bgm2, bgm.H * bgm_pos, bgp2, bgp.H * bgp_pos)
+    ) %>>%
+    mutate_at(c('bgint', 'bgint.L', 'bgint.H'), `/`, .$bgp_pos + .$bgm_pos) %>>%
+    mutate(
+      net.L =
+        net - propagate_add(pkint, pkint.L, bgint, bgint.L),
+      net.H =
+        net + propagate_add(pkint, pkint.H, bgint, bgint.H)
+    ) %>>%
+    return
 
 }
 
