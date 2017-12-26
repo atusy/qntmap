@@ -114,7 +114,7 @@ qnt_load <- function(
 
 
   #extract compositional data
-  #bgm, bgp, pkint [cps/uA]
+  #bgm, bgp, pkint, bgint [cps/uA]
   cmp <- qnt %>>%
     `[`(c('bgm', 'bgp', 'krat', 'kraw', 'net', 'pkint', 'sigma', 'wt')) %>>%
     map(setNames, c('id', 'num', elm$elem, 'sum')) %>>%
@@ -123,10 +123,6 @@ qnt_load <- function(
       bgint =
         t((t(.$bgm) * elm$bgp_pos + t(.$bgp) * elm$bgm_pos) /
             (elm$bgp_pos + elm$bgm_pos)) %>>% as.data.table
-    )) %>>%
-    c(list(
-      pk = .$pkint * cnd$beam * 1e+6, #cps/uA -> cps
-      bg = .$bgint * cnd$beam * 1e+6  #cps/uA -> cps
     ))
 
   QNT <- list(
