@@ -41,15 +41,6 @@ epma_tidy <- function(
   cluster = readRDS(RDS_cluster)
 ) {
 
-  library(qntmap)
-  wd = '/home/atusy/Univ/Data_ND/epma/WDX/ND0207_160819'
-  dir_map = '.map/10'
-  phase_list = NULL
-  RDS_cluster = '/home/atusy/Univ/Data_ND/epma/WDX/ND0207_160819/.map/10_modified_Si_CP/clustering/170423_0207_pois_integrated_k10_CaMnMgSiTiFeNaCPKAlCr_result.RDS'
-  qnt = qnt_load(wd, phase_list = phase_list)
-  qltmap = qltmap_load(dir_map)
-  cluster = readRDS(RDS_cluster)
-
   cd <- getwd()
   on.exit(setwd(cd))
   if(!is.null(wd)) setwd(wd) else wd <- cd
