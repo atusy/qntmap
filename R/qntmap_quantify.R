@@ -88,7 +88,9 @@ qntmap_quantify <- function(
 
   #tidy compilation of epma data
   distinguished <- any(str_detect(colnames(cluster$membership), '_'))
-  epma <- epma_tidy(wd = wd, dir_map = dir_map, qnt = qnt, qltmap = qltmap, cluster = cluster) %>>%
+  epma <- epma_tidy(
+      wd = wd, dir_map = dir_map, qnt = qnt, qltmap = qltmap, cluster = cluster
+    ) %>>%
     mutate(net = ifelse(net < 0, 0, net)) %>>%
     mutate(phase3 = if(distinguished) phase else phase2) %>>%
     mutate(mem = ifelse(cls != phase3 | cls %in% fine_phase | mem < fine_th, 0, mem)) %>>%
@@ -99,8 +101,23 @@ qntmap_quantify <- function(
     mutate(
       stg =
         paste0(
-          formatC(x_stg, width = x_stg %>>% log10 %>>% max(na.rm = TRUE) %>>% floor %>>% `+`(1), flag = '0'),
-          formatC(y_stg, width = y_stg %>>% log10 %>>% max(na.rm = TRUE) %>>% floor %>>% `+`(1), flag = '0')
+          formatC(
+            x_stg,
+            width = x_stg %>>%
+              log10 %>>%
+              max(na.rm = TRUE) %>>%
+              floor %>>% `+`(1),
+            flag = '0'
+          ),
+          formatC(
+            y_stg,
+            width = y_stg %>>%
+              log10 %>>%
+              max(na.rm = TRUE) %>>%
+              floor %>>%
+              `+`(1),
+            flag = '0'
+          )
         )
     ) %>>%
     mutate(stg = ifelse(str_detect(stg, 'NA'), NA, stg)) %>>%
