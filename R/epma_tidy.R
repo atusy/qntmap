@@ -35,10 +35,10 @@ epma_tidy <- function(
   wd = NULL,
   dir_map,
   phase_list = NULL,
-  RDS_cluster,
+  RDS_cluster = NULL,
   qnt = qnt_load(wd, phase_list = phase_list),
   qltmap = qltmap_load(dir_map),
-  cluster = readRDS(RDS_cluster)
+  cluster = if(is.null(RDS_cluster)) NA else readRDS(RDS_cluster)
 ) {
 
   cd <- getwd()
@@ -49,12 +49,17 @@ epma_tidy <- function(
   pos <- dir_map %>>%
     paste0('/0.cnd') %>>%
     readLines %>>%
-    '['(str_detect(.,
-                   '(Measurement Start Position X)|(Measurement Start Position Y)|(X-axis Step Number)|(Y-axis Step Number)|(X-axis Step Size)|(Y-axis Step Size)|(X Step Size)|(Y Step Size)'
+    '['(str_detect(
+      .,
+      '(Measurement Start Position [XY])|([XY](-axis)? Step (Number|Size))'
     )) %>>%
     str_replace_all('[:blank:].*', '') %>>%
     as.numeric %>>%
-    matrix(ncol=3,nrow=2,dimnames=list(NULL,c('start','px','step'))) %>>%
+    matrix(
+      ncol = 3,
+      nrow = 2,
+      dimnames = list(NULL, c('start', 'px', 'step'))
+    ) %>>%
     as.data.table
 
   cnd_detect <- c(
@@ -98,25 +103,39 @@ epma_tidy <- function(
 
   #マッピングデータのうち、定量もした座標のみを選択
   #更に元素名を酸化物に変換
+
+
+  names(qltmap) <- setNames(qnt$elm$elem, qnt$elm$elint)[names(qltmap)] %>>%
+    (x ~ ifelse(is.na(x), names(qltmap), x)) %>>%
+    unname()
+
   qltmap <- qltmap %>>%
-    `[`(qnt$elm$elint) %>>%
-    set_names(qnt$elm$elem) %>>%
     lapply(unlist, use.names = FALSE) %>>%
     lapply(`[`, qnt$cnd$nr) %>>%
     as.data.table
 
   #Load clustering result
-  cluster <- cluster %>>%
-    `[`(c('ytehat', 'membership')) %>>%
-    map_at('ytehat', `[`, qnt$cnd$nr) %>>%
-    map_at('membership', function(x) x[qnt$cnd$nr, ])
+  cluster <- if(is.na(cluster)) {
+      list(
+        ytehat = setNames(NA, 'NA'),
+        membership = matrix(
+          NA, nrow = 1, ncol = 1, dimnames = list(NULL, c('NA'))
+        )
+      )
+    } else {
+      cluster %>>%
+        `[`(c('ytehat', 'membership')) %>>%
+        map_at('ytehat', `[`, qnt$cnd$nr) %>>%
+        map_at('membership', function(x) x[qnt$cnd$nr, ])
+    }
 
   #join cmp, cnd, elem in qnt
   #calculate 95% ci of data
 
   ## Define function for propagating errors
-  propagate_add <- function(x, x2, y, y2)
+  propagate_add <- function(x, x2, y, y2) {
     sqrt((x2 - x) ^ 2 + (y2 - y) ^ 2)
+  }
 
   ##Let's join
   qnt_cnd <- c(names(qnt$cnd), 'cls', 'mem', names(qnt$elm))
@@ -124,8 +143,16 @@ epma_tidy <- function(
     map_at('cmp', c, list(map = qltmap)) %>>%
     map_at('cmp', map, mutate, id = .$cnd$id) %>>%
     map_at('cmp', map, gather, elm, val, -id) %>>%
-    map_at('cmp', map2, names(.$cmp), function(x, nm) rename(x, rlang::UQ(nm) := val)) %>>%
-    map_at('cmp', reduce, left_join, by = c('id', 'elm')) %>>%
+    map_at(
+      'cmp',
+      map2,
+      names(.$cmp),
+      function(x, nm) rename(x, rlang::UQ(nm) := val)
+    ) %>>%
+    # (cmp) %>>% (map) %>>% (elm) %>>% unique
+    map_at('cmp', reduce, full_join, by = c('id', 'elm')) %>>%
+    # (cmp) %>>% filter(elm == 'CP')
+    # (cmp) %>>% (elm) %>>% unique
     map_at('cnd', as_tibble) %>>%
     map_at(
       'cnd',
