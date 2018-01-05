@@ -71,7 +71,7 @@ qntmap_quantify <- function(
       )) %>>%
     str_replace_all('[:blank:].*', '') %>>%
     as.numeric %>>%
-    matrix(ncol=3, nrow=2, dimnames = list(NULL, c('start', 'px', 'step'))) %>>%
+    matrix(ncol = 3, nrow = 2, dimnames = list(NULL, c('start', 'px', 'step'))) %>>%
     as.data.table
 
   stg <- expand.grid(
