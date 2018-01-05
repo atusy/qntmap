@@ -46,7 +46,6 @@ qltmap_cls_pois <- function(
     #qltmap: import mapping data
     if(is.null(qltmap)) qnt <- qltmap_load()
     if(is.character(qltmap)) qltmap <- readRDS(qltmap)
-    if(!all(class(qltmap) == c('list', 'qltmap'))) stop('illegal input of qltmap')
 
     if(is.null(elements)) elements <- names(qltmap)
 
