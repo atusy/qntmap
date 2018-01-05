@@ -13,16 +13,22 @@
 #' @export
 #'
 cipois <- function(x, vars = names(x), offset = 1, conf.level = 0.95) {
+  low <- (1 - conf.level) / 2
+  high <- 1 - low
   x %>>%
     select_at(vars) %>>%
     map2(offset, `*`) %>>%
     map(round) %>>%
-    map(map, poisson.test, conf.level = conf.level) %>>%
-    map(map, 'conf.int') %>>%
-    map(unlist, use.names = FALSE) %>>%
+    map(`+`, 1) %>>%
+    map(
+      function(x) {
+        data.frame(
+          L = qgamma(low, x),
+          H = qgamma(high, x)
+        )
+      }
+    ) %>>%
     map2(offset, `/`) %>>%
-    map(matrix, ncol = 2, byrow = TRUE) %>>%
-    map(as.data.frame) %>>%
     map(setNames, c('L', 'H')) %>>%
     unlist(recursive = FALSE) %>>%
     bind_cols(x)
