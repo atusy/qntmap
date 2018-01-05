@@ -10,6 +10,7 @@
 #'
 #' @importFrom dplyr distinct
 #' @importFrom dplyr left_join
+#' @importFrom dplyr full_join
 #' @importFrom dplyr one_of
 #' @importFrom dplyr select
 #' @importFrom dplyr mutate
@@ -194,6 +195,7 @@ epma_tidy <- function(
       net.H =
         net + propagate_add(pkint, pkint.H, bgint, bgint.H)
     ) %>>%
+    # (~ temp) %>>%
     return
 
 }
