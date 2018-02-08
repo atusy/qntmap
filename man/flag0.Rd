@@ -2,7 +2,7 @@
 % Please edit documentation in R/flag0.R
 \name{flag0}
 \alias{flag0}
-\title{return integer flagged with 0}
+\title{return integer as character flagged with 0}
 \usage{
 flag0(x)
 }
@@ -10,5 +10,5 @@ flag0(x)
 \item{x}{integer}
 }
 \description{
-return integer flagged with 0
+return integer as character flagged with 0
 }
