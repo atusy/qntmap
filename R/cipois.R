@@ -9,6 +9,8 @@
 #' @importFrom dplyr bind_cols
 #' @importFrom purrr map
 #' @importFrom purrr map2
+#' @importFrom stats qgamma
+#' @importFrom stats setNames
 #'
 #' @export
 #'
@@ -19,12 +21,11 @@ cipois <- function(x, vars = names(x), offset = 1, conf.level = 0.95) {
     select_at(vars) %>>%
     map2(offset, `*`) %>>%
     map(round) %>>%
-    map(`+`, 1) %>>%
     map(
       function(x) {
         data.frame(
           L = qgamma(low, x),
-          H = qgamma(high, x)
+          H = qgamma(high, x + 1)
         )
       }
     ) %>>%
