@@ -63,19 +63,6 @@ qntmap_quantify <- function(
   cluster = readRDS(RDS_cluster)
 ) {
 
-# 
-#   wd = "/home/atusy/Univ/Data_ND/epma/WDX/ND0207_160819"
-#   phase_list = NULL
-#   dir_map = './.map/10'
-#   maps_x = 250
-#   maps_y = 415
-#   fine_phase = NULL
-#   fine_th = 0.9
-#   qnt = qnt_load(wd, phase_list = phase_list)
-#   qltmap = qltmap_load(paste(wd, dir_map, sep = '/'))
-#   cluster = readRDS(paste0(wd, '/.map/10_modified_Si_CP/clustering/180107.RDS'))
-
-
   cd <- getwd()
   on.exit(setwd(cd))
   if(is.character(wd)) setwd(wd)
