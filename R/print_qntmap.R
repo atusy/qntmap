@@ -2,12 +2,13 @@
 #'
 #' @param x qntmap class data
 #' @param summarizing TRUE in default will visibly return summary of x and invisibly return x. FALSE will just return x.
+#' @param ... other arguments are discarded
 #'
-#' @importFrom pipeR `%>>%`
+#' @importFrom pipeR %>>%
 #'
 #'@export
 #'
-print.qntmap <- function(x, summarizing = TRUE) {
+print.qntmap <- function(x, summarizing = TRUE, ...) {
   if(!summarizing) return(x)
   cat(paste(
     'Summary of', 

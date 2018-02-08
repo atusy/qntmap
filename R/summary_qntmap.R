@@ -1,13 +1,14 @@
 #' summary qntmap class data.
 #'
-#' @param x qntmap class data
+#' @param object qntmap class data
+#' @param ... other arguments are discarded
 #'
-#' @importFrom pipeR `%>>%`
+#' @importFrom pipeR %>>%
 #' @importFrom dplyr bind_rows
 #'
 #'@export
 #'
-summary.qntmap <- function(x) {
+summary.qntmap <- function(object, ...) {
   x %>>%
     lapply(`[[`, 'wt') %>>%
     lapply(unlist) %>>%
