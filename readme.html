@@ -250,9 +250,10 @@ qnt &lt;- qnt_load()
 ## qnt &lt;- qnt_load(phase_list = &quot;phase_list.csv&quot;, renew = TRUE)
 
 # Determine initial cluster centers
-centers &lt;- qltmap_cls_centers(qnt, xmap, dir_map = dir_map)
+centers &lt;- qltmap_cls_centers(qnt = qnt, qlmap = xmap, dir_map = dir_map)
 
 # Phase identification
+# assign integration = FALSE if you do not want to integrate underscored phases (e.g., garnet_a and garnet_b are integrated to garnet if TRUE)
 cls &lt;- qltmap_cls_pois(centers, xmap, wd = dir_map)
 
 # quantify X-ray maps
