@@ -8,26 +8,31 @@
 #' @param qltmap object of class qltmap
 #' @param cluster object of class PoiClaClu
 #'
+#' @importFrom data.table as.data.table
+#' @importFrom data.table data.table
+#' @importFrom data.table fread
 #' @importFrom dplyr distinct
 #' @importFrom dplyr left_join
-#' @importFrom dplyr full_join
-#' @importFrom dplyr one_of
-#' @importFrom dplyr select
 #' @importFrom dplyr mutate
+#' @importFrom dplyr mutate_at
+#' @importFrom dplyr one_of
+#' @importFrom dplyr rename
+#' @importFrom dplyr select
+#' @importFrom dplyr transmute
 #' @importFrom pipeR %>>%
 #' @importFrom purrr map
 #' @importFrom purrr map2
 #' @importFrom purrr map_at
+#' @importFrom purrr map_int
 #' @importFrom purrr reduce
 #' @importFrom rlang set_names
 #' @importFrom rlang UQ
+#' @importFrom stats setNames
 #' @importFrom stringr str_c
 #' @importFrom stringr str_replace_all
 #' @importFrom stringr str_replace
 #' @importFrom stringr str_detect
-#' @importFrom data.table as.data.table
-#' @importFrom data.table data.table
-#' @importFrom data.table fread
+#' @importFrom tibble as_tibble
 #'
 #' @export
 #'
@@ -65,7 +70,7 @@ epma_tidy <- function(
 
   cnd_detect <- c(
     dwell = 'Dwell Time \\[msec\\]',
-    beam_map = 'Probe Current \\[A\\]'
+    beam_map = 'Probe Current (Avg, Before After )?\\[A\\]'
   )
   cnd_map <- dir_map %>>%
     paste0('/0.cnd') %>>%
@@ -86,9 +91,11 @@ epma_tidy <- function(
     map_at(
       'cnd',
       mutate,
+      # x_px = pos$px[1] - round((x - pos$start[1]) * 1000 / pos$step[1] + 1),
       x_px = round((x - pos$start[1]) * 1000 / pos$step[1] + 1),
       y_px = round((y - pos$start[2]) * 1000 / pos$step[2] + 1),
       nr0 = (y_px - 1) * pos$px[1] + x_px,
+      # nr0 = pos$px[1] * (x_px - 1) + y_px,
       nr = ifelse(nr0 > 0 & nr0 < prod(pos$px), nr0, NA)
     ) %>>%
     map_at('cnd', distinct, nr0, .keep_all = TRUE) %>>% #重複するnrがあれば後者を削除
@@ -106,28 +113,26 @@ epma_tidy <- function(
   #更に元素名を酸化物に変換
 
 
-  names(qltmap) <- setNames(qnt$elm$elem, qnt$elm$elint)[names(qltmap)] %>>%
-    (x ~ ifelse(is.na(x), names(qltmap), x)) %>>%
-    unname()
-
   qltmap <- qltmap %>>%
+    `[`(qnt$elm$elint) %>>%
+    setNames(qnt$elm$elem) %>>%
     lapply(unlist, use.names = FALSE) %>>%
     lapply(`[`, qnt$cnd$nr) %>>%
-    as.data.table
+    as.data.table()
 
   #Load clustering result
-  cluster <- if(is.na(cluster)) {
+  cluster <- if(is.list(cluster)) {
+      cluster %>>%
+        `[`(c('ytehat', 'membership')) %>>%
+        map_at('ytehat', `[`, qnt$cnd$nr) %>>%
+        map_at('membership', function(x) x[qnt$cnd$nr, ])
+    } else {
       list(
         ytehat = setNames(NA, 'NA'),
         membership = matrix(
           NA, nrow = 1, ncol = 1, dimnames = list(NULL, c('NA'))
         )
       )
-    } else {
-      cluster %>>%
-        `[`(c('ytehat', 'membership')) %>>%
-        map_at('ytehat', `[`, qnt$cnd$nr) %>>%
-        map_at('membership', function(x) x[qnt$cnd$nr, ])
     }
 
   #join cmp, cnd, elem in qnt
@@ -151,7 +156,7 @@ epma_tidy <- function(
       function(x, nm) rename(x, rlang::UQ(nm) := val)
     ) %>>%
     # (cmp) %>>% (map) %>>% (elm) %>>% unique
-    map_at('cmp', reduce, full_join, by = c('id', 'elm')) %>>%
+    map_at('cmp', reduce, left_join, by = c('id', 'elm')) %>>%
     # (cmp) %>>% filter(elm == 'CP')
     # (cmp) %>>% (elm) %>>% unique
     map_at('cnd', as_tibble) %>>%
@@ -166,6 +171,7 @@ epma_tidy <- function(
     map_at('cnd', rename, elm = elem) %>>%
     `[`(c('cmp', 'cnd')) %>>%
     reduce(left_join, by = c('id', 'elm')) %>>%
+    mutate(elint = ifelse(is.na(elint), elm, elint)) %>>%
     mutate_at(c('beam', 'beam_map'), `*`, 1e+6) %>>% #A -> uA
     mutate(mapint = map / dwell / beam_map) %>>%
     cipois(
