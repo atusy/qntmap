@@ -10,6 +10,7 @@
 #' @importFrom stringr str_replace
 #' @importFrom data.table as.data.table
 #' @importFrom data.table fread
+#' @importFrom stats setNames
 #' @export
 #'
 qltmap_load <- function(
@@ -53,20 +54,22 @@ qltmap_load <- function(
   rm(test, patterns)
 
   #which element is which filenames$map?
-  names(filenames$map) <- filenames$pm %>>%
+  filenames$elm <- filenames$pm %>>%
     str_replace('^[0-9]+\\.', '') %>>%
     str_replace('\\.pm$', '')
 
   #####load, save, and return map files
   #load qltmap from RDS file when qltmap_load() has already been done
-  if(renew && file.exists(RDS)) {
+  if(!renew && file.exists(RDS)) {
     qltmap <- readRDS(RDS)
   } else {
   # load qltmap from text images when the RDS file does not exist,
   # there is something wrong with RDS file, or renew = TRUE
     qltmap <- lapply(filenames$map, fread) %>>%
-      lapply(
-        function(x, .DT = DT) x / (dwell - DT * 1e-9 * x)
+      setNames(filenames$elm) %>>%
+      map_if(
+        !(names(.) %in% c('CP', 'TP', 'SL')),
+        function(x) dwell * x / (dwell - DT * 1e-9 * x)
       ) %>>%
       lapply(round) %>>%
       lapply(lapply, as.integer) %>>%
