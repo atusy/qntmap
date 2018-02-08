@@ -2,6 +2,7 @@
 #' @param palette palette to be used as LUT. either pcol (= pseudocolor) or gray. It is ignored when LUT is specified.
 #' @param n number of output colors. When n is more than number of colors in the specified palette, output contains duplicated colors.
 #' @param dec FALSE in default outputs a vector of RGB colors. TRUE outputs matrix whose columns are R, G, and B, and whose values are in decimals.
+#' @importFrom grDevices col2rgb
 mycolors <- function(palette = c('pcol', 'gray'), n = NULL, dec = FALSE) {
     LUT <- colors[[match.arg(palette)]]
 
