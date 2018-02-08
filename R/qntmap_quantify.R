@@ -2,11 +2,10 @@
 #'
 #' @param wd working directory which contains .qnt and .map directories
 #' @param dir_map directory containing map data to be quantified
-#' @param phase_list aaa
-#' @param maps_x aaa
-#' @param maps_y aaa
+#' @param maps_x x of maps. Assign when you use guide net map.
+#' @param maps_y y of maps. Assign when you use guide net map.
 #' @param RDS_cluster path to the output RDS file of clustering. NULL in default look for the newest one in dir_map/clustering
-#' @param fine_phase aaa
+#' @param fine_phase fine-grained phases which tend to be appear in multi-phase pixels
 #' @param fine_th 0.9
 #' @param qnt object of class qnt
 #' @param qltmap object of class qltmap
@@ -50,14 +49,13 @@
 #'@export
 qntmap_quantify <- function(
   wd = NULL,
-  phase_list = NULL,
   dir_map,
   RDS_cluster,
   maps_x = NULL,
   maps_y = NULL,
   fine_phase = NULL,
   fine_th = 0.9,
-  qnt = qnt_load(wd, phase_list = phase_list),
+  qnt = qnt_load(wd),
   qltmap = qltmap_load(dir_map),
   cluster = readRDS(RDS_cluster)
 ) {
