@@ -13,7 +13,6 @@
 #' @param cluster object of class PoiClaClu
 #'
 #' @importFrom data.table as.data.table
-#' @importFrom data.table fread
 #' @importFrom data.table fwrite
 #' @importFrom tibble tibble
 #' @importFrom tidyr nest
@@ -91,23 +90,28 @@ qntmap_quantify <- function(
     mutate(y_stg = if(is.null(maps_y)) 1 else y %/% maps_y + 1) %>>%
     mutate(stg = paste0(flag0(x_stg), flag0(y_stg)))
 
-
-
   #tidy compilation of epma data
   distinguished <- any(grepl('_', colnames(cluster$membership)))
   epma <- epma_tidy(
     wd = wd, dir_map = dir_map, qnt = qnt, qltmap = qltmap, cluster = cluster
   ) %>>%
+    filter(elm %in% qnt$elm$elem) %>>%
     mutate(net = ifelse(net < 0, 0, net)) %>>%
-    mutate(phase3 = if(distinguished) phase else phase2) %>>%
-    mutate(mem = mem * !(cls != phase3 | cls %in% fine_phase | mem < fine_th)) %>>%
+    mutate(phase3 = if(any(grepl('_', cls))) phase else phase2) %>>%
     mutate(x_stg = if(is.null(maps_x)) 1 else (x_px - 1) %/% maps_x + 1) %>>%
     mutate(x_stg = ifelse(x_stg <= 0 | x_stg > max(stg$x_stg), NA, x_stg)) %>>%
     mutate(y_stg = if(is.null(maps_y)) 1 else (y_px - 1) %/% maps_y + 1) %>>%
     mutate(y_stg = ifelse(y_stg <= 0 | y_stg > max(stg$y_stg), NA, y_stg)) %>>%
     mutate(stg = paste0(flag0(x_stg), flag0(y_stg))) %>>%
     mutate(stg = ifelse(str_detect(stg, 'NA'), NA, stg)) %>>%
-    mutate(mem = ifelse(is.na(stg), 0, mem))
+    mutate(
+      mem = mem * 
+        (str_replace(cls, '_.*', '') == phase2) *
+        # (cls == phase3) *
+        !(cls %in% fine_phase) * 
+        (mem > fine_th) * 
+        is.na(stg)
+    )
 
   #qltmap: elements -> oxides
   qltmap <- qltmap %>>%
@@ -144,7 +148,9 @@ qntmap_quantify <- function(
   B <- epma %>>%
     filter(!is.na(stg)) %>>%
     group_by(elm) %>>%
-    mutate(fit_na = lm(pkint ~ 0 + map, weights = mem, na.action = na.omit) %>>% list) %>>%
+    mutate(
+      fit_na = list(lm(pkint ~ 0 + map, weights = mem, na.action = na.omit))
+    ) %>>%
     group_by(stg, elm) %>>%
     summarise(
       fit = lm(pkint ~ 0 + map, weights = mem) %>>% list,
@@ -152,7 +158,9 @@ qntmap_quantify <- function(
     ) %>>%
     ungroup %>>%
     mutate(
-      b = map_dbl(fit, coef),
+      b = map_dbl(fit, coef)
+    ) %>>%
+    mutate(
       fit = ifelse(is.na(b), fit_na, fit),
       b_se = map_dbl(fit, vcov),
       b = ifelse(is.na(b), map_dbl(fit_na, coef), b)
@@ -173,8 +181,13 @@ qntmap_quantify <- function(
     map(map, colSums) %>>%
     map(map_at, 'se', sqrt)
 
+  
+  setwd(dir_map)
+  dir.create('qntmap', FALSE)
+  setwd('qntmap')
+  
 
-  qntmap <- AG %>>% #AB
+  AG %>>% #AB
     select(phase3, elm, a, a_se) %>>%
     nest(-phase3, .key = '.A') %>>%
     mutate(
@@ -209,7 +222,7 @@ qntmap_quantify <- function(
     map(unlist, recursive = FALSE) %>>%
     map(map, right_join, tibble(stg = stg$stg), by = 'stg') %>>%
     map(map, select, -stg) %>>%
-    map(map, as.data.table) %>>% (~ . %>>% head %>>% print)
+    map(map, as.data.table) %>>%
     map(map, `*`, X) %>>% #XAB
     map(map_at, 'se', map, `^`, 2) %>>%
     map(map_at, 'se', as.data.table) %>>%
@@ -218,38 +231,60 @@ qntmap_quantify <- function(
     map2(qltmap, function(xab, i) map(xab, function(x) i * x)) %>>% #XABI
     map2(XAG, map2, `-`) %>>% #XABI - XAG
     map(set_names, c('wt', 'se')) %>>%
-    map(function(x) map(x, `*`, x$wt > 0))
-
-
-  qntmap$Total <- list(
-    wt = qntmap %>>%
-      map(`[[`, 'wt') %>>%
-      reduce(`+`) %>>%
-      as.data.frame,
-    se = qntmap %>>%
-      map(`[[`, 'se') %>>%
-      map(`^`, 2) %>>%
-      reduce(`+`) %>>%
-      sqrt %>>%
-      as.data.frame
-  )
-
-  rm(qltmap, XAG)
-
-
-  setwd(dir_map)
-  dir.create('qntmap', FALSE)
-  setwd('qntmap')
-  qntmap %>>%
-    unlist(recursive = FALSE) %>>%
-    set_names(
-      names(.) %>>%
-        str_replace('\\.', '_') %>>%
-        paste0('.csv')
+    map(function(x) map(x, `*`, x$wt > 0)) %>>%
+    list(
+      Total = list(
+        wt = . %>>%
+          map(`[[`, 'wt') %>>%
+          reduce(`+`) %>>%
+          as.data.frame,
+        se = . %>>%
+          map(`[[`, 'se') %>>%
+          map(`^`, 2) %>>%
+          reduce(`+`) %>>%
+          sqrt %>>%
+          as.data.frame
+      )
     ) %>>%
-    walk2(names(.), fwrite)
+    structure(class = c('qntmap', 'list')) %>>%
+    (~ . %>>% #side effect saving csv and RDS files
+       (~ saveRDS(., 'qntmap.RDS')) %>>%
+       unlist(recursive = FALSE) %>>%
+       set_names(
+         names(.) %>>%
+           str_replace('\\.', '_') %>>%
+           paste0('.csv')
+       ) %>>%
+       walk2(names(.), fwrite) %>>%
+       NULL
+    ) %>>%
+    return()
+# 
+#   qntmap$Total <- list(
+#     wt = qntmap %>>%
+#       map(`[[`, 'wt') %>>%
+#       reduce(`+`) %>>%
+#       as.data.frame,
+#     se = qntmap %>>%
+#       map(`[[`, 'se') %>>%
+#       map(`^`, 2) %>>%
+#       reduce(`+`) %>>%
+#       sqrt %>>%
+#       as.data.frame
+#   )
 
-  saveRDS(qntmap, 'qntmap.RDS')
+  # rm(qltmap, XAG)
 
-  qntmap
+  # qntmap %>>%
+  #   unlist(recursive = FALSE) %>>%
+  #   set_names(
+  #     names(.) %>>%
+  #       str_replace('\\.', '_') %>>%
+  #       paste0('.csv')
+  #   ) %>>%
+  #   walk2(names(.), fwrite)
+
+  # saveRDS(qntmap, 'qntmap.RDS')
+
+  # qntmap
 }
