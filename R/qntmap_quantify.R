@@ -37,6 +37,12 @@
 #' @importFrom purrr reduce
 #' @importFrom rlang set_names
 #' @importFrom rlang :=
+#' @importFrom stats coef
+#' @importFrom stats lm
+#' @importFrom stats predict
+#' @importFrom stats sd
+#' @importFrom stats vcov
+#' @importFrom stats na.omit
 #' @importFrom stringr str_c
 #' @importFrom stringr str_detect
 #' @importFrom stringr str_replace
@@ -44,18 +50,31 @@
 #'
 #'@export
 qntmap_quantify <- function(
-    wd = NULL,
-    phase_list = NULL,
-    dir_map,
-    RDS_cluster,
-    maps_x = NULL,
-    maps_y = NULL,
-    fine_phase = NULL,
-    fine_th = 0.9,
-    qnt = qnt_load(wd, phase_list = phase_list),
-    qltmap = qltmap_load(dir_map),
-    cluster = readRDS(RDS_cluster)
+  wd = NULL,
+  phase_list = NULL,
+  dir_map,
+  RDS_cluster,
+  maps_x = NULL,
+  maps_y = NULL,
+  fine_phase = NULL,
+  fine_th = 0.9,
+  qnt = qnt_load(wd, phase_list = phase_list),
+  qltmap = qltmap_load(dir_map),
+  cluster = readRDS(RDS_cluster)
 ) {
+
+# 
+#   wd = "/home/atusy/Univ/Data_ND/epma/WDX/ND0207_160819"
+#   phase_list = NULL
+#   dir_map = './.map/10'
+#   maps_x = 250
+#   maps_y = 415
+#   fine_phase = NULL
+#   fine_th = 0.9
+#   qnt = qnt_load(wd, phase_list = phase_list)
+#   qltmap = qltmap_load(paste(wd, dir_map, sep = '/'))
+#   cluster = readRDS(paste0(wd, '/.map/10_modified_Si_CP/clustering/180107.RDS'))
+
 
   cd <- getwd()
   on.exit(setwd(cd))
@@ -66,74 +85,52 @@ qntmap_quantify <- function(
     str_replace('/?$', '/') %>>%
     str_c('0.cnd') %>>%
     readLines %>>%
-    '['(str_detect(.,
-      '(Measurement Start Position X)|(Measurement Start Position Y)|(X-axis Step Number)|(Y-axis Step Number)|(X-axis Step Size)|(Y-axis Step Size)|(X Step Size)|(Y Step Size)'
-      )) %>>%
+    '['(str_detect(
+      .,
+      '(Measurement Start Position [X|Y])|([XY](-axis)? Step [Size|Number])'
+    )) %>>%
     str_replace_all('[:blank:].*', '') %>>%
     as.numeric %>>%
-    matrix(ncol = 3, nrow = 2, dimnames = list(NULL, c('start', 'px', 'step'))) %>>%
-    as.data.table
-
-  stg <- expand.grid(
-      y = 1:cnd$px[2] - 1,
-      x = 1:cnd$px[1] - 1
+    matrix(
+      ncol = 3, nrow = 2, dimnames = list(NULL, c('start', 'px', 'step'))
     ) %>>%
+    as.data.table
+  
+  stg <- expand.grid(
+    x = 1:cnd$px[1] - 1,
+    y = 1:cnd$px[2] - 1
+  ) %>>%
     mutate(x_stg = if(is.null(maps_x)) 1 else x %/% maps_x + 1) %>>%
     mutate(y_stg = if(is.null(maps_y)) 1 else y %/% maps_y + 1) %>>%
-    mutate(stg = paste0(
-      formatC(x_stg, width = x_stg %>>% log10 %>>% max %>>% floor %>>% `+`(1), flag = '0'),
-      formatC(y_stg, width = y_stg %>>% log10 %>>% max %>>% floor %>>% `+`(1), flag = '0')
-    ))
+    mutate(stg = paste0(flag0(x_stg), flag0(y_stg)))
+
 
 
   #tidy compilation of epma data
-  distinguished <- any(str_detect(colnames(cluster$membership), '_'))
+  distinguished <- any(grepl('_', colnames(cluster$membership)))
   epma <- epma_tidy(
-      wd = wd, dir_map = dir_map, qnt = qnt, qltmap = qltmap, cluster = cluster
-    ) %>>%
+    wd = wd, dir_map = dir_map, qnt = qnt, qltmap = qltmap, cluster = cluster
+  ) %>>%
     mutate(net = ifelse(net < 0, 0, net)) %>>%
     mutate(phase3 = if(distinguished) phase else phase2) %>>%
-    mutate(mem = ifelse(cls != phase3 | cls %in% fine_phase | mem < fine_th, 0, mem)) %>>%
+    mutate(mem = mem * !(cls != phase3 | cls %in% fine_phase | mem < fine_th)) %>>%
     mutate(x_stg = if(is.null(maps_x)) 1 else (x_px - 1) %/% maps_x + 1) %>>%
     mutate(x_stg = ifelse(x_stg <= 0 | x_stg > max(stg$x_stg), NA, x_stg)) %>>%
     mutate(y_stg = if(is.null(maps_y)) 1 else (y_px - 1) %/% maps_y + 1) %>>%
     mutate(y_stg = ifelse(y_stg <= 0 | y_stg > max(stg$y_stg), NA, y_stg)) %>>%
-    mutate(
-      stg =
-        paste0(
-          formatC(
-            x_stg,
-            width = x_stg %>>%
-              log10 %>>%
-              max(na.rm = TRUE) %>>%
-              floor %>>% `+`(1),
-            flag = '0'
-          ),
-          formatC(
-            y_stg,
-            width = y_stg %>>%
-              log10 %>>%
-              max(na.rm = TRUE) %>>%
-              floor %>>%
-              `+`(1),
-            flag = '0'
-          )
-        )
-    ) %>>%
+    mutate(stg = paste0(flag0(x_stg), flag0(y_stg))) %>>%
     mutate(stg = ifelse(str_detect(stg, 'NA'), NA, stg)) %>>%
     mutate(mem = ifelse(is.na(stg), 0, mem))
 
   #qltmap: elements -> oxides
   qltmap <- qltmap %>>%
     `[`(qnt$elm$elint) %>>%
-    set_names(qnt$elm$elem) %>>%
+    setNames(qnt$elm$elem) %>>%
     `[`(sort(names(.)))
 
   rm(qnt)
 
-  X <- cluster %>>%
-    (membership) %>>%
-    as.data.table
+  X <- as.data.table(cluster$membership)
 
   rm(cluster)
   ##
@@ -142,7 +139,7 @@ qntmap_quantify <- function(
     mutate(fit_na = lm(wt ~ 0 + net) %>>% list) %>>%
     group_by(phase3, elm) %>>%
     summarise(
-      fit = lm(wt ~ 0 + net) %>>% list,
+      fit = list(lm(wt ~ 0 + net)),
       fit_na = fit_na[1],
       g = mean(bgint),
       g_se = sd(bgint) / (length(bgint) - 1)
@@ -150,7 +147,7 @@ qntmap_quantify <- function(
     ungroup %>>%
     mutate(
       a = map_dbl(fit, coef),
-      a_se = ifelse(is.na(a), map_dbl(fit_na, vcov), map_dbl(fit, vcov)),
+      a_se = ifelse(is.na(a), map(fit_na, vcov), map(fit, vcov)) %>>% unlist,
       a = ifelse(is.na(a), map_dbl(fit_na, coef), a),
       ag = a * g,
       ag_se = sqrt((a * g_se) ^ 2 + (g * a_se) ^ 2)
@@ -225,7 +222,7 @@ qntmap_quantify <- function(
     map(unlist, recursive = FALSE) %>>%
     map(map, right_join, tibble(stg = stg$stg), by = 'stg') %>>%
     map(map, select, -stg) %>>%
-    map(map, as.data.table) %>>%
+    map(map, as.data.table) %>>% (~ . %>>% head %>>% print)
     map(map, `*`, X) %>>% #XAB
     map(map_at, 'se', map, `^`, 2) %>>%
     map(map_at, 'se', as.data.table) %>>%
@@ -237,16 +234,18 @@ qntmap_quantify <- function(
     map(function(x) map(x, `*`, x$wt > 0))
 
 
-  qntmap$Total$wt <- qntmap %>>%
-    map(`[[`, 'wt') %>>%
-    reduce(`+`) %>>%
-    list
-  qntmap$Total$se <- qntmap %>>%
-    map(`[[`, 'se') %>>%
-    map(`^`, 2) %>>%
-    reduce(`+`) %>>%
-    sqrt %>>%
-    list
+  qntmap$Total <- list(
+    wt = qntmap %>>%
+      map(`[[`, 'wt') %>>%
+      reduce(`+`) %>>%
+      as.data.frame,
+    se = qntmap %>>%
+      map(`[[`, 'se') %>>%
+      map(`^`, 2) %>>%
+      reduce(`+`) %>>%
+      sqrt %>>%
+      as.data.frame
+  )
 
   rm(qltmap, XAG)
 
