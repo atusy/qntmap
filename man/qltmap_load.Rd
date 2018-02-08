@@ -4,10 +4,13 @@
 \alias{qltmap_load}
 \title{load mapping data}
 \usage{
-qltmap_load(wd = NULL, RDS = "qltmap.RDS", renew = FALSE, saving = TRUE)
+qltmap_load(wd = NULL, DT = 1100, RDS = "qltmap.RDS", renew = FALSE,
+  saving = TRUE)
 }
 \arguments{
 \item{wd}{working directory which contains mapping data}
+
+\item{DT}{dead time in nano seconds (1100 nsec in default)}
 
 \item{RDS}{name of RDS file to be saved/readed}
 
