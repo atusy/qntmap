@@ -4,9 +4,10 @@
 \alias{epma_tidy}
 \title{compile epma data}
 \usage{
-epma_tidy(wd = NULL, dir_map, phase_list = NULL, RDS_cluster,
+epma_tidy(wd = NULL, dir_map, phase_list = NULL, RDS_cluster = NULL,
   qnt = qnt_load(wd, phase_list = phase_list),
-  qltmap = qltmap_load(dir_map), cluster = readRDS(RDS_cluster))
+  qltmap = qltmap_load(dir_map), cluster = if (is.null(RDS_cluster)) NA else
+  readRDS(RDS_cluster))
 }
 \arguments{
 \item{wd}{path to the directory containing .qnt directory}
