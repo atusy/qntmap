@@ -1,7 +1,7 @@
 #' load mapping data
 #'
 #' @param wd working directory which contains mapping data
-#' @param DT dead time in nano seconds (1100 nsec in default)
+#' @param DT dead time in nano seconds (0 nsec in default)
 #' @param RDS name of RDS file to be saved/readed
 #' @param renew if TRUE and the file specified by RDS exists, that file will be loaded
 #' @param saving whether or not to save the data as RDS file
@@ -15,7 +15,7 @@
 #'
 qltmap_load <- function(
   wd = NULL,
-  DT = 1100,
+  DT = 0,
   RDS = 'qltmap.RDS',
   renew = FALSE,
   saving = TRUE
