@@ -95,7 +95,9 @@ setwd("Directory which contains analytical data like .qnt directory, .map direct
 dir_map <- "path to the directory containing X-ray map files (directory containing 1_map.txt, 2_map.txt, and so on)"
 
 # Load mapping data
-xmap <- qltmap_load(dir_map)
+# Change value of DT (dead time in nanoseconds) depending on EPMA.
+# 1100 ns is a value applied by JEOL JXA-8105.
+xmap <- qltmap_load(dir_map, DT = 1100)
 
 # Compile quantitative data
 qnt <- qnt_load()
