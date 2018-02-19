@@ -32,7 +32,7 @@ qltmap_cls_pois <- function(
     elements = NULL,
     wd = NULL,
     saving = TRUE,
-    integration = TRUE
+    integration = FALSE
   ) {
     cd <- getwd()
     on.exit(setwd(cd))
