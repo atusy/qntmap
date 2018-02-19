@@ -20,7 +20,6 @@
 #' @importFrom grDevices png
 #' @importFrom pipeR %>>%
 #' @importFrom PoiClaClu Classify
-#' @importFrom stringr str_extract
 #' @importFrom tidyr gather
 #' @importFrom tidyr spread
 #'
@@ -32,7 +31,7 @@ qltmap_cls_pois <- function(
     elements = NULL,
     wd = NULL,
     saving = TRUE,
-    integration = FALSE
+    integration = TRUE
   ) {
     cd <- getwd()
     on.exit(setwd(cd))
@@ -137,7 +136,8 @@ qltmap_cls_pois <- function(
     components <- c('ytehat', 'center', 'membership', 'date', 'dims', 'elements')
     if(saving) qltmap_cls_save(result, 'pois', components)
 
-    if(integration) result <- qltmap_cls_pois_integrate(result, wd = NULL, saving = saving)
+    if(integration && any(grepl('_', colnames(result$membership))))
+        result <- qltmap_cls_pois_integrate(result, wd = NULL, saving = saving)
 
     result
 }
