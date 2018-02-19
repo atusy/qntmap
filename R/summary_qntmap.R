@@ -9,7 +9,7 @@
 #'@export
 #'
 summary.qntmap <- function(object, ...) {
-  x %>>%
+  object %>>%
     lapply(`[[`, 'wt') %>>%
     lapply(unlist) %>>%
     lapply(summary) %>>%
