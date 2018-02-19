@@ -7,6 +7,7 @@
 #' @param saving whether or not to save the data as RDS file
 #'
 #' @importFrom pipeR %>>%
+#' @importFrom purrr map_if
 #' @importFrom stringr str_replace
 #' @importFrom data.table as.data.table
 #' @importFrom data.table fread
