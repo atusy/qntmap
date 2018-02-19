@@ -129,6 +129,7 @@ qltmap_cls_pois <- function(
 
 
     #####additional informations
+    class(result) <- c('qltmap_cls', 'list')
     result$date <- format(Sys.time(), "%y%m%d_%H%M")
     result$dims <- dims
     result$elements <- elements
