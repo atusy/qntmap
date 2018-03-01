@@ -76,6 +76,11 @@ qntmap <- function() {
     fine_phase = if(length(fine_phase)) fine_phase else NULL
   )
   
+  cat('Finished quantification.\n')
+  cat('Results are saved under')
+  cat(paste0(dir_map, '/qntmap\n\n'))
+  
+  cat('Summary of quantified mapping data')
   print(summary(qntmap))
   
   invisible(qntmap)
