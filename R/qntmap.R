@@ -28,9 +28,11 @@ qntmap <- function() {
   if(!length(list.files(dir_map, pattern = '_map\\.txt')))
     stop('Selected directory does not contain *_map.txt files. Did you converted mapping data to ASCII files from Utility menu in JEOL EPMA?')
   
-  cat('Input dead time in nano seconds (input 0 if no corrections required)\n')
+  cat('Input dead time in nano seconds\n')
+  cat('0 if no corrections required)\n')
+  cat('1100 is the default value for JXA-8105\n')
   DT <- as.numeric(readline())
-  cat('Dead time is')
+  cat('Dead time is ')
   cat(DT)
   cat(' nano seconds\n\n')
   
