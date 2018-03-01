@@ -2,11 +2,10 @@
 #'
 #' @param wd path to the directory containing .qnt directory
 #' @param dir_map path to the directory containing mapping analysis e.g., ./.map/1/
-#' @param phase_list path to the csv file containing columns indicating phase of each analysis and true or false to use it for quantifying.
 #' @param RDS_cluster path to the clustering result
-#' @param qnt object of class qnt
-#' @param qltmap object of class qltmap
-#' @param cluster object of class PoiClaClu
+#' @param qnt object returned by qnt_load
+#' @param qltmap object returned by qltmap_load
+#' @param cluster object returned by qltmap_cls_pois
 #'
 #' @importFrom data.table as.data.table
 #' @importFrom data.table data.table
@@ -15,35 +14,26 @@
 #' @importFrom dplyr left_join
 #' @importFrom dplyr mutate
 #' @importFrom dplyr mutate_at
-#' @importFrom dplyr one_of
 #' @importFrom dplyr rename
-#' @importFrom dplyr select
 #' @importFrom dplyr transmute
 #' @importFrom pipeR %>>%
-#' @importFrom purrr map
 #' @importFrom purrr map2
-#' @importFrom purrr map_at
 #' @importFrom purrr map_int
-#' @importFrom purrr reduce
-#' @importFrom rlang set_names
-#' @importFrom rlang UQ
 #' @importFrom stats setNames
 #' @importFrom stringr str_c
 #' @importFrom stringr str_replace_all
 #' @importFrom stringr str_replace
 #' @importFrom stringr str_detect
-#' @importFrom tibble as_tibble
 #'
 #' @export
 #'
 #'
 epma_tidy <- function(
   wd = NULL,
-  dir_map,
-  phase_list = NULL,
+  dir_map = NULL,
   RDS_cluster = NULL,
-  qnt = qnt_load(wd, phase_list = phase_list),
-  qltmap = qltmap_load(dir_map),
+  qnt = qnt_load(wd),
+  qltmap = if(is.null(dir_map)) NULL else qltmap_load(dir_map),
   cluster = if(is.null(RDS_cluster)) NA else readRDS(RDS_cluster)
 ) {
 
@@ -72,6 +62,7 @@ epma_tidy <- function(
     dwell = 'Dwell Time \\[msec\\]',
     beam_map = 'Probe Current (Avg, Before After )?\\[A\\]'
   )
+  
   cnd_map <- dir_map %>>%
     paste0('/0.cnd') %>>%
     readLines %>>%
@@ -87,108 +78,79 @@ epma_tidy <- function(
   #データの整形
 
   #ステージ位置をmmからピクセル位置に変換
-  qnt <- qnt %>>%
-    map_at(
-      'cnd',
-      mutate,
-      # x_px = pos$px[1] - round((x - pos$start[1]) * 1000 / pos$step[1] + 1),
+  qnt$cnd <- qnt$cnd %>>%
+    mutate(
       x_px = round((x - pos$start[1]) * 1000 / pos$step[1] + 1),
       y_px = round((y - pos$start[2]) * 1000 / pos$step[2] + 1),
       nr0 = (y_px - 1) * pos$px[1] + x_px,
-      # nr0 = pos$px[1] * (x_px - 1) + y_px,
       nr = ifelse(nr0 > 0 & nr0 < prod(pos$px), nr0, NA)
     ) %>>%
-    map_at('cnd', distinct, nr0, .keep_all = TRUE) %>>% #重複するnrがあれば後者を削除
-    map_at('cnd', mutate, phase2 = str_replace(phase, '_.*', '')) %>>%
-    map_at('cnd', filter, !is.na(phase)) %>>%
-    map_at('cmp', map, `[`, .$cnd$id, ) %>>%
-    map_at(
-      'elm',
-      mutate,
+    distinct(nr0, .keep_all = TRUE) %>>%
+    mutate(phase2 = str_replace(phase, '_.*', '')) %>>%
+    filter(!is.na(phase))
+  qnt$elm <- qnt$elm %>>%
+    mutate(
       dwell = cnd_map['dwell'] / 1000, #msec -> sec
       beam_map = cnd_map['beam_map']
     )
-
-  #マッピングデータのうち、定量もした座標のみを選択
-  #更に元素名を酸化物に変換
+  
 
 
-  qltmap <- qltmap %>>%
-    `[`(qnt$elm$elint) %>>%
+  ##Let's join
+  qnt$cmp <- qltmap[qnt$elm$elint] %>>%
     setNames(qnt$elm$elem) %>>%
     lapply(unlist, use.names = FALSE) %>>%
-    lapply(`[`, qnt$cnd$nr) %>>%
-    as.data.table()
-
-  #Load clustering result
-  cluster <- if(is.list(cluster)) {
-      cluster %>>%
-        `[`(c('ytehat', 'membership')) %>>%
-        map_at('ytehat', `[`, qnt$cnd$nr) %>>%
-        map_at('membership', function(x) x[qnt$cnd$nr, ])
-    } else {
-      list(
-        ytehat = setNames(NA, 'NA'),
-        membership = matrix(
-          NA, nrow = 1, ncol = 1, dimnames = list(NULL, c('NA'))
-        )
-      )
-    }
-
-  #join cmp, cnd, elem in qnt
-  #calculate 95% ci of data
+    as.data.table %>>%
+    `[`(qnt$cnd$nr, ) %>>%
+    list %>>%
+    setNames('map') %>>%
+    c(map(qnt$cmp, `[`, qnt$cnd$id, )) %>>%
+    map(mutate, id =  qnt$cnd$id) %>>%
+    bind_rows(.id = 'var') %>>%
+    gather(elm, val, -var, -id) %>>%
+    spread(var, val)
 
   ## Define function for propagating errors
   propagate_add <- function(x, x2, y, y2) {
     sqrt((x2 - x) ^ 2 + (y2 - y) ^ 2)
   }
-
-  ##Let's join
-  qnt_cnd <- c(names(qnt$cnd), 'cls', 'mem', names(qnt$elm))
-  qnt %>>%
-    map_at('cmp', c, list(map = qltmap)) %>>%
-    map_at('cmp', map, mutate, id = .$cnd$id) %>>%
-    map_at('cmp', map, gather, elm, val, -id) %>>%
-    map_at(
-      'cmp',
-      map2,
-      names(.$cmp),
-      function(x, nm) rename(x, rlang::UQ(nm) := val)
+  
+  #join cmp, cnd, elem in qnt
+  #calculate 95% ci of data
+  qnt$cnd %>>%
+    mutate(
+      cls = if(is.list(cluster)) 
+        names(cluster$ytehat)[qnt$cnd$nr] else NA,
+      mem = if(is.list(cluster)) 
+        apply(cluster$membership[qnt$cnd$nr, ], 1, max) else NA,
+      elm = list(qnt$elm)
     ) %>>%
-    # (cmp) %>>% (map) %>>% (elm) %>>% unique
-    map_at('cmp', reduce, left_join, by = c('id', 'elm')) %>>%
-    # (cmp) %>>% filter(elm == 'CP')
-    # (cmp) %>>% (elm) %>>% unique
-    map_at('cnd', as_tibble) %>>%
-    map_at(
-      'cnd',
-      mutate,
-      cls = names(cluster$ytehat),
-      mem = apply(cluster$membership, 1, max),
-      elm = list(.$elm)
-    ) %>>%
-    map_at('cnd', unnest) %>>%
-    map_at('cnd', rename, elm = elem) %>>%
-    `[`(c('cmp', 'cnd')) %>>%
-    reduce(left_join, by = c('id', 'elm')) %>>%
+    unnest %>>%
+    rename(elm = elem) %>>%
+    # left_join(qnt$cmp %>>% select(-pkint), by = c('id', 'elm')) %>>%
+    left_join(qnt$cmp, by = c('id', 'elm')) %>>%
     mutate(elint = ifelse(is.na(elint), elm, elint)) %>>%
     mutate_at(c('beam', 'beam_map'), `*`, 1e+6) %>>% #A -> uA
     mutate(mapint = map / dwell / beam_map) %>>%
+    mutate(
+      bgm2 = bgm * bgm_pos,
+      bgp2 = bgp * bgp_pos,
+      bgint = bgm2 + bgp2,
+      pkint = if(exists('pkint')) {pkint} else {(net + bgint  / (bgm_pos + bgp_pos))},
+      pkint = pkint * (pkint > 0)
+    ) %>>%
     cipois(
       vars = c('pkint', 'bgm', 'bgp', 'mapint'),
       offset = . %>>%
         transmute(
           pkint = pk_t * beam,
           bgm = bg_t * beam,
-          bgp = bgm,
+          bgp = bgm, # == bg_t * beam
           mapint = dwell * beam_map
         )
-    ) %>>%
+    ) %>>% 
     mutate_at(c('beam', 'beam_map'), `/`, 1e+6) %>>% #uA -> A
     mutate(
-      bgm2 = bgm * bgm_pos,
-      bgp2 = bgp * bgp_pos,
-      bgint = bgm2 + bgp2,
       bgint.L =
         bgint - propagate_add(bgm2, bgm.L * bgm_pos, bgp2, bgp.L * bgp_pos),
       bgint.H =
@@ -200,9 +162,7 @@ epma_tidy <- function(
         net - propagate_add(pkint, pkint.L, bgint, bgint.L),
       net.H =
         net + propagate_add(pkint, pkint.H, bgint, bgint.H)
-    ) %>>%
-    # (~ temp) %>>%
-    return
+    )
 
 }
 
