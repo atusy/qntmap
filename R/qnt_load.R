@@ -9,7 +9,6 @@
 #' @importFrom dplyr select
 #' @importFrom dplyr mutate
 #' @importFrom pipeR %>>%
-#' @importFrom purrr map
 #' @importFrom stringr str_replace_all
 #' @importFrom stringr str_replace
 #' @importFrom stringr str_detect
@@ -43,7 +42,7 @@ qnt_load <- function(
   cnd0 <- './.qnt/.cnd/' %>>%
     list.files(full.names = TRUE) %>>%
     setNames(str_replace_all(., '(^.*/)|(\\.cnd$)', '')) %>>%
-    map(readLines)
+    lapply(readLines)
 
   #load .qnt files
   qnt <- c(
@@ -61,8 +60,9 @@ qnt_load <- function(
       'wt'
     ) %>>%
     (paste0('./.qnt/', ., '.qnt')) %>>%
+    `[`(file.exists(.)) %>>%
     setNames(str_replace_all(., '(^.*/)|(\\.qnt$)', '')) %>>%
-    map(fread)
+    lapply(fread)
 
   #extract elemental data
   elm <- data.table(
@@ -80,24 +80,9 @@ qnt_load <- function(
         setNames(c('bgp_pos', 'bgm_pos', 'pk_t', 'bg_t'))
     )
 
-  #extract analytical conditions of each analysis
   cnd <- qnt$stg %>>%
-    setNames(
-      c(
-        'id',
-        'group',
-        'sample',
-        'id2',
-        'x',
-        'y',
-        'z',
-        'aux1',
-        'aux2',
-        'comment',
-        'aux3'
-      )
-    ) %>>%
-    select(id, x, y, z, comment) %>>%
+    select(1, 5, 6, 7, 10) %>>% 
+    setNames(c('id', 'x', 'y', 'z', 'comment')) %>>%
     mutate(
       beam = qnt$mes$V3,
       phase =
@@ -106,7 +91,7 @@ qnt_load <- function(
         } else {
           phase_list %>>%
             fread %>>%
-            mutate(use = if('use' %in% names(.)) use else TRUE) %>>%
+            mutate(use = if(exists('use')) use else TRUE) %>>%
             mutate(phase = ifelse(use, phase, NA)) %>>%
             (phase)
         }
@@ -115,18 +100,17 @@ qnt_load <- function(
 
   #extract compositional data
   #bgm, bgp, pkint, bgint [cps/uA]
-  cmp <- qnt %>>%
-    `[`(c('bgm', 'bgp', 'krat', 'kraw', 'net', 'pkint', 'sigma', 'wt')) %>>%
-    map(setNames, c('id', 'num', elm$elem, 'sum')) %>>%
-    map(select, one_of(elm$elem))
+  cmp <- qnt[
+      names(qnt) %in% 
+        c('bgm', 'bgp', 'krat', 'kraw', 'net', 'pkint', 'sigma', 'wt')
+    ] %>>%
+    lapply(setNames, c('id', 'num', elm$elem, 'sum')) %>>%
+    lapply(select, one_of(elm$elem))
 
-  QNT <- list(
-      elm = elm,
-      cnd = cnd,
-      cmp = cmp,
-      raw = list(cnd = cnd0, qnt = qnt)
+  QNT <- structure(
+      list(elm = elm, cnd = cnd, cmp = cmp), #, raw = list(cnd = cnd0, qnt = qnt)),
+      class = c('qnt', 'list')
     )
-  class(QNT) <- c('list', 'qnt')
 
   if(saving) saveRDS(QNT, RDS)
 
