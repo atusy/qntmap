@@ -12,6 +12,7 @@ LazyData: true
 RoxygenNote: 6.0.1
 Imports: data.table,
     dplyr,
+    easycsv,
     pipeR,
     PoiClaClu,
     png,
