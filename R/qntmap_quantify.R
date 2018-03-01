@@ -230,8 +230,8 @@ qntmap_quantify <- function(
     map2(XAG, map2, `-`) %>>% #XABI - XAG
     map(set_names, c('wt', 'se')) %>>%
     map(function(x) map(x, `*`, x$wt > 0)) %>>%
-    list(
-      Total = list(
+    c(
+      list(Total = list(
         wt = . %>>%
           map(`[[`, 'wt') %>>%
           reduce(`+`) %>>%
@@ -242,7 +242,7 @@ qntmap_quantify <- function(
           reduce(`+`) %>>%
           sqrt %>>%
           as.data.frame
-      )
+      ))
     ) %>>%
     structure(class = c('qntmap', 'list')) %>>%
     (~ . %>>% #side effect saving csv and RDS files
@@ -257,32 +257,4 @@ qntmap_quantify <- function(
        NULL
     ) %>>%
     return()
-# 
-#   qntmap$Total <- list(
-#     wt = qntmap %>>%
-#       map(`[[`, 'wt') %>>%
-#       reduce(`+`) %>>%
-#       as.data.frame,
-#     se = qntmap %>>%
-#       map(`[[`, 'se') %>>%
-#       map(`^`, 2) %>>%
-#       reduce(`+`) %>>%
-#       sqrt %>>%
-#       as.data.frame
-#   )
-
-  # rm(qltmap, XAG)
-
-  # qntmap %>>%
-  #   unlist(recursive = FALSE) %>>%
-  #   set_names(
-  #     names(.) %>>%
-  #       str_replace('\\.', '_') %>>%
-  #       paste0('.csv')
-  #   ) %>>%
-  #   walk2(names(.), fwrite)
-
-  # saveRDS(qntmap, 'qntmap.RDS')
-
-  # qntmap
 }
