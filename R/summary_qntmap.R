@@ -7,13 +7,13 @@
 #' @importFrom dplyr bind_rows
 #'
 #'@export
-#'
 summary.qntmap <- function(object, ...) {
   object %>>%
     lapply(`[[`, 'wt') %>>%
     lapply(unlist) %>>%
     lapply(summary) %>>%
+    lapply(round, 2) %>>%
     lapply(as.list) %>>%
     bind_rows(.id = 'element') %>>%
-    return()
+    as.data.frame()
 }
