@@ -87,6 +87,19 @@ Yasumoto et al. (submitted)
 
 By running following code, you'll see that phase identification result in 'clustering' directory and mass concentration data as csv files in 'qntmap' directory both under the directory contaning mapping data.
 
+#### Interactive mode
+
+Follow instructions shown by running the following code.
+
+
+```r
+library(qntmap)
+qntmap()
+```
+
+
+#### Manual mode for experts (example)
+
 
 ```r
 library(qntmap)

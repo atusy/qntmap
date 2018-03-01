@@ -235,6 +235,14 @@ See “How to” section for usage and Yasumoto et al. (submitted) for implement
 <div id="quantification" class="section level3">
 <h3><span class="header-section-number">3.2.1</span> Quantification</h3>
 <p>By running following code, you’ll see that phase identification result in ‘clustering’ directory and mass concentration data as csv files in ‘qntmap’ directory both under the directory contaning mapping data.</p>
+<div id="interactive-mode" class="section level4">
+<h4><span class="header-section-number">3.2.1.1</span> Interactive mode</h4>
+<p>Follow instructions shown by running the following code.</p>
+<pre class="r"><code>library(qntmap)
+qntmap()</code></pre>
+</div>
+<div id="manual-mode-for-experts-example" class="section level4">
+<h4><span class="header-section-number">3.2.1.2</span> Manual mode for experts (example)</h4>
 <pre class="r"><code>library(qntmap)
 
 setwd(&quot;Directory which contains analytical data like .qnt directory, .map directory, and so on&quot;)
@@ -265,6 +273,7 @@ qntmap &lt;- qntmap_quantify(
   cluster = cls,
   fine_phase = NULL #Specify phase whose grain size tend to be smaller than mapping probe diameter.
 )</code></pre>
+</div>
 </div>
 </div>
 </div>
