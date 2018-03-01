@@ -4,9 +4,9 @@
 \alias{epma_tidy}
 \title{compile epma data}
 \usage{
-epma_tidy(wd = NULL, dir_map, phase_list = NULL, RDS_cluster = NULL,
-  qnt = qnt_load(wd, phase_list = phase_list),
-  qltmap = qltmap_load(dir_map), cluster = if (is.null(RDS_cluster)) NA else
+epma_tidy(wd = NULL, dir_map = NULL, RDS_cluster = NULL,
+  qnt = qnt_load(wd), qltmap = if (is.null(dir_map)) NULL else
+  qltmap_load(dir_map), cluster = if (is.null(RDS_cluster)) NA else
   readRDS(RDS_cluster))
 }
 \arguments{
@@ -14,15 +14,13 @@ epma_tidy(wd = NULL, dir_map, phase_list = NULL, RDS_cluster = NULL,
 
 \item{dir_map}{path to the directory containing mapping analysis e.g., ./.map/1/}
 
-\item{phase_list}{path to the csv file containing columns indicating phase of each analysis and true or false to use it for quantifying.}
-
 \item{RDS_cluster}{path to the clustering result}
 
-\item{qnt}{object of class qnt}
+\item{qnt}{object returned by qnt_load}
 
-\item{qltmap}{object of class qltmap}
+\item{qltmap}{object returned by qltmap_load}
 
-\item{cluster}{object of class PoiClaClu}
+\item{cluster}{object returned by qltmap_cls_pois}
 }
 \description{
 compile epma data
