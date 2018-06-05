@@ -44,7 +44,7 @@ qltmap_cls_pois <- function(
     if(!is.null(wd)) setwd(wd)
 
     #####load data
-    if(is.character(centers_initial)) fread(centers_initial)
+    if(is.character(centers_initial)) centers_initial <- fread(centers_initial)
 
     #qltmap: import mapping data
     if(is.null(qltmap)) qnt <- qltmap_load()
