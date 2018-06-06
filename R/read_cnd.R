@@ -81,7 +81,7 @@ read_map_pos <- function(
 #' read mapping beam information from 0.cnd
 #' @inheritParams read_cnd
 read_map_beam <- function(
-  path,
+  path = '0.cnd',
   pattern = c(
     dwell = 'Dwell Time \\[msec\\]',
     beam_map = 'Probe Current (Avg, Before After )?\\[A\\]'
