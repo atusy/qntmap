@@ -22,10 +22,12 @@ read_cnd <- function(path = '0.cnd', pattern = '.', n = NULL) {
   too_many <- detection_n > 1
   if(any(too_many)) {
     stop(
-      paste(
-        paste('Some of the regular expression patterns matched more than 1 lines in ', path, '\n'),
-        paste0('"', pattern[too_many], '"', " matched lines ", lapply(detection[too_many], paste, collapse = ', ')),
-        collapse = '\n'
+      paste0(
+        'Some of the regular expression patterns matched more than 1 lines in "', path, '"\n',
+        paste(
+          paste0('"', pattern[too_many], '"', " matched lines ", lapply(detection[too_many], paste, collapse = ', ')),
+          collapse = '\n'
+        )
       )
     )
   }
