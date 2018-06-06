@@ -61,6 +61,8 @@ epma_tidy <- function(
       )
       distinct(nr0, .keep_all = TRUE)
     })
+  qnt$elm <- mutate(
+      qnt$elm,
       dwell = cnd_map['dwell'] / 1000, #msec -> sec
       beam_map = cnd_map['beam_map']
     )
