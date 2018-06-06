@@ -80,8 +80,7 @@ read_qnt <- function(
         setNames(c('bgp_pos', 'bgm_pos', 'pk_t', 'bg_t'))
     )
 
-  cnd <- qnt$stg %>>%
-    select(1, 5, 6, 7, 10) %>>% 
+  cnd <- qnt$stg[c(1, 5, 6, 7, 10)] %>>% 
     setNames(c('id', 'x', 'y', 'z', 'comment')) %>>%
     mutate(
       beam = qnt$mes$V3,
