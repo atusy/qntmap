@@ -127,5 +127,3 @@ qnt_load <- function(
   warning('qnt_load is deprecated use read_xmap')
   read_qnt(wd, RDS, phase_list, renew, saving)
 }
-
-formals(qnt_load) <- formals(read_qnt)
