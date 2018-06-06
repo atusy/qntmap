@@ -34,6 +34,9 @@ qltmap_load <- function(
     str_replace('[:blank:].*$', '') %>>%
     as.numeric %>>%
     `*`(1e-3)
+  
+  if(renew) return(readRDS(RDS))
+  
 
   #file name patterns of required files
   patterns <- list(
@@ -61,23 +64,19 @@ qltmap_load <- function(
 
   #####load, save, and return map files
   #load qltmap from RDS file when qltmap_load() has already been done
-  if(!renew && file.exists(RDS)) {
-    qltmap <- readRDS(RDS)
-  } else {
   # load qltmap from text images when the RDS file does not exist,
   # there is something wrong with RDS file, or renew = TRUE
-    qltmap <- lapply(filenames$map, fread) %>>%
-      setNames(filenames$elm) %>>%
-      map_if(
-        !(names(.) %in% c('CP', 'TP', 'SL')),
-        function(x) dwell * x / (dwell - DT * 1e-9 * x)
-      ) %>>%
-      lapply(round) %>>%
-      lapply(lapply, as.integer) %>>%
-      lapply(as.data.table)
-    class(qltmap) <- c('list', 'qltmap')
-    if(saving) saveRDS(qltmap, 'qltmap.RDS')
-  }
+  qltmap <- lapply(filenames$map, fread) %>>%
+    setNames(filenames$elm) %>>%
+    map_if(
+      !(names(.) %in% c('CP', 'TP', 'SL')),
+      function(x) dwell * x / (dwell - DT * 1e-9 * x)
+    ) %>>%
+    lapply(round) %>>%
+    lapply(lapply, as.integer) %>>%
+    lapply(as.data.table)
+  class(qltmap) <- c('list', 'qltmap')
+  if(saving) saveRDS(qltmap, 'qltmap.RDS')
 
   return(qltmap)
 }
