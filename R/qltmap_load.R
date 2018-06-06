@@ -27,16 +27,10 @@ qltmap_load <- function(
     on.exit(setwd(cd))
     setwd(wd)
   }
-
-  dwell <- '0.cnd' %>>%
-    readLines %>>%
-    `[`(str_detect(., 'Dwell Time \\[msec\\]')) %>>%
-    str_replace('[:blank:].*$', '') %>>%
-    as.numeric %>>%
-    `*`(1e-3)
   
   if(renew) return(readRDS(RDS))
   
+  dwell <- read_map_beam()['dwell'] * 1e-3
 
   #file name patterns of required files
   patterns <- list(
