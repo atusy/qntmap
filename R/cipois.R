@@ -5,7 +5,6 @@
 #' @param offset vector, list, or data frame indicating rate of poisson process data.
 #' @param conf.level confidence level for the returned confidence interval.
 #'
-#' @importFrom dplyr select_at
 #' @importFrom dplyr bind_cols
 #' @importFrom purrr map
 #' @importFrom purrr map2
@@ -17,8 +16,8 @@
 cipois <- function(x, vars = names(x), offset = 1, conf.level = 0.95) {
   low <- (1 - conf.level) / 2
   high <- 1 - low
-  x %>>%
-    select_at(vars) %>>%
+  
+  x[vars] %>>%
     map2(offset, `*`) %>>%
     map(round) %>>%
     map(
@@ -34,4 +33,3 @@ cipois <- function(x, vars = names(x), offset = 1, conf.level = 0.95) {
     unlist(recursive = FALSE) %>>%
     bind_cols(x)
 }
-
