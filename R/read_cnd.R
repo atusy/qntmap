@@ -96,4 +96,49 @@ read_map_beam <- function(
   })
 }
 
+#' read all .cnd files under the specified directory
+#' @inheritParams read_cnd
+#' @param each n appears in each rows
+read_qnt_elemw <- function(
+  path = './.qnt/.cnd/elemw.cnd',
+  pattern = c(
+    bgp_pos = '(Back |BG)\\+\\[mm\\]',
+    bgm_pos = '(Back |BG)-\\[mm\\]',
+    pk_t = '(Peak|Pk)( Meas\\.)? (Time|t)',
+    bg_t = '(Back|BG)( Meas\\.)? (Time|t)'
+  ),
+  n = c(14, 15, 17, 18),
+  each = 21
+) {
+  # read cnd files and transform to numeric
+  cnd <- readLines(path)
+  cnd_val <- str_replace(cnd, '[:blank:].*', '')
+  
+  # match pattern and return values
+  matched <- lapply(pattern, grepl, cnd)
+  
+  if(length(unique(lapply(matched, sum))) == 1) {
+    return(as.data.frame(lapply(matched, function(i) as.numeric(cnd_num[i]))))
+  }
+  
+  # if pattern did not match well, return values by guess
+  names(n) <- names(pattern)
+  guessed <- lapply(n, seq, length(cnd), each)
+  warning(
+    'some of regex patterns mismuched when finding ',
+    paste(names(pattern), collapse = '\n'),
+    'in\n',
+    path,
+    '\n',
+    'check if values are in correct lines'
+  )
+  print(
+    as.data.frame(guessed)
+  )
+  if(length(n) != length(pattern)) stop('length of pattern and n must be same')
+  return(
+    as.data.frame(lapply(guessed, function(i) cnd_num[i]))
+  )
+}
+
 
