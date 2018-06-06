@@ -60,8 +60,8 @@ read_qnt <- function(
 
   #extract elemental data
   elm <- data.table(
-      elem = qnt$elem[1, -c(1, 2)] %>>% unlist(use.names = FALSE),
-      elint = qnt$elint[1, -c(1, 2)] %>>% unlist(use.names = FALSE),
+      elem = unlist(qnt$elem[1, -c(1, 2)], use.names = FALSE),
+      elint = unlist(qnt$elint[1, -c(1, 2)], use.names = FALSE),
       read_qnt_elemw()
     )
 
