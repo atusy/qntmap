@@ -28,13 +28,14 @@ qntmap <- function() {
   if(!length(list.files(dir_map, pattern = '_map\\.txt')))
     stop('Selected directory does not contain *_map.txt files. Did you converted mapping data to ASCII files from Utility menu in JEOL EPMA?')
   
-  cat('Input dead time in nano seconds\n')
-  cat('0 if no corrections required)\n')
-  cat('1100 is the default value for JXA-8105\n')
+  cat(
+    'Input dead time in nano seconds\n',
+    '0 if no corrections required)\n',
+    '1100 is the default value for JXA-8105\n',
+    sep = ''
+  )
   DT <- as.numeric(readline())
-  cat('Dead time is ')
-  cat(DT)
-  cat(' nano seconds\n\n')
+  cat('Dead time is ', DT, ' nano seconds\n\n')
   
   cat('Identify phase names of quantified points based on')
   selection <- menu(
@@ -54,9 +55,9 @@ qntmap <- function() {
     }
   
   cat('Loading mapping data\n')
-  xmap <- qltmap_load(dir_map, DT = DT, renew = TRUE)
+  xmap <- read_xmap(dir_map, DT = DT, renew = TRUE)
   cat('Loading quantified data\n')
-  qnt <- qnt_load(wd, phase_list, renew = TRUE)
+  qnt <- read_qnt(wd, phase_list, renew = TRUE)
   cat('Peforming cluster analysis\n')
   centers <- qltmap_cls_centers(qnt = qnt, qltmap = xmap, dir_map = dir_map)
   cls <- qltmap_cls_pois(centers, xmap, wd = dir_map)
