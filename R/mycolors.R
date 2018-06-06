@@ -6,14 +6,16 @@
 mycolors <- function(palette = c('pcol', 'gray'), n = NULL, dec = FALSE) {
     LUT <- colors[[match.arg(palette)]]
 
-    if(is.null(n)) {
-      #return all colors
-      output <- LUT
-    } else {
-      #return n colors
-      #n > length(LUT) is allowed by returning some duplicates
-      output <- LUT[seq(1, length(LUT), length.out = n)]
-    }
+    output <- 
+      if(is.null(n)) {
+        #return all colors
+        LUT
+      } else {
+        #return n colors
+        #n > length(LUT) is allowed by returning some duplicates
+        LUT[seq(1, length(LUT), length.out = n)]
+      }
+    
     if(dec){
       #TRUE returns a matrix like R=0,...; G=255,...; B=129,....
       #FALSE returns a vector like #000000, #000001,...
