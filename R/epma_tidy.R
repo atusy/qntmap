@@ -42,38 +42,9 @@ epma_tidy <- function(
   if(!is.null(wd)) setwd(wd) else wd <- cd
 
   #load mapping conditions
-  pos <- dir_map %>>%
-    paste0('/0.cnd') %>>%
-    readLines %>>%
-    '['(str_detect(
-      .,
-      '(Measurement Start Position [XY])|([XY](-axis)? Step (Number|Size))'
-    )) %>>%
-    str_replace_all('[:blank:].*', '') %>>%
-    as.numeric %>>%
-    matrix(
-      ncol = 3,
-      nrow = 2,
-      dimnames = list(NULL, c('start', 'px', 'step'))
-    ) %>>%
-    as.data.table
-
-  cnd_detect <- c(
-    dwell = 'Dwell Time \\[msec\\]',
-    beam_map = 'Probe Current (Avg, Before After )?\\[A\\]'
-  )
-  
-  cnd_map <- dir_map %>>%
-    paste0('/0.cnd') %>>%
-    readLines %>>%
-    `[`(
-      map(cnd_detect, function(.p) str_detect(., .p)) %>>% map_int(which)
-    ) %>>%
-    str_replace('[:blank:].*$', '') %>>%
-    as.numeric %>>%
-    setNames(names(cnd_detect))
-
-
+  cnd <- paste0(dir_map, '/0.cnd')
+  pos <- read_map_pos(cnd)
+  cnd_map <- read_map_beam(cnd)
 
   #データの整形
 
