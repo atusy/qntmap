@@ -4,8 +4,9 @@
 \alias{read_map_beam}
 \title{read mapping beam information from 0.cnd}
 \usage{
-read_map_beam(path, pattern = c(dwell = "Dwell Time \\\\[msec\\\\]", beam_map
-  = "Probe Current (Avg, Before After )?\\\\[A\\\\]"), n = c(39, 17))
+read_map_beam(path = "0.cnd", pattern = c(dwell =
+  "Dwell Time \\\\[msec\\\\]", beam_map =
+  "Probe Current (Avg, Before After )?\\\\[A\\\\]"), n = c(39, 17))
 }
 \arguments{
 \item{path}{a path to the .cnd file}
