@@ -6,7 +6,6 @@
 #' @param renew if TRUE and the file specified by RDS exists, that file will be loaded
 #' @param saving whether or not to save the data as RDS file
 #'
-#' @importFrom dplyr select
 #' @importFrom dplyr mutate
 #' @importFrom pipeR %>>%
 #' @importFrom stringr str_replace_all
@@ -104,7 +103,7 @@ read_qnt <- function(
         c('bgm', 'bgp', 'krat', 'kraw', 'net', 'pkint', 'sigma', 'wt')
     ] %>>%
     lapply(setNames, c('id', 'num', elm$elem, 'sum')) %>>%
-    lapply(select, one_of(elm$elem))
+    lapply(`[`, elm$elem)
 
   QNT <- structure(
       list(elm = elm, cnd = cnd, cmp = cmp), #, raw = list(cnd = cnd0, qnt = qnt)),
