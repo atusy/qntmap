@@ -49,18 +49,18 @@ epma_tidy <- function(
   #データの整形
 
   #ステージ位置をmmからピクセル位置に変換
-  qnt$cnd <- qnt$cnd %>>%
-    mutate(
-      x_px = round((x - pos$start[1]) * 1000 / pos$step[1] + 1),
-      y_px = round((y - pos$start[2]) * 1000 / pos$step[2] + 1),
-      nr0 = (y_px - 1) * pos$px[1] + x_px,
-      nr = ifelse(nr0 > 0 & nr0 < prod(pos$px), nr0, NA)
-    ) %>>%
-    distinct(nr0, .keep_all = TRUE) %>>%
-    mutate(phase2 = str_replace(phase, '_.*', '')) %>>%
-    filter(!is.na(phase))
-  qnt$elm <- qnt$elm %>>%
-    mutate(
+  qnt$cnd <- pipeline({
+      qnt$cnd
+      filter(!is.na(phase))
+      mutate(
+        x_px = round((x - pos$start[1]) * 1000 / pos$step[1] + 1),
+        y_px = round((y - pos$start[2]) * 1000 / pos$step[2] + 1),
+        nr0 = (y_px - 1) * pos$px[1] + x_px,
+        nr = ifelse(nr0 > 0 & nr0 < prod(pos$px), nr0, NA),
+        phase2 = str_replace(phase, '_.*', '')
+      )
+      distinct(nr0, .keep_all = TRUE)
+    })
       dwell = cnd_map['dwell'] / 1000, #msec -> sec
       beam_map = cnd_map['beam_map']
     )
