@@ -6,6 +6,7 @@
 #' @param renew if TRUE and the file specified by RDS exists, that file will be loaded
 #' @param saving whether or not to save the data as RDS file
 #'
+#' @importFrom dplyr select
 #' @importFrom dplyr mutate
 #' @importFrom pipeR %>>%
 #' @importFrom stringr str_replace_all
@@ -37,24 +38,18 @@ read_qnt <- function(
   if(!file.exists('.qnt'))
     stop('wd must be a path where .qnt directory exists')
 
-  #load .cnd files
-  cnd0 <- './.qnt/.cnd/' %>>%
-    list.files(full.names = TRUE) %>>%
-    setNames(str_replace_all(., '(^.*/)|(\\.cnd$)', '')) %>>%
-    lapply(readLines)
-
   #load .qnt files
   qnt <- c(
       'bgm',
       'bgp',
       'elem',
       'elint',
-      'krat',
-      'kraw',
+      # 'krat',
+      # 'kraw',
       'mes',
       'net',
       'pkint',
-      'sigma',
+      # 'sigma',
       'stg',
       'wt'
     ) %>>%
@@ -65,21 +60,12 @@ read_qnt <- function(
 
   #extract elemental data
   elm <- data.table(
-      elem = qnt$elem[1, -(1:2)] %>>% unlist(use.names = FALSE),
-      elint = qnt$elint[1, -(1:2)] %>>% unlist(use.names = FALSE),
-      cnd0$elemw %>>%
-        `[`(str_detect(
-          .,
-          '((Back |BG)[\\+-])|(Meas. Time \\[sec\\])|((Pk|BG) t)')
-        ) %>>%
-        str_replace('[:blank:].*$', '') %>>%
-        as.double %>>%
-        matrix(ncol = 4, byrow = TRUE) %>>%
-        as.data.table %>>%
-        setNames(c('bgp_pos', 'bgm_pos', 'pk_t', 'bg_t'))
+      elem = qnt$elem[1, -c(1, 2)] %>>% unlist(use.names = FALSE),
+      elint = qnt$elint[1, -c(1, 2)] %>>% unlist(use.names = FALSE),
+      read_qnt_elemw()
     )
 
-  cnd <- qnt$stg[c(1, 5, 6, 7, 10)] %>>% 
+  cnd <- qnt$stg[, c(1, 5, 6, 7, 10)] %>>% 
     setNames(c('id', 'x', 'y', 'z', 'comment')) %>>%
     mutate(
       beam = qnt$mes$V3,
@@ -98,12 +84,9 @@ read_qnt <- function(
 
   #extract compositional data
   #bgm, bgp, pkint, bgint [cps/uA]
-  cmp <- qnt[
-      names(qnt) %in% 
-        c('bgm', 'bgp', 'krat', 'kraw', 'net', 'pkint', 'sigma', 'wt')
-    ] %>>%
+  cmp <- qnt[names(qnt) %in% c('bgm', 'bgp', 'net', 'pkint', 'wt')] %>>%
     lapply(setNames, c('id', 'num', elm$elem, 'sum')) %>>%
-    lapply(`[`, elm$elem)
+    lapply(select, one_of(elm$elem))
 
   QNT <- structure(
       list(elm = elm, cnd = cnd, cmp = cmp), #, raw = list(cnd = cnd0, qnt = qnt)),
