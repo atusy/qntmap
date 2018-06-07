@@ -29,8 +29,8 @@ qltmap_cls_centers <- function(
   wd = NULL,
   dir_map,
   phase_fine = NULL,
-  qnt = qnt_load(wd),
-  qltmap = qltmap_load(dir_map),
+  qnt = read_qnt(wd),
+  qltmap = read_xmap(dir_map),
   saving = 'centers_initial0.csv'
 ) {
 
