@@ -143,9 +143,7 @@ qntmap_quantify <- function(
     ) %>>%
     ungroup %>>%
     mutate(
-      b = map_dbl(fit, coef)
-    ) %>>%
-    mutate(
+      b = map_dbl(fit, coef),
       fit = ifelse(is.na(b), fit_na, fit),
       b_se = map_dbl(fit, vcov),
       b = ifelse(is.na(b), map_dbl(fit_na, coef), b)
