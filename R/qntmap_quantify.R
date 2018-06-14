@@ -65,24 +65,11 @@ qntmap_quantify <- function(
   if(is.character(wd)) setwd(wd)
 
   #mapping conditions
-  cnd <- dir_map %>>%
-    str_replace('/?$', '/') %>>%
-    str_c('0.cnd') %>>%
-    readLines %>>%
-    '['(str_detect(
-      .,
-      '(Measurement Start Position [X|Y])|([XY](-axis)? Step [Size|Number])'
-    )) %>>%
-    str_replace_all('[:blank:].*', '') %>>%
-    as.numeric %>>%
-    matrix(
-      ncol = 3, nrow = 2, dimnames = list(NULL, c('start', 'px', 'step'))
-    ) %>>%
-    as.data.table
-  
+  pos <- read_map_pos(paste0(dir_map, '/0.cnd'))
+
   stg <- expand.grid(
-    x = 1:cnd$px[1] - 1,
-    y = 1:cnd$px[2] - 1
+    x = 1:pos$px[1] - 1,
+    y = 1:pos$px[2] - 1
   ) %>>%
     mutate(x_stg = if(is.null(maps_x)) 1 else x %/% maps_x + 1) %>>%
     mutate(y_stg = if(is.null(maps_y)) 1 else y %/% maps_y + 1) %>>%
