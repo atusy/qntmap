@@ -81,7 +81,7 @@ qntmap_quantify <- function(
     wd = wd, dir_map = dir_map, qnt = qnt, qltmap = qltmap, cluster = cluster
   ) %>>%
     filter(elm %in% qnt$elm$elem) %>>%
-    mutate(net = ifelse(net < 0, 0, net)) %>>%
+    mutate(net = net * (net > 0)) %>>%
     mutate(phase3 = if(any(grepl('_', cls))) phase else phase2) %>>%
     mutate(x_stg = if(is.null(maps_x)) 1 else (x_px - 1) %/% maps_x + 1) %>>%
     mutate(x_stg = ifelse(x_stg <= 0 | x_stg > max(stg$x_stg), NA, x_stg)) %>>%
