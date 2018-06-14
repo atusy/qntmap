@@ -112,7 +112,7 @@ qntmap_quantify <- function(
   ##
   AG <- epma %>>%
     group_by(elm) %>>%
-    mutate(fit_na = lm(wt ~ 0 + net) %>>% list) %>>%
+    mutate(fit_na = list(lm(wt ~ 0 + net))) %>>%
     group_by(phase3, elm) %>>%
     summarise(
       fit = list(lm(wt ~ 0 + net)),
