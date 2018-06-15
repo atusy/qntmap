@@ -81,15 +81,12 @@ qntmap_quantify <- function(
     wd = wd, dir_map = dir_map, qnt = qnt, qltmap = qltmap, cluster = cluster
   ) %>>%
     filter(elm %in% qnt$elm$elem) %>>%
-    mutate(net = net * (net > 0)) %>>%
-    mutate(phase3 = if(any(grepl('_', cls))) phase else phase2) %>>%
-    mutate(x_stg = if(is.null(maps_x)) 1 else (x_px - 1) %/% maps_x + 1) %>>%
-    mutate(x_stg = ifelse(x_stg <= 0 | x_stg > max(stg$x_stg), NA, x_stg)) %>>%
-    mutate(y_stg = if(is.null(maps_y)) 1 else (y_px - 1) %/% maps_y + 1) %>>%
-    mutate(y_stg = ifelse(y_stg <= 0 | y_stg > max(stg$y_stg), NA, y_stg)) %>>%
-    mutate(stg = paste0(flag0(x_stg), flag0(y_stg))) %>>%
-    mutate(stg = ifelse(str_detect(stg, 'NA'), NA, stg)) %>>%
     mutate(
+      net = net * (net > 0),
+      phase3 = if(distinguished) phase else phase2,
+      x_stg = ((x_px - 1) %/% maps_x + 1) * (0 < x_px) * (x_px <= pos$px[1]), 
+      y_stg = ((y_px - 1) %/% maps_y + 1) * (0 < y_px) * (y_px <= pos$px[2]),
+      stg = ifelse((x_stg * y_stg) == 0, NA, paste0(flag0(x_stg), flag0(y_stg))),
       mem = mem * 
         (str_replace(cls, '_.*', '') == phase2) *
         # (cls == phase3) *
