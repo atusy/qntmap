@@ -68,11 +68,9 @@ qntmap_quantify <- function(
   pos <- read_map_pos(paste0(dir_map, '/0.cnd'))
 
   stg <- expand.grid(
-    x = 1:pos$px[1] - 1,
-    y = 1:pos$px[2] - 1
+    x_stg = seq(0, pos$px[1] - 1) %/% maps_x + 1,
+    y_stg = seq(0, pos$px[2] - 1) %/% maps_y + 1
   ) %>>%
-    mutate(x_stg = if(is.null(maps_x)) 1 else x %/% maps_x + 1) %>>%
-    mutate(y_stg = if(is.null(maps_y)) 1 else y %/% maps_y + 1) %>>%
     mutate(stg = paste0(flag0(x_stg), flag0(y_stg)))
 
   #tidy compilation of epma data
