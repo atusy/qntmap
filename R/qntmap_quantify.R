@@ -66,7 +66,10 @@ qntmap_quantify <- function(
 
   #mapping conditions
   pos <- read_map_pos(paste0(dir_map, '/0.cnd'))
-
+  
+  if(is.null(maps_x)) maps_x <- pos$px[1]
+  if(is.null(maps_y)) maps_y <- pos$px[2]
+  
   stg <- expand.grid(
     x_stg = seq(0, pos$px[1] - 1) %/% maps_x + 1,
     y_stg = seq(0, pos$px[2] - 1) %/% maps_y + 1
