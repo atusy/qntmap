@@ -85,8 +85,8 @@ qntmap_quantify <- function(
     mutate(
       net = net * (net > 0),
       phase3 = if(distinguished) phase else phase2,
-      x_stg = ((x_px - 1) %/% maps_x + 1) * (0 < x_px) * (x_px <= pos$px[1]), 
-      y_stg = ((y_px - 1) %/% maps_y + 1) * (0 < y_px) * (y_px <= pos$px[2]),
+      x_stg = (x_px - 1) %/% maps_x + 1 * (0 < x_px) * (x_px <= pos$px[1]), 
+      y_stg = (y_px - 1) %/% maps_y + 1 * (0 < y_px) * (y_px <= pos$px[2]),
       stg = ifelse((x_stg * y_stg) == 0, NA, paste0(flag0(x_stg), flag0(y_stg))),
       mem = mem * 
         (str_replace(cls, '_.*', '') == phase2) *
