@@ -104,7 +104,7 @@ qntmap_quantify <- function(
 
   rm(qnt)
 
-  X <- as.data.table(cluster$membership)
+  X <- as.data.frame(cluster$membership)
 
   rm(cluster)
   ##
