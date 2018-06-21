@@ -5,12 +5,12 @@
 #' @param object qntmap class data
 #' @param ... other arguments are discarded
 #'
-#' @importFrom pipeR %>>%
+#' @importFrom pipeline 
 #'
 #'@export
 #'
-summary.qltmap_cls <- function(object, ...) {
-  object$membership %>>%
-    colSums %>>%
+summary.qltmap_cls <- function(object, ...) {pipeline({
+  object$membership 
+    colSums 
     `/`(sum(.))
-}
+})}
