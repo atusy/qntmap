@@ -118,7 +118,7 @@ read_qnt_elemw <- function(
   matched <- lapply(pattern, grepl, cnd)
   
   if(length(unique(lapply(matched, sum))) == 1) {
-    return(as.data.frame(lapply(matched, function(i) as.numeric(cnd_num[i]))))
+    return(as.data.frame(lapply(matched, function(i) as.numeric(cnd_val[i]))))
   }
   
   # if pattern did not match well, return values by guess
@@ -137,7 +137,7 @@ read_qnt_elemw <- function(
   )
   if(length(n) != length(pattern)) stop('length of pattern and n must be same')
   return(
-    as.data.frame(lapply(guessed, function(i) cnd_num[i]))
+    as.data.frame(lapply(guessed, function(i) cnd_val[i]))
   )
 }
 
