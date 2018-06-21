@@ -25,7 +25,7 @@
 #' @importFrom tidyr spread
 #'
 #' @export
-qltmap_cls_centers <- function(
+cls_centers <- qltmap_cls_centers <- function(
   wd = NULL,
   dir_map,
   phase_fine = NULL,
@@ -34,83 +34,92 @@ qltmap_cls_centers <- function(
   saving = 'centers_initial0.csv'
 ) {
 
-  epma_tidy( # Compile spot/map analysis
-    wd,
-    dir_map,
-    qnt = qnt,
-    qltmap = qltmap,
-    cluster = NA
-  ) %>>%
-    group_by(phase) %>>%
-    filter(all(is.na(map)) | !is.na(map)) %>>%
-    ungroup() %>>%
+  quantified <- names(qltmap) %in% qnt$elm$elint
+  qltmap_df <- as.data.frame(lapply(qltmap, unlist, use.names = FALSE))
+  
+  pipeline({
+    epma_tidy( # Compile spot/map analysis
+      wd,
+      dir_map,
+      qnt = qnt,
+      qltmap = qltmap,
+      cluster = NA
+    )
+    group_by(phase)
+    filter(all(is.na(map)) | !is.na(map))
+    ungroup
     mutate( # Let weighting for least squares to be 0 for phases those who listed in phase_fine
       w = if(is.null(phase_fine)) 1 else as.integer(!(phase %in% phase_fine))
-    ) %>>%
-    group_by(elint) %>>% # Peform least squares and estimate 99% CI and PI
+    )
+    group_by(elint) # Peform least squares and estimate 99% prediction interval
     mutate(
-      map_est = 
-        pkint * 
-        lsfit(pkint[!is.na(map)], map[!is.na(map)], w[!is.na(map)], intercept = FALSE)$coef
-    ) %>>%
-    mutate(
-      # map_ci_L99 = qgamma(0.005, map_est + 1, 1),
-      # map_ci_H99 = qgamma(0.995, map_est + 1, 1),
-      map_pi_L99 = qnbinom(0.005, map_est, 0.5),
-      map_pi_H99 = qnbinom(0.995, map_est + 1, 0.5)
-    ) %>>%
-    group_by(id) %>>%
-    mutate( # See if values are within CI or PI
-      # within_ci = (map <= map_ci_H99) & (map >= map_ci_L99),
-      within_pi = all((map <= map_pi_H99) & (map >= map_pi_L99))
-    ) %>>%
-    group_by(elint, phase) %>>%
-    mutate(n_within_pi = sum(within_pi)) %>>%
-    ungroup() %>>%
-    select(elint, map, map_est, within_pi, n_within_pi, phase, id, nr) %>>%
-    (.x ~ if(all(names(qltmap) %in% unique(.x$elint))) {
-      .x
-    } else {
-      bind_rows(
-        .x,
-        .x %>>%
-          filter(elint == elint[1]) %>>%
-          select(-elint, -map, -map_est) %>>%
-          c(lapply(
-            (qltmap[-which(names(qltmap) %in% unique(.x$elint))] %>>%
-              lapply(unlist, use.names = FALSE)),
-            `[`,
-            .$nr
-          )) %>>%
-          as.data.table %>>%
+      map_est =
+        pkint *
+        lsfit(pkint[!is.na(map)], map[!is.na(map)], w[!is.na(map)], intercept = FALSE)$coef,
+      pi_L = qnbinom(0.005, map_est, 0.5),
+      pi_H = qnbinom(0.995, map_est + 1, 0.5)
+    )
+    group_by(id)
+    mutate( # See if values are within prediction interval
+      within_pi = all((pi_L <= map) & (map <= pi_H))
+    )
+    group_by(elint, phase)
+    mutate(n_within_pi = sum(within_pi))
+    ungroup
+    select(elint, map, map_est, within_pi, n_within_pi, phase, id, nr)
+    bind_rows(
+      if(all(quantified)) {
+        NULL
+      } else {
+        pipeline({
+          .
+          filter(elint == elint[1])
+          select(-elint, -map, -map_est)
+          bind_cols(
+            lapply(qltmap_df[!quantified], `[`, .$nr)
+          )
           gather(
             elint, map, -within_pi, -n_within_pi, -phase, -id, -nr
-          )  %>>%
+          )
           mutate(map_est = map)
-      )
-    }) %>>%
-    group_by(phase) %>>%
-    mutate(not_mapped_phase = all(is.na(map))) %>>%
-    ungroup() %>>%
-    mutate(map = ifelse(not_mapped_phase | within_pi == 0, map_est, map)) %>>%
-    # filter(within_ci) %>>%
-    filter(not_mapped_phase | within_pi | n_within_pi == 0) %>>%
-    group_by(elint, phase) %>>%
-    summarise(map = median(map)) %>>%
-    ungroup %>>%
-    spread(elint, map) %>>%
-    (~ if(is.character(saving)) fwrite(., saving)) %>>%
-    # # (~ print(.)) %>>%
-    return()
+        })
+      }
+    )
+    group_by(phase)
+    mutate(not_mapped_phase = all(is.na(map)))
+    ungroup
+    mutate(map = ifelse(not_mapped_phase | within_pi == 0, map_est, map))
+    filter(not_mapped_phase | within_pi | n_within_pi == 0)
+    group_by(elint, phase)
+    summarise(map = median(map))
+    ungroup
+    spread(elint, map)
+    # guess mapping intensity of certain phases in case
+    # target elements are not analyzed by reference point analysis
+    x ~ { 
+      miss <- Reduce(`|`, lapply(x, is.na))
+      if(all(!miss)) return(x)
+      x[miss, -1] <- pipeline({
+        map2(
+          list(t(qltmap_df[names(x[-1])])),
+          pmap(x[miss, -1], c),
+          `-`
+        )
+        map(`^`, 2)
+        map(colSums, na.rm = TRUE)
+        map(which.min)
+        map(function(i) qltmap_df[i, ])
+        bind_rows
+        `[`(names(x[-1]))
+        map2(x[miss, -1], function(y, x) ifelse(is.na(x), y, x))
+        bind_cols
+      })
+      x
+    }
+    ~ if(is.character(saving)) fwrite(., saving)
+  })
 
 }
-
-
-
-
-
-
-
 
 
 
