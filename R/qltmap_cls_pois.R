@@ -59,17 +59,16 @@ qltmap_cls_pois <- function(
     if(all(elements %in% names(centers_initial)) == FALSE) stop("Specified wrong element which is not present in centers_initial")
 
     #####initial clusters===================================================================================================
-    x <- qltmap %>>%
-      `[`(elements) %>>%
+    x <- qltmap[elements] %>>%
       lapply(unlist, use.names = FALSE) %>>%
-      as.data.table
+      as.data.frame
 
     rm(qltmap)
 
     y <- centers_initial %>>%
-        select(one_of(elements)) %>>%
-        apply(1, function(y) colSums((t(x) - y) ^ 2)) %>>%
-        apply(1, which.min)
+      select(one_of(elements)) %>>%
+      apply(1, function(y) colSums((t(x) - y) ^ 2)) %>>%
+      apply(1, which.min)
 
 
 
