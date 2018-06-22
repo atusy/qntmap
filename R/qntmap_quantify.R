@@ -121,43 +121,7 @@ qntmap_quantify <- function(
   dir.create('qntmap', FALSE)
   setwd('qntmap')
   
-
-  AG %>>% #AB
-    select(phase3, elm, a, a_se) %>>%
-    nest(-phase3, .key = '.A') %>>%
-    mutate(
-      .A = .A %>>%
-        map(
-          function(.A) B %>>%
-            mutate(
-              .B = map(
-                .B,
-                mutate,
-                val = b * .A$a,
-                se = sqrt((b * .A$a_se) ^ 2 + (.A$a * b_se) ^ 2)
-              )
-            )
-        ) %>>%
-        map(unnest) %>>%
-        map(select, -b, -b_se)
-    ) %>>%
-    unnest %>>%
-    nest(-elm) %>>%
-    mutate(
-      val = data %>>%
-        map(select, -se) %>>%
-        map(spread, phase3, val),
-      se = data %>>%
-        map(select, -val) %>>%
-        map(spread, phase3, se)
-    ) %>>%
-    select(-data) %>>%
-    nest(-elm) %>>%
-    (.x ~ set_names(.x$data, .x$elm)) %>>%
-    map(unlist, recursive = FALSE) %>>%
-    map(map, right_join, tibble(stg = stg$stg), by = 'stg') %>>%
-    map(map, select, -stg) %>>%
-    map(map, as.data.table) %>>%
+  qntmap_AB(AG, B, stg) %>>% #AB
     map(map, `*`, X) %>>% #XAB
     map(map_at, 'se', map, `^`, 2) %>>%
     map(map_at, 'se', as.data.table) %>>%
