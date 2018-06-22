@@ -1,6 +1,6 @@
 #' quantify qualtitative mapping data
 #'
-#' @param wd working directory which contains .qnt and .map directories
+#' @param wd working directory which contains .qnt and .map directories. Default is current directory.
 #' @param dir_map directory containing map data to be quantified
 #' @param maps_x x of maps. Assign when you use guide net map.
 #' @param maps_y y of maps. Assign when you use guide net map.
@@ -10,6 +10,7 @@
 #' @param qnt object of class qnt
 #' @param qltmap object of class qltmap
 #' @param cluster object of class PoiClaClu
+#' @param fix fix compositions
 #'
 #' @importFrom data.table fwrite
 #' @importFrom pipeR %>>%
