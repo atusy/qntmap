@@ -90,10 +90,8 @@ qntmap_quantify <- function(
       stg = ifelse((x_stg * y_stg) <= 0, NA, flag0(x_stg, y_stg)),
       mem = mem * 
         (str_replace(cls, '_.*', '') == phase2) *
-        # (cls == phase3) *
         !(cls %in% fine_phase) * 
-        (mem > fine_th) * 
-        is.na(stg)
+        (mem > fine_th) 
     )
 
   #qltmap: elements -> oxides
