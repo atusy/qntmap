@@ -61,12 +61,9 @@ epma_tidy <- function(
       )
       distinct(nr0, .keep_all = TRUE)
     })
-  qnt$elm <- mutate(
-      qnt$elm,
-      dwell = cnd_map['dwell'] / 1000, #msec -> sec
-      beam_map = cnd_map['beam_map']
-    )
-  
+  qnt$elm$dwell <- cnd_map['dwell'] / 1000
+  qnt$elm$beam_map <- cnd_map['beam_map']
+
 
 
   ##Let's join
@@ -95,16 +92,16 @@ epma_tidy <- function(
     ) %>>%
     unnest %>>%
     rename(elm = elem) %>>%
-    # left_join(qnt$cmp %>>% select(-pkint), by = c('id', 'elm')) %>>%
     left_join(qnt$cmp, by = c('id', 'elm')) %>>%
-    mutate(elint = ifelse(is.na(elint), elm, elint)) %>>%
-    mutate_at(c('beam', 'beam_map'), `*`, 1e+6) %>>% #A -> uA
-    mutate(mapint = map / dwell / beam_map) %>>%
     mutate(
+      elint = ifelse(is.na(elint), elm, elint),
+      beam = beam * 1e+6,
+      beam_map = beam_map * 1e+6,
+      mapint = map / dwell / beam_map,
       bgm2 = bgm * bgm_pos,
       bgp2 = bgp * bgp_pos,
       bgint = bgm2 + bgp2,
-      pkint = if(exists('pkint')) {pkint} else {(net + bgint  / (bgm_pos + bgp_pos))},
+      pkint = `if`(exists('pkint'), pkint, (net + bgint  / (bgm_pos + bgp_pos))),
       pkint = pkint * (pkint > 0)
     ) %>>%
     cipois(
@@ -117,15 +114,18 @@ epma_tidy <- function(
           mapint = dwell * beam_map
         )
     ) %>>% 
-    mutate_at(c('beam', 'beam_map'), `/`, 1e+6) %>>% #uA -> A
     mutate(
+      beam = beam * 1e-6,
+      beam_map = beam_map * 1e-6,
       bgint.L =
         bgint - propagate_add(bgm2, bgm.L * bgm_pos, bgp2, bgp.L * bgp_pos),
       bgint.H =
-        bgint + propagate_add(bgm2, bgm.H * bgm_pos, bgp2, bgp.H * bgp_pos)
-    ) %>>%
-    mutate_at(c('bgint', 'bgint.L', 'bgint.H'), `/`, .$bgp_pos + .$bgm_pos) %>>%
-    mutate(
+        bgint + propagate_add(bgm2, bgm.H * bgm_pos, bgp2, bgp.H * bgp_pos),
+      .tmp = bgp_pos + bgm_pos,
+      bgint = bgint / .tmp,
+      bgint.L = bgint.L / .tmp,
+      bgint.H = bgint.H / .tmp,
+      .tmp = NULL,
       net.L =
         net - propagate_add(pkint, pkint.L, bgint, bgint.L),
       net.H =
