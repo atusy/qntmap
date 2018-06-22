@@ -58,6 +58,7 @@ qntmap_quantify <- function(
   qnt = read_qnt(wd),
   qltmap = read_xmap(dir_map),
   cluster = readRDS(RDS_cluster),
+  fix = NULL
 ) {
 
   cd <- getwd()
@@ -119,6 +120,7 @@ qntmap_quantify <- function(
   setwd('qntmap')
   
   qntmap_AB(AG, B, stg) %>>% #AB
+    qntmap_AB_fix %>>%
     map(map, `*`, X) %>>% #XAB
     map(map_at, 'se', map, `^`, 2) %>>%
     map(map_at, 'se', as.data.table) %>>%
