@@ -62,7 +62,7 @@ qntmap_quantify <- function(
 
   cd <- getwd()
   on.exit(setwd(cd))
-  if(is.character(wd)) setwd(wd)
+  setwd(wd)
 
   #mapping conditions
   pos <- read_map_pos(paste0(dir_map, '/0.cnd'))
