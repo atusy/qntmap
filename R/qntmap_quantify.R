@@ -115,18 +115,8 @@ qntmap_quantify <- function(
 
   rm(epma)
 
-  XAG <- AG %>>%
-    select(phase3, elm, ag, ag_se) %>>%
-    nest(-elm) %>>%
-    (.x ~ set_names(.x$data, .x$elm)) %>>%
-    map(function(x) map(x %>>% select(-phase3), set_names, x$phase3)) %>>%
-    map(map, `*`, t(X)) %>>%
-    map(set_names, c('val', 'se')) %>>%
-    map(map_at, 'se', `^`, 2) %>>%
-    map(map, colSums) %>>%
-    map(map_at, 'se', sqrt)
+  XAG <- qntmap_XAG(X, AG)
 
-  
   setwd(dir_map)
   dir.create('qntmap', FALSE)
   setwd('qntmap')
