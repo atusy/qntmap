@@ -83,11 +83,6 @@ epma_tidy <- function(
     gather(elm, val, -var, -id) %>>%
     spread(var, val)
 
-  ## Define function for propagating errors
-  propagate_add <- function(x, x2, y, y2) {
-    sqrt((x2 - x) ^ 2 + (y2 - y) ^ 2)
-  }
-  
   #join cmp, cnd, elem in qnt
   #calculate 95% ci of data
   qnt$cnd %>>%

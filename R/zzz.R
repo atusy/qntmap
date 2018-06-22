@@ -84,6 +84,14 @@ mycolors <- function(palette = c('pcol', 'gray'), n = NULL, dec = FALSE) {
   output
 }
 
+#' Propagate add
+#' @param x
+#' @param x2
+#' @param y
+#' @param y2
+propagate_add <- function(x, x2, y, y2) {
+  sqrt((x2 - x) ^ 2 + (y2 - y) ^ 2)
+}
 
 
 #' Reduce add
