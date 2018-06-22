@@ -74,7 +74,7 @@ qntmap_quantify <- function(
     x_stg = seq(0, pos$px[1] - 1) %/% maps_x + 1,
     y_stg = seq(0, pos$px[2] - 1) %/% maps_y + 1
   ) %>>%
-    mutate(stg = paste0(flag0(x_stg), flag0(y_stg)))
+    mutate(stg = flag0(x_stg, y_stg))
 
   #tidy compilation of epma data
   distinguished <- any(grepl('_', colnames(cluster$membership)))
@@ -85,9 +85,9 @@ qntmap_quantify <- function(
     mutate(
       net = net * (net > 0),
       phase3 = if(distinguished) phase else phase2,
-      x_stg = (x_px - 1) %/% maps_x + 1 * (0 < x_px) * (x_px <= pos$px[1]), 
-      y_stg = (y_px - 1) %/% maps_y + 1 * (0 < y_px) * (y_px <= pos$px[2]),
-      stg = ifelse((x_stg * y_stg) == 0, NA, paste0(flag0(x_stg), flag0(y_stg))),
+      x_stg = ((x_px - 1) %/% maps_x + 1) * (0 < x_px) * (x_px <= pos$px[1]), 
+      y_stg = ((y_px - 1) %/% maps_y + 1) * (0 < y_px) * (y_px <= pos$px[2]),
+      stg = ifelse((x_stg * y_stg) <= 0, NA, flag0(x_stg, y_stg)),
       mem = mem * 
         (str_replace(cls, '_.*', '') == phase2) *
         # (cls == phase3) *
