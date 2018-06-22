@@ -109,27 +109,9 @@ qntmap_quantify <- function(
   rm(cluster)
   
 
-  B <- epma %>>%
-    filter(!is.na(stg)) %>>%
-    group_by(elm) %>>%
-    mutate(
-      fit_na = list(lm(pkint ~ 0 + map, weights = mem, na.action = na.omit))
-    ) %>>%
-    group_by(stg, elm) %>>%
-    summarise(
-      fit = lm(pkint ~ 0 + map, weights = mem) %>>% list,
-      fit_na = fit_na[1]
-    ) %>>%
-    ungroup %>>%
-    mutate(
-      b = map_dbl(fit, coef),
-      fit = ifelse(is.na(b), fit_na, fit),
-      b_se = map_dbl(fit, vcov),
-      b = ifelse(is.na(b), map_dbl(fit_na, coef), b)
-    ) %>>%
-    select(-fit, -fit_na) %>>%
-    nest(-stg, .key = '.B')
   AG <- qntmap_AG(epma) # return also A
+
+  B <- qntmap_B(epma)
 
   rm(epma)
 
