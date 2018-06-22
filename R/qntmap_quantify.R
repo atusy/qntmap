@@ -11,40 +11,15 @@
 #' @param qltmap object of class qltmap
 #' @param cluster object of class PoiClaClu
 #'
-#' @importFrom data.table as.data.table
 #' @importFrom data.table fwrite
-#' @importFrom tibble tibble
-#' @importFrom tidyr nest
-#' @importFrom tidyr unnest
-#' @importFrom tidyr spread
-#' @importFrom dplyr filter
-#' @importFrom dplyr group_by
-#' @importFrom dplyr mutate
-#' @importFrom dplyr one_of
-#' @importFrom dplyr right_join
-#' @importFrom dplyr rename
-#' @importFrom dplyr select
-#' @importFrom dplyr summarise
-#' @importFrom dplyr ungroup
 #' @importFrom pipeR %>>%
+#' @importFrom pipeR pipeline
 #' @importFrom purrr map
 #' @importFrom purrr map_at
-#' @importFrom purrr map_dbl
 #' @importFrom purrr map2
 #' @importFrom purrr walk2
-#' @importFrom purrr reduce
-#' @importFrom rlang set_names
-#' @importFrom rlang :=
-#' @importFrom stats coef
-#' @importFrom stats lm
-#' @importFrom stats predict
-#' @importFrom stats sd
-#' @importFrom stats vcov
-#' @importFrom stats na.omit
-#' @importFrom stringr str_c
-#' @importFrom stringr str_detect
+#' @imrpotFrom stats setNames
 #' @importFrom stringr str_replace
-#' @importFrom stringr str_replace_all
 #'
 #'@export
 qntmap_quantify <- function(
