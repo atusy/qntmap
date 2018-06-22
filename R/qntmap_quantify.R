@@ -107,26 +107,7 @@ qntmap_quantify <- function(
   X <- as.data.frame(cluster$membership)
 
   rm(cluster)
-  ##
-  AG <- epma %>>%
-    group_by(elm) %>>%
-    mutate(fit_na = list(lm(wt ~ 0 + net))) %>>%
-    group_by(phase3, elm) %>>%
-    summarise(
-      fit = list(lm(wt ~ 0 + net)),
-      fit_na = fit_na[1],
-      g = mean(bgint),
-      g_se = sd(bgint) / (length(bgint) - 1)
-    ) %>>%
-    ungroup %>>%
-    mutate(
-      a = map_dbl(fit, coef),
-      a_se = ifelse(is.na(a), map(fit_na, vcov), map(fit, vcov)) %>>% unlist,
-      a = ifelse(is.na(a), map_dbl(fit_na, coef), a),
-      ag = a * g,
-      ag_se = sqrt((a * g_se) ^ 2 + (g * a_se) ^ 2)
-    ) %>>%
-    select(-fit, -fit_na, -g, -g_se)
+  
 
   B <- epma %>>%
     filter(!is.na(stg)) %>>%
@@ -148,6 +129,7 @@ qntmap_quantify <- function(
     ) %>>%
     select(-fit, -fit_na) %>>%
     nest(-stg, .key = '.B')
+  AG <- qntmap_AG(epma) # return also A
 
   rm(epma)
 
