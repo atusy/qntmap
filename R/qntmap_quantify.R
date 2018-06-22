@@ -131,12 +131,10 @@ qntmap_quantify <- function(
     map(function(x) map(x, `*`, x$wt > 0)) %>>%
     c(
       list(Total = list(
-        wt = . %>>%
-          map(`[[`, 'wt') %>>%
-          reduce(`+`) %>>%
+        wt = map(., `[[`, 'wt') %>>%
+          reduce_add %>>%
           as.data.frame,
-        se = . %>>%
-          map(`[[`, 'se') %>>%
+        se = map(., `[[`, 'se') %>>%
           map(`^`, 2) %>>%
           reduce_add %>>%
           sqrt %>>%
