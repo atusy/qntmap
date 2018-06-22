@@ -29,7 +29,7 @@
 #'
 #'
 epma_tidy <- function(
-  wd = NULL,
+  wd = '.',
   dir_map = NULL,
   RDS_cluster = NULL,
   qnt = read_qnt(wd),
@@ -39,7 +39,7 @@ epma_tidy <- function(
 
   cd <- getwd()
   on.exit(setwd(cd))
-  if(!is.null(wd)) setwd(wd) else wd <- cd
+  setwd(wd)
 
   #load mapping conditions
   cnd <- paste0(dir_map, '/0.cnd')
