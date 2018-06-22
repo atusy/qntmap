@@ -126,6 +126,7 @@ qntmap_quantify <- function(
     map(map_at, 'se', map, `^`, 2) %>>%
     map(map_at, 'se', as.data.table) %>>%
     map(map, rowSums) %>>%
+    map(map, reduce_add) %>>%
     map(map_at, 'se', sqrt) %>>%
     map2(qltmap, function(xab, i) map(xab, function(x) i * x)) %>>% #XABI
     map2(XAG, map2, `-`) %>>% #XABI - XAG
@@ -140,7 +141,7 @@ qntmap_quantify <- function(
         se = . %>>%
           map(`[[`, 'se') %>>%
           map(`^`, 2) %>>%
-          reduce(`+`) %>>%
+          reduce_add %>>%
           sqrt %>>%
           as.data.frame
       ))
@@ -158,4 +159,5 @@ qntmap_quantify <- function(
 }
 
 #' Reduce add
+#' @param x input
 reduce_add <- function(x) Reduce(`+`, x)
