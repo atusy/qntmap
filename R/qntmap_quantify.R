@@ -123,8 +123,6 @@ qntmap_quantify <- function(
     qntmap_AB_fix %>>%
     map(map, `*`, X) %>>% #XAB
     map(map_at, 'se', map, `^`, 2) %>>%
-    map(map_at, 'se', as.data.table) %>>%
-    map(map, rowSums) %>>%
     map(map, reduce_add) %>>%
     map(map_at, 'se', sqrt) %>>%
     map2(qltmap, function(xab, i) map(xab, function(x) i * x)) %>>% #XABI
