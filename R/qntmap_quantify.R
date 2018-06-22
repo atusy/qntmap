@@ -155,3 +155,7 @@ qntmap_quantify <- function(
        ) %>>%
        NULL
     ) 
+}
+
+#' Reduce add
+reduce_add <- function(x) Reduce(`+`, x)
