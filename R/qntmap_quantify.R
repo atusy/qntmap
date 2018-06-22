@@ -95,8 +95,7 @@ qntmap_quantify <- function(
     )
 
   #qltmap: elements -> oxides
-  qltmap <- qltmap %>>%
-    `[`(qnt$elm$elint) %>>%
+  qltmap <- qltmap[qnt$elm$elint] %>>%
     setNames(qnt$elm$elem) %>>%
     `[`(sort(names(.)))
 
