@@ -146,16 +146,12 @@ qntmap_quantify <- function(
       ))
     ) %>>%
     structure(class = c('qntmap', 'list')) %>>%
+    (~ saveRDS(., 'qntmap.RDS')) %>>%
     (~ . %>>% #side effect saving csv and RDS files
-       (~ saveRDS(., 'qntmap.RDS')) %>>%
        unlist(recursive = FALSE) %>>%
-       set_names(
-         names(.) %>>%
-           str_replace('\\.', '_') %>>%
-           paste0('.csv')
+       walk2(
+         paste0(sub('\\.', '_', names(.)), '.csv'), 
+         fwrite
        ) %>>%
-       walk2(names(.), fwrite) %>>%
        NULL
-    ) %>>%
-    return()
-}
+    ) 
