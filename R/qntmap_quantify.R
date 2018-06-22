@@ -48,7 +48,7 @@
 #'
 #'@export
 qntmap_quantify <- function(
-  wd = NULL,
+  wd = '.',
   dir_map,
   RDS_cluster,
   maps_x = NULL,
