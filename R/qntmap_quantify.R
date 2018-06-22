@@ -55,9 +55,9 @@ qntmap_quantify <- function(
   maps_y = NULL,
   fine_phase = NULL,
   fine_th = 0.9,
-  qnt = qnt_load(wd),
-  qltmap = qltmap_load(dir_map),
-  cluster = readRDS(RDS_cluster)
+  qnt = read_qnt(wd),
+  qltmap = read_xmap(dir_map),
+  cluster = readRDS(RDS_cluster),
 ) {
 
   cd <- getwd()
