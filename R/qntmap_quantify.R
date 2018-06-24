@@ -70,11 +70,6 @@ qntmap_quantify <- function(
         (mem > fine_th) 
     )
 
-  #qltmap: elements -> oxides
-  qltmap <- qltmap[qnt$elm$elint] %>>%
-    setNames(qnt$elm$elem) %>>%
-    `[`(sort(names(.)))
-
   rm(qnt)
 
   X <- as.data.frame(cluster$membership)
@@ -100,7 +95,10 @@ qntmap_quantify <- function(
     map(map_at, 'se', map, `^`, 2) %>>%
     map(map, reduce_add) %>>%
     map(map_at, 'se', sqrt) %>>%
-    map2(qltmap, function(xab, i) map(xab, `*`, i)) %>>% #XABI
+    map2(
+      qltmap[qnt$elm$elint[order(qnt$elm$elem)]], 
+      function(xab, i) map(xab, `*`, i)
+    ) %>>% #XABI
     map2(XAG, map2, `-`) %>>% #XABI - XAG
     map(setNames, c('wt', 'se')) %>>%
     map(function(x) map(x, `*`, x$wt > 0)) %>>%
