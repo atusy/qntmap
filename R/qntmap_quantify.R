@@ -19,7 +19,7 @@
 #' @importFrom purrr map_at
 #' @importFrom purrr map2
 #' @importFrom purrr walk2
-#' @imrpotFrom stats setNames
+#' @importFrom stats setNames
 #' @importFrom stringr str_replace
 #'
 #'@export
@@ -44,14 +44,13 @@ qntmap_quantify <- function(
   #mapping conditions
   pos <- read_map_pos(paste0(dir_map, '/0.cnd'))
   
-  if(is.null(maps_x)) maps_x <- pos$px[1]
-  if(is.null(maps_y)) maps_y <- pos$px[2]
-  
-  stg <- expand.grid(
-    x_stg = seq(0, pos$px[1] - 1) %/% maps_x + 1,
-    y_stg = seq(0, pos$px[2] - 1) %/% maps_y + 1
-  ) %>>%
-    mutate(stg = flag0(x_stg, y_stg))
+  stg <- do.call(
+    flag0,
+    unclass(expand.grid(
+      x_stg = seq(0, pos$px[1] - 1) %/% c(maps_x, pos$px[1])[1] + 1,
+      y_stg = seq(0, pos$px[2] - 1) %/% c(maps_y, pos$px[2])[1] + 1
+    ))
+  )
 
   #tidy compilation of epma data
   distinguished <- any(grepl('_', colnames(cluster$membership)))
@@ -129,6 +128,3 @@ qntmap_quantify <- function(
     ) 
 }
 
-#' Reduce add
-#' @param x input
-reduce_add <- function(x) Reduce(`+`, x)
