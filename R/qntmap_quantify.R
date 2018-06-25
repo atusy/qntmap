@@ -47,8 +47,8 @@ qntmap_quantify <- function(
   stg <- do.call(
     flag0,
     unclass(expand.grid(
-      x_stg = seq(0, pos$px[1] - 1) %/% c(maps_x, pos$px[1])[1] + 1,
-      y_stg = seq(0, pos$px[2] - 1) %/% c(maps_y, pos$px[2])[1] + 1
+      x_stg = seq(0, pos$px[1] - 1) %/% maps_x + 1,
+      y_stg = seq(0, pos$px[2] - 1) %/% maps_y + 1
     ))
   )
 
