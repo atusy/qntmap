@@ -7,7 +7,7 @@
 #'
 #' @importFrom pipeline 
 #'
-#'@export
+#' @export
 #'
 summary.qltmap_cls <- function(object, ...) {pipeline({
   object$membership 
