@@ -9,11 +9,12 @@
 #'
 print.qntmap <- function(x, summarizing = TRUE, ...) {
   if(!summarizing) return(x)
-  cat(paste(
+  cat(
     'Summary of', 
     paste(dim(x[[1]][[1]]), collapse = ' * '), 
-    ' mass concentration map\n'
-  ))
+    ' mass concentration map\n',
+    sep = ' '
+  )
   print(summary.qntmap(x))
   cat(
     '',
