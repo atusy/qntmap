@@ -114,7 +114,7 @@ qntmap_quantify <- function(
           as.data.frame
       ))
     ) %>>%
-    structure(class = c('qntmap', 'list')) %>>%
+    `class<-`(c('qntmap', 'list')) %>>%
     (~ saveRDS(., 'qntmap.RDS')) %>>%
     (~ . %>>% #side effect saving csv and RDS files
        unlist(recursive = FALSE) %>>%
