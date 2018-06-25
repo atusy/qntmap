@@ -4,7 +4,6 @@
 #' @param summarizing TRUE in default will visibly return summary of x and invisibly return x. FALSE will just return x.
 #' @param ... other arguments are discarded
 #'
-#' @importFrom pipeR %>>%
 #'
 #'@export
 #'
