@@ -49,7 +49,7 @@ cls_centers <- qltmap_cls_centers <- function(
     filter(all(is.na(map)) | !is.na(map))
     ungroup
     mutate( # Let weighting for least squares to be 0 for phases those who listed in phase_fine
-      w = if(is.null(phase_fine)) 1 else as.integer(!(phase %in% phase_fine))
+      w = if(is.null(phase_fine)) 1 else as.integer(phase %nin% phase_fine)
     )
     group_by(elint) # Peform least squares and estimate 99% prediction interval
     mutate(
@@ -105,7 +105,7 @@ cls_centers <- qltmap_cls_centers <- function(
           pmap(x[miss, -1], c),
           `-`
         )
-        map(`^`, 2)
+        map(square)
         map(colSums, na.rm = TRUE)
         map(which.min)
         map(function(i) qltmap_df[i, ])
