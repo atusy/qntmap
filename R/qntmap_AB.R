@@ -53,7 +53,7 @@ qntmap_AB <- function(A, B, stg) {pipeline({
     mutate(data = setNames(data, elm)) 
     `[[`('data') 
     map(unlist, recursive = FALSE)  
-    map(map, right_join, tibble(stg = stg$stg), by = 'stg') 
+    map(map, right_join, tibble(stg), by = 'stg') 
     map(map, select, -stg) 
     map(map, as.data.table)
 })}
