@@ -5,7 +5,7 @@
 #' @param object qntmap class data
 #' @param ... other arguments are discarded
 #'
-#' @importFrom pipeline 
+#' @importFrom pipeR pipeline 
 #'
 #' @export
 #'
