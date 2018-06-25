@@ -55,7 +55,6 @@ qntmap_AB <- function(A, B, stg) {pipeline({
     map(unlist, recursive = FALSE)  
     map(map, right_join, tibble(stg), by = 'stg') 
     map(map, select, -stg) 
-    map(map, as.data.table)
 })}
 
 #' fix AB value when composition of certain phases are constant
