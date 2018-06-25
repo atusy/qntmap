@@ -76,7 +76,6 @@ qntmap_quantify <- function(
 
   rm(cluster)
   
-
   AG <- qntmap_AG(epma) # return also A
 
   B <- qntmap_B(epma)
