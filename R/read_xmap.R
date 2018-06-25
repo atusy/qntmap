@@ -15,20 +15,18 @@
 #' @export
 #'
 read_xmap <- function(
-  wd = NULL,
+  wd = '.',
   DT = 0,
   RDS = 'qltmap.RDS',
   renew = FALSE,
   saving = TRUE
 ) {
   #when the argument "wd" is assigned, setwd to the argument on start and to the current wd on exit.
-  if(!is.null(wd)) {
-    cd <- getwd()
-    on.exit(setwd(cd))
-    setwd(wd)
-  }
   
-  setwd('/home/atusy/R/mypkg/qntmap_sampledata/JGb1a_170912/.map/1')
+  cd <- getwd()
+  on.exit(cd)
+  setwd(wd)
+
   renew = FALSE
   
   if(renew) return(readRDS(RDS))
