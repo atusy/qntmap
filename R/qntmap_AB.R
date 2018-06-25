@@ -78,7 +78,7 @@ qntmap_AB_fix <- function(AB, fix = NULL, X, fine_th = .90) {
       select(which(names(.) %in% c('phase', names(AB))))
       filter(phase %in% names(AB[[1]]$val))
       mutate(w = unclass(X * (X > fine_th))[phase])
-      gather(elm, wt, -phase, -w, -stg)
+      gather(elm, wt, -phase, -w)
       mutate(
         i = pipeline({
           elm
