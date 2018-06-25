@@ -69,7 +69,7 @@ qntmap_quantify <- function(
       stg = ifelse((x_stg * y_stg) <= 0, NA, flag0(x_stg, y_stg)),
       mem = mem * 
         (str_replace(cls, '_.*', '') == phase2) *
-        !(cls %in% fine_phase) * 
+        (cls %nin% fine_phase) * 
         (mem > fine_th) 
     )
 
@@ -94,7 +94,7 @@ qntmap_quantify <- function(
   qntmap_AB(AG, B, stg) %>>% #AB
     qntmap_AB_fix %>>%
     map(map, `*`, X) %>>% #XAB
-    map(map_at, 'se', map, `^`, 2) %>>%
+    map(map_at, 'se', map, square) %>>%
     map(map, reduce_add) %>>%
     map(map_at, 'se', sqrt) %>>%
     map2(
@@ -110,7 +110,7 @@ qntmap_quantify <- function(
           reduce_add %>>%
           as.data.frame,
         se = map(., `[[`, 'se') %>>%
-          map(`^`, 2) %>>%
+          map(square) %>>%
           reduce_add %>>%
           sqrt %>>%
           as.data.frame
