@@ -62,7 +62,7 @@ qntmap_AB <- function(A, B, stg) {pipeline({
 #' @param AB AB
 #' @param fix csv file indicating composition of the phases. NULL returns input AB
 #' @param X membership
-#' @fine_th threshold of X
+#' @param fine_th threshold of X
 #' @importFrom data.table fread
 #' @importFrom purrr map
 #' @importFrom purrr map2_dbl
