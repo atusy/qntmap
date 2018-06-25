@@ -1,6 +1,6 @@
 #' find XAG
 #' @param X X
-#' @param AB AB
+#' @param AG AG
 #' @importFrom dplyr select
 #' @importFrom tidyr nest
 #' @importFrom stats setNames
