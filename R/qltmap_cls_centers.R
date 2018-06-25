@@ -16,7 +16,6 @@
 #' @importFrom dplyr mutate
 #' @importFrom dplyr summarise
 #' @importFrom dplyr ungroup
-#' @importFrom dplyr summarise
 #' @importFrom pipeR pipeline
 #' @importFrom stats lm
 #' @importFrom stats predict
