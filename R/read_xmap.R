@@ -24,7 +24,7 @@ read_xmap <- function(
   #when the argument "wd" is assigned, setwd to the argument on start and to the current wd on exit.
   
   cd <- getwd()
-  on.exit(cd)
+  on.exit(setwd(cd))
   setwd(wd)
 
   renew = FALSE
