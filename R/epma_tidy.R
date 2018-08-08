@@ -67,8 +67,8 @@ epma_tidy <- function(
       )
       distinct(nr0, .keep_all = TRUE)
     })
-  qnt$elm$dwell <- cnd_map['dwell'] / 1000
-  qnt$elm$beam_map <- cnd_map['beam_map']
+  qnt$elm$dwell <- beam['dwell'] / 1000
+  qnt$elm$beam_map <- beam['beam']
 
 
 
