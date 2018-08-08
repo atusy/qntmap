@@ -92,7 +92,7 @@ square <- function(x) x ^ 2L
 #' @param x,y numeric
 #' @param x2,y2 errors of x and y
 propagate_add <- function(x, x2, y, y2) {
-  sqrt((x2 - x) ^ 2 + (y2 - y) ^ 2)
+  sqrt(square(x2 - x) + square(y2 - y))
 }
 
 
