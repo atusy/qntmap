@@ -84,6 +84,10 @@ mycolors <- function(palette = c('pcol', 'gray'), n = NULL, dec = FALSE) {
   output
 }
 
+#' square
+#' @param x input
+square <- function(x) x ^ 2L
+
 #' Propagate add
 #' @param x
 #' @param x2
