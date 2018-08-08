@@ -100,3 +100,7 @@ propagate_add <- function(x, x2, y, y2) {
 #' @param x input
 reduce_add <- function(x) Reduce(`+`, x)
 
+#' \%nin\%
+#' @param x x
+#' @param table table
+`%nin%` <- function(x, table) !match(x, table, nomatch = 0L)
