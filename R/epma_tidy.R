@@ -59,10 +59,15 @@ epma_tidy <- function(
       qnt$cnd
       filter(!is.na(phase))
       mutate(
-        x_px = round((x - pos$start[1]) * 1000 / pos$step[1] + 1),
-        y_px = round((y - pos$start[2]) * 1000 / pos$step[2] + 1),
-        nr0 = (y_px - 1) * pos$px[1] + x_px,
-        nr = ifelse(nr0 > 0 & nr0 < prod(pos$px), nr0, NA),
+        x_px = (round((x - pos$start[1]) * 1e3 / pos$step[1]) + 1) *
+          `if`(class(cnd)[1] == 'map_cnd', -1, 1),
+        y_px = round((y - pos$start[2]) * 1e3 / pos$step[2]) + 1,
+        nr0 = `if`(
+          class(cnd)[1] == 'map_cnd',
+          (x_px - 1) * pos$px[2] + y_px,
+          (y_px - 1) * pos$px[1] + x_px
+        ),
+        nr = ifelse(0 < nr0 & nr0 < prod(pos$px), nr0, NA),
         phase2 = str_replace(phase, '_.*', '')
       )
       distinct(nr0, .keep_all = TRUE)
