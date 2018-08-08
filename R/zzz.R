@@ -13,9 +13,9 @@
 #'
 #' @export
 #'
-cipois <- function(x, vars = names(x), offset = 1, conf.level = 0.95) {
-  low <- (1 - conf.level) / 2
-  high <- 1 - low
+cipois <- function(x, vars = names(x), offset = 1L, conf.level = 0.95) {
+  low <- (1L - conf.level) / 2L
+  high <- 1L - low
   
   x[vars] %>>%
     map2(offset, `*`) %>>%
@@ -24,7 +24,7 @@ cipois <- function(x, vars = names(x), offset = 1, conf.level = 0.95) {
       function(x) {
         data.frame(
           L = qgamma(low, x),
-          H = qgamma(high, x + 1)
+          H = qgamma(high, x + 1L)
         )
       }
     ) %>>%
@@ -46,7 +46,7 @@ flag0 <- function(...) {
       function(x) {
         formatC(
           x,
-          width = floor(log10(max(x, na.rm = TRUE))) + 1, 
+          width = floor(log10(max(x, na.rm = TRUE))) + 1L, 
           flag = '0'
         )
       }
@@ -70,7 +70,7 @@ mycolors <- function(palette = c('pcol', 'gray'), n = NULL, dec = FALSE) {
     } else {
       #return n colors
       #n > length(LUT) is allowed by returning some duplicates
-      LUT[seq(1, length(LUT), length.out = n)]
+      LUT[seq(1L, length(LUT), length.out = n)]
     }
   
   if(dec){
@@ -104,3 +104,4 @@ reduce_add <- function(x) Reduce(`+`, x)
 #' @param x x
 #' @param table table
 `%nin%` <- function(x, table) !match(x, table, nomatch = 0L)
+
