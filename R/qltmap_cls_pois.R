@@ -37,9 +37,7 @@ qltmap_cls_pois <- function(
     #####set working directory
     cd <- getwd()
     on.exit(setwd(cd))
-
-    #####set working directory
-    if(!is.null(wd)) setwd(wd)
+    setwd(wd)
 
     #####load data
     if(is.character(centers_initial)) centers_initial <- fread(centers_initial)
