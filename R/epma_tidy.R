@@ -42,9 +42,15 @@ epma_tidy <- function(
   setwd(wd)
 
   #load mapping conditions
-  cnd <- paste0(dir_map, '/0.cnd')
+  cnd <- pipeline({
+    dir_map
+    paste0('/', c('0', 'map'), '.cnd')
+    `[`(file.exists(.))
+    `[`(1)
+    read_cnd
+  })
   pos <- read_map_pos(cnd)
-  cnd_map <- read_map_beam(cnd)
+  beam <- read_map_beam(cnd)
 
   #データの整形
 
