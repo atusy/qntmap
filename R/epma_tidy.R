@@ -107,7 +107,7 @@ epma_tidy <- function(
       bgm2 = bgm * bgm_pos,
       bgp2 = bgp * bgp_pos,
       bgint = bgm2 + bgp2,
-      pkint = `if`(exists('pkint'), pkint, (net + bgint  / (bgm_pos + bgp_pos))),
+      pkint = `if`(exists('pkint'), pkint, net + bgint  / (bgm_pos + bgp_pos)),
       pkint = pkint * (pkint > 0)
     ) %>>%
     cipois(
