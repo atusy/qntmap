@@ -68,16 +68,15 @@ qltmap_cls_pois <- function(
 
 
 
-    #####Classify by PoiClaClu ===================================================================================================
+    # Classify by PoiClaClu 
     result <- PoiClaClu::Classify(x, y, x)
 
     rm(y)
 
-    #####give phase names to result$ytehat==================================================================
+    # give phase names to result$ytehat
     names(result$ytehat) <- centers_initial$phase[result$ytehat]
 
-    #####Find representative values of each clusters (~ centers)==================================================================
-    #bw <- sapply(qltmap, sd) / (length(result$ytehat) ^ (1/3)) #Scott
+    # Find representative values of each clusters (~ centers)
     result$center <- x %>>%
       lapply(as.double) %>>%
       as.data.table %>>%
@@ -89,7 +88,7 @@ qltmap_cls_pois <- function(
       spread(elm, val) %>>%
       as.data.table
 
-    #####estimate membership of each clusters ==================================================================
+    # estimate membership of each clusters
     result$membership <- result$discriminant %>>%
       `-`(apply(., 1, max)) %>>%
       exp %>>%
@@ -123,7 +122,7 @@ qltmap_cls_pois <- function(
     }
 
 
-    #####additional informations
+    # additional informations
     class(result) <- c('qltmap_cls', 'list')
     result$date <- format(Sys.time(), "%y%m%d_%H%M")
     result$dims <- dims
