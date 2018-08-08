@@ -89,10 +89,8 @@ mycolors <- function(palette = c('pcol', 'gray'), n = NULL, dec = FALSE) {
 square <- function(x) x ^ 2L
 
 #' Propagate add
-#' @param x
-#' @param x2
-#' @param y
-#' @param y2
+#' @param x,y numeric
+#' @param x2,y2 errors of x and y
 propagate_add <- function(x, x2, y, y2) {
   sqrt((x2 - x) ^ 2 + (y2 - y) ^ 2)
 }
