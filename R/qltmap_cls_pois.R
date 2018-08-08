@@ -27,12 +27,14 @@
 #' @export
 qltmap_cls_pois <- function(
     centers_initial,
-    qltmap = NULL,
+    dir_map,
     elements = NULL,
-    wd = NULL,
+    wd = dir_map,
     saving = TRUE,
-    integration = TRUE
-  ) {
+    integration = TRUE,
+    qltmap = read_xmap(dir_map)
+) {
+    #####set working directory
     cd <- getwd()
     on.exit(setwd(cd))
 
