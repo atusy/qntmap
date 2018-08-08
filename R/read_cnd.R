@@ -1,167 +1,92 @@
+#' read .cnd files
+#' e.g., '0.cnd', 'map.cnd', ...
+#' @param x path to the file
+#' @param ... other arguments passed to methods
+read_cnd <- function(x, ...) {
+  UseMethod("read_cnd")
 }
 
+#' default method for read_cnd
+#' @inheritParams read_cnd
+read_cnd.default <- function(x, ...) {
+  cnd <- readLines(x)
+  class(cnd) <- `if`(all(grepl('^\\$', cnd)), 'map_cnd', '0_cnd')
+  read_cnd(cnd, ...)
 }
 
-}
+#' method for read_cnd
+#' @param x returned value from readLines. each elements starts with "$"
+#' @param ... other arguments passed to methods
+#' @importFrom tidyr separate
+#' @importFrom utils type.convert
+#' @importFrom dplyr arrange
+#' @importFrom stringr str_extract
+read_cnd.map_cnd <- function(x, ...) {pipeline({
+  x
+    strsplit(' ')
+    lapply(`[`, seq(1, max(map_int(., length))))
+    .x ~ Reduce(rbind, .x)
+    as.data.frame(stringsAsFactors = FALSE)
+    setNames(paste0('V', seq(0, by = 1, length.out = length(.))))
+    mutate(V0 = str_replace(V0, '\\$', ''))
+    separate('V0', into = c('id', 'no'), sep = '%', fill = 'right', convert = TRUE)
+    nest(-id)
+    mutate(data = setNames(data, id))
+    `[[`('data')
+    map(map, type.convert, as.is = TRUE)
+    map(map, unname)
+    map(as.data.frame, stringsAsFactors = FALSE)
+    map(arrange, no)
+    map(select, -no)
+    `class<-`('map_cnd')
+})}
 
+#' method for read_cnd
+#'
+#' @param x input
+#' @param pattern character vector. Used to extract rows which contains phrase matching pattern.
+#' @param n integer vector of same length as pattern. Used to extract nth row of .cnd file in case pattern did not match any phrase.
+#'
+read_cnd.0_cnd <- function(x, pattern = NULL, n = NULL) {
+  if(is.null(pattern)) return(x)
+  
+  detection <- lapply(pattern, function(i) which(str_detect(x, i)))
+  
+  # number of detections
+  detection_n <- unlist(lapply(detection, length), use.names = FALSE)
+  
+  # error if any pattern matched more than 1 phrase
+  if(any(too_many <- detection_n > 1)) {
+    stop(
+      'Some of the regular expression patterns matched more than 1 lines in "',
+      path,
+      '"\n',
+      paste(
+        paste0('"', pattern[too_many], '"\n matched lines ', lapply(detection[too_many], paste, collapse = ', ')),
+        collapse = '\n'
+      )
+    )
+  }
+  
+  # warn if any pattern did not match any phrase
+  if(any(mismatch <- detection_n == 0)) {
+    warning(
+      'Some of the regular expression patterns matched 0 phrases in "', path, '".\n',
+      'Such patterns as follows are assumed to be in lines specified by a parameter n.\n',
+      paste(
+        paste0('"', pattern[mismatch], '"', ' is considered to be in line ', n[mismatch]),
+        collapse = '\n'
+      )
+    )
+    
+    if(length(pattern) != length(n)) stop('pattern and n must have same length')
+    
+    return(x[unlist(ifelse(mismatch, n, detection), use.names = FALSE)])
+  }
+  
+  structure(
+    x[unlist(detection, use.names = FALSE)],
+    class = '0_cnd'
   )
 }
 
-
-
-
-
-
-
-
-
-
-
-# #' read .cnd file of JEOL EPMA (0.cnd, 1.cnd, ...)
-# #'
-# #' @param path a path to the .cnd file
-# #' @param pattern character vector. Used to extract rows which contains phrase matching pattern.
-# #' @param n integer vector of same length as pattern. Used to extract nth row of .cnd file in case pattern did not match any phrase.
-# #'
-# read_cnd <- function(path = '0.cnd', pattern = '.', n = NULL) {
-#   cnd <- readLines(path)
-#   if(is.null(pattern)) return(cnd)
-#   
-#   detection <- lapply(
-#     pattern,
-#     function(pattern) {
-#       which(str_detect(cnd, pattern))
-#     }
-#   )
-#   
-#   # number of detections
-#   detection_n <- unlist(lapply(detection, length), use.names = FALSE)
-#   
-#   # error if any pattern matched more than 1 phrase
-#   too_many <- detection_n > 1
-#   if(any(too_many)) {
-#     stop(
-#       paste0(
-#         'Some of the regular expression patterns matched more than 1 lines in "', path, '"\n',
-#         paste(
-#           paste0('"', pattern[too_many], '"', " matched lines ", lapply(detection[too_many], paste, collapse = ', ')),
-#           collapse = '\n'
-#         )
-#       )
-#     )
-#   }
-#   
-#   # warn if any pattern did not match any phrase
-#   mismatch <- detection_n == 0
-#   if(any(mismatch)) {
-#     warning(
-#       paste0(
-#         'Some of the regular expression patterns matched 0 phrases in "', path, '".\n',
-#         'Such patterns as follows are assumed to be in lines specified by a parameter n.\n',
-#         paste(
-#           paste0('"', pattern[mismatch], '"', ' is considered to be in line ', n[mismatch]),
-#           collapse = '\n'
-#         )
-#       )
-#     )
-#     
-#     if(length(pattern) != length(n)) stop('pattern and n must have same length')
-# 
-#     return(cnd[unlist(ifelse(mismatch, n, detection), use.names = FALSE)])
-#   }
-# 
-#   return(structure(
-#     cnd[unlist(detection, use.names = FALSE)],
-#     class = '0cnd'
-#   ))
-# }
-# 
-# 
-# #' read mapping stage information from 0.cnd
-# #' @inheritParams read_cnd
-# read_map_pos <- function(
-#   path,
-#   pattern = c(
-#     'Measurement Start Position X',
-#     'Measurement Start Position Y',
-#     'X(-axis)? Step Number',
-#     'Y(-axis)? Step Number',
-#     'X(-axis)? Step Size',
-#     'Y(-axis)? Step Size'
-#   ),
-#   n = c(27, 28, 30:33)
-# ) {
-#   pipeline({
-#     read_cnd(path, pattern, n)
-#     str_replace('[:blank:].*', '')
-#     as.numeric
-#     matrix(ncol = 3, nrow = 2, dimnames = list(NULL, c('start', 'px', 'step')))
-#     as.data.table
-#   })
-# }
-# 
-# #' read mapping beam information from 0.cnd
-# #' @inheritParams read_cnd
-# read_map_beam <- function(
-#   path = '0.cnd',
-#   pattern = c(
-#     dwell = 'Dwell Time \\[msec\\]',
-#     beam_map = 'Probe Current (Avg, Before After )?\\[A\\]'
-#   ),
-#   n = c(39, 17)
-# ) {
-#   pipeline({
-#     read_cnd(path, pattern, n)
-#     str_replace('[:blank:].*', '')
-#     as.numeric
-#     setNames(names(pattern))
-#   })
-# }
-# 
-# #' read all .cnd files under the specified directory
-# #' @inheritParams read_cnd
-# #' @param each n appears in each rows
-# read_qnt_elemw <- function(
-#   path = './.qnt/.cnd/elemw.cnd',
-#   pattern = c(
-#     bgp_pos = '(Back |BG)\\+\\[mm\\]',
-#     bgm_pos = '(Back |BG)-\\[mm\\]',
-#     pk_t = '(Peak|Pk)( Meas\\.)? (Time|t)',
-#     bg_t = '(Back|BG)( Meas\\.)? (Time|t)'
-#   ),
-#   n = c(14, 15, 17, 18),
-#   each = 21
-# ) {
-#   # read cnd files and transform to numeric
-#   cnd <- readLines(path)
-#   cnd_val <- str_replace(cnd, '[:blank:].*', '')
-#   
-#   # match pattern and return values
-#   matched <- lapply(pattern, grepl, cnd)
-#   
-#   if(length(unique(lapply(matched, sum))) == 1) {
-#     return(as.data.frame(lapply(matched, function(i) as.numeric(cnd_val[i]))))
-#   }
-#   
-#   # if pattern did not match well, return values by guess
-#   names(n) <- names(pattern)
-#   guessed <- lapply(n, seq, length(cnd), each)
-#   warning(
-#     'some of regex patterns mismuched when finding ',
-#     paste(names(pattern), collapse = '\n'),
-#     'in\n',
-#     path,
-#     '\n',
-#     'check if values are in correct lines'
-#   )
-#   print(
-#     as.data.frame(guessed)
-#   )
-#   if(length(n) != length(pattern)) stop('length of pattern and n must be same')
-#   return(
-#     as.data.frame(lapply(guessed, function(i) cnd_val[i]))
-#   )
-# }
-# 
-# 
-# 
