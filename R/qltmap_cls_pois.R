@@ -38,10 +38,6 @@ qltmap_cls_pois <- function(
     cd <- getwd()
     on.exit(setwd(cd))
 
-    #####for the test
-    #centers_initial = 'centers_initial3.csv'; qltmap = NULL; elements = c('Ti','Al','Fe','Mg','Ca','Na'); name_write = 'pois'; path_cnd = '0.cnd'; saving = TRUE
-    #centers_initial = centers; qltmap = readRDS('qltmap.RDS'); dims = dims[[wd]]; elements = NULL; wd = NULL; name_write = 'pois'; path_cnd = '0.cnd'; saving = TRUE;  components = c('ytehat', 'center', 'membership', 'date', 'dims', 'elements')
-
     #####set working directory
     if(!is.null(wd)) setwd(wd)
 
