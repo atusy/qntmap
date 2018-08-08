@@ -76,7 +76,7 @@ epma_tidy <- function(
   qnt$cmp <- qltmap[qnt$elm$elint] %>>%
     setNames(qnt$elm$elem) %>>%
     lapply(unlist, use.names = FALSE) %>>%
-    as.data.table %>>%
+    as.data.frame %>>%
     `[`(qnt$cnd$nr, ) %>>%
     list %>>%
     setNames('map') %>>%
