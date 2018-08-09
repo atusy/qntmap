@@ -10,10 +10,10 @@
 #' @param qnt object of class qnt
 #' @param qltmap object of class qltmap
 #' @param cluster object of class PoiClaClu
-#' @param fix fix compositions
+#' @param fixAB fix AB in case compositions of a mineral is constant
+#' @param fixB fix B
 #'
 #' @importFrom data.table fwrite
-#' @importFrom pipeR %>>%
 #' @importFrom pipeR pipeline
 #' @importFrom purrr map
 #' @importFrom purrr map_at
@@ -34,7 +34,8 @@ qntmap_quantify <- function(
   qnt = read_qnt(wd),
   qltmap = read_xmap(dir_map),
   cluster = readRDS(RDS_cluster),
-  fix = NULL
+  fixAB = NULL,
+  fixB = NULL
 ) {
 
   cd <- getwd()
@@ -42,7 +43,9 @@ qntmap_quantify <- function(
   setwd(wd)
 
   #mapping conditions
-  pos <- read_map_pos(paste0(dir_map, '/0.cnd'))
+  cnd <- dir(dir_map, pattern = '^(map|0)\\.cnd$', full.names = TRUE)
+  pos <- read_map_pos(cnd)
+  rm(cnd)
   
   if(is.null(maps_x)) maps_x <- pos$px[1]
   if(is.null(maps_y)) maps_y <- pos$px[2]
@@ -57,21 +60,23 @@ qntmap_quantify <- function(
 
   #tidy compilation of epma data
   distinguished <- any(grepl('_', colnames(cluster$membership)))
-  epma <- epma_tidy(
-    wd = wd, dir_map = dir_map, qnt = qnt, qltmap = qltmap, cluster = cluster
-  ) %>>%
-    filter(elm %in% qnt$elm$elem) %>>%
-    mutate(
-      net = net * (net > 0),
-      phase3 = if(distinguished) phase else phase2,
-      x_stg = ((x_px - 1) %/% maps_x + 1) * (0 < x_px) * (x_px <= pos$px[1]), 
-      y_stg = ((y_px - 1) %/% maps_y + 1) * (0 < y_px) * (y_px <= pos$px[2]),
-      stg = ifelse((x_stg * y_stg) <= 0, NA, flag0(x_stg, y_stg)),
-      mem = mem * 
-        (str_replace(cls, '_.*', '') == phase2) *
-        (cls %nin% fine_phase) * 
-        (mem > fine_th) 
-    )
+  epma <- pipeline({
+    epma_tidy(
+      wd = wd, dir_map = dir_map, qnt = qnt, qltmap = qltmap, cluster = cluster
+    ) 
+      filter(elm %in% qnt$elm$elem) 
+      mutate(
+        net = net * (net > 0),
+        phase3 = if(distinguished) phase else phase2,
+        x_stg = ((x_px - 1) %/% maps_x + 1) * (0 < x_px) * (x_px <= pos$px[1]), 
+        y_stg = ((y_px - 1) %/% maps_y + 1) * (0 < y_px) * (y_px <= pos$px[2]),
+        stg = ifelse((x_stg * y_stg) <= 0, NA, flag0(x_stg, y_stg)),
+        mem = mem * 
+          (str_replace(cls, '_.*', '') == phase2) *
+          (cls %nin% fine_phase) * 
+          (mem > fine_th) 
+      )
+  })
 
   rm(qnt)
 
@@ -87,44 +92,47 @@ qntmap_quantify <- function(
 
   XAG <- qntmap_XAG(X, AG)
 
-  setwd(dir_map)
-  dir.create('qntmap', FALSE)
-  setwd('qntmap')
-  
-  qntmap_AB(AG, B, stg) %>>% #AB
-    qntmap_AB_fix %>>%
-    map(map, `*`, X) %>>% #XAB
-    map(map_at, 'se', map, square) %>>%
-    map(map, reduce_add) %>>%
-    map(map_at, 'se', sqrt) %>>%
-    map2(
-      qltmap[qnt$elm$elint[order(qnt$elm$elem)]], 
-      function(xab, i) map(xab, `*`, i)
-    ) %>>% #XABI
-    map2(XAG, map2, `-`) %>>% #XABI - XAG
-    map(setNames, c('wt', 'se')) %>>%
-    map(function(x) map(x, `*`, x$wt > 0)) %>>%
-    c(
-      list(Total = list(
-        wt = map(., `[[`, 'wt') %>>%
-          reduce_add %>>%
-          as.data.frame,
-        se = map(., `[[`, 'se') %>>%
-          map(square) %>>%
-          reduce_add %>>%
-          sqrt %>>%
-          as.data.frame
-      ))
-    ) %>>%
-    `class<-`(c('qntmap', 'list')) %>>%
-    (~ saveRDS(., 'qntmap.RDS')) %>>%
-    (~ . %>>% #side effect saving csv and RDS files
-       unlist(recursive = FALSE) %>>%
-       walk2(
-         paste0(sub('\\.', '_', names(.)), '.csv'), 
-         fwrite
-       ) %>>%
-       NULL
-    ) 
-}
+  dir_qntmap <- paste0(dir_map, '/qntmap')
+  dir.create(dir_qntmap, FALSE)
 
+  pipeline({
+    qntmap_AB(AG, B, stg)  #AB
+      qntmap_AB_fix(fixAB, X, fine_th, qltmap)
+      map(map, `*`, X)  #XAB
+      map(map_at, 'se', map, square) 
+      map(map, reduce_add) 
+      map(map_at, 'se', sqrt) 
+      map2(
+        qltmap[qnt$elm$elint[order(qnt$elm$elem)]], 
+        function(xab, i) map(xab, `*`, i)
+      )  #XABI
+      map2(XAG, map2, `-`)  #XABI - XAG
+      map(setNames, c('wt', 'se')) 
+      map(function(x) map(x, `*`, x$wt > 0)) 
+      c(
+        list(Total = list(
+          wt = pipeline({
+            map(., `[[`, 'wt') 
+            reduce_add 
+            as.data.frame
+          }),
+          se = pipeline({
+            map(., `[[`, 'se') 
+            map(square) 
+            reduce_add 
+            sqrt 
+            as.data.frame
+          })
+        ))
+      ) 
+      `class<-`(c('qntmap', 'list')) 
+      ~ saveRDS(., paste0(dir_qntmap, '/qntmap.RDS'))
+      ~ pipeline({
+        unlist(., recursive = FALSE)
+        walk2(
+         paste0(dir_qntmap, '/', str_replace(names(.), '\\.', '_'), '.csv'),
+         fwrite
+        )
+      })
+  })
+}
