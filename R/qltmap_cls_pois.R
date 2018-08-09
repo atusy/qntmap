@@ -39,20 +39,20 @@ qltmap_cls_pois <- function(
     on.exit(setwd(cd))
     setwd(wd)
 
-    if(is.character(centers_initial)) centers_initial <- fread(centers_initial)
-
-    #qltmap: import mapping data
-    if(is.null(qltmap)) qnt <- qltmap_load()
-    if(is.character(qltmap)) qltmap <- readRDS(qltmap)
-
-    if(is.null(elements)) elements <- names(qltmap)
     # load data
+    if(is.character(centers_initial)) 
+      centers_initial <- fread(centers_initial)
 
     dims <- dim(qltmap[[1]])
 
-    #####check data
-    if(all(elements %in% names(qltmap)) == FALSE) stop("Specified wrong element which is not present in qltmap")
-    if(all(elements %in% names(centers_initial)) == FALSE) stop("Specified wrong element which is not present in centers_initial")
+    elements <- `if`(
+      is.null(elements),
+      names(qltmap)[names(qltmap) %in% names(centers_initial)],
+      elements[
+        elements %in% names(qltmap) & 
+        elements %in% names(centers_initial)
+      ]
+    )
 
     # initial clusters
     x <- qltmap[elements] %>>%
@@ -107,17 +107,16 @@ qltmap_cls_pois <- function(
         rm(TF)
       }
       missings <- centers_initial$phase %>>%
-        `[`(!(. %in% colnames(result$membership)))
-      result$membership <- result$membership %>>%
-        cbind(
+        `[`(. %nin% colnames(result$membership))
+      result$membership <- cbind(
+          result$membership,
           matrix(
             0,
             nrow(.),
             ncol = length(missings),
             dimnames = list(NULL, missings)
           )
-        ) %>>%
-        `[`(, centers_initial$phase %>>% as.character)
+        )[, as.character(centers_initial$phase)]
       rm(missings)
     }
 
