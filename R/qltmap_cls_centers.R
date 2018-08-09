@@ -25,7 +25,7 @@
 #'
 #' @export
 cls_centers <- qltmap_cls_centers <- function(
-  wd = NULL,
+  wd = '.',
   dir_map,
   phase_fine = NULL,
   qnt = read_qnt(wd),
