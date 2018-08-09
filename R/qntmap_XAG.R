@@ -1,20 +1,17 @@
 #' find XAG
 #' @param X X
 #' @param AG AG
-#' @importFrom dplyr select
-#' @importFrom tidyr nest
+#' @importFrom dplyr transmute_at
 #' @importFrom stats setNames
 #' @importFrom purrr map
 #' @importFrom purrr map_at
 qntmap_XAG <- function(X, AG) {pipeline({
   AG 
-    select(phase3, elm, ag, ag_se) 
-    nest(-elm) 
-    (.x ~ setNames(.x$data, .x$elm)) 
-    map(function(x) map(select(x, -phase3), setNames, x$phase3)) 
+    transmute_at(c('ag', 'ag_se'), setNames, .$phase3) 
+    split(AG$elm)
     map(map, `*`, t(X)) 
     map(setNames, c('val', 'se')) 
-    map(map_at, 'se', `^`, 2) 
-    map(map, colSums)
+    map(map_at, 'se', square) 
+    map(map, colSums, na.rm = TRUE)
     map(map_at, 'se', sqrt)
 })}
