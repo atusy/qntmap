@@ -1,5 +1,6 @@
 #' find B
 #' @param epma epma data
+#' @param fix fix B
 #' @importFrom dplyr filter
 #' @importFrom dplyr group_by
 #' @importFrom dplyr mutate
@@ -13,26 +14,30 @@
 #' @importFrom purrr map_dbl
 #' @importFrom pipeR pipeline 
 #' 
-qntmap_B <- function(epma) {pipeline({
+qntmap_B <- function(epma, fix = NULL) {pipeline({
   epma 
     filter(!is.na(stg)) 
     group_by(elm) 
     mutate(
-      fit_na = list(lm(pkint ~ 0 + map, weights = mem, na.action = na.omit))
+      fit_na = list(lm(pkint ~ 0 + mapint, weights = mem, na.action = na.omit))
     ) 
     group_by(stg, elm) 
     summarise(
-      fit = list(lm(pkint ~ 0 + map, weights = mem)),
-      fit_na = fit_na[1]
+      fit = list(lm(pkint ~ 0 + mapint, weights = mem)),
+      fit_na = fit_na[1],
+      k = dwell[1] * beam_map[1] * 1e+6
     ) 
     ungroup 
     mutate(
+      fix = elm %in% fix,
       b = map_dbl(fit, coef),
       fit = ifelse(is.na(b), fit_na, fit),
-      b_se = map_dbl(fit, vcov),
-      b = ifelse(is.na(b), map_dbl(fit_na, coef), b),
+      b_se = ifelse(fix, 0, map_dbl(fit, vcov) / k),
+      b = ifelse(fix, 1, ifelse(is.na(b), map_dbl(fit_na, coef), b)) / k,
       fit = NULL,
-      fit_na = NULL
+      fit_na = NULL,
+      k = NULL,
+      fix = NULL
     ) 
     nest(-stg, .key = '.B')
 })}

@@ -68,7 +68,7 @@ qntmap_AB <- function(A, B, stg) {pipeline({
 #' @importFrom purrr map2_dbl
 #' @importFrom matrixStats weightedMedian
 
-qntmap_AB_fix <- function(AB, fix = NULL, X, fine_th = .90) {
+qntmap_AB_fix <- function(AB, fix = NULL, X, fine_th = .90, qltmap) {
   
   if(is.null(fix)) return(AB)
 
@@ -81,8 +81,7 @@ qntmap_AB_fix <- function(AB, fix = NULL, X, fine_th = .90) {
       gather(elm, wt, -phase, -w)
       mutate(
         i = pipeline({
-          elm
-            map(function(e) qltmap[[e]])
+          qltmap[str_replace(elm, '[0-9]*O[0-9]*', '')]
             map(unlist, use.names = FALSE)
             map2_dbl(w, weightedMedian, na.rm = TRUE)
         }),
@@ -97,14 +96,16 @@ qntmap_AB_fix <- function(AB, fix = NULL, X, fine_th = .90) {
       mutate(data = setNames(data, elm), elm = NULL)
       `[[`('data')
       map(`[[`, 'data')
-      map(map, unname)
+      map(map, unlist, use.names = FALSE)
       map(unlist)
-  })
+  }) 
   
   for(e in names(AB_fix)) {
     for(p in names(AB_fix[[e]])){
-      AB[[e]][['val']][[p]][] <- AB_fix[[e]][[p]]
-      AB[[e]][['se']][[p]][] <- 0
+      if(is.finite(AB_fix[[e]][[p]])) {
+        AB[[e]][['val']][[p]][] <- AB_fix[[e]][[p]]
+        AB[[e]][['se']][[p]][] <- 0
+      }
     }
   }
   
