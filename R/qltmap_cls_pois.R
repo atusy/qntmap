@@ -34,12 +34,11 @@ qltmap_cls_pois <- function(
     integration = TRUE,
     qltmap = read_xmap(dir_map)
 ) {
-    #####set working directory
+    # set working directory
     cd <- getwd()
     on.exit(setwd(cd))
     setwd(wd)
 
-    #####load data
     if(is.character(centers_initial)) centers_initial <- fread(centers_initial)
 
     #qltmap: import mapping data
@@ -47,6 +46,7 @@ qltmap_cls_pois <- function(
     if(is.character(qltmap)) qltmap <- readRDS(qltmap)
 
     if(is.null(elements)) elements <- names(qltmap)
+    # load data
 
     dims <- dim(qltmap[[1]])
 
@@ -54,7 +54,7 @@ qltmap_cls_pois <- function(
     if(all(elements %in% names(qltmap)) == FALSE) stop("Specified wrong element which is not present in qltmap")
     if(all(elements %in% names(centers_initial)) == FALSE) stop("Specified wrong element which is not present in centers_initial")
 
-    #####initial clusters===================================================================================================
+    # initial clusters
     x <- qltmap[elements] %>>%
       lapply(unlist, use.names = FALSE) %>>%
       as.data.frame
