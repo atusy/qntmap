@@ -24,18 +24,17 @@ read_cnd.default <- function(x, ...) {
 read_cnd.map_cnd <- function(x, ...) {pipeline({
   x
     strsplit(' ')
-    lapply(`[`, seq(1, max(map_int(., length))))
+    lapply(`[`, seq(max(map_int(., length))))
     .x ~ Reduce(rbind, .x)
-    as.data.frame(stringsAsFactors = FALSE)
+    as.data.frame
     setNames(paste0('V', seq(0, by = 1, length.out = length(.))))
     mutate(V0 = str_replace(V0, '\\$', ''))
     separate('V0', into = c('id', 'no'), sep = '%', fill = 'right', convert = TRUE)
-    nest(-id)
-    mutate(data = setNames(data, id))
-    `[[`('data')
+    split(.$id)
+    map(select, -id)
     map(map, type.convert, as.is = TRUE)
     map(map, unname)
-    map(as.data.frame, stringsAsFactors = FALSE)
+    map(as.data.frame)
     map(arrange, no)
     map(select, -no)
     `class<-`('map_cnd')
