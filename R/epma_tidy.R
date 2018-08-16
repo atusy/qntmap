@@ -7,9 +7,6 @@
 #' @param qltmap object returned by qltmap_load
 #' @param cluster object returned by qltmap_cls_pois
 #'
-#' @importFrom data.table as.data.table
-#' @importFrom data.table data.table
-#' @importFrom data.table fread
 #' @importFrom dplyr distinct
 #' @importFrom dplyr left_join
 #' @importFrom dplyr mutate
@@ -73,24 +70,25 @@ epma_tidy <- function(
       distinct(nr0, .keep_all = TRUE)
     })
   qnt$elm$dwell <- beam['dwell'] / 1000
-  qnt$elm$beam_map <- beam['beam']
+  qnt$elm$beam_map <- beam['beam_map']
 
 
 
   ##Let's join
-  qnt$cmp <- qltmap[qnt$elm$elint] %>>%
-    setNames(qnt$elm$elem) %>>%
-    lapply(unlist, use.names = FALSE) %>>%
-    as.data.frame %>>%
-    `[`(qnt$cnd$nr, ) %>>%
-    list %>>%
-    setNames('map') %>>%
-    c(map(qnt$cmp, `[`, qnt$cnd$id, )) %>>% 
-    map(mutate, id = qnt$cnd$id) %>>%
-    bind_rows(.id = 'var') %>>%
-    gather(elm, val, -var, -id) %>>%
+  qnt$cmp <- pipeline({
+    qltmap[qnt$elm$elint]
+    setNames(qnt$elm$elem)
+    lapply(unlist, use.names = FALSE)
+    as.data.frame
+    `[`(qnt$cnd$nr, )
+    list
+    setNames('map')
+    c(map(qnt$cmp, `[`, qnt$cnd$id, ))
+    map(mutate, id = qnt$cnd$id)
+    bind_rows(.id = 'var')
+    gather(elm, val, -var, -id)
     spread(var, val)
-
+  })
   #join cmp, cnd, elem in qnt
   #calculate 95% ci of data
   qnt$cnd %>>%
