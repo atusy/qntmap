@@ -14,13 +14,13 @@
 #' @importFrom stringr str_detect
 #' @importFrom data.table as.data.table
 #' @importFrom data.table data.table
-#' @importFrom data.table fread
+#' @importFrom data.table fwrite
 #'
 #' @export
 #'
 #'
 read_qnt <- function(
-  wd = NULL,
+  wd = '.',
   RDS = 'qnt.RDS',
   phase_list = NULL,
   renew = FALSE,
@@ -29,14 +29,16 @@ read_qnt <- function(
 
   cd <- getwd()
   on.exit(setwd(cd))
+  setwd(wd)
 
-  if(!is.null(wd)) setwd(wd)
+  if(!renew && file.exists(RDS)) return(readRDS(RDS))
 
-  if(!renew && file.exists(RDS))
-    return(readRDS(RDS))
-
-  if(!file.exists('.qnt'))
-    stop('wd must be a path where .qnt directory exists')
+  dir_qnt <- dir(
+      wd, pattern = ('(.*_QNT|^\\.qnt)$'), all.files = TRUE
+    )[1]
+  if(is.na(dir_qnt)) stop(
+    'wd must be a path where .qnt or *_QNT directory exists'
+  )
 
   #load .qnt files
   qnt <- c(
@@ -49,21 +51,30 @@ read_qnt <- function(
       'mes',
       'net',
       'pkint',
+      'peak',
       # 'sigma',
       'stg',
       'wt'
     ) %>>%
-    (paste0('./.qnt/', ., '.qnt')) %>>%
+    (paste0(dir_qnt, '/', ., '.qnt')) %>>%
     `[`(file.exists(.)) %>>%
     setNames(str_replace_all(., '(^.*/)|(\\.qnt$)', '')) %>>%
     lapply(fread)
 
+  elemw <- paste(
+      dir_qnt, 
+      c('.cnd/elemw.cnd', 'Pos_0001/data001.cnd'), 
+      sep = '/'
+    )
+  
   #extract elemental data
   elm <- data.table(
       elem = unlist(qnt$elem[1, -c(1, 2)], use.names = FALSE),
       elint = unlist(qnt$elint[1, -c(1, 2)], use.names = FALSE),
-      read_qnt_elemw()
+      read_qnt_elemw(elemw[file.exists(elemw)][1])
     )
+  
+  rm(elemw)
 
   cnd <- qnt$stg[, c(1, 5, 6, 7, 10)] %>>% 
     setNames(c('id', 'x', 'y', 'z', 'comment')) %>>%
@@ -71,7 +82,10 @@ read_qnt <- function(
       beam = qnt$mes$V3,
       phase =
         if(is.null(phase_list)) {
-          comment
+          comment %>>%
+            str_replace_all('[:blank:]{2,}', ' ') %>>%
+            str_replace(' $', '') %>>%
+            str_replace('^ ', '')
         } else {
           phase_list %>>%
             fread %>>%
@@ -93,6 +107,12 @@ read_qnt <- function(
       class = c('qnt', 'list')
     )
 
+  if(is.null(phase_list) && !file.exists('phase_list0.csv')) pipeline({
+    cnd
+    select(id, phase)
+    mutate(use = TRUE)
+    fwrite('phase_list0.csv')
+  })
   if(saving) saveRDS(QNT, RDS)
 
   return(QNT)
@@ -103,7 +123,7 @@ read_qnt <- function(
 #' @inheritParams read_qnt
 #' @export
 qnt_load <- function(
-  wd = NULL, RDS = 'qnt.RDS', phase_list = NULL, renew = FALSE, saving = TRUE
+  wd = '.', RDS = 'qnt.RDS', phase_list = NULL, renew = FALSE, saving = TRUE
 ) {
   warning('qnt_load is deprecated use read_xmap')
   read_qnt(wd, RDS, phase_list, renew, saving)

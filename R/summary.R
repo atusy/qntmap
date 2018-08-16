@@ -29,7 +29,7 @@ summary.qntmap <- function(object, ...) {pipeline({
   lapply(`[[`, 'wt') 
   lapply(unlist) 
   lapply(summary) 
-  lapply(round, 2) 
+  lapply(round, 2L) 
   lapply(as.list) 
   bind_rows(.id = 'element') 
   as.data.frame()
