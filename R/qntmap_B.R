@@ -41,3 +41,4 @@ qntmap_B <- function(epma, fix = NULL) {pipeline({
     ) 
     nest(-stg, .key = '.B')
 })}
+
