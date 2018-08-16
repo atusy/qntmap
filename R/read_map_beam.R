@@ -22,7 +22,9 @@ read_map_beam.map_cnd <- function(x, ...) {pipeline({
 })}
 
 #' read mapping beam conditions
-#' @inheritParams read_map.0_cnd
+#' @param x x
+#' @param pattern patterns to be matched
+#' @param n nth lines
 read_map_beam.0_cnd <- function(
   x,
   pattern = c(
