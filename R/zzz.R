@@ -1,3 +1,5 @@
+# small functions which are not exported
+
 #' confidence interval of observed data from poisson process
 #'
 #' @param x data frame containing variable whose data is from poisson process
@@ -6,20 +8,20 @@
 #' @param conf.level confidence level for the returned confidence interval.
 #'
 #' @importFrom dplyr bind_cols
+#' @importFrom pipeR pipeline
 #' @importFrom purrr map
 #' @importFrom purrr map2
 #' @importFrom stats qgamma
 #' @importFrom stats setNames
 #'
-#' @export
-#'
 cipois <- function(x, vars = names(x), offset = 1L, conf.level = 0.95) {
   low <- (1L - conf.level) / 2L
   high <- 1L - low
-  
-  x[vars] %>>%
-    map2(offset, `*`) %>>%
-    map(round) %>>%
+
+  pipeline({
+    x[vars]
+    map2(offset, `*`)
+    map(round)
     map(
       function(x) {
         data.frame(
@@ -27,13 +29,13 @@ cipois <- function(x, vars = names(x), offset = 1L, conf.level = 0.95) {
           H = qgamma(high, x + 1L)
         )
       }
-    ) %>>%
-    map2(offset, `/`) %>>%
-    map(setNames, c('L', 'H')) %>>%
-    unlist(recursive = FALSE) %>>%
+    )
+    map2(offset, `/`)
+    map(setNames, c('L', 'H'))
+    unlist(recursive = FALSE)
     bind_cols(x)
+  })
 }
-
 
 #' return integer as character flagged with 0
 #'
@@ -54,33 +56,24 @@ flag0 <- function(...) {
   )
 }
 
-
 #' color LUT
-#' @param palette palette to be used as LUT. either pcol (= pseudocolor) or gray. It is ignored when LUT is specified.
+#' @param palette palette to be used as LUT. either pcol (pseudocolor) or gray. It is ignored when LUT is specified.
 #' @param n number of output colors. When n is more than number of colors in the specified palette, output contains duplicated colors.
 #' @param dec FALSE in default outputs a vector of RGB colors. TRUE outputs matrix whose columns are R, G, and B, and whose values are in decimals.
 #' @importFrom grDevices col2rgb
 mycolors <- function(palette = c('pcol', 'gray'), n = NULL, dec = FALSE) {
   LUT <- colors[[match.arg(palette)]]
   
-  output <- 
-    if(is.null(n)) {
-      #return all colors
-      LUT
-    } else {
-      #return n colors
-      #n > length(LUT) is allowed by returning some duplicates
-      LUT[seq(1L, length(LUT), length.out = n)]
-    }
+  output <- `if`(
+    is.null(n),
+    LUT, # all colors
+    LUT[seq(1L, length(LUT), length.out = n)] # n colors allowing duplicates
+  )
   
-  if(dec){
-    #TRUE returns a matrix like R=0,...; G=255,...; B=129,....
-    #FALSE returns a vector like #000000, #000001,...
-    output <- t(col2rgb(output))
-    colnames(output) <- c('R', 'G', 'B')
-  }
-  
-  #return available LUTs or colors chosen from a LUT
+  # dec = TRUE returns a matrix like R=0,...; G=255,...; B=129,....
+  if(dec) return(`colnames<-`(t(col2rgb(output)), c('R', 'G', 'B')))
+
+  # dec = FALSE returns a vector like #000000, #000001,...
   output
 }
 
