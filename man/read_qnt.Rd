@@ -4,8 +4,8 @@
 \alias{read_qnt}
 \title{compile quantitative data}
 \usage{
-read_qnt(wd = NULL, RDS = "qnt.RDS", phase_list = NULL, renew = FALSE,
-  saving = TRUE)
+read_qnt(wd = ".", RDS = "qnt.RDS", phase_list = NULL,
+  renew = FALSE, saving = TRUE)
 }
 \arguments{
 \item{wd}{path to the directory containing .qnt directory}

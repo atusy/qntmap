@@ -4,13 +4,12 @@
 \alias{qltmap_cls_pois}
 \title{cluster mapping data into mineral species}
 \usage{
-qltmap_cls_pois(centers_initial, qltmap = NULL, elements = NULL,
-  wd = NULL, saving = TRUE, integration = TRUE)
+qltmap_cls_pois(centers_initial, dir_map, elements = NULL,
+  wd = dir_map, saving = TRUE, integration = TRUE,
+  qltmap = read_xmap(dir_map))
 }
 \arguments{
 \item{centers_initial}{a path to csv file telling initial centers of clusters}
-
-\item{qltmap}{default to NULL}
 
 \item{elements}{If NULL, all mapped elements are used for clustering. Specifiyng elements may reduce analytical time.}
 
@@ -19,6 +18,8 @@ qltmap_cls_pois(centers_initial, qltmap = NULL, elements = NULL,
 \item{saving}{TRUE or FALSE to save result}
 
 \item{integration}{TRUE or FALSE to integrate same phase with obiously different compositions. For example, when there are clusters named as Pl_NaRich and Pl_NaPoor, they are integrated to Pl.}
+
+\item{qltmap}{default to NULL}
 }
 \description{
 cluster mapping data into mineral species

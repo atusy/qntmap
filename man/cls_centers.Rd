@@ -4,7 +4,7 @@
 \alias{cls_centers}
 \title{Generate initial centroids for clustering}
 \usage{
-cls_centers(wd = NULL, dir_map, phase_fine = NULL, qnt = read_qnt(wd),
+cls_centers(wd = ".", dir_map, phase_fine = NULL, qnt = read_qnt(wd),
   qltmap = read_xmap(dir_map), saving = "centers_initial0.csv")
 }
 \arguments{

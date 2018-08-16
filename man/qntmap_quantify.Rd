@@ -4,12 +4,13 @@
 \alias{qntmap_quantify}
 \title{quantify qualtitative mapping data}
 \usage{
-qntmap_quantify(wd = NULL, dir_map, RDS_cluster, maps_x = NULL,
-  maps_y = NULL, fine_phase = NULL, fine_th = 0.9, qnt = qnt_load(wd),
-  qltmap = qltmap_load(dir_map), cluster = readRDS(RDS_cluster))
+qntmap_quantify(wd = ".", dir_map, RDS_cluster, maps_x = NULL,
+  maps_y = NULL, fine_phase = NULL, fine_th = 0.9,
+  qnt = read_qnt(wd), qltmap = read_xmap(dir_map),
+  cluster = readRDS(RDS_cluster), fixAB = NULL, fixB = NULL)
 }
 \arguments{
-\item{wd}{working directory which contains .qnt and .map directories}
+\item{wd}{working directory which contains .qnt and .map directories. Default is current directory.}
 
 \item{dir_map}{directory containing map data to be quantified}
 
@@ -28,6 +29,10 @@ qntmap_quantify(wd = NULL, dir_map, RDS_cluster, maps_x = NULL,
 \item{qltmap}{object of class qltmap}
 
 \item{cluster}{object of class PoiClaClu}
+
+\item{fixAB}{fix AB in case compositions of a mineral is constant}
+
+\item{fixB}{fix B}
 }
 \description{
 quantify qualtitative mapping data

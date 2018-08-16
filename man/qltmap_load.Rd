@@ -4,8 +4,9 @@
 \alias{qltmap_load}
 \title{DEPRECATED!! use read_xmap}
 \usage{
-qltmap_load(wd = NULL, DT = 0, RDS = "qltmap.RDS", renew = FALSE,
-  saving = TRUE)
+qltmap_load(wd = ".", DT = 0, RDS = "xmap.RDS", renew = FALSE,
+  saving = TRUE, .map = "(data)?[0-9]*[1-9](\\\\.csv|_map\\\\.txt)",
+  .cnd = "(data)?[0-9]*[1-9]\\\\.cnd")
 }
 \arguments{
 \item{wd}{working directory which contains mapping data}

@@ -4,8 +4,9 @@
 \alias{read_xmap}
 \title{read X-ray map data}
 \usage{
-read_xmap(wd = NULL, DT = 0, RDS = "qltmap.RDS", renew = FALSE,
-  saving = TRUE)
+read_xmap(wd = ".", DT = 0, RDS = "xmap.RDS", renew = FALSE,
+  saving = TRUE, .map = "(data)?[0-9]*[1-9](\\\\.csv|_map\\\\.txt)",
+  .cnd = "(data)?[0-9]*[1-9]\\\\.cnd")
 }
 \arguments{
 \item{wd}{working directory which contains mapping data}
