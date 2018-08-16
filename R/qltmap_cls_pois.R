@@ -7,18 +7,9 @@
 #' @param saving TRUE or FALSE to save result
 #' @param integration TRUE or FALSE to integrate same phase with obiously different compositions. For example, when there are clusters named as Pl_NaRich and Pl_NaPoor, they are integrated to Pl.
 #'
-#' @importFrom data.table as.data.table
-#' @importFrom data.table fread
 #' @importFrom dplyr group_by
-#' @importFrom dplyr select
-#' @importFrom dplyr summarise_all
 #' @importFrom dplyr ungroup
-#' @importFrom dplyr one_of
-#' @importFrom graphics pie
-#' @importFrom grDevices dev.copy
-#' @importFrom grDevices dev.off
-#' @importFrom grDevices png
-#' @importFrom pipeR %>>%
+#' @importFrom pipeR pipeline
 #' @importFrom PoiClaClu Classify
 #' @importFrom tidyr gather
 #' @importFrom tidyr spread
@@ -55,18 +46,19 @@ qltmap_cls_pois <- function(
     )
 
     # initial clusters
-    x <- qltmap[elements] %>>%
-      lapply(unlist, use.names = FALSE) %>>%
+    x <- pipeline({
+      qltmap[elements]
+      lapply(unlist, use.names = FALSE)
       as.data.frame
+    })
 
     rm(qltmap)
 
-    y <- centers_initial %>>%
-      select(one_of(elements)) %>>%
-      apply(1, function(y) colSums((t(x) - y) ^ 2)) %>>%
+    y <- pipeline({
+      centers_initial[, elements]
+      apply(1, function(y) colSums((t(x) - y) ^ 2))
       apply(1, which.min)
-
-
+    })
 
     # Classify by PoiClaClu 
     result <- PoiClaClu::Classify(x, y, x)
@@ -77,24 +69,27 @@ qltmap_cls_pois <- function(
     names(result$ytehat) <- centers_initial$phase[result$ytehat]
 
     # Find representative values of each clusters (~ centers)
-    result$center <- x %>>%
-      lapply(as.double) %>>%
-      as.data.table %>>%
-      mutate(phase = names(result$ytehat)) %>>%
-      gather(elm, val, -phase) %>>%
-      group_by(phase, elm) %>>%
-      summarise(val = median(val)) %>>%
-      ungroup %>>%
-      spread(elm, val) %>>%
-      as.data.table
+    result$center <- pipeline({
+      x
+      lapply(as.double)
+      as.data.frame
+      mutate(phase = names(result$ytehat))
+      gather(elm, val, -phase)
+      group_by(phase, elm)
+      summarise(val = median(val))
+      ungroup
+      spread(elm, val)
+    })
 
     # estimate membership of each clusters
-    result$membership <- result$discriminant %>>%
-      `-`(apply(., 1, max)) %>>%
-      exp %>>%
+    result$membership <- pipeline({
+      result$discriminant
+      `-`(apply(., 1, max))
+      exp
       `/`(rowSums(.))
+    })
 
-    if(is.vector(result$membership)) result$membership <- as.matrix(result$membership)
+    if(is.null(dim(result$membership))) result$membership <- as.matrix(result$membership)
 
     if(nrow(centers_initial) == ncol(result$membership)) {
       colnames(result$membership) <- centers_initial$phase
@@ -135,42 +130,4 @@ qltmap_cls_pois <- function(
 
     result
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
