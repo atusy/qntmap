@@ -43,10 +43,8 @@ qntmap_quantify <- function(
   setwd(wd)
 
   #mapping conditions
-  cnd <- dir(dir_map, pattern = '^(map|0)\\.cnd$', full.names = TRUE)
-  pos <- read_map_pos(cnd)
-  rm(cnd)
-  
+  pos <- read_map_pos(dir(dir_map, pattern = '^(map|0)\\.cnd$', full.names = TRUE))
+
   if(is.null(maps_x)) maps_x <- pos$px[1]
   if(is.null(maps_y)) maps_y <- pos$px[2]
 
