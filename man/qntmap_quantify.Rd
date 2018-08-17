@@ -5,8 +5,9 @@
 \title{quantify qualtitative mapping data}
 \usage{
 qntmap_quantify(wd = NULL, dir_map, RDS_cluster, maps_x = NULL,
-  maps_y = NULL, fine_phase = NULL, fine_th = 0.9, qnt = qnt_load(wd),
-  qltmap = qltmap_load(dir_map), cluster = readRDS(RDS_cluster))
+  maps_y = NULL, fine_phase = NULL, fine_th = 0.9,
+  qnt = qnt_load(wd), qltmap = qltmap_load(dir_map),
+  cluster = readRDS(RDS_cluster))
 }
 \arguments{
 \item{wd}{working directory which contains .qnt and .map directories}

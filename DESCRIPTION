@@ -8,7 +8,7 @@ Description: Analyze EPMA mapping data and produce chemical mass concentration m
 License: MIT + file LICENSE
 Encoding: UTF-8
 LazyData: true
-RoxygenNote: 6.0.1
+RoxygenNote: 6.1.0
 Imports: data.table,
     dplyr,
     easycsv,

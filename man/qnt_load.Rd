@@ -4,8 +4,8 @@
 \alias{qnt_load}
 \title{compile quantitative data}
 \usage{
-qnt_load(wd = NULL, RDS = "qnt.RDS", phase_list = NULL, renew = FALSE,
-  saving = TRUE)
+qnt_load(wd = NULL, RDS = "qnt.RDS", phase_list = NULL,
+  renew = FALSE, saving = TRUE)
 }
 \arguments{
 \item{wd}{path to the directory containing .qnt directory}
