@@ -52,9 +52,11 @@ cls_centers <- qltmap_cls_centers <- function(
     )
     group_by(elint) # Peform least squares and estimate 99% prediction interval
     mutate(
+      map_finite = is.finite(map),
       map_est =
         pkint *
-        lsfit(pkint[!is.na(map)], map[!is.na(map)], w[!is.na(map)], intercept = FALSE)$coef,
+        lsfit(pkint[map_finite], map[map_finite], w[map_finite], intercept = FALSE)$coef,
+      map_fnite = NULL, 
       pi_L = qnbinom(0.005, map_est, 0.5),
       pi_H = qnbinom(0.995, map_est + 1, 0.5)
     )
@@ -67,9 +69,7 @@ cls_centers <- qltmap_cls_centers <- function(
     ungroup
     select(elint, map, map_est, within_pi, n_within_pi, phase, id, nr)
     bind_rows(
-      if(all(quantified)) {
-        NULL
-      } else {
+      if(!all(quantified)) {
         pipeline({
           .
           filter(elint == elint[1])
