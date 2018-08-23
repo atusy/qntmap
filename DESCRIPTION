@@ -1,11 +1,10 @@
 Package: qntmap
 Type: Package
 Title: What the Package Does (Title Case)
-Version: 0.1.0
-Author: Who wrote it
-Maintainer: The package maintainer <yourself@somewhere.net>
-Description: More about what it does (maybe more than one line)
-    Use four spaces when indenting paragraphs within the Description.
+Version: 0.2.0
+Author: YASUMOTO Atsushi
+Maintainer: YASUMOTO Atsushi <atusy.7+qntmap@gmail.com>
+Description: Analyze EPMA mapping data and produce chemical mass concentration map
 License: MIT + file LICENSE
 Encoding: UTF-8
 LazyData: true
@@ -22,4 +21,4 @@ Imports: data.table,
     stringr,
     tibble,
     tidyr
-Depends: R(>= 2.10.0)
+Depends: R(>= 3.1.2)
