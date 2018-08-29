@@ -94,7 +94,7 @@ qltmap_cls_pois <- function(
   # Classify by PoiClaClu 
   result <- cluster(x, centers = centers[, elements])
 
-    if(is.null(dim(result$membership))) result$membership <- as.matrix(result$membership)
+    as.matrix
 
     if(nrow(centers_initial) == ncol(result$membership)) {
       colnames(result$membership) <- centers_initial$phase
