@@ -119,10 +119,10 @@ epma_tidy <- function(
     mutate(
       beam = beam * 1e-6,
       beam_map = beam_map * 1e-6,
-      bgint.L =
-        bgint - propagate_add(bgm2, bgm.L * bgm_pos, bgp2, bgp.L * bgp_pos),
-      bgint.H =
-        bgint + propagate_add(bgm2, bgm.H * bgm_pos, bgp2, bgp.H * bgp_pos),
+      .tmp = bgm.L * bgm_pos,
+      bgint.L = bgint - propagate_add(bgm2, .tmp, bgp2, .tmp),
+      .tmp = bgm.H * bgm_pos,
+      bgint.H = bgint + propagate_add(bgm2, .tmp, bgp2, .tmp),
       .tmp = bgp_pos + bgm_pos,
       bgint = bgint / .tmp,
       bgint.L = bgint.L / .tmp,
