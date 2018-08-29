@@ -84,7 +84,7 @@ qntmap <- function() {
   cat(paste0(dir_map, '/qntmap\n\n'))
   
   cat('Summary of quantified mapping data')
-  print(summary(qntmap))
+  print(summary(qmap))
   
-  invisible(qntmap)
+  invisible(qmap)
 }
