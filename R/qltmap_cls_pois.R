@@ -31,12 +31,12 @@ cluster <- function(x, centers) {
 #'
 #'
 #' @export
-qltmap_cls_pois <- function(
     centers_initial,
     dir_map,
     elements = NULL,
     saving = TRUE,
     integration = TRUE,
+cluster_xmap <- function(
   xmap,
 ) {
 

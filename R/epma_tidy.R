@@ -2,7 +2,7 @@
 #'
 #' @param dir_map path to the directory containing mapping analysis e.g., ./.map/1/
 #' @param RDS_cluster path to the clustering result
-#' @param qnt object returned by qnt_load
+#' @param qnt object returned by read_qnt
 #' @param xmap object returned by read_xmap
 #' @param cluster object returned by cluster_xmap
 #'
@@ -24,7 +24,7 @@
 #' @export
 #'
 #'
-epma_tidy <- function(
+tidy_epma <- function(
   dir_map = NULL,
   RDS_cluster = NULL,
   qnt = read_qnt(),
@@ -133,3 +133,7 @@ epma_tidy <- function(
     )
 
 }
+
+#' @export
+#' @rdname tidy_epma
+epma_tidy <- tidy_epma

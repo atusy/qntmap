@@ -25,7 +25,7 @@
 #' @importFrom tidyr spread
 #'
 #' @export
-cls_initialize <- function(
+cluster_centers <- function(
   dir_map,
   phase_fine = NULL,
   qnt = read_qnt(),
