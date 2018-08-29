@@ -1,16 +1,12 @@
 #' integrate clusters named with same prefix (e.g., A_1 and A_2 are integrated to be A)
 #'
 #' @param result result of qltmap_cls_pois
-#' @param wd Directory containing mapping data. If NULL, current directory is wd.
 #' @param saving TRUE or FALSE to save result
 #'
 #' @importFrom stringr str_replace
 #'
 #' @export
 qltmap_cls_pois_integrate <- function(result, wd = '.', saving = TRUE) {
-  cd <- getwd()
-  on.exit(setwd(cd))
-  setwd(wd)
 
   # integrate clusters on demand
   cls <- as.factor(str_replace(colnames(result$membership), '_.*$', ''))
