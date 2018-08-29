@@ -108,7 +108,7 @@ cluster_xmap <- function(
   result$elements <- elements
 
   components <- c('ytehat', 'cluster', 'center', 'membership', 'date', 'dims', 'elements')
-  if(saving) qltmap_cls_save(result, 'pois', components)
+  if(saving) cluster_save(result, 'pois', components)
 
   if(integration && any(grepl('_', colnames(result$membership))))
       result <- cluster_group(result, saving = saving)
