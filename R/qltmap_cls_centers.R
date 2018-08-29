@@ -25,8 +25,8 @@
 #' @importFrom tidyr spread
 #'
 #' @export
-cls_centers <- qltmap_cls_centers <- function(
   wd = '.',
+cls_initialize <- function(
   dir_map,
   phase_fine = NULL,
   qnt = read_qnt(wd),
@@ -121,10 +121,17 @@ cls_centers <- qltmap_cls_centers <- function(
 }
 
 
-
-
-
-
+#' @export
+#' @rdname cls_initialize
+#' @param wd working directory which contains .qnt directory. Use current directory if NULL
+qltmap_cls_centers <- function() {
+  warning('qltmap_cls_centers is deprecated. Use cls_initialize instead.')
+  cd <- getwd()
+  on.exit(cd)
+  setwd(wd)
+  cls_initialize(dir_map = dir_map, phase_fine = phase_fine, qnt = qnt, qltmap = qltmap, saving = saving)
+}
+formals(qltmap_cls_centers) <- c(wd = '.', formals(cls_initialize))
 
 
 
