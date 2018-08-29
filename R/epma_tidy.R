@@ -88,10 +88,8 @@ epma_tidy <- function(
   #calculate 95% ci of data
   qnt$cnd %>>%
     mutate(
-      cls = if(is.list(cluster)) 
-        names(cluster$ytehat)[qnt$cnd$nr] else NA,
-      mem = if(is.list(cluster)) 
-        apply(cluster$membership[qnt$cnd$nr, ], 1, max) else NA,
+      cls = `if`(is.na(cluster), NA, names(cluster$ytehat)[qnt$cnd$nr]),
+      mem = `if`(is.na(cluster), NA, apply(cluster$membership[qnt$cnd$nr, ], 1, max)),
       elm = list(qnt$elm)
     ) %>>%
     unnest %>>%
