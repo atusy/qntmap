@@ -5,6 +5,7 @@
 #' @param RDS name of RDS file to be saved/readed
 #' @param renew if TRUE and the file specified by RDS exists, that file will be loaded
 #' @param saving whether or not to save the data as RDS file
+#' @param .map,.cnd regular expressions to match ASCII converted mapping results (`.map`) and condition files (`.cnd`)
 #'
 #' @importFrom pipeR pipeline
 #' @importFrom purrr map_if
