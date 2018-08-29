@@ -56,7 +56,6 @@ cluster_xmap <- function(
     rm(y)
 
     # give phase names to result$ytehat
-    names(result$ytehat) <- centers_initial$phase[result$ytehat]
 
     # Find representative values of each clusters (~ centers)
     result$center <- pipeline({
@@ -83,6 +82,7 @@ cluster_xmap <- function(
   # Classify by PoiClaClu 
   result <- cluster(x, centers = centers[, elements])
 
+  names(result$ytehat) <- result$cluster <- centers$phase[result$ytehat]
     as.matrix
 
     if(nrow(centers_initial) == ncol(result$membership)) {
