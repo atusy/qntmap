@@ -80,7 +80,7 @@ read_xmap <- function(
 #' @inheritParams read_xmap
 #' @export
 qltmap_load <- function() {
-  warning('qltmap_load is deprecated use read_xmap')
+  warning('qltmap_load is deprecated. Use read_xmap instead.')
   read_xmap(wd, DT, RDS, renew, saving)
 }
 
