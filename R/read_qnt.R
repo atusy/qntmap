@@ -113,9 +113,8 @@ read_qnt <- function(
     mutate(use = TRUE)
     fwrite('phase_list0.csv')
   })
-  if(saving) saveRDS(QNT, RDS)
-
-  return(QNT)
+  
+  save4qm(QNT, 'qnt.RDS', saving)
 
 }
 

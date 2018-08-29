@@ -70,10 +70,10 @@ read_xmap <- function(
       lapply(lapply, as.integer) 
       lapply(as.data.frame) 
       structure(
-        class = c('xmap', class(.)),
         deadtime = DT
+        class = c('qm_xmap', class(.)),
       )
-      ~ if(saving) saveRDS(., 'xmap.RDS')
+      save4qm('xmap.RDS', saving)
   })
 }
 

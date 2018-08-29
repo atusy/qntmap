@@ -23,7 +23,7 @@ cluster_group <- function(result, saving = TRUE) {
     function(i) rowSums(result$membership[, cls == i, drop = FALSE])
   )
 
-  if(saving) qltmap_cls_save(result, 'pois_integrated')
+  if(saving) save4qm(result, 'grouped')
 
   class(result) <- c(class(result), 'integrated')
   result

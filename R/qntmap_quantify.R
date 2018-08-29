@@ -124,13 +124,6 @@ qntmap_quantify <- function(
         ))
       ) 
       `class<-`(c('qntmap', 'list')) 
-      ~ saveRDS(., paste0(dir_qntmap, '/qntmap.RDS'))
-      ~ pipeline({
-        unlist(., recursive = FALSE)
-        walk2(
-         paste0(dir_qntmap, '/', str_replace(names(.), '\\.', '_'), '.csv'),
-         fwrite
-        )
-      })
+      save4qm(dir_qntmap = dir_qntmap)
   })
 }
