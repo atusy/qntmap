@@ -16,8 +16,8 @@ cluster <- function(x, centers) {
 
 #' cluster mapping data into mineral species
 #'
-#' @param qltmap default to NULL
 #' @param centers a path to csv file telling initial centers of clusters
+#' @param xmap default to NULL
 #' @param elements If NULL, all mapped elements are used for clustering. Specifiyng elements may reduce analytical time.
 #' @param wd Directory containing mapping data. If NULL, current directory is wd.
 #' @param saving TRUE or FALSE to save result
@@ -38,7 +38,7 @@ qltmap_cls_pois <- function(
     elements = NULL,
     saving = TRUE,
     integration = TRUE,
-    qltmap = read_xmap(dir_map)
+  xmap,
 ) {
 
 
@@ -47,12 +47,10 @@ qltmap_cls_pois <- function(
 
     # initial clusters
     x <- pipeline({
-      qltmap[elements]
       lapply(unlist, use.names = FALSE)
       as.data.frame
     })
 
-    rm(qltmap)
 
 
     rm(y)
@@ -72,6 +70,8 @@ qltmap_cls_pois <- function(
       ungroup
       spread(elm, val)
     })
+    xmap[elements]
+  rm(xmap)
 
     # estimate membership of each clusters
     result$membership <- pipeline({

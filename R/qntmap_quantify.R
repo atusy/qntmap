@@ -8,7 +8,7 @@
 #' @param fine_phase fine-grained phases which tend to be appear in multi-phase pixels
 #' @param fine_th 0.9
 #' @param qnt object of class qnt
-#' @param qltmap object of class qltmap
+#' @param xmap object of class xmap
 #' @param cluster object of class PoiClaClu
 #' @param fixAB fix AB in case compositions of a mineral is constant
 #' @param fixB fix B
@@ -32,7 +32,7 @@ qntmap_quantify <- function(
   fine_phase = NULL,
   fine_th = 0.9,
   qnt = read_qnt(wd),
-  qltmap = read_xmap(dir_map),
+  xmap = read_xmap(dir_map),
   cluster = readRDS(RDS_cluster),
   fixAB = NULL,
   fixB = NULL
@@ -60,7 +60,7 @@ qntmap_quantify <- function(
   distinguished <- any(grepl('_', colnames(cluster$membership)))
   epma <- pipeline({
     epma_tidy(
-      wd = wd, dir_map = dir_map, qnt = qnt, qltmap = qltmap, cluster = cluster
+      wd = wd, dir_map = dir_map, qnt = qnt, xmap = xmap, cluster = cluster
     ) 
       filter(elm %in% qnt$elm$elem) 
       mutate(
@@ -95,13 +95,13 @@ qntmap_quantify <- function(
 
   pipeline({
     qntmap_AB(AG, B, stg)  #AB
-      qntmap_AB_fix(fixAB, X, fine_th, qltmap)
+      qntmap_AB_fix(fixAB, X, fine_th, xmap)
       map(map, `*`, X)  #XAB
       map(map_at, 'se', map, square) 
       map(map, reduce_add) 
       map(map_at, 'se', sqrt) 
       map2(
-        qltmap[qnt$elm$elint[order(qnt$elm$elem)]], 
+        xmap[qnt$elm$elint[order(qnt$elm$elem)]], 
         function(xab, i) map(xab, `*`, i)
       )  #XABI
       map2(XAG, map2, `-`)  #XABI - XAG

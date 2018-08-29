@@ -59,8 +59,8 @@ qntmap <- function() {
   cat('Loading quantified data\n')
   qnt <- read_qnt(wd, phase_list, renew = TRUE)
   cat('Peforming cluster analysis\n')
-  centers <- qltmap_cls_centers(qnt = qnt, qltmap = xmap, dir_map = dir_map)
-  cls <- qltmap_cls_pois(centers, xmap, wd = dir_map)
+  centers <- cluster_centers(qnt = qnt, qltmap = xmap, dir_map = dir_map)
+  cls <- cluster_xmap(centers, xmap, wd = dir_map)
   cat('Finished cluster analysis. Result is in ')
   cat(dir_map)
   cat('/clustering\n\n')
@@ -70,11 +70,11 @@ qntmap <- function() {
   cat('\n')
   
   cat('Quantifying mapping data\n')
-  qntmap <- qntmap_quantify(
+  qmap <- qmap_quantify(
     wd = wd,
     dir_map = dir_map,
     qnt = qnt,
-    qltmap = xmap,
+    xmap = xmap,
     cluster = cls,
     fine_phase = if(length(fine_phase)) fine_phase else NULL
   )

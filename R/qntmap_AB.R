@@ -68,7 +68,7 @@ qntmap_AB <- function(A, B, stg) {pipeline({
 #' @importFrom purrr map2_dbl
 #' @importFrom matrixStats weightedMedian
 
-qntmap_AB_fix <- function(AB, fix = NULL, X, fine_th = .90, qltmap) {
+qntmap_AB_fix <- function(AB, fix = NULL, X, fine_th = .90, xmap) {
   
   if(is.null(fix)) return(AB)
 
@@ -81,7 +81,7 @@ qntmap_AB_fix <- function(AB, fix = NULL, X, fine_th = .90, qltmap) {
       gather(elm, wt, -phase, -w)
       mutate(
         i = pipeline({
-          qltmap[str_replace(elm, '[0-9]*O[0-9]*', '')]
+          xmap[str_replace(elm, '[0-9]*O[0-9]*', '')]
             map(unlist, use.names = FALSE)
             map2_dbl(w, weightedMedian, na.rm = TRUE)
         }),

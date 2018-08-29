@@ -1,4 +1,4 @@
-#' save the result of qltmap_cls_pois() or qltmap_cls_pois_integrate() as RDS file and png file
+#' save the result of `cluster_xmap()` or `cluster_group()` as RDS file and png file
 #'
 #' @param result result of clustering
 #' @param name_write name of result to be written
@@ -6,7 +6,7 @@
 #'
 #' @importFrom png writePNG
 #'
-qltmap_cls_save <- function(result, name_write, components = NULL) {
+xmap_cls_save <- function(result, name_write, components = NULL) {
   #setting for output
   dir_out <- 'clustering'
   dir.create(dir_out, showWarnings = FALSE)

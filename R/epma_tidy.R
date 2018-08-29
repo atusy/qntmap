@@ -4,8 +4,8 @@
 #' @param dir_map path to the directory containing mapping analysis e.g., ./.map/1/
 #' @param RDS_cluster path to the clustering result
 #' @param qnt object returned by qnt_load
-#' @param qltmap object returned by qltmap_load
-#' @param cluster object returned by qltmap_cls_pois
+#' @param xmap object returned by read_xmap
+#' @param cluster object returned by cluster_xmap
 #'
 #' @importFrom dplyr distinct
 #' @importFrom dplyr left_join
@@ -29,7 +29,7 @@ epma_tidy <- function(
   dir_map = NULL,
   RDS_cluster = NULL,
   qnt = read_qnt(wd),
-  qltmap = if(is.null(dir_map)) NULL else read_xmap(dir_map),
+  xmap = if(is.null(dir_map)) NULL else read_xmap(dir_map),
   cluster = if(is.null(RDS_cluster)) NA else readRDS(RDS_cluster)
 ) {
 
@@ -71,7 +71,7 @@ epma_tidy <- function(
 
   ##Let's join
   qnt$cmp <- pipeline({
-    qltmap[qnt$elm$elint]
+    xmap[qnt$elm$elint]
     setNames(qnt$elm$elem)
     lapply(unlist, use.names = FALSE)
     as.data.frame
