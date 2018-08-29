@@ -16,8 +16,8 @@ cluster <- function(x, centers) {
 
 #' cluster mapping data into mineral species
 #'
-#' @param centers_initial a path to csv file telling initial centers of clusters
 #' @param qltmap default to NULL
+#' @param centers a path to csv file telling initial centers of clusters
 #' @param elements If NULL, all mapped elements are used for clustering. Specifiyng elements may reduce analytical time.
 #' @param wd Directory containing mapping data. If NULL, current directory is wd.
 #' @param saving TRUE or FALSE to save result
