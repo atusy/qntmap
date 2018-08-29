@@ -129,10 +129,8 @@ epma_tidy <- function(
       bgint.L = bgint.L / .tmp,
       bgint.H = bgint.H / .tmp,
       .tmp = NULL,
-      net.L =
-        net - propagate_add(pkint, pkint.L, bgint, bgint.L),
-      net.H =
-        net + propagate_add(pkint, pkint.H, bgint, bgint.H)
+      net.L = net - propagate_add(pkint, pkint.L, bgint, bgint.L),
+      net.H = net + propagate_add(pkint, pkint.H, bgint, bgint.H)
     )
 
 }
