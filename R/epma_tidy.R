@@ -26,17 +26,12 @@
 #'
 #'
 epma_tidy <- function(
-  wd = '.',
   dir_map = NULL,
   RDS_cluster = NULL,
   qnt = read_qnt(wd),
   qltmap = if(is.null(dir_map)) NULL else read_xmap(dir_map),
   cluster = if(is.null(RDS_cluster)) NA else readRDS(RDS_cluster)
 ) {
-
-  cd <- getwd()
-  on.exit(setwd(cd))
-  setwd(wd)
 
   #load mapping conditions
   cnd <- pipeline({
