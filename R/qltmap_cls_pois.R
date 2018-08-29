@@ -1,3 +1,19 @@
+#' Poisson distribution based custering based on `PoiClaClu:Classify()`
+#' @param x data frame or matrix
+#' @param center data frame or matrix
+#' @importFrom PoiClaClu Classify
+#' @export
+cluster <- function(x, centers) {
+  x_trans <- t(x)
+  y <- pipeline({
+    centers
+    apply(1, function(y) colSums(x_trans - y) ^ 2)
+    apply(1, which.min)
+  })
+  rm(x_trans)
+  Classify(x, y, x)
+}
+
 #' cluster mapping data into mineral species
 #'
 #' @param centers_initial a path to csv file telling initial centers of clusters
@@ -54,14 +70,6 @@ qltmap_cls_pois <- function(
 
     rm(qltmap)
 
-    y <- pipeline({
-      centers_initial[, elements]
-      apply(1, function(y) colSums((t(x) - y) ^ 2))
-      apply(1, which.min)
-    })
-
-    # Classify by PoiClaClu 
-    result <- PoiClaClu::Classify(x, y, x)
 
     rm(y)
 
@@ -88,6 +96,8 @@ qltmap_cls_pois <- function(
       exp
       `/`(rowSums(.))
     })
+  # Classify by PoiClaClu 
+  result <- cluster(x, centers = centers[, elements])
 
     if(is.null(dim(result$membership))) result$membership <- as.matrix(result$membership)
 
