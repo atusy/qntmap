@@ -60,7 +60,7 @@ qntmap <- function() {
   qnt <- read_qnt(wd, phase_list, renew = TRUE)
   cat('Peforming cluster analysis\n')
   centers <- cluster_centers(qnt = qnt, qltmap = xmap, dir_map = dir_map)
-  cls <- cluster_xmap(centers, xmap, wd = dir_map)
+  cls <- cluster_xmap(centers, xmap, dir_map = dir_map)
   cat('Finished cluster analysis. Result is in ')
   cat(dir_map)
   cat('/clustering\n\n')
