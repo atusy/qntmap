@@ -1,49 +1,36 @@
 #' Generate initial centroids for clustering randomly
 #'
+#' @param x matrix
 #' @param k number of clusters
-#' @param given given centers
-#' @param qltmap path to the .RDS file which compiles mapping data
-#' @param wd working directory which contains mapping data
+#' @param given given centers. not yet implemented
 #'
-#' @importFrom data.table as.data.table
-#' @importFrom data.table data.table
 #' @importFrom data.table fwrite
 #'
 #' @export
-qltmap_cls_centers_random <- function(k, given = NULL, qltmap = NULL, wd = NULL) {
-  cd <- getwd()
-  on.exit(setwd(cd))
-  if(!is.null(wd)) setwd(wd)
+cls_initialize_kpp <- function(x, k, given = NULL) {
+  # check parameters
+  if(!is.null(given) && nrow(x) < k) stop('Number of given centroids must be smaller than k')
+  if(k < 2) stop('k must be a numeric >= 2')
+  
+  # transform parameters
+  x <- as.matrix(x)
+  x_trans <- t(x)
 
-  #qltmap: import mapping data
-  if(!is.matrix(qltmap)) qltmap <- as.matrix(as.data.table((qltmap_load())))
-
-  n <- nrow(qltmap) # number of data points
+  # calculation
+  n <- nrow(x) # number of data points
+  n_seq <- seq(n)
   centers <- numeric(k) # IDs of centers
   distances <- matrix(numeric(n * (k - 1)), ncol = k - 1) # distances[i, j]: The distance between x[i,] and x[centers[j],]
   pr <- rep(1, n) # probability for sampling centers
-  for (i in 1:(k - 1)) {
+  for (i in seq(k - 1)) {
     centers[i] <- sample.int(n, 1, prob = pr) # Pick up the ith center
-    distances[, i] <- colSums((t(qltmap) - qltmap[centers[i], ])^2) # Compute (the square of) distances to the center
-    pr <- distances[cbind(1:n, max.col(-distances[, 1:i, drop = FALSE]))] # Compute probaiblity for the next sampling
+    distances[, i] <- colSums((x_trans - x[centers[i], ]) ^ 2) # Compute (the square of) distances to the center
+    pr <- distances[cbind(n_seq, max.col(-distances[, 1:i, drop = FALSE]))] # Compute probaiblity for the next sampling
   }
   centers[k] <- sample.int(n, 1, prob = pr)
 
-  fwrite(data.table(phase = centers, qltmap[centers, ]), 'centers_random0.csv')
+  data.frame(
+    phase = centers,
+    x[centers, ]
+  )
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
