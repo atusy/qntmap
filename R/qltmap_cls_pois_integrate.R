@@ -6,7 +6,7 @@
 #' @importFrom stringr str_replace
 #'
 #' @export
-cluster_groupe <- function(result, saving = TRUE) {
+cluster_group <- function(result, saving = TRUE) {
 
   # integrate clusters on demand
   cls <- as.factor(str_replace(colnames(result$membership), '_.*$', ''))
