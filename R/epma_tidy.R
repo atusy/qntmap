@@ -1,6 +1,5 @@
 #' compile epma data
 #'
-#' @param wd path to the directory containing .qnt directory
 #' @param dir_map path to the directory containing mapping analysis e.g., ./.map/1/
 #' @param RDS_cluster path to the clustering result
 #' @param qnt object returned by qnt_load
