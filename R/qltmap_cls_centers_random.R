@@ -5,9 +5,7 @@
 #' @param given given centers. not yet implemented
 #'
 #' @importFrom data.table fwrite
-#'
-#' @export
-cls_initialize_kpp <- function(x, k, given = NULL) {
+cluster_init_kpp <- function(x, k, given = NULL) {
   # check parameters
   if(!is.null(given) && nrow(x) < k) stop('Number of given centroids must be smaller than k')
   if(k < 2) stop('k must be a numeric >= 2')
