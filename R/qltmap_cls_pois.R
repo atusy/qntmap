@@ -36,15 +36,10 @@ qltmap_cls_pois <- function(
     centers_initial,
     dir_map,
     elements = NULL,
-    wd = dir_map,
     saving = TRUE,
     integration = TRUE,
     qltmap = read_xmap(dir_map)
 ) {
-    # set working directory
-    cd <- getwd()
-    on.exit(setwd(cd))
-    setwd(wd)
 
     # load data
     if(is.character(centers_initial)) 
