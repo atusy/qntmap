@@ -22,8 +22,8 @@ print.qntmap <- function(x, summarizing = TRUE, ...) {
     'x$CaO$wt returns CaO mass concentration map, and', 
     'x$CaO$se returns CaO standard error map', 
     '', 
-    'You can also access to the above data in csv files', 
-    'saved in "qntmap" directory below your mapping data directory', 
+    'The data are also accessible as csv files', 
+    'in "qntmap" directory below your mapping data directory', 
     'e.g., example/.map/1/qntmap/CaO_wt.csv',
     sep = '\n'
   )
