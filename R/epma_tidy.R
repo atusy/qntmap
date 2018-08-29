@@ -28,7 +28,7 @@
 epma_tidy <- function(
   dir_map = NULL,
   RDS_cluster = NULL,
-  qnt = read_qnt(wd),
+  qnt = read_qnt(),
   xmap = if(is.null(dir_map)) NULL else read_xmap(dir_map),
   cluster = if(is.null(RDS_cluster)) NA else readRDS(RDS_cluster)
 ) {
@@ -134,4 +134,3 @@ epma_tidy <- function(
     )
 
 }
-

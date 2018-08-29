@@ -19,7 +19,6 @@ cluster <- function(x, centers) {
 #' @param centers a path to csv file telling initial centers of clusters
 #' @param xmap default to NULL
 #' @param elements If NULL, all mapped elements are used for clustering. Specifiyng elements may reduce analytical time.
-#' @param wd Directory containing mapping data. If NULL, current directory is wd.
 #' @param saving TRUE or FALSE to save result
 #' @param integration TRUE or FALSE to integrate same phase with obiously different compositions. For example, when there are clusters named as Pl_NaRich and Pl_NaPoor, they are integrated to Pl.
 #'
@@ -118,9 +117,9 @@ qltmap_cls_pois <- function(
     if(saving) qltmap_cls_save(result, 'pois', components)
 
     if(integration && any(grepl('_', colnames(result$membership))))
-        result <- qltmap_cls_pois_integrate(result, wd = NULL, saving = saving)
 
     result
     missings <- setdiff(centers$phase, colnames(result$membership))
+      result <- cluster_group(result, saving = saving)
 }
 

@@ -25,11 +25,10 @@
 #' @importFrom tidyr spread
 #'
 #' @export
-  wd = '.',
 cls_initialize <- function(
   dir_map,
   phase_fine = NULL,
-  qnt = read_qnt(wd),
+  qnt = read_qnt(),
   xmap = read_xmap(dir_map),
   saving = './centers_initial0.csv'
 ) {
@@ -39,7 +38,6 @@ cls_initialize <- function(
   
   pipeline({
     epma_tidy( # Compile spot/map analysis
-      wd,
       dir_map,
       qnt = qnt,
       xmap = xmap,
