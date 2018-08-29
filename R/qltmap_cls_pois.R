@@ -25,102 +25,94 @@ cluster <- function(x, centers) {
 #' @importFrom dplyr group_by
 #' @importFrom dplyr ungroup
 #' @importFrom pipeR pipeline
-#' @importFrom PoiClaClu Classify
 #' @importFrom tidyr gather
 #' @importFrom tidyr spread
 #'
 #'
 #' @export
-    centers_initial,
-    dir_map,
-    elements = NULL,
-    saving = TRUE,
-    integration = TRUE,
 cluster_xmap <- function(
   xmap,
+  centers,
+  dir_map,
+  elements = intersect(colnames(xmap), colnames(centers)),
+  saving = TRUE,
+  integration = TRUE
 ) {
 
   centers$phase <- as.character(centers$phase)
+  dims <- dim(xmap[[1]])
 
-    dims <- dim(qltmap[[1]])
-
-
-    # initial clusters
-    x <- pipeline({
-      lapply(unlist, use.names = FALSE)
-      as.data.frame
-    })
-
-
-
-    rm(y)
-
-    # give phase names to result$ytehat
-
-    # Find representative values of each clusters (~ centers)
-    result$center <- pipeline({
-      x
-      lapply(as.double)
-      as.data.frame
-      mutate(phase = names(result$ytehat))
-      gather(elm, val, -phase)
-      group_by(phase, elm)
-      summarise(val = median(val))
-      ungroup
-      spread(elm, val)
-    })
+  x <- pipeline({
     xmap[elements]
+    lapply(unlist, use.names = FALSE)
+    as.data.frame
+  })
+  
   rm(xmap)
 
-    # estimate membership of each clusters
-    result$membership <- pipeline({
-      result$discriminant
-      `-`(apply(., 1, max))
-      exp
-      `/`(rowSums(.))
-    })
   # Classify by PoiClaClu 
   result <- cluster(x, centers = centers[, elements])
 
+  # give phase names to result$ytehat
   names(result$ytehat) <- result$cluster <- centers$phase[result$ytehat]
+  
+  # Find representative values of each clusters (~ centers)
+  result$center <- pipeline({
+    x
+    lapply(as.double)
+    as.data.frame
+    mutate(phase = result$cluster)
+    gather(elm, val, -phase)
+    group_by(phase, elm)
+    summarise(val = median(val))
+    ungroup
+    spread(elm, val)
+  })
+
+  # estimate membership of each clusters
+  result$membership <- pipeline({
+    result$discriminant
+    `-`(apply(., 1, max))
+    exp
+    `/`(rowSums(.))
     as.matrix
+  })
 
-    if(nrow(centers_initial) == ncol(result$membership)) {
-      colnames(result$membership) <- centers_initial$phase
+  if(nrow(centers) == ncol(result$membership)) {
+    colnames(result$membership) <- centers$phase
+  } else {
+    if(ncol(result$membership) == 1) {
+      colnames(result$membership) <- names(result$ytehat[1])
     } else {
-      if(ncol(result$membership) == 1) {
-        colnames(result$membership) <- names(result$ytehat[1])
-      } else {
-        TF <- !duplicated(names(result$ytehat))
-        colnames(result$membership)[apply(result$membership[TF, ], 1, which.max)] <- names(result$ytehat)[TF]
-        rm(TF)
-      }
-      result$membership <- cbind(
-          result$membership,
-          matrix(
-            0,
-            nrow(.),
-            ncol = length(missings),
-            dimnames = list(NULL, missings)
-          )
-        )[, as.character(centers_initial$phase)]
-      rm(missings)
+      TF <- !duplicated(result$cluster)
+      colnames(result$membership)[apply(result$membership[TF, ], 1, which.max)] <- result$cluster[TF]
+      rm(TF)
     }
-
-
-    # additional informations
-    class(result) <- c('qltmap_cls', 'list')
-    result$date <- format(Sys.time(), "%y%m%d_%H%M")
-    result$dims <- dims
-    result$elements <- elements
-
-    components <- c('ytehat', 'center', 'membership', 'date', 'dims', 'elements')
-    if(saving) qltmap_cls_save(result, 'pois', components)
-
-    if(integration && any(grepl('_', colnames(result$membership))))
-
-    result
     missings <- setdiff(centers$phase, colnames(result$membership))
+    result$membership <- cbind(
+        result$membership,
+        matrix(
+          0,
+          nrow(.),
+          ncol = length(missings),
+          dimnames = list(NULL, missings)
+        )
+      )[, centers$phase]
+    rm(missings)
+  }
+  
+  # additional informations
+  class(result) <- c('xmap_cls', 'list')
+  result$date <- format(Sys.time(), "%y%m%d_%H%M")
+  result$dims <- dims
+  result$elements <- elements
+
+  components <- c('ytehat', 'cluster', 'center', 'membership', 'date', 'dims', 'elements')
+  if(saving) qltmap_cls_save(result, 'pois', components)
+
+  if(integration && any(grepl('_', colnames(result$membership))))
       result <- cluster_group(result, saving = saving)
+
+  result
 }
 
