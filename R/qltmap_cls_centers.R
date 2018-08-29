@@ -31,7 +31,7 @@ cls_initialize <- function(
   phase_fine = NULL,
   qnt = read_qnt(wd),
   qltmap = read_xmap(dir_map),
-  saving = 'centers_initial0.csv'
+  saving = './centers_initial0.csv'
 ) {
 
   quantified <- names(qltmap) %in% qnt$elm$elint
