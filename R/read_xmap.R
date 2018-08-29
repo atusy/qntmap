@@ -1,6 +1,6 @@
 #' read X-ray map data
 #'
-#' @param wd working directory which contains mapping data
+#' @param wd directory which contains mapping data
 #' @param DT dead time in nano seconds (0 nsec in default)
 #' @param RDS name of RDS file to be saved/readed
 #' @param renew if TRUE and the file specified by RDS exists, that file will be loaded
@@ -27,9 +27,14 @@ read_xmap <- function(
   
   cd <- getwd()
   on.exit(setwd(cd))
+  wd <- path.expand(wd)
   setwd(wd)
   
-  if(renew) return(readRDS(RDS))
+  if(!renew) {
+    xmap <- readRDS(RDS)
+    attr(xmap, 'dir_map') <- wd
+    return(xmap)
+  }
   
   dwell <- read_map_beam(dir(pattern = '^(0|map)\\.cnd$'))['dwell'] * 1e-3
 
@@ -70,8 +75,9 @@ read_xmap <- function(
       lapply(lapply, as.integer) 
       lapply(as.data.frame) 
       structure(
-        deadtime = DT
         class = c('qm_xmap', class(.)),
+        deadtime = DT,
+        dir_map = wd
       )
       save4qm('xmap.RDS', saving)
   })

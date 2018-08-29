@@ -33,12 +33,11 @@ cluster <- function(x, centers) {
 cluster_xmap <- function(
   xmap,
   centers,
-  dir_map,
   elements = intersect(colnames(xmap), colnames(centers)),
   saving = TRUE,
   integration = TRUE
 ) {
-
+  dir_map <- attr(xmap, 'dir_map')
   centers$phase <- as.character(centers$phase)
   dims <- dim(xmap[[1]])
 
@@ -102,10 +101,11 @@ cluster_xmap <- function(
   }
   
   # additional informations
-  class(result) <- c('xmap_cls', 'list')
+  class(result) <- c('qm_cluster', 'list')
   result$date <- format(Sys.time(), "%y%m%d_%H%M")
   result$dims <- dims
   result$elements <- elements
+  result$dir_map <- dir_map
 
   components <- c('ytehat', 'cluster', 'center', 'membership', 'date', 'dims', 'elements')
   save4qm(result, 'pois', saving, components = components)

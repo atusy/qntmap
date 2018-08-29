@@ -1,7 +1,6 @@
 #' compile quantitative data
 #'
 #' @param wd path to the directory containing .qnt directory
-#' @param RDS name of RDS file to be saved/readed
 #' @param phase_list path to the csv file containing columns indicating phase of each analysis and true or false to use it for quantifying.
 #' @param renew if TRUE and the file specified by RDS exists, that file will be loaded
 #' @param saving whether or not to save the data as RDS file
@@ -20,8 +19,7 @@
 #'
 #'
 read_qnt <- function(
-  wd = '.',
-  RDS = 'qnt.RDS',
+  wd = NULL,
   phase_list = NULL,
   renew = FALSE,
   saving = TRUE
@@ -29,17 +27,22 @@ read_qnt <- function(
 
   cd <- getwd()
   on.exit(setwd(cd))
+
+  if(is.null(wd)) 
+    wd <- dir(pattern = ('(.*_QNT|^\\.qnt)$'), all.files = TRUE)[1]
+  if(is.na(wd)) stop(
+    'if wd is unspecified, ',
+    'current directory must contain directory named .qnt or *_QNT'
+  )
+  wd <- expand.path(wd)
   setwd(wd)
 
-  if(!renew && file.exists(RDS)) return(readRDS(RDS))
-
-  dir_qnt <- dir(
-      wd, pattern = ('(.*_QNT|^\\.qnt)$'), all.files = TRUE
-    )[1]
-  if(is.na(dir_qnt)) stop(
-    'wd must be a path where .qnt or *_QNT directory exists'
-  )
-
+  if(!renew && file.exists('qnt.RDS')) {
+    QNT <- readRDS(RDS)
+    attr(QNT, 'dir_qnt') <- wd
+    return(QNT)
+  }
+  
   #load .qnt files
   qnt <- c(
       'bgm',
@@ -56,13 +59,13 @@ read_qnt <- function(
       'stg',
       'wt'
     ) %>>%
-    (paste0(dir_qnt, '/', ., '.qnt')) %>>%
+    (paste0(wd, '/', ., '.qnt')) %>>%
     `[`(file.exists(.)) %>>%
     setNames(str_replace_all(., '(^.*/)|(\\.qnt$)', '')) %>>%
     lapply(fread)
 
   elemw <- paste(
-      dir_qnt, 
+      wd, 
       c('.cnd/elemw.cnd', 'Pos_0001/data001.cnd'), 
       sep = '/'
     )
@@ -104,7 +107,8 @@ read_qnt <- function(
 
   QNT <- structure(
       list(elm = elm, cnd = cnd, cmp = cmp), #, raw = list(cnd = cnd0, qnt = qnt)),
-      class = c('qnt', 'list')
+      dir_qnt = wd,
+      class = c('qm_qnt', 'list')
     )
 
   if(is.null(phase_list) && !file.exists('phase_list0.csv')) pipeline({
@@ -120,10 +124,11 @@ read_qnt <- function(
 
 #' DEPRECATED!! Use read_qnt
 #' @inheritParams read_qnt
+#' @param RDS ignored
 #' @export
 qnt_load <- function(
-  wd = '.', RDS = 'qnt.RDS', phase_list = NULL, renew = FALSE, saving = TRUE
+  wd = NULL, RDS = 'qnt.RDS', phase_list = NULL, renew = FALSE, saving = TRUE
 ) {
   warning('qnt_load is deprecated use read_xmap')
-  read_qnt(wd, RDS, phase_list, renew, saving)
+  read_qnt(wd, phase_list, renew, saving)
 }

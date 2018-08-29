@@ -1,6 +1,5 @@
 #' compile epma data
 #'
-#' @param dir_map path to the directory containing mapping analysis e.g., ./.map/1/
 #' @param RDS_cluster path to the clustering result
 #' @param qnt object returned by read_qnt
 #' @param xmap object returned by read_xmap
@@ -25,16 +24,15 @@
 #'
 #'
 tidy_epma <- function(
-  dir_map = NULL,
-  RDS_cluster = NULL,
-  qnt = read_qnt(),
-  xmap = if(is.null(dir_map)) NULL else read_xmap(dir_map),
-  cluster = if(is.null(RDS_cluster)) NA else readRDS(RDS_cluster)
+  qnt = ,
+  xmap = , # NA,
+  cluster = NA
 ) {
 
   #load mapping conditions
   cnd <- pipeline({
-    dir_map
+    xmap
+    attr('dir_map')
     paste0('/', c('0', 'map'), '.cnd')
     `[`(file.exists(.))
     `[`(1)

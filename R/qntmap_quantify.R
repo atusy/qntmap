@@ -1,15 +1,12 @@
 #' quantify qualtitative mapping data
 #'
-#' @param wd working directory which contains .qnt and .map directories. Default is current directory.
-#' @param dir_map directory containing map data to be quantified
-#' @param maps_x x of maps. Assign when you use guide net map.
-#' @param maps_y y of maps. Assign when you use guide net map.
-#' @param RDS_cluster path to the output RDS file of clustering. NULL in default look for the newest one in dir_map/clustering
-#' @param fine_phase fine-grained phases which tend to be appear in multi-phase pixels
-#' @param fine_th 0.9
 #' @param qnt object of class qnt
 #' @param xmap object of class xmap
 #' @param cluster object of class PoiClaClu
+#' @param maps_x x of maps. Assign when you use guide net map.
+#' @param maps_y y of maps. Assign when you use guide net map.
+#' @param fine_phase fine-grained phases which tend to be appear in multi-phase pixels
+#' @param fine_th 0.9
 #' @param fixAB fix AB in case compositions of a mineral is constant
 #' @param fixB fix B
 #'
@@ -24,25 +21,21 @@
 #'
 #'@export
 qntmap_quantify <- function(
-  wd = '.',
-  dir_map,
-  RDS_cluster,
+  xmap,
+  qnt,
+  cluster,
   maps_x = NULL,
   maps_y = NULL,
   fine_phase = NULL,
   fine_th = 0.9,
-  qnt = read_qnt(wd),
-  xmap = read_xmap(dir_map),
-  cluster = readRDS(RDS_cluster),
   fixAB = NULL,
   fixB = NULL
 ) {
 
-  cd <- getwd()
-  on.exit(setwd(cd))
-  setwd(wd)
-
+  cd <- getwd(); on.exit(setwd(cd))
+  
   #mapping conditions
+  dir_map <- attr(xmap, 'dir_map')
   pos <- read_map_pos(dir(dir_map, pattern = '^(map|0)\\.cnd$', full.names = TRUE))
 
   if(is.null(maps_x)) maps_x <- pos$px[1]
@@ -60,7 +53,7 @@ qntmap_quantify <- function(
   distinguished <- any(grepl('_', colnames(cluster$membership)))
   epma <- pipeline({
     epma_tidy(
-      wd = wd, dir_map = dir_map, qnt = qnt, xmap = xmap, cluster = cluster
+      wd = wd, qnt = qnt, xmap = xmap, cluster = cluster
     ) 
       filter(elm %in% qnt$elm$elem) 
       mutate(
