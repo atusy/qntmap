@@ -11,7 +11,7 @@
 #' @importFrom stats lm 
 #' @importFrom stats coef
 #' @importFrom stats vcov
-qntmap_AG <- function(epma) {pipeline({
+find_AG <- function(epma) {pipeline({
   epma
     group_by(elm)
     mutate(fit_na = list(lm(wt ~ 0 + net))) 

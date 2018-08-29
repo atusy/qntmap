@@ -14,7 +14,7 @@
 #' @importFrom purrr map_dbl
 #' @importFrom pipeR pipeline 
 #' 
-qntmap_B <- function(epma, fix = NULL) {pipeline({
+find_B <- function(epma, fix = NULL) {pipeline({
   epma 
     filter(!is.na(stg)) 
     group_by(elm) 

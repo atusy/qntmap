@@ -20,7 +20,7 @@
 #' @importFrom stringr str_replace
 #'
 #'@export
-qntmap_quantify <- function(
+quantify <- function(
   xmap,
   qnt,
   cluster,
@@ -75,20 +75,20 @@ qntmap_quantify <- function(
 
   rm(cluster)
   
-  AG <- qntmap_AG(epma) # return also A
+  AG <- find_AG(epma) # return also A
 
-  B <- qntmap_B(epma)
+  B <- find_B(epma)
 
   rm(epma)
 
-  XAG <- qntmap_XAG(X, AG)
+  XAG <- find_XAG(X, AG)
 
   dir_qntmap <- paste0(dir_map, '/qntmap')
   dir.create(dir_qntmap, FALSE)
 
   pipeline({
-    qntmap_AB(AG, B, stg)  #AB
-      qntmap_AB_fix(fixAB, X, fine_th, xmap)
+    find_AB(AG, B, stg)  #AB
+      find_AB_fix(fixAB, X, fine_th, xmap)
       map(map, `*`, X)  #XAB
       map(map_at, 'se', map, square) 
       map(map, reduce_add) 
@@ -120,3 +120,7 @@ qntmap_quantify <- function(
       save4qm(dir_qntmap = dir_qntmap)
   })
 }
+
+#' @rdname quantify
+#' @export
+qntmap_quantify <- quantify

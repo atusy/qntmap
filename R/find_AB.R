@@ -11,7 +11,7 @@
 #' @param B B
 #' @param stg stg
 #'  
-qntmap_AB <- function(A, B, stg) {pipeline({
+find_AB <- function(A, B, stg) {pipeline({
   A  #AB
     select(phase3, elm, a, a_se) 
     nest(-phase3, .key = '.A') 
@@ -58,7 +58,7 @@ qntmap_AB <- function(A, B, stg) {pipeline({
 })}
 
 #' fix AB value when composition of certain phases are constant
-#' @inheritParams qntmap_AB
+#' @inheritParams find_AB
 #' @param AB AB
 #' @param fix csv file indicating composition of the phases. NULL returns input AB
 #' @param X membership
@@ -68,7 +68,7 @@ qntmap_AB <- function(A, B, stg) {pipeline({
 #' @importFrom purrr map2_dbl
 #' @importFrom matrixStats weightedMedian
 
-qntmap_AB_fix <- function(AB, fix = NULL, X, fine_th = .90, xmap) {
+find_AB_fix <- function(AB, fix = NULL, X, fine_th = .90, xmap) {
   
   if(is.null(fix)) return(AB)
 
