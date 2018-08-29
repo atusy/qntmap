@@ -41,9 +41,6 @@ qltmap_cls_pois <- function(
     qltmap = read_xmap(dir_map)
 ) {
 
-    # load data
-    if(is.character(centers_initial)) 
-      centers_initial <- fread(centers_initial)
 
     dims <- dim(qltmap[[1]])
 
