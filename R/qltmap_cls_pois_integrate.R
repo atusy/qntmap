@@ -6,7 +6,7 @@
 #' @importFrom stringr str_replace
 #'
 #' @export
-qltmap_cls_pois_integrate <- function(result, wd = '.', saving = TRUE) {
+cluster_groupe <- function(result, saving = TRUE) {
 
   # integrate clusters on demand
   cls <- as.factor(str_replace(colnames(result$membership), '_.*$', ''))
