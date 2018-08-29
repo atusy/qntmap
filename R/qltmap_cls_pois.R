@@ -95,8 +95,6 @@ qltmap_cls_pois <- function(
         colnames(result$membership)[apply(result$membership[TF, ], 1, which.max)] <- names(result$ytehat)[TF]
         rm(TF)
       }
-      missings <- centers_initial$phase %>>%
-        `[`(. %nin% colnames(result$membership))
       result$membership <- cbind(
           result$membership,
           matrix(
@@ -123,5 +121,6 @@ qltmap_cls_pois <- function(
         result <- qltmap_cls_pois_integrate(result, wd = NULL, saving = saving)
 
     result
+    missings <- setdiff(centers$phase, colnames(result$membership))
 }
 
