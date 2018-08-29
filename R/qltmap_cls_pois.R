@@ -47,14 +47,6 @@ qltmap_cls_pois <- function(
 
     dims <- dim(qltmap[[1]])
 
-    elements <- `if`(
-      is.null(elements),
-      names(qltmap)[names(qltmap) %in% names(centers_initial)],
-      elements[
-        elements %in% names(qltmap) & 
-        elements %in% names(centers_initial)
-      ]
-    )
 
     # initial clusters
     x <- pipeline({
