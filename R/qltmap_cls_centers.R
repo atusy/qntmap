@@ -1,4 +1,6 @@
-#' Generate initial centroids for clustering
+#' Initialize centroids
+#' 
+#' Initialize centroids for cluster analysis.
 #'
 #' @param wd working directory which contains .qnt directory. Use current directory if NULL
 #' @param dir_map path to the directory which contains mapping data.
