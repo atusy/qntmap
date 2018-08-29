@@ -23,7 +23,7 @@
 #' @importFrom tidyr spread
 #'
 #' @export
-cluster_centers <- function(
+find_centers <- function(
   qnt,
   xmap,
   phase_fine = NULL,
@@ -124,7 +124,7 @@ qltmap_cls_centers <- function() {
   cd <- getwd()
   on.exit(cd)
   setwd(wd)
-  cluster_centers(phase_fine = phase_fine, qnt = qnt, xmap = qltmap, saving = saving)
+  find_centers(phase_fine = phase_fine, qnt = qnt, xmap = qltmap, saving = saving)
 }
 formals(qltmap_cls_centers) <- c(wd = '.', dir_map, formals(cls_initialize))
 
