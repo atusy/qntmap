@@ -40,6 +40,7 @@ cluster_xmap <- function(
   xmap,
 ) {
 
+  centers$phase <- as.character(centers$phase)
 
     dims <- dim(qltmap[[1]])
 
