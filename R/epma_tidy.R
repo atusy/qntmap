@@ -108,8 +108,9 @@ epma_tidy <- function(
     ) %>>%
     cipois(
       vars = c('pkint', 'bgm', 'bgp', 'mapint'),
-      offset = . %>>%
+      offset = 
         transmute(
+          ., 
           pkint = pk_t * beam,
           bgm = bg_t * beam,
           bgp = bgm, # == bg_t * beam
