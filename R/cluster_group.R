@@ -12,23 +12,19 @@
 #' @export
 group_cluster <- function(x, saving = TRUE, suffix = '_.*') {
 
-  # integrate clusters on demand
-  cls <- as.factor(str_replace(colnames(result$membership), '_.*$', ''))
-
-  # modify result
-  result$ytehat <- result$ytehat %>>%
-    names %>>%
-    str_replace('_.*$', '') %>>%
-    as.factor %>>%
-    (setNames(as.integer(.), as.character(.)))
+  # group clusters
+  colnames(x$membership) <- .cn <- 
+    str_replace(colnames(x$membership), suffix, '')
+  x$cluster <- str_replace(result$cluster, suffix, '')
+  .cls <- as.factor(x$cluster)
+  x$ytehat <- setNames(as.integer(.cls), as.character(.cls))
   
-  result$membership <- sapply(
-    levels(cls),
-    function(i) rowSums(result$membership[, cls == i, drop = FALSE])
+  # modify membership
+  x$membership <- sapply(
+    levels(.cls),
+    function(.cls) rowSums(x$membership[, .cn == .cls, drop = FALSE])
   )
 
-  if(saving) save4qm(result, 'grouped')
-
-  class(result) <- c(class(result), 'integrated')
-  result
+  class(x) <- c(class(x), 'integrated')
+  save4qm(x, 'grouped', saving)
 }
