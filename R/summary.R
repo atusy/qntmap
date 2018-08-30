@@ -9,7 +9,7 @@
 #'
 #' @export
 #'
-summary.qltmap_cls <- function(object, ...) {pipeline({
+summary.xmap_cls <- function(object, ...) {pipeline({
   object$membership 
   colSums 
   `/`(sum(.))
