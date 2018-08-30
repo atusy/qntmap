@@ -5,7 +5,7 @@
 #' @importFrom stats setNames
 #' @importFrom purrr map
 #' @importFrom purrr map_at
-qntmap_XAG <- function(X, AG) {pipeline({
+find_XAG <- function(X, AG) {pipeline({
   AG 
     transmute_at(c('ag', 'ag_se'), setNames, .$phase3) 
     split(AG$elm)
