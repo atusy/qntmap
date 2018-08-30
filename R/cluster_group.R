@@ -1,4 +1,7 @@
-#' integrate clusters named with same prefix (e.g., A_1 and A_2 are integrated to be A)
+#' group clusters who share same prefix
+#'
+#' When data points are assigned to clusters A_1 and A_2, 
+#' their clusters are renamed to be A by matching regular expressions.
 #'
 #' @param result result of qltmap_cls_pois
 #' @param saving TRUE or FALSE to save result
