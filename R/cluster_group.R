@@ -5,11 +5,12 @@
 #'
 #' @param result result of qltmap_cls_pois
 #' @param saving TRUE or FALSE to save result
+#' @param suffix regular expression of suffix
 #'
 #' @importFrom stringr str_replace
 #'
 #' @export
-cluster_group <- function(result, saving = TRUE) {
+group_cluster <- function(x, saving = TRUE, suffix = '_.*') {
 
   # integrate clusters on demand
   cls <- as.factor(str_replace(colnames(result$membership), '_.*$', ''))
