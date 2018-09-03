@@ -83,12 +83,19 @@ read_xmap <- function(
   })
 }
 
-#' DEPRECATED!! use read_xmap
+#' (DEPRECATED) Use read_xmap
 #' @inheritParams read_xmap
+#' @param RDS ignored.
 #' @export
-qltmap_load <- function() {
-  warning('qltmap_load is deprecated. Use read_xmap instead.')
-  read_xmap(wd, DT, RDS, renew, saving)
+qltmap_load <- function(
+  wd = '.',
+  DT = 0,
+  RDS, # ignored
+  renew = FALSE,
+  saving = TRUE
+) {
+  .Deprecated(new = 'read_xmap')
+  read_xmap(wd = wd, DT = DT, renew = renew, saving = saving)
 }
 
 formals(qltmap_load) <- formals(read_xmap)

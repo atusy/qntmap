@@ -121,6 +121,23 @@ quantify <- function(
   })
 }
 
-#' @rdname quantify
+#' (Deprecated) Use quantify.
+#' @param wd working directory which contains .qnt and .map directories
+#' @inheritParams quantify
 #' @export
-qntmap_quantify <- quantify
+qntmap_quantify <- function(
+  wd = '.',
+  dir_map,
+  RDS_cluster,
+  maps_x = NULL,
+  maps_y = NULL,
+  fine_phase = NULL,
+  fine_th = 0.9,
+  qnt = qnt_load(wd),
+  qltmap = qltmap_load(dir_map),
+  cluster = readRDS(RDS_cluster)
+) {
+  .Deprecated(new = 'quantify')
+  cd <- getwd(); on.exit(setwd(cd))
+  quantify(xmap = qltmap, qnt = qnt, cluster = cluster, maps_x = maps_x, maps_y = maps_y, fine_phase = fine_phase, fine_th = fine_th)
+}

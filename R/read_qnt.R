@@ -122,13 +122,13 @@ read_qnt <- function(
 
 }
 
-#' DEPRECATED!! Use read_qnt
+#' @rdname read_qnt
 #' @inheritParams read_qnt
 #' @param RDS ignored
 #' @export
 qnt_load <- function(
-  wd = NULL, RDS = 'qnt.RDS', phase_list = NULL, renew = FALSE, saving = TRUE
+  wd = NULL, RDS, phase_list = NULL, renew = FALSE, saving = TRUE
 ) {
-  warning('qnt_load is deprecated use read_xmap')
-  read_qnt(wd, phase_list, renew, saving)
+  .Deprecated(new = 'read_qnt')
+  read_qnt(wd = wd, phase_list = phase_list, renew = renew, saving = saving)
 }
