@@ -10,7 +10,7 @@
 #' @param A A
 #' @param B B
 #' @param stg stg
-#'  
+#' @noRd
 find_AB <- function(A, B, stg) {pipeline({
   A  #AB
     select(phase3, elm, a, a_se) 
@@ -67,7 +67,7 @@ find_AB <- function(A, B, stg) {pipeline({
 #' @importFrom purrr map
 #' @importFrom purrr map2_dbl
 #' @importFrom matrixStats weightedMedian
-
+#' @noRd
 find_AB_fix <- function(AB, fix = NULL, X, fine_th = .90, xmap) {
   
   if(is.null(fix)) return(AB)

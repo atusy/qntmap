@@ -1,10 +1,12 @@
 #' read mapping positions
 #' @param x input
 #' @param ... other arguments passed to methods
+#' @noRd
 read_map_pos <- function(x, ...) UseMethod('read_map_pos')
 
 #' a default method for read_map_pos
 #' @inheritParams read_map_pos
+#' @noRd
 read_map_pos.default <- function(x, ...) {
   read_map_pos(read_cnd(x), ...)
 }
@@ -23,6 +25,7 @@ read_map_pos.map_cnd <- function(x, ...) {pipeline({
 })}
 #' read mapping stage information from 0.cnd
 #' @inheritParams read_cnd.0_cnd
+#' @noRd
 read_map_pos.0_cnd <- function(
   x,
   pattern = c(

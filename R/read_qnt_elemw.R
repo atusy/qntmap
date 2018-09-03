@@ -1,8 +1,12 @@
+#' @noRd
 read_qnt_elemw <- function(x, ...) UseMethod('read_qnt_elemw')
+
+#' @noRd
 read_qnt_elemw.default <- function(x, ...) {
   read_qnt_elemw(read_cnd(x), ...)
 }
 
+#' @noRd
 read_qnt_elemw.map_cnd <- function(
   x,
   ...
@@ -21,6 +25,7 @@ read_qnt_elemw.map_cnd <- function(
 #' read all .cnd files under the specified directory
 #' @inheritParams read_cnd
 #' @param each n appears in each rows
+#' @noRd
 read_qnt_elemw.0_cnd <- function(
   x,
   pattern = c(

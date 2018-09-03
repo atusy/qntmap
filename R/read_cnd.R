@@ -21,6 +21,7 @@ read_cnd.default <- function(x, ...) {
 #' @importFrom utils type.convert
 #' @importFrom dplyr arrange
 #' @importFrom stringr str_extract
+#' @noRd
 read_cnd.map_cnd <- function(x, ...) {pipeline({
   x
     strsplit(' ')
@@ -46,7 +47,7 @@ read_cnd.map_cnd <- function(x, ...) {pipeline({
 #' @param pattern character vector. Used to extract rows which contains phrase matching pattern.
 #' @param n integer vector of same length as pattern. Used to extract nth row of .cnd file in case pattern did not match any phrase.
 #'
-read_cnd.0_cnd <- function(x, pattern = NULL, n = NULL) {
+#' @noRd
   if(is.null(pattern)) return(x)
   
   detection <- lapply(pattern, function(i) which(str_detect(x, i)))

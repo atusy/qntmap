@@ -12,7 +12,7 @@
 #' @importFrom stats coef
 #' @importFrom purrr map_dbl
 #' @importFrom pipeR pipeline 
-#' 
+#' @noRd
 find_B <- function(epma, fix = NULL) {pipeline({
   epma[!is.na(epma$stg), ] 
     group_by(elm) 

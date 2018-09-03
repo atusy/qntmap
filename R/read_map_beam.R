@@ -1,16 +1,19 @@
 #' read mapping beam conditions
+#' @noRd
 read_map_beam <- function(x, ...) {
   UseMethod('read_map_beam')
 }
 
 #' a method for read_map_beam
 #' @inheritParams read_map_beam
+#' @noRd
 read_map_beam.default <- function(x, ...) {
   read_map_beam(read_cnd(x), ...)
 }
 
 #' a method for read_map_beam
 #' @inheritParams read_map_beam
+#' @noRd
 read_map_beam.map_cnd <- function(x, ...) {pipeline({
   x[c(
     'XM_DATA_PROBE_CURRENT',
@@ -25,6 +28,7 @@ read_map_beam.map_cnd <- function(x, ...) {pipeline({
 #' @param x x
 #' @param pattern patterns to be matched
 #' @param n nth lines
+#' @noRd
 read_map_beam.0_cnd <- function(
   x,
   pattern = c(

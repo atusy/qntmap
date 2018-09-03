@@ -11,6 +11,7 @@
 #' @importFrom stats lm 
 #' @importFrom stats coef
 #' @importFrom stats vcov
+#' @noRd
 find_AG <- function(epma) {pipeline({
   epma
     group_by(elm)
