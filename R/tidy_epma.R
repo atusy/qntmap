@@ -128,6 +128,6 @@ tidy_epma <- function(
       .tmp = NULL,
       net.L = net - propagate_add(pkint, pkint.L, bgint, bgint.L),
       net.H = net + propagate_add(pkint, pkint.H, bgint, bgint.H)
-    )
-
+    ) %>>%
+    as.data.frame
 }
