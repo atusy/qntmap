@@ -100,46 +100,42 @@ qntmap()
 #### Manual mode for experts (example)
 
 ```{r eval = FALSE}
+# Required parameters
+wd <- 'path to the working directory'
+dir_map <- '.map/1' # relative/absolute path to the directory containing ascii converted X-ray map files (1_map.txt, 2_map.txt, and so on)"
+dir_qnt <- '.qnt' # relative/absolute path to the directory containing .qnt files (pkint.qnt, net.qnt, and so on)"
 
+
+# Optional parameters
+fine_phase <- NULL # A character vector to specify phases tend to be smaller than mapping probe diameter
+phase_list <- NULL # A csv file indicating phase of n-th quantitative point analysis
+
+# Run analysis
 library(qntmap)
 
-setwd("Directory which contains analytical data like .qnt directory, .map directory, and so on")
-dir_map <- "path to the directory containing X-ray map files (directory containing 1_map.txt, 2_map.txt, and so on)"
+# Set working directory
+setwd(wd)
 
 # Load mapping data
 # Change value of DT (dead time in nanoseconds) depending on EPMA.
 # 1100 ns is a value applied by JEOL JXA-8105.
-xmap <- qltmap_load(dir_map, DT = 1100)
+xmap <- read_xmap(dir_map, DT = 1100)
 
 # Compile quantitative data
-qnt <- qnt_load()
+qnt <- read_qnt(dir_qnt, phase_list = NULL)
 ## If you want to change phase names of each analysis different from those determined preliminary given during EPMA analysis, prepare csv file that indicates phase name, and input its path to phase_list parameter.
 ## In addition, make renew = TRUE.
 ## qnt <- qnt_load(phase_list = "phase_list.csv", renew = TRUE)
 
 # Determine initial cluster centers
-centers <- qltmap_cls_centers(qnt = qnt, qlmap = xmap, dir_map = dir_map)
+centers <- find_centers(xmap = xmap, qnt = qnt, fine_phase = fine_phase)
 
 # Phase identification
 # assign integration = FALSE if you do not want to integrate underscored phases (e.g., garnet_a and garnet_b are integrated to garnet if TRUE)
-cls <- qltmap_cls_pois(centers, xmap, wd = dir_map)
+cls <- cluster_xmap(xmap, centers)
 
 # quantify X-ray maps
 qntmap <- qntmap_quantify(
-  dir_map = dir_map,
-  qnt = qnt,
-  cluster = cls,
-  fine_phase = NULL #Specify phase whose grain size tend to be smaller than mapping probe diameter.
+  xmap = xmap, qnt = qnt, cluster = cls, fine_phase = fine_phase
 )
-
 ```
-
-# Upcoming updates
-
-- Automation
-    - Instead of running each functions manually and giving parameter in R console, 
-      I am planning to add a function called "qntmap", 
-      which runs all commands above and determines parameters based on a given text file.
-- HTML reporting
-
-
