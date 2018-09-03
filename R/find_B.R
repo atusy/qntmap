@@ -1,7 +1,6 @@
 #' find B
 #' @param epma epma data
 #' @param fix fix B
-#' @importFrom dplyr filter
 #' @importFrom dplyr group_by
 #' @importFrom dplyr mutate
 #' @importFrom dplyr summarise
@@ -15,8 +14,7 @@
 #' @importFrom pipeR pipeline 
 #' 
 find_B <- function(epma, fix = NULL) {pipeline({
-  epma 
-    filter(!is.na(stg)) 
+  epma[!is.na(epma$stg), ] 
     group_by(elm) 
     mutate(
       fit_na = list(lm(pkint ~ 0 + mapint, weights = mem, na.action = na.omit))
