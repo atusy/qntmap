@@ -1,8 +1,8 @@
 #' Generate initial centroids for clustering randomly
 #'
-#' @param x matrix
-#' @param k number of clusters
-#' @param given given centers. not yet implemented
+#' @param x An object which can be coerced to `matrix`, typically `matrix` itself or `data.frame`.
+#' @param k A number of clusters.
+#' @param given Given centers. Not yet implemented.
 #'
 #' @importFrom data.table fwrite
 find_centers_kpp <- function(x, k, given = NULL) {
