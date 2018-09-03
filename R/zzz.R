@@ -13,7 +13,7 @@
 #' @importFrom purrr map2
 #' @importFrom stats qgamma
 #' @importFrom stats setNames
-#'
+#' @noRd
 cipois <- function(x, vars = names(x), offset = 1L, conf.level = 0.95) {
   low <- (1L - conf.level) / 2L
   high <- 1L - low
@@ -40,6 +40,7 @@ cipois <- function(x, vars = names(x), offset = 1L, conf.level = 0.95) {
 #' return integer as character flagged with 0
 #'
 #' @param ... list of integer vectors of same length
+#' @noRd
 flag0 <- function(...) {
   do.call(
     'paste0',
@@ -61,6 +62,7 @@ flag0 <- function(...) {
 #' @param n number of output colors. When n is more than number of colors in the specified palette, output contains duplicated colors.
 #' @param dec FALSE in default outputs a vector of RGB colors. TRUE outputs matrix whose columns are R, G, and B, and whose values are in decimals.
 #' @importFrom grDevices col2rgb
+#' @noRd
 mycolors <- function(palette = c('pcol', 'gray'), n = NULL, dec = FALSE) {
   LUT <- colors[[match.arg(palette)]]
   
@@ -79,11 +81,13 @@ mycolors <- function(palette = c('pcol', 'gray'), n = NULL, dec = FALSE) {
 
 #' square
 #' @param x input
+#' @noRd
 square <- function(x) x ^ 2L
 
 #' Propagate add
 #' @param x,y numeric
 #' @param x2,y2 errors of x and y
+#' @noRd
 propagate_add <- function(x, x2, y, y2) {
   sqrt(square(x2 - x) + square(y2 - y))
 }
@@ -91,10 +95,12 @@ propagate_add <- function(x, x2, y, y2) {
 
 #' Reduce add
 #' @param x input
+#' @noRd
 reduce_add <- function(x) Reduce(`+`, x)
 
 #' \%nin\%
 #' @param x x
 #' @param table table
+#' @noRd
 `%nin%` <- function(x, table) !match(x, table, nomatch = 0L)
 
