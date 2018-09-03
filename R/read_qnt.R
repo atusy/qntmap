@@ -19,7 +19,7 @@
 #'
 #'
 read_qnt <- function(
-  wd = NULL,
+  wd = dir(pattern = ('(.*_QNT|^\\.qnt)$'), all.files = TRUE)[1],
   phase_list = NULL,
   renew = FALSE,
   saving = TRUE
@@ -28,13 +28,7 @@ read_qnt <- function(
   cd <- getwd()
   on.exit(setwd(cd))
 
-  if(is.null(wd)) 
-    wd <- dir(pattern = ('(.*_QNT|^\\.qnt)$'), all.files = TRUE)[1]
-  if(is.na(wd)) stop(
-    'if wd is unspecified, ',
-    'current directory must contain directory named .qnt or *_QNT'
-  )
-  wd <- expand.path(wd)
+  wd <- normalizePath(wd)
   setwd(wd)
 
   if(!renew && file.exists('qnt.RDS')) {

@@ -15,7 +15,7 @@
 #' @export
 #'
 read_xmap <- function(
-  wd = '.',
+  wd = '.map/1',
   DT = 0,
   RDS = 'xmap.RDS',
   renew = FALSE,
@@ -27,7 +27,7 @@ read_xmap <- function(
   
   cd <- getwd()
   on.exit(setwd(cd))
-  wd <- path.expand(wd)
+  wd <- normalizePath(wd)
   setwd(wd)
   
   if(!renew) {
