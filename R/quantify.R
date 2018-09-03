@@ -1,14 +1,14 @@
 #' quantify qualtitative mapping data
 #'
-#' @param qnt object of class qnt
-#' @param xmap object of class xmap
-#' @param cluster object of class PoiClaClu
-#' @param maps_x x of maps. Assign when you use guide net map.
-#' @param maps_y y of maps. Assign when you use guide net map.
-#' @param fine_phase fine-grained phases which tend to be appear in multi-phase pixels
+#' @param xmap `qm_xmap` class object returned by `read_xmap()`.
+#' @param qnt `qm_qnt` class object returned by `read_qnt()`.
+#' @param cluster `qm_cluster` class object returned by `cluter_xmap()`.
+#' @param maps_x A x-axis size of maps comprising guide net map (default: `NULL`).
+#' @param maps_y A y-axis size of maps comprising guide net map (default: `NULL`).
+#' @inheritParams find_centers
 #' @param fine_th 0.9
-#' @param fixAB fix AB in case compositions of a mineral is constant
-#' @param fixB fix B
+#' @param fixAB fix AB in case compositions of a mineral is constant (default: `NULL`).
+#' @param fixB fix B (default: `NULL`).
 #'
 #' @importFrom data.table fwrite
 #' @importFrom pipeR pipeline
@@ -19,7 +19,7 @@
 #' @importFrom stats setNames
 #' @importFrom stringr str_replace
 #'
-#'@export
+#' @export
 quantify <- function(
   xmap,
   qnt,
@@ -52,9 +52,7 @@ quantify <- function(
   #tidy compilation of epma data
   distinguished <- any(grepl('_', colnames(cluster$membership)))
   epma <- pipeline({
-    epma_tidy(
-      wd = wd, qnt = qnt, xmap = xmap, cluster = cluster
-    ) 
+    tidy_epma(qnt = qnt, xmap = xmap, cluster = cluster) 
       filter(elm %in% qnt$elm$elem) 
       mutate(
         net = net * (net > 0),
@@ -69,6 +67,8 @@ quantify <- function(
       )
   })
 
+  xmap <- xmap[qnt$elm$elint[order(qnt$elm$elem)]]
+    
   rm(qnt)
 
   X <- as.data.frame(cluster$membership)
@@ -87,17 +87,14 @@ quantify <- function(
   dir.create(dir_qntmap, FALSE)
 
   pipeline({
-    find_AB(AG, B, stg)  #AB
+    find_AB(AG, B, stg) #AB
       find_AB_fix(fixAB, X, fine_th, xmap)
-      map(map, `*`, X)  #XAB
+      map(map, `*`, X) #XAB
       map(map_at, 'se', map, square) 
       map(map, reduce_add) 
       map(map_at, 'se', sqrt) 
-      map2(
-        xmap[qnt$elm$elint[order(qnt$elm$elem)]], 
-        function(xab, i) map(xab, `*`, i)
-      )  #XABI
-      map2(XAG, map2, `-`)  #XABI - XAG
+      map2(xmap, function(xab, i) map(xab, `*`, i)) #XABI
+      map2(XAG, map2, `-`) #XABI - XAG
       map(setNames, c('wt', 'se')) 
       map(function(x) map(x, `*`, x$wt > 0)) 
       c(

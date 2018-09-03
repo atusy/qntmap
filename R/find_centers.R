@@ -24,9 +24,9 @@
 #'
 #' @export
 find_centers <- function(
-  qnt,
   xmap,
-  phase_fine = NULL,
+  qnt,
+  fine_phase = NULL,
   saveas = 'centers0.csv'
 ) {
 
@@ -34,16 +34,12 @@ find_centers <- function(
   xmap_df <- as.data.frame(lapply(xmap, unlist, use.names = FALSE))
   
   pipeline({
-    epma_tidy( # Compile spot/map analysis
-      qnt = qnt,
-      xmap = xmap,
-      cluster = NA
-    )
+    tidy_epma(qnt = qnt, xmap = xmap, cluster = NULL)
     group_by(phase)
     filter(all(is.na(map)) | !is.na(map))
     ungroup
-    mutate( # Let weighting for least squares to be 0 for phases those who listed in phase_fine
-      w = if(is.null(phase_fine)) 1 else as.integer(phase %nin% phase_fine)
+    mutate( # Let weighting for least squares to be 0 for phases those who listed in fine_phase
+      w = if(is.null(fine_phase)) 1 else as.integer(phase %nin% fine_phase)
     )
     group_by(elint) # Peform least squares and estimate 99% prediction interval
     mutate(
@@ -55,9 +51,7 @@ find_centers <- function(
       pi_H = qnbinom(0.995, map_est + 1, 0.5)
     )
     group_by(id)
-    mutate( # See if values are within prediction interval
-      within_pi = all((pi_L <= map) & (map <= pi_H))
-    )
+    mutate(within_pi = all((pi_L <= map) & (map <= pi_H)))  # pi = prediction interval
     group_by(elint, phase)
     mutate(n_within_pi = sum(within_pi))
     ungroup
