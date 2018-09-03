@@ -2,21 +2,25 @@
 % Please edit documentation in R/read_qnt.R
 \name{read_qnt}
 \alias{read_qnt}
+\alias{qnt_load}
 \title{compile quantitative data}
 \usage{
-read_qnt(wd = ".", RDS = "qnt.RDS", phase_list = NULL,
-  renew = FALSE, saving = TRUE)
+read_qnt(wd = dir(pattern = ("(.*_QNT|^\\\\.qnt)$"), all.files =
+  TRUE)[1], phase_list = NULL, renew = FALSE, saving = TRUE)
+
+qnt_load(wd = NULL, RDS, phase_list = NULL, renew = FALSE,
+  saving = TRUE)
 }
 \arguments{
-\item{wd}{path to the directory containing .qnt directory}
-
-\item{RDS}{name of RDS file to be saved/readed}
+\item{wd}{directory path containing .qnt files}
 
 \item{phase_list}{path to the csv file containing columns indicating phase of each analysis and true or false to use it for quantifying.}
 
 \item{renew}{if TRUE and the file specified by RDS exists, that file will be loaded}
 
 \item{saving}{whether or not to save the data as RDS file}
+
+\item{RDS}{ignored}
 }
 \description{
 compile quantitative data

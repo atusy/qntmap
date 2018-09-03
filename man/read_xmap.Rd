@@ -4,20 +4,20 @@
 \alias{read_xmap}
 \title{read X-ray map data}
 \usage{
-read_xmap(wd = ".", DT = 0, RDS = "xmap.RDS", renew = FALSE,
-  saving = TRUE, .map = "(data)?[0-9]*[1-9](\\\\.csv|_map\\\\.txt)",
+read_xmap(wd = ".map/1", DT = 0, renew = FALSE, saving = TRUE,
+  .map = "(data)?[0-9]*[1-9](\\\\.csv|_map\\\\.txt)",
   .cnd = "(data)?[0-9]*[1-9]\\\\.cnd")
 }
 \arguments{
-\item{wd}{working directory which contains mapping data}
+\item{wd}{directory path containing mapping data (e.g., ./.map/.1)}
 
 \item{DT}{dead time in nano seconds (0 nsec in default)}
-
-\item{RDS}{name of RDS file to be saved/readed}
 
 \item{renew}{if TRUE and the file specified by RDS exists, that file will be loaded}
 
 \item{saving}{whether or not to save the data as RDS file}
+
+\item{.map, .cnd}{regular expressions to match ASCII converted mapping results (\code{.map}) and condition files (\code{.cnd})}
 }
 \description{
 read X-ray map data

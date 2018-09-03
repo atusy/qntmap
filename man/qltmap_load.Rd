@@ -2,23 +2,21 @@
 % Please edit documentation in R/read_xmap.R
 \name{qltmap_load}
 \alias{qltmap_load}
-\title{DEPRECATED!! use read_xmap}
+\title{(DEPRECATED) Use read_xmap}
 \usage{
-qltmap_load(wd = ".", DT = 0, RDS = "xmap.RDS", renew = FALSE,
-  saving = TRUE, .map = "(data)?[0-9]*[1-9](\\\\.csv|_map\\\\.txt)",
-  .cnd = "(data)?[0-9]*[1-9]\\\\.cnd")
+qltmap_load(wd = ".", DT = 0, RDS, renew = FALSE, saving = TRUE)
 }
 \arguments{
-\item{wd}{working directory which contains mapping data}
+\item{wd}{directory path containing mapping data (e.g., ./.map/.1)}
 
 \item{DT}{dead time in nano seconds (0 nsec in default)}
 
-\item{RDS}{name of RDS file to be saved/readed}
+\item{RDS}{ignored.}
 
 \item{renew}{if TRUE and the file specified by RDS exists, that file will be loaded}
 
 \item{saving}{whether or not to save the data as RDS file}
 }
 \description{
-DEPRECATED!! use read_xmap
+(DEPRECATED) Use read_xmap
 }

@@ -2,17 +2,24 @@
 % Please edit documentation in R/read_cnd.R
 \name{read_cnd}
 \alias{read_cnd}
-\title{read .cnd files
-e.g., '0.cnd', 'map.cnd', ...}
+\alias{read_cnd.default}
+\title{read .cnd files}
 \usage{
 read_cnd(x, ...)
+
+\method{read_cnd}{default}(x, ...)
 }
 \arguments{
-\item{x}{path to the file}
+\item{x}{A path to the file (e.g., '0.cnd', 'map.cnd', ...)}
 
-\item{...}{other arguments passed to methods}
+\item{...}{Other arguments passed to methods}
 }
 \description{
 read .cnd files
-e.g., '0.cnd', 'map.cnd', ...
 }
+\section{.default}{
+
+A default method which returns a result of \code{readLines(x)}
+with additional class according to the content of the file.
+}
+
