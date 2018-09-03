@@ -1,8 +1,7 @@
 #' read X-ray map data
 #'
-#' @param wd directory which contains mapping data
+#' @param wd directory path containing mapping data (e.g., ./.map/.1)
 #' @param DT dead time in nano seconds (0 nsec in default)
-#' @param RDS name of RDS file to be saved/readed
 #' @param renew if TRUE and the file specified by RDS exists, that file will be loaded
 #' @param saving whether or not to save the data as RDS file
 #' @param .map,.cnd regular expressions to match ASCII converted mapping results (`.map`) and condition files (`.cnd`)
@@ -17,7 +16,6 @@
 read_xmap <- function(
   wd = '.map/1',
   DT = 0,
-  RDS = 'xmap.RDS',
   renew = FALSE,
   saving = TRUE,
   .map = '(data)?[0-9]*[1-9](\\.csv|_map\\.txt)', 
@@ -30,10 +28,9 @@ read_xmap <- function(
   wd <- normalizePath(wd)
   setwd(wd)
   
-  if(!renew) {
-    xmap <- readRDS(RDS)
-    attr(xmap, 'dir_map') <- wd
-    return(xmap)
+  if(!renew && file.exists('xmap.RDS')) {
+    xmap <- readRDS('xmap.RDS')
+    return(structure(xmap, dir_map = wd))
   }
   
   dwell <- read_map_beam(dir(pattern = '^(0|map)\\.cnd$'))['dwell'] * 1e-3
@@ -97,6 +94,3 @@ qltmap_load <- function(
   .Deprecated(new = 'read_xmap')
   read_xmap(wd = wd, DT = DT, renew = renew, saving = saving)
 }
-
-formals(qltmap_load) <- formals(read_xmap)
-

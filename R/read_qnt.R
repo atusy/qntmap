@@ -1,6 +1,6 @@
 #' compile quantitative data
 #'
-#' @param wd path to the directory containing .qnt directory
+#' @param wd directory path containing .qnt files
 #' @param phase_list path to the csv file containing columns indicating phase of each analysis and true or false to use it for quantifying.
 #' @param renew if TRUE and the file specified by RDS exists, that file will be loaded
 #' @param saving whether or not to save the data as RDS file
@@ -16,8 +16,6 @@
 #' @importFrom data.table fwrite
 #'
 #' @export
-#'
-#'
 read_qnt <- function(
   wd = dir(pattern = ('(.*_QNT|^\\.qnt)$'), all.files = TRUE)[1],
   phase_list = NULL,
@@ -32,7 +30,7 @@ read_qnt <- function(
   setwd(wd)
 
   if(!renew && file.exists('qnt.RDS')) {
-    QNT <- readRDS(RDS)
+    QNT <- readRDS('qnt.RDS')
     attr(QNT, 'dir_qnt') <- wd
     return(QNT)
   }
