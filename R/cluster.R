@@ -78,6 +78,8 @@ cluster_xmap <- function(
     `/`(rowSums(.))
     # as.matrix # maybe not needed
   })
+  
+  result$discriminant <-NULL
 
   if(nrow(centers) == ncol(result$membership)) {
     colnames(result$membership) <- centers$phase
