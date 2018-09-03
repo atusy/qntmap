@@ -104,42 +104,53 @@ qntmap()
 ```r
 library(qntmap)
 
-setwd("Directory which contains analytical data like .qnt directory, .map directory, and so on")
-dir_map <- "path to the directory containing X-ray map files (directory containing 1_map.txt, 2_map.txt, and so on)"
+# Required parameters
+wd <- '.' # path to the working directory
+dir_map <- '.map/1' # relative/absolute path to the directory containing ascii converted X-ray map files (1_map.txt, 2_map.txt, and so on)"
+dir_qnt <- '.qnt' # relative/absolute path to the directory containing .qnt files (pkint.qnt, net.qnt, and so on)"
+
+
+# Optional parameters
+
+## A character vector to specify phases tend to be smaller than mapping probe diameter
+fine_phase <- NULL 
+
+## A csv file indicating name of the phase of n-th quantitative point analysis.
+## If NULL, names are assumed to be specified in comments during EPMA analysis.
+phase_list <- NULL 
+
+# Run analysis
+
+# Set working directory
+setwd(wd)
 
 # Load mapping data
 # Change value of DT (dead time in nanoseconds) depending on EPMA.
 # 1100 ns is a value applied by JEOL JXA-8105.
-xmap <- qltmap_load(dir_map, DT = 1100)
+xmap <- read_xmap(wd = dir_map, DT = 1100)
 
 # Compile quantitative data
-qnt <- qnt_load()
-## If you want to change phase names of each analysis different from those determined preliminary given during EPMA analysis, prepare csv file that indicates phase name, and input its path to phase_list parameter.
-## In addition, make renew = TRUE.
-## qnt <- qnt_load(phase_list = "phase_list.csv", renew = TRUE)
+qnt <- read_qnt(wd = dir_qnt, phase_list = phase_list, renew = TRUE)
+## Check 'phase_list0.csv' under 'dir_qnt' to see if name of phases are provided properly.
+## If not, modify the csv file and specify the path of modified one to `phase_list` in "Optional parameters" section and rerun the above code.
 
 # Determine initial cluster centers
-centers <- qltmap_cls_centers(qnt = qnt, qlmap = xmap, dir_map = dir_map)
+centers <- find_centers(xmap = xmap, qnt = qnt, fine_phase = fine_phase)
+## Check 'centers0.csv' under the `wd` and modify on demand.
+## if modified, assign content of the modified csv file by running
+## centers <- data.table::fread('path to the modified csv file')
 
 # Phase identification
-# assign integration = FALSE if you do not want to integrate underscored phases (e.g., garnet_a and garnet_b are integrated to garnet if TRUE)
-cls <- qltmap_cls_pois(centers, xmap, wd = dir_map)
+# assign group_cluster = TRUE if you want to integrate same phases subgrouped by suffix after '_' 
+# (e.g., garnet_a and garnet_b are integrated to garnet if TRUE)
+cls <- cluster_xmap(xmap = xmap, centers = centers, group_cluster = FALSE)
 
 # quantify X-ray maps
-qntmap <- qntmap_quantify(
-  dir_map = dir_map,
-  qnt = qnt,
-  cluster = cls,
-  fine_phase = NULL #Specify phase whose grain size tend to be smaller than mapping probe diameter.
+qmap <- quantify(
+  xmap = xmap, qnt = qnt, cluster = cls, fine_phase = fine_phase
 )
+## Resulting files are saved in `qntmap` directory` under `dir_map`.
+
+# summarize result
+summary(qmap)
 ```
-
-# Upcoming updates
-
-- Automation
-    - Instead of running each functions manually and giving parameter in R console, 
-      I am planning to add a function called "qntmap", 
-      which runs all commands above and determines parameters based on a given text file.
-- HTML reporting
-
-
