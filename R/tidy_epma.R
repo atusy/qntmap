@@ -1,6 +1,5 @@
-#' compile epma data
+#' Compile epma data into a data frame
 #'
-#' @param RDS_cluster path to the clustering result
 #' @param qnt object returned by read_qnt
 #' @param xmap object returned by read_xmap
 #' @param cluster object returned by cluster_xmap
@@ -11,6 +10,7 @@
 #' @importFrom dplyr mutate_at
 #' @importFrom dplyr rename
 #' @importFrom dplyr transmute
+#' @importFrom matrixStats rowMaxs
 #' @importFrom pipeR %>>%
 #' @importFrom purrr map2
 #' @importFrom purrr map_int
@@ -24,9 +24,9 @@
 #'
 #'
 tidy_epma <- function(
-  qnt = ,
-  xmap = , # NA,
-  cluster = NA
+  qnt,
+  xmap, # NA,
+  cluster = NULL
 ) {
 
   #load mapping conditions

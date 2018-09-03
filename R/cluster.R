@@ -20,13 +20,15 @@ cluster <- function(x, centers, xte = NULL, ...) {
   Classify(x, y, `if`(is.null(xte), x, xte), ...)
 }
 
-#' cluster mapping data into mineral species
+
+
+#' Cluster mapping data into mineral species
 #'
 #' @inheritParams cluster
-#' @param xmap a `qm_xmap`` class object
+#' @param xmap a `qm_xmap` class object returned by `read_xmap`
 #' @param elements A character vector indicating which elements to be utilized in cluster analysis. `NULL`, in default, selects as much elements as possible are utilized in cluster analysis.
 #' @param saving `TRUE` or `FALSE` to save result.
-#' @param group_cluster `TRUE` or `FALSE` to integrate same phase with obiously different compositions. For example, when there are clusters named as Pl_NaRich and Pl_NaPoor, they are grouped as Pl.
+#' @param group_cluster `TRUE` (default) or `FALSE` to integrate same phase subgrouped using suffix. For example, when there are clusters named as Pl_NaRich and Pl_NaPoor, they are grouped as Pl.
 #'
 #' @importFrom dplyr group_by
 #' @importFrom dplyr ungroup

@@ -24,6 +24,8 @@ read_qnt_elemw.map_cnd <- function(
 
 #' read all .cnd files under the specified directory
 #' @inheritParams read_cnd
+#' @param pattern named character vectors
+#' @param n number of rows
 #' @param each n appears in each rows
 #' @noRd
 read_qnt_elemw.0_cnd <- function(

@@ -1,36 +1,35 @@
-#' summary qltmap_cls data
-#'
-#' Returns abundance ratios of clusters.
-#'
-#' @param object qntmap class data
-#' @param ... other arguments are discarded
-#'
+#' @name summary_methods
+#' @title summary methods
+#' @param object object to be summarized
+#' @param ... other arguments to control summary results
+NULL
+
+#' @rdname summary_methods
+#' @aliases summary.qm_cluster
+#' @section summary.qm_cluster: Returns abundance ratios of clusters.
 #' @importFrom pipeR pipeline 
-#'
 #' @export
-#'
-summary.xmap_cls <- function(object, ...) {pipeline({
+summary.qm_cluster <- function(object, ...) {pipeline({
   object$membership 
   colSums 
   `/`(sum(.))
 })}
 
-#' summary qntmap class data.
-#'
-#' @param object qntmap class data
-#' @param ... other arguments are discarded
-#'
+#' @section summary.qntmap: summary qntmap class data.
 #' @importFrom pipeR pipeline
 #' @importFrom dplyr bind_rows
-#'
-#'@export
-summary.qntmap <- function(object, ...) {pipeline({
-  object 
-  lapply(`[[`, 'wt') 
-  lapply(unlist) 
-  lapply(summary) 
-  lapply(round, 2L) 
-  lapply(as.list) 
-  bind_rows(.id = 'element') 
-  as.data.frame()
-})}
+#' @export
+summary.qntmap <- function(object, ...) {
+  pipeline({
+    object 
+    lapply(`[[`, 'wt') 
+    lapply(unlist) 
+    lapply(summary) 
+    lapply(round, 2L) 
+    lapply(as.list) 
+    bind_rows(.id = 'Element') 
+    as.data.frame()
+    print()
+  })
+  message('\n', 'Note that Total is not sum each column')
+}

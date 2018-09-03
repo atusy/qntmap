@@ -11,8 +11,6 @@
 #' @importFrom stringr str_replace_all
 #' @importFrom stringr str_replace
 #' @importFrom stringr str_detect
-#' @importFrom data.table as.data.table
-#' @importFrom data.table data.table
 #' @importFrom data.table fwrite
 #'
 #' @export
@@ -51,19 +49,14 @@ read_qnt <- function(
       'stg',
       'wt'
     ) %>>%
-    (paste0(wd, '/', ., '.qnt')) %>>%
-    `[`(file.exists(.)) %>>%
-    setNames(str_replace_all(., '(^.*/)|(\\.qnt$)', '')) %>>%
+    (setNames(paste0(., '.qnt'), .)) %>>%
+    # `[`(file.exists(.)) %>>%
     lapply(fread)
 
-  elemw <- paste(
-      wd, 
-      c('.cnd/elemw.cnd', 'Pos_0001/data001.cnd'), 
-      sep = '/'
-    )
+  elemw <- c('.cnd/elemw.cnd', 'Pos_0001/data001.cnd')
   
   #extract elemental data
-  elm <- data.table(
+  elm <- data.frame(
       elem = unlist(qnt$elem[1, -c(1, 2)], use.names = FALSE),
       elint = unlist(qnt$elint[1, -c(1, 2)], use.names = FALSE),
       read_qnt_elemw(elemw[file.exists(elemw)][1])
@@ -90,27 +83,24 @@ read_qnt <- function(
         }
     )
 
-
   #extract compositional data
   #bgm, bgp, pkint, bgint [cps/uA]
   cmp <- qnt[names(qnt) %in% c('bgm', 'bgp', 'net', 'pkint', 'wt')] %>>%
     lapply(setNames, c('id', 'num', elm$elem, 'sum')) %>>%
     lapply(select, one_of(elm$elem))
 
-  QNT <- structure(
+  if(is.null(phase_list) && !file.exists('phase_list0.csv')) 
+    fwrite(cbind(cnd[c('id', 'phase')], use =TRUE), 'phase_list0.csv')
+  
+  save4qm(
+    structure(
       list(elm = elm, cnd = cnd, cmp = cmp), #, raw = list(cnd = cnd0, qnt = qnt)),
       dir_qnt = wd,
       class = c('qm_qnt', 'list')
-    )
-
-  if(is.null(phase_list) && !file.exists('phase_list0.csv')) pipeline({
-    cnd
-    select(id, phase)
-    mutate(use = TRUE)
-    fwrite('phase_list0.csv')
-  })
-  
-  save4qm(QNT, 'qnt.RDS', saving)
+    ),
+    'qnt.RDS',
+    saving
+  )
 
 }
 

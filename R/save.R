@@ -1,50 +1,73 @@
-#' save objects created by functions in QntMap package.
-save4qm <- function(x, nm, saving = TRUE, ...) {
+#' S3 generics to save returned values from functions in QntMap package.
+#' @return `invisible(x)`
+#' @param x object to save
+#' @param nm name of object to save
+#' @param saving `TRUE` or `FALSE` to save result file(s).
+#' @param ... other arguments passed to class methods
+#' @export
+save4qm <- function(x, nm = '', saving = TRUE, ...) {
   if(!saving) return(invisible(x))
+  if(!is.character(nm)) stop('nm must be a string')
   UseMethod('save4qm')
 }
-save4qm.qm_xmap <- save4qm.qm_qnt <- 
-  function(x, nm, ...) saveRDS(x, nm)
-save4qm.data.frame <- 
-  function(x, nm, ...) data.table::fwrite(x, nm)
-#' save the result of `cluster_xmap()` or `cluster_group()` as RDS file and png file
-#'
-#' @param result result of clustering
-#' @param name_write name of result to be written
-#' @param components components in RDS
-#'
+
+#' @rdname save4qm
+#' @section `save4qm.default`: 
+#' A default method.
+#' This is a wrapper of `saveRDS` together with invisible return of `x`.
+save4qm.default <- function(x, nm, saving, ...) {
+    saveRDS(x, nm)
+    invisible(x)
+  }
+
+#' @rdname save4qm
+#' @section `save4qm.data.frame`:
+#' A method for `data.frame` class. 
+#' This is a wrapper of `data.table::fwrite` 
+#' together with invisible return of `x`.
+#' 
+#' @importFrom data.table fwrite
+save4qm.data.frame <- function(x, nm, saving, ...) {
+    fwrite(x, nm)
+    invisible(x)
+  }
+
+#' @rdname save4qm
+#' @section `save4qm.qm_cluster`: 
+#' A method for `qm_cluster` class returned by `cluster_xmap()` or `cluster_group()`.
+#' Object is saved as RDS file and png file.
+#' The latter shows distribution of phases among a mapped area.
 #' @importFrom png writePNG
-#'
-save4qm.qm_cluster <- function(x, nm, components = NULL, ...) {
+#' @importFrom grDevices dev.copy
+#' @importFrom grDevices dev.off
+#' @importFrom grDevices png
+#' @importFrom graphics pie
+save4qm.qm_cluster <- function(x, nm, saving, ...) {
   #setting for output
   dir_out <- paste0(x$dir_map, '/clustering')
   dir.create(dir_out, showWarnings = FALSE)
-  k <- ncol(result$membership)
+  k <- ncol(x$membership)
   nm <- paste0(
       dir_out, '/', x$date, '_', nm, '_k', k, '_', 
-      paste(result$elements, collapse ='')
+      paste(x$elements, collapse ='')
     )
 
   #save modal map
-  png::writePNG(
+  writePNG(
     image = array(
-      mycolors(n = k, dec = TRUE)[result$ytehat, ] / 255,
-      dim = c(result$dims, 3)
+      mycolors(n = k, dec = TRUE)[x$ytehat, ] / 255,
+      dim = c(x$dims, 3)
     ),
     target = paste0(nm, "_map.png")
   )
 
   #save result of classification
-  if(is.null(components)){
-    saveRDS(result, paste0(nm, "_result.RDS"))
-  } else {
-    saveRDS(result[components], paste0(nm, "_result.RDS"))
-  }
+  saveRDS(x, paste0(nm, "_result.RDS"))
 
   #save legend
   pie(
     rep(1, k), 
-    labels = paste(1:k, colnames(result$membership), sep='.'), 
+    labels = paste(1:k, colnames(x$membership), sep='.'), 
     col = mycolors(n = k)
   )
   dev.copy(png, paste0(nm, "_legend.png"))
@@ -52,15 +75,24 @@ save4qm.qm_cluster <- function(x, nm, components = NULL, ...) {
   
   invisible(x)
 }
+
+#' @rdname save4qm
+#' @param dir_qntmap A path to the directory to save `x`.
+#' @section `save4qm.qntmap`: 
+#' A method for `qntmap` class returned by `qntmap()` or `quantify()`
+#' 
+#' @importFrom data.table fwrite
+#' @importFrom pipeR pipeline
+#' @importFrom purrr walk2
 save4qm.qntmap <- function(x, nm, dir_qntmap, ...) {
   cd <- getwd(); on.exit(setwd(cd))
   setwd(dir_qntmap)
   saveRDS(x, 'qntmap.RDS')
-  pipeR::pipeline({
+  pipeline({
     unlist(x, recursive = FALSE)
-    purrr::walk2(
+    walk2(
       paste0(str_replace(names(.), '\\.', '_'), '.csv'),
-      data.table::fwrite
+      fwrite
     )
   })
   invisible(x)

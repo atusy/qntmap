@@ -1,5 +1,5 @@
-#' quantify qualtitative mapping data interactively
-#'
+#' interactively quantify X-ray maps
+#' 
 #' @importFrom easycsv choose_dir
 #' @importFrom utils select.list
 #' @export
@@ -9,11 +9,11 @@ qntmap <- function() {
   on.exit(setwd(cd))
   
   cat('(1) select any file in the directory which contains .map and .qnt directory\n')
-  setwd(wd <- easycsv::choose_dir())
+  setwd(wd <- choose_dir()) # easycsv::choose_dir
   if(!all(c('.map', '.qnt') %in% list.files(all.files = TRUE, include.dirs = TRUE)))
     while(!all(c('.map', '.qnt') %in% list.files(all.files = TRUE, include.dirs = TRUE))) {
       cat('(1) Selected directory does not contain .map and .qnt directory. Select again\n')
-      setwd(wd <- easycsv::choose_dir())
+      setwd(wd <- choose_dir()) # easycsv::choose_dir
     }
   cat('working directory is settled to\n')
   cat(wd)
@@ -57,10 +57,10 @@ qntmap <- function() {
   cat('Loading mapping data\n')
   xmap <- read_xmap(dir_map, DT = DT, renew = TRUE)
   cat('Loading quantified data\n')
-  qnt <- read_qnt(wd, phase_list, renew = TRUE)
+  qnt <- read_qnt('.qnt', phase_list, renew = TRUE)
   cat('Peforming cluster analysis\n')
-  centers <- cluster_centers(qnt = qnt, qltmap = xmap, dir_map = dir_map)
-  cls <- cluster_xmap(centers, xmap, dir_map = dir_map)
+  centers <- find_centers(xmap = xmap, qnt = qnt)
+  cls <- cluster_xmap(xmap = xmap, centers = centers)
   cat('Finished cluster analysis. Result is in ')
   cat(dir_map)
   cat('/clustering\n\n')
@@ -70,11 +70,9 @@ qntmap <- function() {
   cat('\n')
   
   cat('Quantifying mapping data\n')
-  qmap <- qmap_quantify(
-    wd = wd,
-    dir_map = dir_map,
-    qnt = qnt,
+  qmap <- quantify(
     xmap = xmap,
+    qnt = qnt,
     cluster = cls,
     fine_phase = if(length(fine_phase)) fine_phase else NULL
   )
@@ -83,7 +81,7 @@ qntmap <- function() {
   cat('Results are saved under')
   cat(paste0(dir_map, '/qntmap\n\n'))
   
-  cat('Summary of quantified mapping data')
+  cat('Summary of quantified mapping data\n')
   print(summary(qmap))
   
   invisible(qmap)

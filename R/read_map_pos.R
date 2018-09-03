@@ -5,7 +5,7 @@
 read_map_pos <- function(x, ...) UseMethod('read_map_pos')
 
 #' a default method for read_map_pos
-#' @inheritParams read_map_pos
+#' @inheritDotParams read_map_pos
 #' @noRd
 read_map_pos.default <- function(x, ...) {
   read_map_pos(read_cnd(x), ...)
@@ -13,6 +13,7 @@ read_map_pos.default <- function(x, ...) {
 
 #' a method for read_map_pos
 #' @inheritParams read_map_pos
+#' @noRd
 read_map_pos.map_cnd <- function(x, ...) {pipeline({
   rbind(
     x[['XM_AP_SA_STAGE_POS']][2, 1:2],
@@ -23,8 +24,10 @@ read_map_pos.map_cnd <- function(x, ...) {pipeline({
   as.data.frame
   setNames(c('start', 'px', 'step'))
 })}
+
 #' read mapping stage information from 0.cnd
-#' @inheritParams read_cnd.0_cnd
+#' @inheritDotParams read_map_pos
+#' @inheritDotParams read_cnd.0_cnd pattern n
 #' @noRd
 read_map_pos.0_cnd <- function(
   x,
@@ -36,7 +39,8 @@ read_map_pos.0_cnd <- function(
     'X(-axis)? Step Size',
     'Y(-axis)? Step Size'
   ),
-  n = c(27, 28, 30:33)
+  n = c(27, 28, 30:33),
+  ...
 ) {
   pipeline({
     read_cnd(x, pattern, n)

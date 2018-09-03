@@ -1,22 +1,22 @@
 #' read .cnd files
-#' e.g., '0.cnd', 'map.cnd', ...
-#' @param x path to the file
-#' @param ... other arguments passed to methods
-read_cnd <- function(x, ...) {
-  UseMethod("read_cnd")
-}
+#' 
+#' @param x A path to the file (e.g., '0.cnd', 'map.cnd', ...)
+#' @param ... Other arguments passed to methods
+#' @export
+read_cnd <- function(x, ...) UseMethod("read_cnd")
 
-#' default method for read_cnd
-#' @inheritParams read_cnd
+#' @rdname read_cnd
+#' @section .default: 
+#' A default method which returns a result of `readLines(x)` 
+#' with additional class according to the content of the file.
 read_cnd.default <- function(x, ...) {
   cnd <- readLines(x)
   class(cnd) <- `if`(all(grepl('^\\$', cnd)), 'map_cnd', '0_cnd')
   read_cnd(cnd, ...)
 }
 
-#' method for read_cnd
-#' @param x returned value from readLines. each elements starts with "$"
-#' @param ... other arguments passed to methods
+#' @rdname read_cnd
+#' @section read_cnd.map_cnd: A method for `map_cnd` class object.
 #' @importFrom tidyr separate
 #' @importFrom utils type.convert
 #' @importFrom dplyr arrange
@@ -41,13 +41,14 @@ read_cnd.map_cnd <- function(x, ...) {pipeline({
     `class<-`('map_cnd')
 })}
 
-#' method for read_cnd
-#'
-#' @param x input
-#' @param pattern character vector. Used to extract rows which contains phrase matching pattern.
-#' @param n integer vector of same length as pattern. Used to extract nth row of .cnd file in case pattern did not match any phrase.
-#'
+#' @rdname read_cnd
+#' @section read_cnd.map_cnd: A method for `0_cnd` class object.
+#' @param pattern character vector. 
+#'   Used to extract rows which contains phrase matching pattern.
+#' @param n integer vector of same length as pattern. 
+#'   Used to extract nth row of .cnd file in case pattern did not match any phrase.
 #' @noRd
+read_cnd.0_cnd <- function(x, pattern = NULL, n = NULL, ...) {
   if(is.null(pattern)) return(x)
   
   detection <- lapply(pattern, function(i) which(str_detect(x, i)))

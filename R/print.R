@@ -1,8 +1,8 @@
-#' print qntmap class data.
-#'
-#' @param x qntmap class data
-#' @param summarizing TRUE in default will visibly return summary of x and invisibly return x. FALSE will just return x.
-#' @param ... other arguments are discarded
+#' `print` method for `qntmap` class object
+#' 
+#' @param x `qntmap` class object returned by `quantify()` or `qntmap()`.
+#' @param summarizing `TRUE` or `FALSE` to summarize x (default: `TRUE`. 
+#' @param ... Discarded.
 #'
 #'
 #'@export
@@ -15,7 +15,7 @@ print.qntmap <- function(x, summarizing = TRUE, ...) {
     ' mass concentration map\n',
     sep = ' '
   )
-  print(summary.qntmap(x))
+  print(summary(x))
   cat(
     '',
     'This is a list object',
