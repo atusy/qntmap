@@ -4,3 +4,4 @@
 .Ruserdata
 .Rprofile
 qntmap.Rproj
+*.sync-conflict*
