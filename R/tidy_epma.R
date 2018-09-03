@@ -131,7 +131,3 @@ tidy_epma <- function(
     )
 
 }
-
-#' @export
-#' @rdname tidy_epma
-epma_tidy <- tidy_epma
