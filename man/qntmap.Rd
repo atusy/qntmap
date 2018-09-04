@@ -2,10 +2,10 @@
 % Please edit documentation in R/qntmap.R
 \name{qntmap}
 \alias{qntmap}
-\title{quantify qualtitative mapping data interactively}
+\title{interactively quantify X-ray maps}
 \usage{
 qntmap()
 }
 \description{
-quantify qualtitative mapping data interactively
+interactively quantify X-ray maps
 }
