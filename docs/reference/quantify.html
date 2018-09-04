@@ -76,6 +76,9 @@
 <li>
   <a href="../reference/index.html">Reference</a>
 </li>
+<li>
+  <a href="../news/index.html">Changelog</a>
+</li>
       </ul>
       
       <ul class="nav navbar-nav navbar-right">
@@ -109,9 +112,6 @@
     </div>
 
     <pre class="usage"><span class='fu'>quantify</span>(<span class='no'>xmap</span>, <span class='no'>qnt</span>, <span class='no'>cluster</span>, <span class='kw'>maps_x</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>maps_y</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
-  <span class='kw'>fine_phase</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>fine_th</span> <span class='kw'>=</span> <span class='fl'>0.9</span>, <span class='kw'>fixAB</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>fixB</span> <span class='kw'>=</span> <span class='kw'>NULL</span>)
-
-<span class='fu'>qntmap_quantify</span>(<span class='no'>xmap</span>, <span class='no'>qnt</span>, <span class='no'>cluster</span>, <span class='kw'>maps_x</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>maps_y</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
   <span class='kw'>fine_phase</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>fine_th</span> <span class='kw'>=</span> <span class='fl'>0.9</span>, <span class='kw'>fixAB</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>fixB</span> <span class='kw'>=</span> <span class='kw'>NULL</span>)</pre>
     
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
@@ -119,23 +119,23 @@
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
       <th>xmap</th>
-      <td><p>`qm_xmap` class object returned by `read_xmap()`.</p></td>
+      <td><p><code>qm_xmap</code> class object returned by <code><a href='read_xmap.html'>read_xmap()</a></code>.</p></td>
     </tr>
     <tr>
       <th>qnt</th>
-      <td><p>`qm_qnt` class object returned by `read_qnt()`.</p></td>
+      <td><p><code>qm_qnt</code> class object returned by <code><a href='read_qnt.html'>read_qnt()</a></code>.</p></td>
     </tr>
     <tr>
       <th>cluster</th>
-      <td><p>`qm_cluster` class object returned by `cluter_xmap()`.</p></td>
+      <td><p><code>qm_cluster</code> class object returned by <code>cluter_xmap()</code>.</p></td>
     </tr>
     <tr>
       <th>maps_x</th>
-      <td><p>A x-axis size of maps comprising guide net map (default: `NULL`).</p></td>
+      <td><p>A x-axis size of maps comprising guide net map (default: <code>NULL</code>).</p></td>
     </tr>
     <tr>
       <th>maps_y</th>
-      <td><p>A y-axis size of maps comprising guide net map (default: `NULL`).</p></td>
+      <td><p>A y-axis size of maps comprising guide net map (default: <code>NULL</code>).</p></td>
     </tr>
     <tr>
       <th>fine_phase</th>
@@ -147,11 +147,11 @@
     </tr>
     <tr>
       <th>fixAB</th>
-      <td><p>fix AB in case compositions of a mineral is constant (default: `NULL`).</p></td>
+      <td><p>fix AB in case compositions of a mineral is constant (default: <code>NULL</code>).</p></td>
     </tr>
     <tr>
       <th>fixB</th>
-      <td><p>fix B (default: `NULL`).</p></td>
+      <td><p>fix B (default: <code>NULL</code>).</p></td>
     </tr>
     </table>
     

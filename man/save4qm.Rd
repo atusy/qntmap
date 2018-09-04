@@ -8,7 +8,7 @@
 \alias{save4qm.qntmap}
 \title{S3 generics to save returned values from functions in QntMap package.}
 \usage{
-save4qm(x, nm, saving = TRUE, ...)
+save4qm(x, nm = "", saving = TRUE, ...)
 
 \method{save4qm}{default}(x, nm, saving, ...)
 

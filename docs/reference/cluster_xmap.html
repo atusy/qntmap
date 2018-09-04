@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>cluster mapping data into mineral species — cluster_xmap • qntmap</title>
+<title>Cluster mapping data into mineral species — cluster_xmap • qntmap</title>
 
 <!-- jquery -->
 <script src="https://code.jquery.com/jquery-3.1.0.min.js" integrity="sha384-nrOSfDHtoPMzJHjVTdCopGqIqeYETSXhZDFyniQ8ZHcVy08QesyHcnOUpMpqnmWq" crossorigin="anonymous"></script>
@@ -30,9 +30,9 @@
 
 
 
-<meta property="og:title" content="cluster mapping data into mineral species — cluster_xmap" />
+<meta property="og:title" content="Cluster mapping data into mineral species — cluster_xmap" />
 
-<meta property="og:description" content="cluster mapping data into mineral species" />
+<meta property="og:description" content="Cluster mapping data into mineral species" />
 <meta name="twitter:card" content="summary" />
 
 
@@ -76,6 +76,9 @@
 <li>
   <a href="../reference/index.html">Reference</a>
 </li>
+<li>
+  <a href="../news/index.html">Changelog</a>
+</li>
       </ul>
       
       <ul class="nav navbar-nav navbar-right">
@@ -97,14 +100,14 @@
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>cluster mapping data into mineral species</h1>
+    <h1>Cluster mapping data into mineral species</h1>
     <small class="dont-index">Source: <a href='https://github.com/atusy/qntmap//blob/master/R/cluster.R'><code>R/cluster.R</code></a></small>
     <div class="hidden name"><code>cluster_xmap.Rd</code></div>
     </div>
 
     <div class="ref-description">
     
-    <p>cluster mapping data into mineral species</p>
+    <p>Cluster mapping data into mineral species</p>
     
     </div>
 
@@ -116,23 +119,23 @@
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
       <th>xmap</th>
-      <td><p>a `qm_xmap`` class object</p></td>
+      <td><p>a <code>qm_xmap</code> class object returned by <code>read_xmap</code></p></td>
     </tr>
     <tr>
       <th>centers</th>
-      <td><p>c-by-p matrix returned by `find_centers()` or by manually; c clusters and p features. Used to guess initial centers (or centroids) of clusters. A value returned by , typically `data.frame` or `matrix`, indicating initial guess centers (or centroids) or clusters. See `find_centers()`.</p></td>
+      <td><p>c-by-p matrix returned by <code><a href='find_centers.html'>find_centers()</a></code> or by manually; c clusters and p features. Used to guess initial centers (or centroids) of clusters. A value returned by , typically <code>data.frame</code> or <code>matrix</code>, indicating initial guess centers (or centroids) or clusters. See <code><a href='find_centers.html'>find_centers()</a></code>.</p></td>
     </tr>
     <tr>
       <th>elements</th>
-      <td><p>A character vector indicating which elements to be utilized in cluster analysis. `NULL`, in default, selects as much elements as possible are utilized in cluster analysis.</p></td>
+      <td><p>A character vector indicating which elements to be utilized in cluster analysis. <code>NULL</code>, in default, selects as much elements as possible are utilized in cluster analysis.</p></td>
     </tr>
     <tr>
       <th>saving</th>
-      <td><p>`TRUE` or `FALSE` to save result.</p></td>
+      <td><p><code>TRUE</code> or <code>FALSE</code> to save result.</p></td>
     </tr>
     <tr>
       <th>group_cluster</th>
-      <td><p>`TRUE` or `FALSE` to integrate same phase with obiously different compositions. For example, when there are clusters named as Pl_NaRich and Pl_NaPoor, they are grouped as Pl.</p></td>
+      <td><p><code>TRUE</code> (default) or <code>FALSE</code> to integrate same phase subgrouped using suffix. For example, when there are clusters named as Pl_NaRich and Pl_NaPoor, they are grouped as Pl.</p></td>
     </tr>
     </table>
     

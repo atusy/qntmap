@@ -76,6 +76,9 @@
 <li>
   <a href="../reference/index.html">Reference</a>
 </li>
+<li>
+  <a href="../news/index.html">Changelog</a>
+</li>
       </ul>
       
       <ul class="nav navbar-nav navbar-right">
@@ -135,7 +138,7 @@
     </tr>
     <tr>
       <th>saving</th>
-      <td><p>whether or not to save</p></td>
+      <td><p><code>TRUE</code> or <code>FALSE</code> to save result file(s).</p></td>
     </tr>
     <tr>
       <th>...</th>
@@ -143,38 +146,38 @@
     </tr>
     <tr>
       <th>dir_qntmap</th>
-      <td><p>A path to the directory to save `x`.</p></td>
+      <td><p>A path to the directory to save <code>x</code>.</p></td>
     </tr>
     </table>
     
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <p>`invisible(x)`</p>
+    <p><code>invisible(x)</code></p>
     
-    <h2 class="hasAnchor" id="-save-qm-default-"><a class="anchor" href="#-save-qm-default-"></a>`save4qm.default`</h2>
+    <h2 class="hasAnchor" id="save-qm-default"><a class="anchor" href="#save-qm-default"></a><code>save4qm.default</code></h2>
 
     
     <p>A default method.
-This is a wrapper of `saveRDS` together with invisible return of `x`.</p>
+This is a wrapper of <code>saveRDS</code> together with invisible return of <code>x</code>.</p>
     
-    <h2 class="hasAnchor" id="-save-qm-data-frame-"><a class="anchor" href="#-save-qm-data-frame-"></a>`save4qm.data.frame`</h2>
+    <h2 class="hasAnchor" id="save-qm-data-frame"><a class="anchor" href="#save-qm-data-frame"></a><code>save4qm.data.frame</code></h2>
 
     
-    <p>A method for `data.frame` class. 
-This is a wrapper of `data.table::fwrite` 
-together with invisible return of `x`.</p>
+    <p>A method for <code>data.frame</code> class.
+This is a wrapper of <code><a href='http://www.rdocumentation.org/packages/data.table/topics/fwrite'>data.table::fwrite</a></code>
+together with invisible return of <code>x</code>.</p>
     
-    <h2 class="hasAnchor" id="-save-qm-qm-cluster-"><a class="anchor" href="#-save-qm-qm-cluster-"></a>`save4qm.qm_cluster`</h2>
+    <h2 class="hasAnchor" id="save-qm-qm-cluster"><a class="anchor" href="#save-qm-qm-cluster"></a><code>save4qm.qm_cluster</code></h2>
 
     
-    <p>A method for `qm_cluster` class returned by `cluster_xmap()` or `cluster_group()`.
+    <p>A method for <code>qm_cluster</code> class returned by <code><a href='cluster_xmap.html'>cluster_xmap()</a></code> or <code>cluster_group()</code>.
 Object is saved as RDS file and png file.
 The latter shows distribution of phases among a mapped area.</p>
     
-    <h2 class="hasAnchor" id="-save-qm-qntmap-"><a class="anchor" href="#-save-qm-qntmap-"></a>`save4qm.qntmap`</h2>
+    <h2 class="hasAnchor" id="save-qm-qntmap"><a class="anchor" href="#save-qm-qntmap"></a><code>save4qm.qntmap</code></h2>
 
     
-    <p>A method for `qntmap` class returned by `qntmap()` or `quantify()`</p>
+    <p>A method for <code>qntmap</code> class returned by <code><a href='qntmap.html'>qntmap()</a></code> or <code><a href='quantify.html'>quantify()</a></code></p>
     
 
   </div>
@@ -185,13 +188,13 @@ The latter shows distribution of phases among a mapped area.</p>
       
       <li><a href="#value">Value</a></li>
 
-      <li><a href="#-save-qm-default-">`save4qm.default`</a></li>
+      <li><a href="#save-qm-default"><code>save4qm.default</code></a></li>
 
-      <li><a href="#-save-qm-data-frame-">`save4qm.data.frame`</a></li>
+      <li><a href="#save-qm-data-frame"><code>save4qm.data.frame</code></a></li>
 
-      <li><a href="#-save-qm-qm-cluster-">`save4qm.qm_cluster`</a></li>
+      <li><a href="#save-qm-qm-cluster"><code>save4qm.qm_cluster</code></a></li>
 
-      <li><a href="#-save-qm-qntmap-">`save4qm.qntmap`</a></li>
+      <li><a href="#save-qm-qntmap"><code>save4qm.qntmap</code></a></li>
           </ul>
 
   </div>

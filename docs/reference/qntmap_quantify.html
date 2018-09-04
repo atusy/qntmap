@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Generate initial centroids for clustering randomly — find_centers_kpp • qntmap</title>
+<title>(Deprecated) Use quantify. — qntmap_quantify • qntmap</title>
 
 <!-- jquery -->
 <script src="https://code.jquery.com/jquery-3.1.0.min.js" integrity="sha384-nrOSfDHtoPMzJHjVTdCopGqIqeYETSXhZDFyniQ8ZHcVy08QesyHcnOUpMpqnmWq" crossorigin="anonymous"></script>
@@ -30,9 +30,9 @@
 
 
 
-<meta property="og:title" content="Generate initial centroids for clustering randomly — find_centers_kpp" />
+<meta property="og:title" content="(Deprecated) Use quantify. — qntmap_quantify" />
 
-<meta property="og:description" content="Generate initial centroids for clustering randomly" />
+<meta property="og:description" content="(Deprecated) Use quantify." />
 <meta name="twitter:card" content="summary" />
 
 
@@ -100,33 +100,52 @@
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Generate initial centroids for clustering randomly</h1>
-    <small class="dont-index">Source: <a href='https://github.com/atusy/qntmap//blob/master/R/find_centers_kpp.R'><code>R/find_centers_kpp.R</code></a></small>
-    <div class="hidden name"><code>find_centers_kpp.Rd</code></div>
+    <h1>(Deprecated) Use quantify.</h1>
+    <small class="dont-index">Source: <a href='https://github.com/atusy/qntmap//blob/master/R/quantify.R'><code>R/quantify.R</code></a></small>
+    <div class="hidden name"><code>qntmap_quantify.Rd</code></div>
     </div>
 
     <div class="ref-description">
     
-    <p>Generate initial centroids for clustering randomly</p>
+    <p>(Deprecated) Use quantify.</p>
     
     </div>
 
-    <pre class="usage"><span class='fu'>find_centers_kpp</span>(<span class='no'>x</span>, <span class='no'>k</span>, <span class='kw'>given</span> <span class='kw'>=</span> <span class='kw'>NULL</span>)</pre>
+    <pre class="usage"><span class='fu'>qntmap_quantify</span>(<span class='kw'>wd</span> <span class='kw'>=</span> <span class='st'>"."</span>, <span class='no'>dir_map</span>, <span class='no'>RDS_cluster</span>, <span class='kw'>maps_x</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
+  <span class='kw'>maps_y</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>fine_phase</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>fine_th</span> <span class='kw'>=</span> <span class='fl'>0.9</span>,
+  <span class='kw'>qnt</span> <span class='kw'>=</span> <span class='fu'><a href='read_qnt.html'>qnt_load</a></span>(<span class='no'>wd</span>), <span class='kw'>qltmap</span> <span class='kw'>=</span> <span class='fu'><a href='qltmap_load.html'>qltmap_load</a></span>(<span class='no'>dir_map</span>),
+  <span class='kw'>cluster</span> <span class='kw'>=</span> <span class='fu'>readRDS</span>(<span class='no'>RDS_cluster</span>))</pre>
     
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
-      <th>x</th>
-      <td><p>An object which can be coerced to <code>matrix</code>, typically <code>matrix</code> itself or <code>data.frame</code>.</p></td>
+      <th>wd</th>
+      <td><p>working directory which contains .qnt and .map directories</p></td>
     </tr>
     <tr>
-      <th>k</th>
-      <td><p>A number of clusters.</p></td>
+      <th>maps_x</th>
+      <td><p>A x-axis size of maps comprising guide net map (default: <code>NULL</code>).</p></td>
     </tr>
     <tr>
-      <th>given</th>
-      <td><p>Given centers. Not yet implemented.</p></td>
+      <th>maps_y</th>
+      <td><p>A y-axis size of maps comprising guide net map (default: <code>NULL</code>).</p></td>
+    </tr>
+    <tr>
+      <th>fine_phase</th>
+      <td><p>A character vector to specify fine grained phases which tend to comprise multi-phase pixels e.g., c('Pl', 'Amp')</p></td>
+    </tr>
+    <tr>
+      <th>fine_th</th>
+      <td><p>0.9</p></td>
+    </tr>
+    <tr>
+      <th>qnt</th>
+      <td><p><code>qm_qnt</code> class object returned by <code><a href='read_qnt.html'>read_qnt()</a></code>.</p></td>
+    </tr>
+    <tr>
+      <th>cluster</th>
+      <td><p><code>qm_cluster</code> class object returned by <code>cluter_xmap()</code>.</p></td>
     </tr>
     </table>
     

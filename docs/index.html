@@ -46,6 +46,9 @@
 <li>
   <a href="reference/index.html">Reference</a>
 </li>
+<li>
+  <a href="news/index.html">Changelog</a>
+</li>
       </ul>
 <ul class="nav navbar-nav navbar-right">
 <li>
@@ -88,6 +91,11 @@ See “How to” section for usage and Yasumoto et al. (submitted) for implement
 <div id="how-to" class="section level1">
 <h1 class="hasAnchor">
 <a href="#how-to" class="anchor"></a>How to</h1>
+<ol style="list-style-type: decimal">
+<li>Export data from EPMA analysis.</li>
+<li>Run QntMap</li>
+</ol>
+<p>Read below for details.</p>
 <div id="epma-analysis" class="section level2">
 <h2 class="hasAnchor">
 <a href="#epma-analysis" class="anchor"></a>EPMA analysis</h2>
@@ -205,18 +213,24 @@ See “How to” section for usage and Yasumoto et al. (submitted) for implement
 <div id="manual-mode-for-experts-example" class="section level4">
 <h4 class="hasAnchor">
 <a href="#manual-mode-for-experts-example" class="anchor"></a>Manual mode for experts (example)</h4>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># Required parameters</span>
-wd &lt;-<span class="st"> 'path to the working directory'</span>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(qntmap)
+
+<span class="co"># Required parameters</span>
+wd &lt;-<span class="st"> '.'</span> <span class="co"># path to the working directory</span>
 dir_map &lt;-<span class="st"> '.map/1'</span> <span class="co"># relative/absolute path to the directory containing ascii converted X-ray map files (1_map.txt, 2_map.txt, and so on)"</span>
 dir_qnt &lt;-<span class="st"> '.qnt'</span> <span class="co"># relative/absolute path to the directory containing .qnt files (pkint.qnt, net.qnt, and so on)"</span>
 
 
 <span class="co"># Optional parameters</span>
-fine_phase &lt;-<span class="st"> </span><span class="ot">NULL</span> <span class="co"># A character vector to specify phases tend to be smaller than mapping probe diameter</span>
-phase_list &lt;-<span class="st"> </span><span class="ot">NULL</span> <span class="co"># A csv file indicating phase of n-th quantitative point analysis</span>
+
+## A character vector to specify phases tend to be smaller than mapping probe diameter
+fine_phase &lt;-<span class="st"> </span><span class="ot">NULL</span> 
+
+## A csv file indicating name of the phase of n-th quantitative point analysis.
+## If NULL, names are assumed to be specified in comments during EPMA analysis.
+phase_list &lt;-<span class="st"> </span><span class="ot">NULL</span> 
 
 <span class="co"># Run analysis</span>
-<span class="kw">library</span>(qntmap)
 
 <span class="co"># Set working directory</span>
 <span class="kw">setwd</span>(wd)
@@ -224,25 +238,33 @@ phase_list &lt;-<span class="st"> </span><span class="ot">NULL</span> <span clas
 <span class="co"># Load mapping data</span>
 <span class="co"># Change value of DT (dead time in nanoseconds) depending on EPMA.</span>
 <span class="co"># 1100 ns is a value applied by JEOL JXA-8105.</span>
-xmap &lt;-<span class="st"> </span><span class="kw"><a href="reference/read_xmap.html">read_xmap</a></span>(dir_map, <span class="dt">DT =</span> <span class="dv">1100</span>)
+xmap &lt;-<span class="st"> </span><span class="kw"><a href="reference/read_xmap.html">read_xmap</a></span>(<span class="dt">wd =</span> dir_map, <span class="dt">DT =</span> <span class="dv">1100</span>)
 
 <span class="co"># Compile quantitative data</span>
-qnt &lt;-<span class="st"> </span><span class="kw"><a href="reference/read_qnt.html">read_qnt</a></span>(dir_qnt, <span class="dt">phase_list =</span> <span class="ot">NULL</span>)
-## If you want to change phase names of each analysis different from those determined preliminary given during EPMA analysis, prepare csv file that indicates phase name, and input its path to phase_list parameter.
-## In addition, make renew = TRUE.
-## qnt &lt;- qnt_load(phase_list = "phase_list.csv", renew = TRUE)
+qnt &lt;-<span class="st"> </span><span class="kw"><a href="reference/read_qnt.html">read_qnt</a></span>(<span class="dt">wd =</span> dir_qnt, <span class="dt">phase_list =</span> phase_list, <span class="dt">renew =</span> <span class="ot">TRUE</span>)
+## Check 'phase_list0.csv' under 'dir_qnt' to see if name of phases are provided properly.
+## If not, modify the csv file and specify the path of modified one to `phase_list` in "Optional parameters" section and rerun the above code.
 
 <span class="co"># Determine initial cluster centers</span>
 centers &lt;-<span class="st"> </span><span class="kw"><a href="reference/find_centers.html">find_centers</a></span>(<span class="dt">xmap =</span> xmap, <span class="dt">qnt =</span> qnt, <span class="dt">fine_phase =</span> fine_phase)
+## Check 'centers0.csv' under the `wd` and modify on demand.
+## if modified, assign content of the modified csv file by running
+## centers &lt;- data.table::fread('path to the modified csv file')
 
 <span class="co"># Phase identification</span>
-<span class="co"># assign integration = FALSE if you do not want to integrate underscored phases (e.g., garnet_a and garnet_b are integrated to garnet if TRUE)</span>
-cls &lt;-<span class="st"> </span><span class="kw"><a href="reference/cluster_xmap.html">cluster_xmap</a></span>(xmap, centers)
+<span class="co"># assign group_cluster = TRUE if you want to integrate same phases subgrouped by suffix after '_' </span>
+<span class="co"># (e.g., garnet_a and garnet_b are integrated to garnet if TRUE)</span>
+cls &lt;-<span class="st"> </span><span class="kw"><a href="reference/cluster_xmap.html">cluster_xmap</a></span>(<span class="dt">xmap =</span> xmap, <span class="dt">centers =</span> centers, <span class="dt">group_cluster =</span> <span class="ot">FALSE</span>)
 
 <span class="co"># quantify X-ray maps</span>
-qntmap &lt;-<span class="st"> </span><span class="kw"><a href="reference/quantify.html">qntmap_quantify</a></span>(
+qmap &lt;-<span class="st"> </span><span class="kw"><a href="reference/quantify.html">quantify</a></span>(
   <span class="dt">xmap =</span> xmap, <span class="dt">qnt =</span> qnt, <span class="dt">cluster =</span> cls, <span class="dt">fine_phase =</span> fine_phase
-)</code></pre></div>
+)
+## Resulting files are saved in `qntmap` directory` under `dir_map`.
+
+<span class="co"># summarize result</span>
+<span class="kw">summary</span>(qmap)
+## This shows minimum, lower quantile, median, mean, upper quantile, and maximum values of variables.</code></pre></div>
 </div>
 </div>
 </div>
