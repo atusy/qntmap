@@ -145,8 +145,8 @@ qmap <- quantify(
 
 # summarize result
 summary(qmap)
-<<<<<<< HEAD:readme.md
+<<<<<<< HEAD:readme.Rmd
 ## This shows minimum, lower quantile, median, mean, upper quantile, and maximum values of variables.
 =======
->>>>>>> master:README.md
+>>>>>>> master:README.Rmd
 ```
