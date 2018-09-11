@@ -13,7 +13,7 @@ cluster <- function(x, centers, xte = NULL, ...) {
   x_trans <- t(x)
   y <- pipeline({
     centers
-    apply(1, function(y) colSums(x_trans - y) ^ 2)
+    apply(1, function(y) colSums((x_trans - y) ^ 2))
     apply(1, which.min)
   })
   rm(x_trans)

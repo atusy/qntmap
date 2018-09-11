@@ -50,7 +50,7 @@ read_qnt <- function(
       'wt'
     ) %>>%
     (setNames(paste0(., '.qnt'), .)) %>>%
-    # `[`(file.exists(.)) %>>%
+    `[`(file.exists(.)) %>>%
     lapply(fread)
 
   elemw <- c('.cnd/elemw.cnd', 'Pos_0001/data001.cnd')
