@@ -34,7 +34,7 @@ plot_shiny <- function(x, y = setdiff(names(x), c('x', 'y'))[1], interactive = T
         numericInput('height', 'Height of graph [px]', value = 800),
         br(),
         checkboxInput('interactive', 'Interactive', value = interactive)
-      ),
+      ), # sidebarPanel
       
       mainPanel(
         conditionalPanel(
@@ -49,10 +49,10 @@ plot_shiny <- function(x, y = setdiff(names(x), c('x', 'y'))[1], interactive = T
           condition = "input.interactive == false",
           plotOutput("plot", height = 'auto')
         )
-      )
-    ),
+      ) # mainPanel
+    ), # sidebarLayout
     tags$style(type='text/css', "#goButton { width:100%; margin-top: 25px;}")
-  ))
+  )) # fluidPage, shinyUI
   
   S <- shinyServer(function(input, output) {
 
@@ -60,55 +60,65 @@ plot_shiny <- function(x, y = setdiff(names(x), c('x', 'y'))[1], interactive = T
       input$goButton
       isolate(
         ggplot(
-          mutate_at(
-            x,
-            input$fill,
-            function(i) {
-              if(is.finite(input$min) && min(i) < input$min && input$min < max(i)) {
-                i[i < input$min] <- input$min
-              }
-              if(is.finite(input$max) && min(i) < input$max && input$max < max(i)) {
-                i[i > input$max] <- input$max
-              }
-              i
-            }
-          ),
-          do.call(
-            aes,
-            lapply(
-              setNames(nm, str_replace(nm, paste0('^', input$fill, '$'), 'fill')), 
+          data = 
+            mutate_at(
+              x,
+              input$fill,
+              function(d) {
+                m_d <- min(d)
+                M_d <- max(d)
+                m_in <- input$min
+                M_in <- input$max
+                if(is.finite(m_in) && m_d < m_in && m_in < M_d) 
+                  d[d < m_in] <- m_in
+                if(is.finite(M_in) && M_d < M_in && M_in < M_d) 
+                  d[d > M_in] <- M_in
+                d
+              } # function
+            ), # mutate_at
+          mapping = 
+            # aes_string(x = 'x', y = 'y', fill = input$fill) # faster but less info
             setNames(aes_fix, str_replace(nm, paste0('^', input$fill, '$'), 'fill'))
-            )
-          )
-        )
-      )
-    })
+        ) # ggplot
+      ) # isolate
+    }) # reactive
       
     output$plot <- renderPlot(
       g_raster() + layers_raster,
       height = reactive(input$height)
-    )
+    ) # renderPlot
+    
     output$plotly <- plotly::renderPlotly(
-      plotly::ggplotly(
+      ggplotly(
         g_raster() + layers_raster,
         height = input$height
       ) 
-    )
+    ) # renderPlotly
     
     output$click <- renderPrint({
       d <- event_data("plotly_click")
       if (is.null(d)) 
         cat('Click pixel & keep data here')
       else
-        x[x$x == d$x & x$y == -d$y, ]
-    })
+        unlist(x[x$x == d$x & x$y == -d$y, ])
+    }) # renderPrint
     
-    output$hist <- renderPlot(
-      x[[input$fill]] %>>%
-        `[`(`if`(is.finite(input$min) && input$min < max(.), . > input$min, TRUE)) %>>%
-        `[`(`if`(is.finite(input$max) && input$max > min(.), . < input$max, TRUE)) %>>%
+    output$hist <- renderPlot(pipeline({
+      x[[input$fill]]
+        `[`(
+          `if`(
+            is.finite(input$min) && input$min < max(.), 
+            . > input$min, 
+            TRUE
+          ) &
+          `if`(
+            is.finite(input$max) && input$max > min(.),
+            . < input$max, 
+            TRUE
+          )
+        ) # [
         gghist()
-    )
+    })) # pipeline, renderPlot
   
   })
   
@@ -146,21 +156,21 @@ layers_hist <- list(
     colors = c('black','purple','blue','green','red','white')
   ),
   ggplot2::theme_classic(),
-  ggplot2::theme(legend.position = 'none', axis.title = ggplot2::element_blank())
+  ggplot2::theme(
+    legend.position = 'none', 
+    axis.title = ggplot2::element_blank()
+  )
 )
 
 #' Daraw a histgram for numeric vector based on Scott's choice
 #' @importFrom graphics hist
-#' @importFrom dplyr mutate
 #' @importFrom ggplot2 ggplot
 #' @importFrom ggplot2 aes
 #' @noRd
-gghist <- function(x) {
-  x %>>%
-    hist(breaks = 'Scott', plot = FALSE) %>>%
-    `[`(c('mids', 'counts')) %>>%
-    as.data.frame %>>%
-    mutate(w = mids[2] - mids[1]) %>>%
-    ggplot(aes(mids, counts, fill = mids, width = w)) +
-    layers_hist
-}
+gghist <- function(x) {pipeline({
+  hist(x, breaks = 'Scott', plot = FALSE)[(c('mids', 'counts'))]
+    c(w = .$mids[2] - .$mids[1])
+    as.data.frame()
+    ggplot(aes(mids, counts, fill = mids, width = w))
+    + layers_hist
+})}
