@@ -1,5 +1,6 @@
 #' find AG
 #' @param epma epma data
+#' @param not_quantified a character vector specifying phases who weren't analyzed during point analysis # JAMSTEC
 #' @importFrom dplyr group_by
 #' @importFrom dplyr mutate
 #' @importFrom dplyr summarise
@@ -12,19 +13,40 @@
 #' @importFrom stats coef
 #' @importFrom stats vcov
 #' @noRd
-find_AG <- function(epma) {pipeline({
+find_AG <- function(epma, not_quantified = character(0)) {pipeline({ # JAMSTEC added not_quantified = character(0)
   epma
     group_by(elm)
-    mutate(fit_na = list(lm(wt ~ 0 + net))) 
-    group_by(phase3, elm) 
+    mutate(
+      fit_na = list(lm(wt ~ 0 + net)),
+      g_na = mean(bgint), # JAMSTEC
+      g_na_se = sd(g_na) / (length(g_na) - 1) # JAMSTEC
+    ) 
+    group_by(elm, phase3) # JAMSTEC changed group_by(phase3, elm) -> group_by(elm, phase3) 
     summarise(
       fit = list(lm(wt ~ 0 + net)),
       fit_na = fit_na[1],
       g = mean(bgint),
-      g_se = sd(bgint) / (length(bgint) - 1)
+      g_se = sd(bgint) / (length(bgint) - 1),
+      g_na = g_na[1], # JAMSTEC
+      g_na_se = g_na_se[1] # JAMSTEC
     ) 
+    bind_rows(
+      if(length(not_quantified)) {
+        unnest(
+          summarize(
+            .,
+            phase3 = list(not_quantified), # JAMSTEC
+            fit = fit_na[1], # JAMSTEC
+            g = g_na[1], # JAMSTEC
+            g_se = g_na_se[1] # JAMSTEC
+          ),
+          phase3
+        ) # unnest; JAMSTEC
+      } # JAMSTEC
+    ) # JAMSTEC
     ungroup 
     mutate(
+      g_na = NULL, g_na_se = NULL, # JAMSTEC
       a = map_dbl(fit, coef),
       a_se = unlist(ifelse(is.na(a), map(fit_na, vcov), map(fit, vcov))),
       a = ifelse(is.na(a), map_dbl(fit_na, coef), a),
