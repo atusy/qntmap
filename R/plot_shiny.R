@@ -17,6 +17,7 @@
 plot_shiny <- function(x, y = setdiff(names(x), c('x', 'y'))[1], interactive = TRUE) {
 
   nm <- names(x)
+  aes_fix <- do.call(aes, lapply(nm, as.name))
 
   U <- shinyUI(fluidPage(
     
@@ -76,7 +77,7 @@ plot_shiny <- function(x, y = setdiff(names(x), c('x', 'y'))[1], interactive = T
             aes,
             lapply(
               setNames(nm, str_replace(nm, paste0('^', input$fill, '$'), 'fill')), 
-              as.name
+            setNames(aes_fix, str_replace(nm, paste0('^', input$fill, '$'), 'fill'))
             )
           )
         )
