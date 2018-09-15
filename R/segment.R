@@ -37,9 +37,9 @@ segment <- function(x, ...) {
 #' @export
 segment.character <- function(x, ...) {
   pipeline({
-    x
-    load.image
-    apply(4, list)
+    load.image(x)[,,1,]
+    apply(3, list)
+    lapply(lapply, t)
     setNames(names(formals(rgb))[seq_along(.)])
     pmap(rgb)
     unlist(use.names = FALSE)
