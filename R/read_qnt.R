@@ -6,6 +6,7 @@
 #' @param saving whether or not to save the data as RDS file
 #'
 #' @importFrom dplyr select
+#' @importFrom dplyr one_of
 #' @importFrom dplyr mutate
 #' @importFrom pipeR %>>%
 #' @importFrom stringr str_replace_all
