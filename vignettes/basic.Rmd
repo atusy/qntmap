@@ -1,0 +1,57 @@
+---
+title: "Basic"
+author: "Atsushi YASUMOTO"
+date: "`r Sys.Date()`"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Vignette Title}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r setup, include = FALSE}
+wd <- tempdir()
+knitr::opts_chunk$set(
+  root.dir = wd,
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+# Intro
+
+This vignette introduce a basic procedure of analysis using `qntmap` package using example data.
+
+# Preparation
+
+## Load package
+
+```{r, eval = FALSE}
+library(qntmap)
+```
+
+## Move to working directory
+
+```{r eval = FALSE}
+wd <- tempdir()
+setwd(wd)
+```
+
+## Copy example data
+
+```{r}
+file.copy(
+  from = system.file('extdata', 'minimal', package = 'qntmap'),
+  to = wd,
+  recursive = TRUE
+)
+```
+
+`TRUE` indicates files are successfully copied. 
+Check if really files are copied by `dir()`.
+
+```{r}
+dir(wd, recursive = TRUE, all.files = TRUE)
+```
+
+##

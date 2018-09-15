@@ -1,0 +1,9 @@
+val var
+0 Measurement Start Position X [mm]
+0 Measurement Start Position Y [mm]
+100 X-axis Step Number [1~1024]
+100 Y-axis Step Number [1~1024]
+1000 X Step Size [um], or Beam Dots Width
+1000 Y Step Size [um], or Beam Dots Width
+100 Dwell Time [msec]
+1e-07 Probe Current Avg, Before After [A]
