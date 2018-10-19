@@ -7,9 +7,11 @@ output:
     df_print: kable
 vignette: >
   %\VignetteIndexEntry{Basic usage}
-  %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
+  %\VignetteEngine{knitr::rmarkdown}
 ---
+
+<!-- © 2018 JAMSTEC -->
 
 ```{r setup, include = FALSE}
 wd <- tempdir()
@@ -21,6 +23,13 @@ knitr::opts_chunk$set(
   comment = "#>"
 )
 library(qntmap)
+library(dplyr)
+library(pipeR)
+library(ggplot2)
+
+formals(read_xmap)$renew <-
+  formals(read_qnt)$renew <- 
+  TRUE
 ```
 
 # Intro
@@ -61,7 +70,7 @@ Check if really files are copied by `dir()`.
 dir(file.path(wd, 'minimal'), recursive = TRUE, all.files = TRUE)
 ```
 
-# Start analysis
+# Analysis
 
 ## Specify directories containing data
 
@@ -97,10 +106,10 @@ plot(xmap, 'Si', interactive = FALSE) +
 ## Plot X-ray map data as heatmap
 
 Plots are by default **interactive**. 
+Specify 'Si' instead of 'Mg' to see Si map. 
 Specify `interactive = FALSE` if necessary.
 
 ```{r}
-plot(xmap, 'Si', interactive = TRUE)
 plot(xmap, 'Mg', interactive = TRUE)
 ```
 
@@ -147,19 +156,16 @@ summary(cluster)
 ## Quantify
 
 ```{r}
-qmap <- quantify(xmap, qnt, cluster)
+qmap <- quantify(xmap = xmap, qnt = qnt, cluster = cluster)
 ```
 
 ### Plot quantified map
 
-```{r}
-plot(qmap, 'Si')
-```
+Just like [X-ray map](#Plot X-ray map).
 
 ```{r}
-plot(qmap, 'Mg')
+plot(qmap, 'Si', interactive = FALSE)
 ```
-
 
 ### Summarize quantified map
 
@@ -180,13 +186,19 @@ According to compositions of olivine (57.29% MgO and 42.71 wt% SiO~2~),
 and of quartz (100% SiO~2~),
 
 $$
-E(MgO_{bulk}) = 57.29 \times `r V['Ol']` + 0 \times `r V['Qtz']` = `r E['Mg']` \mathrm{,}
+E(MgO_{bulk}) = 
+  57.29 \times `r V['Ol']` + 0 \times `r V['Qtz']` = 
+  `r 57.29 * V['Ol']` \simeq 
+  `r E['Mg']` \mathrm{,}
 $$
 
 and
 
 $$
-E(SiO2_{bulk}) = 57.29 \times `r V['Ol']` + 0 \times `r V['Qtz']` = `r E['Si']` \mathrm{,}
+E(SiO2_{bulk}) = 
+  42.71 \times `r V['Ol']` + 100 \times `r V['Qtz']` = 
+  `r 42.71 * V['Ol'] + 100 * V['Qtz']` \simeq
+  `r E['Si']` \mathrm{,}
 $$
 
 the above summary is adequate.
@@ -222,4 +234,10 @@ and white (`#FFFFFF`) corresponds to quartz cluster,
 the average compositions of each clusters are nearly equal to ideal compositions of olivine and quartz.
 
 This feature is useful to find average compositions of each minearls, local bulk compositions of domains (layer, symplectite, and so on).
+
+Note that mask image must be have **same width and height** as mapping data, and should be either `bmp` or `png` format. `jpg` is allowed but not recommended as it is a lossy format.
+
+```{r include = FALSE}
+unlink('centers0.csv')
+```
 
