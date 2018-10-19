@@ -75,7 +75,7 @@ quantify <- function(
 
   rm(cluster)
   
-  AG <- find_AG(epma) # return also A
+  AG <- find_AG(epma, setdiff(names(X), unique(epma$phase3))) # return also A
 
   B <- find_B(epma)
 

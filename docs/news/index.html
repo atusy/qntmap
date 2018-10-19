@@ -73,6 +73,21 @@
 <li>
   <a href="../reference/index.html">Reference</a>
 </li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+    Articles
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="../articles/add_phase.html">Add phases after EPMA analysis</a>
+    </li>
+    <li>
+      <a href="../articles/basic.html">Basic usage</a>
+    </li>
+  </ul>
+</li>
 <li>
   <a href="../news/index.html">Changelog</a>
 </li>
@@ -135,12 +150,7 @@
 </li>
 <li>Condition files of EPMA analysis are read by S3 generics to support various types of file formats.</li>
 <li>
-<code>find_centers</code> (former <code>qltmap_cls_centers</code>) become more robust against multi-phase pixels by
-<ul>
-<li>finding pixels analyzing multi-phase pixels by comaring with corresponding quantified points.</li>
-<li>predicting X-ray map counts of a target phase in multi-phase pixels based on regression analysis.</li>
-</ul>
-</li>
+<code>find_centers</code> (former <code>qltmap_cls_centers</code>) become more robust against multi-phase pixels by - finding pixels analyzing multi-phase pixels by comaring with corresponding quantified points. - predicting X-ray map counts of a target phase in multi-phase pixels based on regression analysis.</li>
 <li>
 <code>cluster_xmap</code> does not <code>group_clusters</code> by default.</li>
 </ul>
