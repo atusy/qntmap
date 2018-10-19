@@ -1,3 +1,5 @@
+# © 2018 JAMSTEC
+
 #' @name plot
 #' 
 #' @title Plot methods for `qntmap` package

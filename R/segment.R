@@ -2,6 +2,8 @@
 #' 
 #' Make index to segment mapping area.
 #' The obtained index is further utilized in [mean.qntmap()].
+# © 2018 JAMSTEC
+
 #' 
 #' @param x A path to the image file (PNG, JPEG, and BMP).
 #' @param ... ignored

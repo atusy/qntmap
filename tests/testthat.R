@@ -1,3 +1,4 @@
+#  © 2018 JAMSTEC
 library(testthat)
 library(qntmap)
 

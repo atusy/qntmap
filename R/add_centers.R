@@ -1,3 +1,4 @@
+# © 2018 JAMSTEC
 #' Add centroids manually
 #' 
 #' Add centroids manually by picking X-ray counts of selected pixels in X-ray maps.

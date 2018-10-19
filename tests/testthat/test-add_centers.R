@@ -1,3 +1,4 @@
+# © 2018 JAMSTEC
 context("test-add_ceters.R")
 
 test_that("Add centers without saving csv", {

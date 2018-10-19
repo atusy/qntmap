@@ -1,3 +1,4 @@
+# © 2018 JAMSTEC
 #' @name mean
 #' @title Arithmetric mean for `qntmap` package
 #' @description S3 methods for the arithmetric mean. 
