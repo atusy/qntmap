@@ -1,3 +1,4 @@
+# © 2018 JAMSTEC
 #' Pick values from mapping data
 #' 
 #' Pick values from mapping data based on coordinates of x and y.

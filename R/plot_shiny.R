@@ -1,3 +1,5 @@
+# © 2018 JAMSTEC
+
 #' Plot mapping data using shiny
 #' 
 #' @inheritParams plot.qm_raster

@@ -1,21 +1,35 @@
 ---
-title: "Basic"
+title: "Basic usage"
 author: "Atsushi YASUMOTO"
 date: "`r Sys.Date()`"
-output: rmarkdown::html_vignette
+output: 
+  rmarkdown::html_vignette:
+    df_print: kable
 vignette: >
-  %\VignetteIndexEntry{Vignette Title}
-  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteIndexEntry{Basic usage}
   %\VignetteEncoding{UTF-8}
+  %\VignetteEngine{knitr::rmarkdown}
 ---
+
+<!-- © 2018 JAMSTEC -->
 
 ```{r setup, include = FALSE}
 wd <- tempdir()
 knitr::opts_chunk$set(
   root.dir = wd,
+  fig.width = 7,
+  fig.height = 7,
   collapse = TRUE,
   comment = "#>"
 )
+library(qntmap)
+library(dplyr)
+library(pipeR)
+library(ggplot2)
+
+formals(read_xmap)$renew <-
+  formals(read_qnt)$renew <- 
+  TRUE
 ```
 
 # Intro
@@ -33,11 +47,13 @@ library(qntmap)
 ## Move to working directory
 
 ```{r eval = FALSE}
-wd <- tempdir()
+wd <- tempdir() # Arbitrary
 setwd(wd)
 ```
 
 ## Copy example data
+
+or any original data.
 
 ```{r}
 file.copy(
@@ -51,7 +67,177 @@ file.copy(
 Check if really files are copied by `dir()`.
 
 ```{r}
-dir(wd, recursive = TRUE, all.files = TRUE)
+dir(file.path(wd, 'minimal'), recursive = TRUE, all.files = TRUE)
 ```
 
-##
+# Analysis
+
+## Specify directories containing data
+
+```{r}
+dir_map <- file.path(wd, 'minimal/.map/1')
+dir_qnt <- file.path(wd, 'minimal/.qnt')
+```
+
+
+## Load data
+
+```{r}
+xmap <- read_xmap(dir_map)
+qnt <- read_qnt(dir_qnt)
+```
+
+This is an artifact example data which contains olivine and quartz within the mapping area.
+The phases are quantified 20 points each.
+
+```{r, message = FALSE, echo = FALSE}
+epma <- tidy_epma(qnt, xmap) %>>%
+  filter(elm == elm[[1]]) %>>%
+  select(x_px, y_px, phase)
+plot(xmap, 'Si', interactive = FALSE) +
+  scale_fill_gradient(low = 'black', high = 'white') +
+  geom_point(
+    aes(y_px, x_px, colour = phase),
+    data = epma, inherit.aes = FALSE
+  )
+```
+
+
+## Plot X-ray map data as heatmap
+
+Plots are by default **interactive**. 
+Specify 'Si' instead of 'Mg' to see Si map. 
+Specify `interactive = FALSE` if necessary.
+
+```{r}
+plot(xmap, 'Mg', interactive = TRUE)
+```
+
+## Cluster analysis
+
+### Initialize cluster centers
+
+Although this step is just a guessing initialization, 
+compare the output values with plots above 
+to see if the centers are well guessed.
+
+```{r}
+centers <- find_centers(xmap, qnt)
+centers
+```
+
+### Run cluster analysis {#run-cls}
+
+```{r, include = FALSE}
+cluster <- cluster_xmap(xmap, centers)
+cls_imgs <- dir(
+    file.path(dir_map, 'clustering'), 
+    full.names = TRUE
+  )
+```
+
+```{r eval = FALSE}
+cluster <- cluster_xmap(xmap, centers)
+```
+
+![](`r cls_imgs[1]`){height=10cm}
+![](`r cls_imgs[2]`){height=10cm}
+
+The results are saved as the above images in `clustering` directory below the directory containing mapping data.
+
+### Summarize cluster analysis
+
+`summary` function gives abundance ratios of phases in the map.
+
+```{r}
+summary(cluster)
+```
+
+## Quantify
+
+```{r}
+qmap <- quantify(xmap = xmap, qnt = qnt, cluster = cluster)
+```
+
+### Plot quantified map
+
+Just like [X-ray map](#Plot X-ray map).
+
+```{r}
+plot(qmap, 'Si', interactive = FALSE)
+```
+
+### Summarize quantified map
+
+```{r}
+summary(qmap)
+```
+
+Note also that this summary does not correct densities of phases.
+
+```{r, include = FALSE}
+V <- unclass(table(cluster$cluster))
+V <- V / sum(V)
+E <- mean(qmap)
+E <- setNames(round(E[['Whole area']], 2), E[['Element']])
+```
+
+According to compositions of olivine (57.29% MgO and 42.71 wt% SiO~2~),
+and of quartz (100% SiO~2~),
+
+$$
+E(MgO_{bulk}) = 
+  57.29 \times `r V['Ol']` + 0 \times `r V['Qtz']` = 
+  `r 57.29 * V['Ol']` \simeq 
+  `r E['Mg']` \mathrm{,}
+$$
+
+and
+
+$$
+E(SiO2_{bulk}) = 
+  42.71 \times `r V['Ol']` + 100 \times `r V['Qtz']` = 
+  `r 42.71 * V['Ol'] + 100 * V['Qtz']` \simeq
+  `r E['Si']` \mathrm{,}
+$$
+
+the above summary is adequate.
+
+### Summary based on mask images
+
+For another way to summarize the result of quantified map, `mean` function is defined.
+
+A simple usage gives nothing more than `mean` column of `summary()`.
+
+```{r}
+mean(qmap)
+```
+
+However, by using mask image, `mean` values of each element are calculated for each mask areas with same colors.
+
+Let's use an image from cluster analysis [above](#run-cls).
+
+Input path to the image to `segment` function.
+
+```{r}
+i <- segment(cls_imgs[grepl('_map.png$', cls_imgs)][1])
+```
+
+Then, input the result of `segment()` to `index` parameter of `mean()`.
+
+```{r}
+mean(qmap, index = i)
+```
+
+As black (`#000000`) corresponds to olivine cluster,
+and white (`#FFFFFF`) corresponds to quartz cluster,
+the average compositions of each clusters are nearly equal to ideal compositions of olivine and quartz.
+
+This feature is useful to find average compositions of each minearls, local bulk compositions of domains (layer, symplectite, and so on).
+
+Note that mask image must be have **same width and height** as mapping data, and should be either `bmp` or `png` format. `jpg` is allowed but not recommended as it is a lossy format.
+
+```{r include = FALSE}
+unlink('centers0.csv')
+```
+

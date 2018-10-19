@@ -2,7 +2,13 @@ Package: qntmap
 Type: Package
 Title: Enhance quantitative analysis of EPMA data
 Version: 0.2.0
-Authors@R: c(person(given = 'Atsushi', family = 'YASUMOTO', role = c('aut', 'cph', 'cre'), email = 'atusy.7+qntmap@gmail.com'))
+Authors@R: c(
+    person(given = 'YASUMOTO Atsushi', role = c('aut', 'cph', 'cre'), email = 'atusy.7+qntmap@gmail.com'),
+    person(given = 'YOSHIDA Kenta', role = c('ctb')),
+    person(given = 'KUWATANI Tatsu', role = c('ctb')),
+    person(given = 'Japan Agency for Marine-Earth Science and Technology (JAMSTEC)', role = c('cph', 'fnd')),
+    person(given = 'JST PRESTO (Grant No. JPMJPR1676)', role = c('fnd'))
+)
 Authors: YASUMOTO Atsushi [aut, cph, cre]
 Maintainer: YASUMOTO Atsushi <atusy.7+qntmap@gmail.com>
 Description: A main function of this packages is 
@@ -12,23 +18,32 @@ License: MIT + file LICENSE
 Encoding: UTF-8
 LazyData: true
 RoxygenNote: 6.1.0
+Depends: R(>= 3.1.2)
 Imports: curl,
     data.table,
     dplyr,
+    ggplot2,
     easycsv,
+    imager,
     matrixStats,
+    plotly,
     pipeR,
     PoiClaClu,
     png,
     purrr,
     rlang,
     stringr,
+    shiny,
     tibble,
     tidyr
-Depends: R(>= 3.1.2)
+Sugests: pkgdown,
+    roxygen2,
+    testthat
 URL: https://github.com/atusy/qntmap/
 BugReports: https://github.com/atusy/qntmap/issues
-Collate: 
+Collate:
+    'pick.R'
+    'add_centers.R'
     'cluster.R'
     'find_AB.R'
     'find_AG.R'
@@ -37,6 +52,9 @@ Collate:
     'find_centers.R'
     'find_centers_kpp.R'
     'group_cluster.R'
+    'mean.R'
+    'plot.R'
+    'plot_shiny.R'
     'print.R'
     'qntmap.R'
     'quantify.R'
@@ -47,8 +65,12 @@ Collate:
     'read_qnt_elemw.R'
     'read_xmap.R'
     'save.R'
+    'segment.R'
     'summary.R'
     'tidy_epma.R'
     'wrappers.R'
     'zzz.R'
 Roxygen: list(markdown = TRUE)
+Suggests: knitr,
+    rmarkdown
+VignetteBuilder: knitr

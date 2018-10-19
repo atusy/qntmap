@@ -2,6 +2,8 @@
 #' 
 #' Make index to segment mapping area.
 #' The obtained index is further utilized in [mean.qntmap()].
+# © 2018 JAMSTEC
+
 #' 
 #' @param x A path to the image file (PNG, JPEG, and BMP).
 #' @param ... ignored
@@ -37,9 +39,9 @@ segment <- function(x, ...) {
 #' @export
 segment.character <- function(x, ...) {
   pipeline({
-    x
-    load.image
-    apply(4, list)
+    load.image(x)[,,1,]
+    apply(3, list)
+    lapply(lapply, t)
     setNames(names(formals(rgb))[seq_along(.)])
     pmap(rgb)
     unlist(use.names = FALSE)

@@ -1,3 +1,4 @@
+# © 2018 JAMSTEC
 context("test-pick.R")
 
 test_that("Pixels to be picked can be specified by parameters x, y, and phase", {
