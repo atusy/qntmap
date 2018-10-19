@@ -26,6 +26,8 @@ library(qntmap)
 library(dplyr)
 library(pipeR)
 library(ggplot2)
+library(stringr)
+library(purrr)
 
 formals(read_xmap)$renew <-
   formals(read_qnt)$renew <- 
@@ -128,22 +130,46 @@ centers
 
 ### Run cluster analysis {#run-cls}
 
-```{r, include = FALSE}
-cluster <- cluster_xmap(xmap, centers)
-cls_imgs <- dir(
-    file.path(dir_map, 'clustering'), 
-    full.names = TRUE
-  )
-```
-
 ```{r eval = FALSE}
 cluster <- cluster_xmap(xmap, centers)
 ```
 
-![](`r cls_imgs[1]`){height=10cm}
-![](`r cls_imgs[2]`){height=10cm}
+The results are saved as a binary file and the png format images in `clustering` directory below the directory containing mapping data.
 
-The results are saved as the above images in `clustering` directory below the directory containing mapping data.
+```{r, include = FALSE}
+cluster <- cluster_xmap(xmap, centers)
+```
+
+```{r, echo = FALSE, fig.width = 3, fig.height = 3, fig.show = 'hold'}
+cls_imgs <- dir(
+    file.path(dir_map, 'clustering'), 
+    full.names = TRUE
+  ) %>>%
+  str_subset('\\.png$')
+cls_imgs[1:2] %>>%
+  setNames(c('Legend', 'Cluster')) %>>%
+  map(png::readPNG) %>>%
+  map(function(.x) {
+    expand.grid(
+      y = seq(nrow(.x), 1),
+      x = seq(ncol(.x))
+    ) %>>%
+      mutate(
+        fill = rgb(r = c(.x[, , 1]), g = c(.x[, , 2]), b = c(.x[, , 3]))
+      )
+  }) %>>%
+  map(ggplot, aes(x, y, fill = fill)) %>>%
+  map(
+    `+`,
+    list(
+      geom_raster(),
+      scale_fill_identity(),
+      coord_fixed(),
+      theme_void()
+    )
+  ) %>>%
+  walk(print)
+```
 
 ### Summarize cluster analysis
 
