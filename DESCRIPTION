@@ -3,12 +3,12 @@ Type: Package
 Title: Enhance quantitative analysis of EPMA data
 Version: 0.2.0
 Authors@R: c(
-    person(given = 'YASUMOTO Atsushi', role = c('aut', 'cph', 'cre'), email = 'atusy.7+qntmap@gmail.com'),
-    person(given = 'YOSHIDA Kenta', role = c('ctb')),
-    person(given = 'KUWATANI Tatsu', role = c('ctb')),
-    person(given = 'Japan Agency for Marine-Earth Science and Technology (JAMSTEC)', role = c('cph', 'fnd')),
-    person(given = 'JST PRESTO (Grant No. JPMJPR1676)', role = c('fnd'))
-)
+        person(given = 'YASUMOTO Atsushi', role = c('aut', 'cph', 'cre'), email = 'atusy.7+qntmap@gmail.com'),
+        person(given = 'YOSHIDA Kenta', role = c('ctb')),
+        person(given = 'KUWATANI Tatsu', role = c('ctb')),
+        person(given = 'Japan Agency for Marine-Earth Science and Technology (JAMSTEC)', role = c('cph', 'fnd')),
+        person(given = 'JST PRESTO (Grant No. JPMJPR1676)', role = c('fnd'))
+    )
 Authors: YASUMOTO Atsushi [aut, cph, cre]
 Maintainer: YASUMOTO Atsushi <atusy.7+qntmap@gmail.com>
 Description: A main function of this packages is 
@@ -71,6 +71,8 @@ Collate:
     'wrappers.R'
     'zzz.R'
 Roxygen: list(markdown = TRUE)
-Suggests: knitr,
-    rmarkdown
+Suggests: 
+    knitr,
+    rmarkdown,
+    testthat
 VignetteBuilder: knitr
