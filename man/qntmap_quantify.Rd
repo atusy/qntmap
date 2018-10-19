@@ -12,6 +12,10 @@ qntmap_quantify(wd = ".", dir_map, RDS_cluster, maps_x = NULL,
 \arguments{
 \item{wd}{working directory which contains .qnt and .map directories}
 
+\item{dir_map}{ignored}
+
+\item{RDS_cluster}{path to the RDS file created by cluster analysis}
+
 \item{maps_x}{A x-axis size of maps comprising guide net map (default: \code{NULL}).}
 
 \item{maps_y}{A y-axis size of maps comprising guide net map (default: \code{NULL}).}
@@ -21,6 +25,8 @@ qntmap_quantify(wd = ".", dir_map, RDS_cluster, maps_x = NULL,
 \item{fine_th}{0.9}
 
 \item{qnt}{\code{qm_qnt} class object returned by \code{read_qnt()}.}
+
+\item{qltmap}{\code{qm_xmap} class object returned by \code{read_xmap()}.}
 
 \item{cluster}{\code{qm_cluster} class object returned by \code{cluter_xmap()}.}
 }

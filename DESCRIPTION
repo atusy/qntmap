@@ -71,6 +71,8 @@ Collate:
     'wrappers.R'
     'zzz.R'
 Roxygen: list(markdown = TRUE)
-Suggests: knitr,
-    rmarkdown
+Suggests: 
+    knitr,
+    rmarkdown,
+    testthat
 VignetteBuilder: knitr

@@ -139,6 +139,9 @@ The result is saved as a binary file and as png format images in `clustering` di
 
 ```{r, include = FALSE}
 cluster <- cluster_xmap(xmap, centers)
+```
+
+```{r, echo = FALSE, fig.width = 3, fig.height = 3, fig.show = 'hold'}
 cls_imgs <- dir(
     file.path(dir_map, 'clustering'), 
     full.names = TRUE
