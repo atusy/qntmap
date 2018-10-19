@@ -120,6 +120,9 @@ quantify <- function(
 
 #' (Deprecated) Use quantify.
 #' @param wd working directory which contains .qnt and .map directories
+#' @param dir_map ignored
+#' @param RDS_cluster path to the RDS file created by cluster analysis
+#' @param qltmap `qm_xmap` class object returned by `read_xmap()`.
 #' @inheritParams quantify
 #' @export
 qntmap_quantify <- function(
