@@ -1,0 +1,204 @@
+---
+title: "Add phases after EPMA analysis"
+author: "YASUMOTO Atsushi"
+date: "`r Sys.Date()`"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Vignette Title}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+<!-- © 2018 JAMSTEC -->
+
+```{r setup, include = FALSE}
+wd <- tempdir()
+knitr::opts_chunk$set(
+  root.dir = wd,
+  fig.width = 7,
+  fig.height = 7,
+  collapse = TRUE,
+  comment = "#>"
+)
+library(qntmap)
+library(dplyr)
+library(pipeR)
+library(ggplot2)
+```
+
+# Intro
+
+This vignette introduce a way to quantify X-ray map even if, in accident, 
+there are some phases without spot analysis. 
+For accurate analysis, I highly recommend careful observation prior to EPMA analysis, 
+so that as less phases as possible being missed.
+
+Please read [basic.html](basic.html) before hand.
+
+# Preparation
+
+This section prepares package, files, and modify sample data.
+An original sample dataset is same as that used in ["Basic usage"](basic.html).
+However, the dataset will be modified to let a phase be not analyzed by EPMA spot analysis.
+This is why "[Specify directories containing data]" and "[Load Data]" belongs to "[Preparation]" despite
+they belongs to [Analysis section of "Basic usage"](basic#Analysis).
+
+## Load package
+
+```{r, eval = FALSE}
+library(qntmap)
+```
+
+## Move to working directory
+
+```{r eval = FALSE}
+wd <- tempdir() # Arbitrary
+setwd(wd)
+```
+
+## Copy example data
+
+or any original data.
+
+```{r}
+file.copy(
+  from = system.file('extdata', 'minimal', package = 'qntmap'),
+  to = wd,
+  recursive = TRUE
+)
+```
+
+`TRUE` indicates files are successfully copied. 
+Check if really files are copied by `dir()`.
+
+```{r}
+dir(file.path(wd, 'minimal'), recursive = TRUE, all.files = TRUE)
+```
+
+## Specify directories containing data
+
+```{r}
+dir_map <- file.path(wd, 'minimal/.map/1')
+dir_qnt <- file.path(wd, 'minimal/.qnt')
+```
+
+
+## Load data
+
+```{r}
+xmap <- read_xmap(dir_map)
+qnt <- read_qnt(dir_qnt)
+```
+
+## Check quantified data
+
+In the original dataet, 20 spots are analyzed by EPMA on both olivine and quartz.
+
+```{r}
+table(qnt$cnd$phase)
+```
+
+## Modify data
+
+Let's delete quartz from dataset and reload.
+
+After `read_qnt()` is performed, a file `phase_list0.csv` is created under `dir_qnt`.
+This file consists of 3 columns `id`, `phase`, and `use`.
+
+**Do not** edit `id`.
+
+**Correct** `phase` in the analyzed phases are not expected ones, 
+or in case some phase needs be sub-grouped due to large compositional variation.
+For example, substitute Ol by Ol_Fe and Ol_Mg based on Fe/Mg ratio.
+
+**Correct** `use` in case there are bad results.
+
+This time, let `use` be `FALSE` if `phase` is Qtz, and retry `read_qnt`
+
+To do it on R, execute codes below.
+Be sure to specify a path to modified csv file to `phase_list` parameter of `read_qnt`.
+Also, `renew` parameter of `read_qnt` must be `TRUE`.
+
+```{r}
+phase_list <- read.csv(file.path(dir_qnt, 'phase_list0.csv'))
+phase_list$use[phase_list$phase == 'Qtz'] <- FALSE
+write.csv(phase_list, file.path(dir_qnt, 'phase_list_no_qtz.csv'))
+qnt <- read_qnt(dir_qnt, phase_list = file.path(dir_qnt, 'phase_list_no_qtz.csv'), renew = TRUE)
+```
+
+After editing, only olivine is said to be quantified.
+
+```{r}
+table(qnt$cnd$phase)
+```
+
+```{r, message = FALSE, echo = FALSE}
+epma <- tidy_epma(qnt, xmap) %>>%
+  filter(elm == elm[[1]]) %>>%
+  select(x_px, y_px, phase)
+plot(xmap, 'Si', interactive = FALSE) +
+  scale_fill_gradient(low = 'black', high = 'white') +
+  geom_point(
+    aes(y_px, x_px, colour = phase),
+    data = epma, inherit.aes = FALSE
+  )
+```
+
+# Analysis
+
+## Cluster analysis
+
+### Initialize cluster centers
+
+```{r}
+centers <- find_centers(xmap, qnt)
+centers
+```
+
+### Compare the initial centroids with X-ray map plotted with heatmap
+
+```{r}
+plot(xmap, 'Si', interactive = TRUE)
+```
+
+In this case, an analysist will notice there is something other than olivine.
+Let's mouse over the **interactive map** and one will see one of the coordinates of quartz (e.g., x = 18, y  = 28).
+Keep it in your note.
+
+### Add initial centers
+
+#### on R
+
+Add initial centers by using `add_centers`.
+
+```{r}
+centers <- add_centers(centers = centers, xmap = xmap, x = 18, y = 28, p = 'Qtz')
+```
+
+Then, Qtz is properly added to `centers`.
+
+```{r}
+print(centers)
+```
+#### on Spreadsheet program + R
+
+- Open `centers_initial0.csv` in the current directory (try `getwd()` on R if unknown).
+- Edit it
+- Save it
+- Reload on R by `centers <- read.csv('path to an updated csv file')`
+
+### Cluster and quantify
+
+```{r fig.show = 'hide'}
+cluster <- cluster_xmap(xmap, centers)
+qmap <- quantify(xmap, qnt, cluster)
+```
+
+```{r}
+summary(cluster)
+summary(qmap)
+```
+
+```{r include = FALSE}
+unlink(c('centers0.csv', 'center_add.csv'))
+```
