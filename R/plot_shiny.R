@@ -106,22 +106,9 @@ plot_shiny <- function(x, y = setdiff(names(x), c('x', 'y'))[1], interactive = T
       )
     }) # renderPrint
     
-    output$hist <- renderPlot(pipeline({
-      x[[input$fill]]
-        `[`(
-          `if`(
-            is.finite(input$min) && input$min < max(.), 
-            . > input$min, 
-            TRUE
-          ) &
-          `if`(
-            is.finite(input$max) && input$max > min(.),
-            . < input$max, 
-            TRUE
-          )
-        ) # [
-        gghist()
-    })) # pipeline, renderPlot
+    output$hist <- renderPlot(
+        gghist(x[[input$fill]], input[['min']], input[['max']])
+      ) # pipeline, renderPlot
   
   })
   
