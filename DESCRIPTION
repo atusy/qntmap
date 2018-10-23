@@ -45,6 +45,7 @@ Collate:
     'pick.R'
     'add_centers.R'
     'cluster.R'
+    'data.R'
     'find_AB.R'
     'find_AG.R'
     'find_B.R'
