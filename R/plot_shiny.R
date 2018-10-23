@@ -153,7 +153,6 @@ layers_raster <- list(
 #' @importFrom ggplot2 element_blank
 #' @noRd
 layers_hist <- list(
-  ggplot2::geom_col(),
   ggplot2::scale_fill_gradientn(
     colors = c('black','purple','blue','green','red','white')
   ),
@@ -169,10 +168,13 @@ layers_hist <- list(
 #' @importFrom ggplot2 ggplot
 #' @importFrom ggplot2 aes
 #' @noRd
-gghist <- function(x) {pipeline({
-  hist(x, breaks = 'Scott', plot = FALSE)[(c('mids', 'counts'))]
-    c(w = .$mids[2] - .$mids[1])
-    as.data.frame()
-    ggplot(aes(mids, counts, fill = mids, width = w))
-    + layers_hist
-})}
+gghist <- function(x, .min = NA, .max = NA) {
+  if(!is.finite(.min)) .min <- min(x)
+  if(!is.finite(.max)) .max <- max(x)
+  d <- as.data.frame(hist(
+      x[.min <= x & x <= .max], 
+      breaks = 'Scott', plot = FALSE
+    )[(c('mids', 'counts'))])
+  ggplot(d, aes(mids, counts, fill = mids)) +
+    geom_col(width = d$mids[2] - d$mids[1]) +
+    layers_hist
