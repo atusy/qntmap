@@ -71,9 +71,11 @@ plot_shiny <- function(x, y = setdiff(names(x), c('x', 'y'))[1], interactive = T
                 M_d <- max(d)
                 m_in <- input$min
                 M_in <- input$max
-                if(is.finite(m_in) && m_d < m_in && m_in < M_d) 
+                if(is.finite(m_in) && m_d < m_in && m_in < M_d) {
                   d[d < m_in] <- m_in
-                if(is.finite(M_in) && M_d < M_in && M_in < M_d) 
+                  m_d <- m_in
+                }
+                if(is.finite(M_in) && m_d < M_in && M_in < M_d) 
                   d[d > M_in] <- M_in
                 d
               } # function
