@@ -66,7 +66,7 @@ mean.qntmap <- function(x, index = 'Whole area', ...) {
     })
     c(.index = list(index))
     as.data.frame()
-    gather(Element, val, -.index)
+    gather(Element, val, -.index, factor_key = TRUE)
     group_by(Element, .index)
     summarize(val = mean.default(val, ...))
     spread(.index, val)
