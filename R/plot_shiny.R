@@ -99,10 +99,11 @@ plot_shiny <- function(x, y = setdiff(names(x), c('x', 'y'))[1], interactive = T
     
     output$click <- renderPrint({
       d <- event_data("plotly_click")
-      if (is.null(d)) 
-        cat('Click pixel & keep data here')
-      else
+      `if`(
+        is.null(d), 
+        cat('Click pixel & keep data here'),
         unlist(x[x$x == d$x & x$y == -d$y, ])
+      )
     }) # renderPrint
     
     output$hist <- renderPlot(pipeline({
