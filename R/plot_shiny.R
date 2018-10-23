@@ -19,14 +19,14 @@
 plot_shiny <- function(x, y = setdiff(names(x), c('x', 'y'))[1], interactive = TRUE) {
 
   nm <- names(x)
-  aes_fix <- do.call(aes, lapply(nm, as.name))
+  # aes_fix <- do.call(aes, lapply(nm, as.name))
 
   U <- shinyUI(fluidPage(
     
     sidebarLayout(
       sidebarPanel(
         splitLayout(
-          selectInput('fill', 'Element', setdiff(nm, c('x', 'y')), selected = y),
+          selectInput('fill', 'Element', setdiff(nm, c('x', 'y')), selected = y, selectize = FALSE),
           numericInput('min', 'Min', value = NA),
           numericInput('max', 'Max', value = NA),
           actionButton("goButton", "", icon("refresh"))
@@ -57,14 +57,15 @@ plot_shiny <- function(x, y = setdiff(names(x), c('x', 'y'))[1], interactive = T
   )) # fluidPage, shinyUI
   
   S <- shinyServer(function(input, output) {
-
+    
     g_raster <- reactive({
       input$goButton
       isolate(
         ggplot(
           data = 
             mutate_at(
-              x,
+              x[c('x', 'y', input$fill)],
+              # x,
               input$fill,
               function(d) {
                 m_d <- min(d)
@@ -81,8 +82,8 @@ plot_shiny <- function(x, y = setdiff(names(x), c('x', 'y'))[1], interactive = T
               } # function
             ), # mutate_at
           mapping = 
-            # aes_string(x = 'x', y = 'y', fill = input$fill) # faster but less info
-            setNames(aes_fix, str_replace(nm, paste0('^', input$fill, '$'), 'fill'))
+            aes_string(x = 'x', y = 'y', fill = input$fill) # faster but less info
+            # setNames(aes_fix, str_replace(nm, paste0('^', input$fill, '$'), 'fill'))
         ) # ggplot
       ) # isolate
     }) # reactive
@@ -170,3 +171,4 @@ gghist <- function(x, .min = NA, .max = NA) {
   ggplot(d, aes(mids, counts, fill = mids)) +
     geom_col(width = d$mids[2] - d$mids[1]) +
     layers_hist
+}
