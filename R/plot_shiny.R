@@ -158,6 +158,8 @@ layers_hist <- list(
   ),
   ggplot2::theme_classic(),
   ggplot2::theme(
+    plot.background = element_rect(fill = '#f5f5f5', color = '#f5f5f5'),
+    panel.background = element_rect(fill = '#f5f5f5', color = '#f5f5f5'),
     legend.position = 'none', 
     axis.title = ggplot2::element_blank()
   )
