@@ -104,3 +104,14 @@ reduce_add <- function(x) Reduce(`+`, x)
 #' @noRd
 `%nin%` <- function(x, table) !match(x, table, nomatch = 0L)
 
+#' Let certain components of x come prior to the alphabetically ordered others 
+#' @param x must be named
+#' @param prior priors
+#' @noRd
+prioritize <- function(x, prior) {
+  nm <- names(x)
+  x[c(
+    intersect(prior, nm),
+    sort(setdiff(nm, prior))
+  )]
+}

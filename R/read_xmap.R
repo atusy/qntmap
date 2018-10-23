@@ -7,7 +7,7 @@
 #' @param .map,.cnd regular expressions to match ASCII converted mapping results (`.map`) and condition files (`.cnd`)
 #'
 #' @importFrom pipeR pipeline
-#' @importFrom purrr map_if
+#' @importFrom purrr map_at
 #' @importFrom stringr str_replace
 #' @importFrom data.table fread
 #' @importFrom stats setNames
@@ -64,8 +64,9 @@ read_xmap <- function(
   pipeline({
     lapply(filenames$map, fread)
       setNames(filenames$elm) 
-      map_if(
-        names(.) %nin% c('CP', 'TP', 'SL'),
+      prioritize(.component)
+      map_at( # Dead time corrections except for electron signals (e.g., BSE)
+        setdiff(names(.), .electron),
         function(x) dwell * x / (dwell - DT * 1e-9 * x)
       ) 
       lapply(round) 
