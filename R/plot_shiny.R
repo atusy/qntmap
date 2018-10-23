@@ -19,14 +19,14 @@
 plot_shiny <- function(x, y = setdiff(names(x), c('x', 'y'))[1], interactive = TRUE) {
 
   nm <- names(x)
-  aes_fix <- do.call(aes, lapply(nm, as.name))
+  # aes_fix <- do.call(aes, lapply(nm, as.name))
 
   U <- shinyUI(fluidPage(
     
     sidebarLayout(
       sidebarPanel(
         splitLayout(
-          selectInput('fill', 'Element', setdiff(nm, c('x', 'y')), selected = y),
+          selectInput('fill', 'Element', setdiff(nm, c('x', 'y')), selected = y, selectize = FALSE),
           numericInput('min', 'Min', value = NA),
           numericInput('max', 'Max', value = NA),
           actionButton("goButton", "", icon("refresh"))
@@ -57,30 +57,33 @@ plot_shiny <- function(x, y = setdiff(names(x), c('x', 'y'))[1], interactive = T
   )) # fluidPage, shinyUI
   
   S <- shinyServer(function(input, output) {
-
+    
     g_raster <- reactive({
       input$goButton
       isolate(
         ggplot(
           data = 
             mutate_at(
-              x,
+              x[c('x', 'y', input$fill)],
+              # x,
               input$fill,
               function(d) {
                 m_d <- min(d)
                 M_d <- max(d)
                 m_in <- input$min
                 M_in <- input$max
-                if(is.finite(m_in) && m_d < m_in && m_in < M_d) 
+                if(is.finite(m_in) && m_d < m_in && m_in < M_d) {
                   d[d < m_in] <- m_in
-                if(is.finite(M_in) && M_d < M_in && M_in < M_d) 
+                  m_d <- m_in
+                }
+                if(is.finite(M_in) && m_d < M_in && M_in < M_d) 
                   d[d > M_in] <- M_in
                 d
               } # function
             ), # mutate_at
           mapping = 
-            # aes_string(x = 'x', y = 'y', fill = input$fill) # faster but less info
-            setNames(aes_fix, str_replace(nm, paste0('^', input$fill, '$'), 'fill'))
+            aes_string(x = 'x', y = 'y', fill = input$fill) # faster but less info
+            # setNames(aes_fix, str_replace(nm, paste0('^', input$fill, '$'), 'fill'))
         ) # ggplot
       ) # isolate
     }) # reactive
@@ -99,28 +102,16 @@ plot_shiny <- function(x, y = setdiff(names(x), c('x', 'y'))[1], interactive = T
     
     output$click <- renderPrint({
       d <- event_data("plotly_click")
-      if (is.null(d)) 
-        cat('Click pixel & keep data here')
-      else
+      `if`(
+        is.null(d), 
+        cat('Click pixel & keep data here'),
         unlist(x[x$x == d$x & x$y == -d$y, ])
+      )
     }) # renderPrint
     
-    output$hist <- renderPlot(pipeline({
-      x[[input$fill]]
-        `[`(
-          `if`(
-            is.finite(input$min) && input$min < max(.), 
-            . > input$min, 
-            TRUE
-          ) &
-          `if`(
-            is.finite(input$max) && input$max > min(.),
-            . < input$max, 
-            TRUE
-          )
-        ) # [
-        gghist()
-    })) # pipeline, renderPlot
+    output$hist <- renderPlot(
+        gghist(x[[input$fill]], input[['min']], input[['max']])
+      ) # pipeline, renderPlot
   
   })
   
@@ -153,12 +144,13 @@ layers_raster <- list(
 #' @importFrom ggplot2 element_blank
 #' @noRd
 layers_hist <- list(
-  ggplot2::geom_col(),
   ggplot2::scale_fill_gradientn(
     colors = c('black','purple','blue','green','red','white')
   ),
   ggplot2::theme_classic(),
   ggplot2::theme(
+    plot.background = element_rect(fill = '#f5f5f5', color = '#f5f5f5'),
+    panel.background = element_rect(fill = '#f5f5f5', color = '#f5f5f5'),
     legend.position = 'none', 
     axis.title = ggplot2::element_blank()
   )
@@ -169,10 +161,14 @@ layers_hist <- list(
 #' @importFrom ggplot2 ggplot
 #' @importFrom ggplot2 aes
 #' @noRd
-gghist <- function(x) {pipeline({
-  hist(x, breaks = 'Scott', plot = FALSE)[(c('mids', 'counts'))]
-    c(w = .$mids[2] - .$mids[1])
-    as.data.frame()
-    ggplot(aes(mids, counts, fill = mids, width = w))
-    + layers_hist
-})}
+gghist <- function(x, .min = NA, .max = NA) {
+  if(!is.finite(.min)) .min <- min(x)
+  if(!is.finite(.max)) .max <- max(x)
+  d <- as.data.frame(hist(
+      x[.min <= x & x <= .max], 
+      breaks = 'Scott', plot = FALSE
+    )[(c('mids', 'counts'))])
+  ggplot(d, aes(mids, counts, fill = mids)) +
+    geom_col(width = d$mids[2] - d$mids[1]) +
+    layers_hist
+}

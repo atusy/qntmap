@@ -100,6 +100,7 @@ find_centers <- function(
       })
       x
     }
+    prioritize(c('phase', .component))
     save4qm(nm = saveas, saving = is.character(saveas))
   })
 

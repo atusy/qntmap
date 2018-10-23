@@ -113,6 +113,7 @@ quantify <- function(
           })
         ))
       ) 
+      prioritize(.component)
       `class<-`(c('qntmap', 'list')) 
       save4qm(dir_qntmap = dir_qntmap)
   })
