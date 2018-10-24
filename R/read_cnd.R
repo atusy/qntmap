@@ -6,12 +6,15 @@
 read_cnd <- function(x, ...) UseMethod("read_cnd")
 
 #' @rdname read_cnd
+#' @importFrom stringr str_detect
+#' @importFrom stringr str_subset
 #' @section .default: 
 #' A default method which returns a result of `readLines(x)` 
 #' with additional class according to the content of the file.
-read_cnd.default <- function(x, ...) {
+read_cnd.default <- function(x, pattern = NULL, ...) {
   cnd <- readLines(x)
-  class(cnd) <- `if`(all(grepl('^\\$', cnd)), 'map_cnd', '0_cnd')
+  if(!is.null(pattern)) cnd <- str_subset(cnd, pattern)
+  class(cnd) <- `if`(all(str_detect(cnd, '^\\$')), 'map_cnd', '0_cnd')
   read_cnd(cnd, ...)
 }
 
@@ -24,6 +27,7 @@ read_cnd.default <- function(x, ...) {
 #' @noRd
 read_cnd.map_cnd <- function(x, ...) {pipeline({
   x
+    str_replace_all('[:blank:]+', ' ')
     strsplit(' ')
     lapply(`[`, seq(max(map_int(., length))))
     .x ~ Reduce(rbind, .x)
