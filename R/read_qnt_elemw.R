@@ -11,7 +11,6 @@ read_qnt_elemw.map_cnd <- function(
   x,
   ...
 ) {
-  x <- read_cnd('/home/atusy/Desktop/EPMA_data/AC684_fujise_180613_0001_QNT/Pos_0001/data001.cnd')
   data.frame(
     bgp_pos = x[['XM_ELEM_WDS_BACK_PLUS']][[1]],
     bgm_pos = x[['XM_ELEM_WDS_BACK_MINUS']][[1]],
