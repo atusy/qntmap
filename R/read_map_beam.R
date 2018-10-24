@@ -18,8 +18,8 @@ read_map_beam.default <- function(x, ...) {
 #' @noRd
 read_map_beam.map_cnd <- function(x, ...) {pipeline({
   x[c(
-    'XM_DATA_PROBE_CURRENT',
-    'XM_AP_SA_DWELL_TIME'
+    'CM_CURRENT', 'XM_DATA_PROBE_CURRENT',
+    'XM_DWELL_TIME', 'XM_AP_SA_DWELL_TIME'
   )]
   lapply(`[[`, 1)
   unlist(use.names = FALSE)
