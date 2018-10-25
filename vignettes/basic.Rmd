@@ -147,9 +147,7 @@ cls_imgs <- dir(
     full.names = TRUE
   ) %>>%
   str_subset('\\.png$')
-```
 
-```{r, fig.width = 3, fig.height = 3, fig.show = 'hold'}
 cls_imgs %>>%
   map(png::readPNG) %>>%
   map(function(.x) {
