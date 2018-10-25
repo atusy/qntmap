@@ -38,6 +38,8 @@ formals(read_xmap)$renew <-
 
 This vignette introduce a basic procedure of analysis using `qntmap` package using example data.
 
+See https://doi.org/10.2138/am-2018-6323CCBY for technical details.
+
 # Preparation
 
 ## Load package

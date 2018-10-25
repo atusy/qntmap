@@ -65,6 +65,23 @@ read_qnt <- function(
   
   rm(elemw)
 
+  if(!file.exists(phase_list) && !grepl('/', phase_list)) {
+    phase_list2 <- file.path(cd, phase_list)
+    if(!file.exists(phase_list2)) stop('"', phase_list, '" not found')
+    warning(
+      '\n',
+      'Found phase_list in current directory: ',
+      cd,
+      '\n',
+      'From qntmap v0.2.0, ', 
+      'phase_list parameter needs be an absolute path, ', 
+      'or a relative path from parameter wd', 
+      '\n\n'
+    )
+    phase_list <- phase_list2
+    rm(phase_list2)
+  }
+  
   cnd <- qnt$stg[, c(1, 5, 6, 7, 10)] %>>% 
     setNames(c('id', 'x', 'y', 'z', 'comment')) %>>%
     mutate(
