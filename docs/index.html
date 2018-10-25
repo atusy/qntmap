@@ -95,7 +95,7 @@
 <p>This package provides functions to convert element characteristic X-ray intensity maps into element mass concentration maps.<br>
 Current version supports data from JEOL-style electron probe microanalyer (EPMA).<br>
 For conversion, you need to run spot analysis before mapping analysis.<br>
-See “How to” section for usage and Yasumoto et al. (submitted) for implementations.</p>
+See “How to” section for usage and <a href="https://doi.org/10.2138/am-2018-6323CCBY">Yasumoto et al. (2018)</a> for implementations.</p>
 </div>
 <div id="installation" class="section level1">
 <h1 class="hasAnchor">
@@ -250,44 +250,45 @@ See “How to” section for usage and Yasumoto et al. (submitted) for implement
 <a class="sourceLine" id="cb4-12" data-line-number="12">fine_phase &lt;-<span class="st"> </span><span class="ot">NULL</span> </a>
 <a class="sourceLine" id="cb4-13" data-line-number="13"></a>
 <a class="sourceLine" id="cb4-14" data-line-number="14">## A csv file indicating name of the phase of n-th quantitative point analysis.</a>
-<a class="sourceLine" id="cb4-15" data-line-number="15">## If NULL, names are assumed to be specified in comments during EPMA analysis.</a>
-<a class="sourceLine" id="cb4-16" data-line-number="16">phase_list &lt;-<span class="st"> </span><span class="ot">NULL</span> </a>
-<a class="sourceLine" id="cb4-17" data-line-number="17"></a>
-<a class="sourceLine" id="cb4-18" data-line-number="18"><span class="co"># Run analysis</span></a>
-<a class="sourceLine" id="cb4-19" data-line-number="19"></a>
-<a class="sourceLine" id="cb4-20" data-line-number="20"><span class="co"># Set working directory</span></a>
-<a class="sourceLine" id="cb4-21" data-line-number="21"><span class="kw">setwd</span>(wd)</a>
-<a class="sourceLine" id="cb4-22" data-line-number="22"></a>
-<a class="sourceLine" id="cb4-23" data-line-number="23"><span class="co"># Load mapping data</span></a>
-<a class="sourceLine" id="cb4-24" data-line-number="24"><span class="co"># Change value of DT (dead time in nanoseconds) depending on EPMA.</span></a>
-<a class="sourceLine" id="cb4-25" data-line-number="25"><span class="co"># 1100 ns is a value applied by JEOL JXA-8105.</span></a>
-<a class="sourceLine" id="cb4-26" data-line-number="26">xmap &lt;-<span class="st"> </span><span class="kw"><a href="reference/read_xmap.html">read_xmap</a></span>(<span class="dt">wd =</span> dir_map, <span class="dt">DT =</span> <span class="dv">1100</span>)</a>
-<a class="sourceLine" id="cb4-27" data-line-number="27"></a>
-<a class="sourceLine" id="cb4-28" data-line-number="28"><span class="co"># Compile quantitative data</span></a>
-<a class="sourceLine" id="cb4-29" data-line-number="29">qnt &lt;-<span class="st"> </span><span class="kw"><a href="reference/read_qnt.html">read_qnt</a></span>(<span class="dt">wd =</span> dir_qnt, <span class="dt">phase_list =</span> phase_list, <span class="dt">renew =</span> <span class="ot">TRUE</span>)</a>
-<a class="sourceLine" id="cb4-30" data-line-number="30">## Check 'phase_list0.csv' under 'dir_qnt' to see if name of phases are provided properly.</a>
-<a class="sourceLine" id="cb4-31" data-line-number="31">## If not, modify the csv file and specify the path of modified one to `phase_list` in "Optional parameters" section and rerun the above code.</a>
-<a class="sourceLine" id="cb4-32" data-line-number="32"></a>
-<a class="sourceLine" id="cb4-33" data-line-number="33"><span class="co"># Determine initial cluster centers</span></a>
-<a class="sourceLine" id="cb4-34" data-line-number="34">centers &lt;-<span class="st"> </span><span class="kw"><a href="reference/find_centers.html">find_centers</a></span>(<span class="dt">xmap =</span> xmap, <span class="dt">qnt =</span> qnt, <span class="dt">fine_phase =</span> fine_phase)</a>
-<a class="sourceLine" id="cb4-35" data-line-number="35">## Check 'centers0.csv' under the `wd` and modify on demand.</a>
-<a class="sourceLine" id="cb4-36" data-line-number="36">## if modified, assign content of the modified csv file by running</a>
-<a class="sourceLine" id="cb4-37" data-line-number="37">## centers &lt;- data.table::fread('path to the modified csv file')</a>
-<a class="sourceLine" id="cb4-38" data-line-number="38"></a>
-<a class="sourceLine" id="cb4-39" data-line-number="39"><span class="co"># Phase identification</span></a>
-<a class="sourceLine" id="cb4-40" data-line-number="40"><span class="co"># assign group_cluster = TRUE if you want to integrate same phases subgrouped by suffix after '_' </span></a>
-<a class="sourceLine" id="cb4-41" data-line-number="41"><span class="co"># (e.g., garnet_a and garnet_b are integrated to garnet if TRUE)</span></a>
-<a class="sourceLine" id="cb4-42" data-line-number="42">cls &lt;-<span class="st"> </span><span class="kw"><a href="reference/cluster_xmap.html">cluster_xmap</a></span>(<span class="dt">xmap =</span> xmap, <span class="dt">centers =</span> centers, <span class="dt">group_cluster =</span> <span class="ot">FALSE</span>)</a>
-<a class="sourceLine" id="cb4-43" data-line-number="43"></a>
-<a class="sourceLine" id="cb4-44" data-line-number="44"><span class="co"># quantify X-ray maps</span></a>
-<a class="sourceLine" id="cb4-45" data-line-number="45">qmap &lt;-<span class="st"> </span><span class="kw"><a href="reference/quantify.html">quantify</a></span>(</a>
-<a class="sourceLine" id="cb4-46" data-line-number="46">  <span class="dt">xmap =</span> xmap, <span class="dt">qnt =</span> qnt, <span class="dt">cluster =</span> cls, <span class="dt">fine_phase =</span> fine_phase</a>
-<a class="sourceLine" id="cb4-47" data-line-number="47">)</a>
-<a class="sourceLine" id="cb4-48" data-line-number="48">## Resulting files are saved in `qntmap` directory` under `dir_map`.</a>
-<a class="sourceLine" id="cb4-49" data-line-number="49"></a>
-<a class="sourceLine" id="cb4-50" data-line-number="50"><span class="co"># summarize result</span></a>
-<a class="sourceLine" id="cb4-51" data-line-number="51"><span class="kw">summary</span>(qmap)</a>
-<a class="sourceLine" id="cb4-52" data-line-number="52">## This shows minimum, lower quantile, median, mean, upper quantile, and maximum values of variables.</a></code></pre></div>
+<a class="sourceLine" id="cb4-15" data-line-number="15">## The file path is absolute or relative to `dir_qnt`.</a>
+<a class="sourceLine" id="cb4-16" data-line-number="16">## If NULL, names are assumed to be specified in comments during EPMA analysis.</a>
+<a class="sourceLine" id="cb4-17" data-line-number="17">phase_list &lt;-<span class="st"> </span><span class="ot">NULL</span> </a>
+<a class="sourceLine" id="cb4-18" data-line-number="18"></a>
+<a class="sourceLine" id="cb4-19" data-line-number="19"><span class="co"># Run analysis</span></a>
+<a class="sourceLine" id="cb4-20" data-line-number="20"></a>
+<a class="sourceLine" id="cb4-21" data-line-number="21"><span class="co"># Set working directory</span></a>
+<a class="sourceLine" id="cb4-22" data-line-number="22"><span class="kw">setwd</span>(wd)</a>
+<a class="sourceLine" id="cb4-23" data-line-number="23"></a>
+<a class="sourceLine" id="cb4-24" data-line-number="24"><span class="co"># Load mapping data</span></a>
+<a class="sourceLine" id="cb4-25" data-line-number="25"><span class="co"># Change value of DT (dead time in nanoseconds) depending on EPMA.</span></a>
+<a class="sourceLine" id="cb4-26" data-line-number="26"><span class="co"># 1100 ns is a value applied by JEOL JXA-8105.</span></a>
+<a class="sourceLine" id="cb4-27" data-line-number="27">xmap &lt;-<span class="st"> </span><span class="kw"><a href="reference/read_xmap.html">read_xmap</a></span>(<span class="dt">wd =</span> dir_map, <span class="dt">DT =</span> <span class="dv">1100</span>)</a>
+<a class="sourceLine" id="cb4-28" data-line-number="28"></a>
+<a class="sourceLine" id="cb4-29" data-line-number="29"><span class="co"># Compile quantitative data</span></a>
+<a class="sourceLine" id="cb4-30" data-line-number="30">qnt &lt;-<span class="st"> </span><span class="kw"><a href="reference/read_qnt.html">read_qnt</a></span>(<span class="dt">wd =</span> dir_qnt, <span class="dt">phase_list =</span> phase_list, <span class="dt">renew =</span> <span class="ot">TRUE</span>)</a>
+<a class="sourceLine" id="cb4-31" data-line-number="31">## Check 'phase_list0.csv' under 'dir_qnt' to see if name of phases are provided properly.</a>
+<a class="sourceLine" id="cb4-32" data-line-number="32">## If not, modify the csv file and specify the path of modified one to `phase_list` in "Optional parameters" section and rerun the above code.</a>
+<a class="sourceLine" id="cb4-33" data-line-number="33"></a>
+<a class="sourceLine" id="cb4-34" data-line-number="34"><span class="co"># Determine initial cluster centers</span></a>
+<a class="sourceLine" id="cb4-35" data-line-number="35">centers &lt;-<span class="st"> </span><span class="kw"><a href="reference/find_centers.html">find_centers</a></span>(<span class="dt">xmap =</span> xmap, <span class="dt">qnt =</span> qnt, <span class="dt">fine_phase =</span> fine_phase)</a>
+<a class="sourceLine" id="cb4-36" data-line-number="36">## Check 'centers0.csv' under the `wd` and modify on demand.</a>
+<a class="sourceLine" id="cb4-37" data-line-number="37">## if modified, assign content of the modified csv file by running</a>
+<a class="sourceLine" id="cb4-38" data-line-number="38">## centers &lt;- data.table::fread('path to the modified csv file')</a>
+<a class="sourceLine" id="cb4-39" data-line-number="39"></a>
+<a class="sourceLine" id="cb4-40" data-line-number="40"><span class="co"># Phase identification</span></a>
+<a class="sourceLine" id="cb4-41" data-line-number="41"><span class="co"># assign group_cluster = TRUE if you want to integrate same phases subgrouped by suffix after '_' </span></a>
+<a class="sourceLine" id="cb4-42" data-line-number="42"><span class="co"># (e.g., garnet_a and garnet_b are integrated to garnet if TRUE)</span></a>
+<a class="sourceLine" id="cb4-43" data-line-number="43">cls &lt;-<span class="st"> </span><span class="kw"><a href="reference/cluster_xmap.html">cluster_xmap</a></span>(<span class="dt">xmap =</span> xmap, <span class="dt">centers =</span> centers, <span class="dt">group_cluster =</span> <span class="ot">FALSE</span>)</a>
+<a class="sourceLine" id="cb4-44" data-line-number="44"></a>
+<a class="sourceLine" id="cb4-45" data-line-number="45"><span class="co"># quantify X-ray maps</span></a>
+<a class="sourceLine" id="cb4-46" data-line-number="46">qmap &lt;-<span class="st"> </span><span class="kw"><a href="reference/quantify.html">quantify</a></span>(</a>
+<a class="sourceLine" id="cb4-47" data-line-number="47">  <span class="dt">xmap =</span> xmap, <span class="dt">qnt =</span> qnt, <span class="dt">cluster =</span> cls, <span class="dt">fine_phase =</span> fine_phase</a>
+<a class="sourceLine" id="cb4-48" data-line-number="48">)</a>
+<a class="sourceLine" id="cb4-49" data-line-number="49">## Resulting files are saved in `qntmap` directory` under `dir_map`.</a>
+<a class="sourceLine" id="cb4-50" data-line-number="50"></a>
+<a class="sourceLine" id="cb4-51" data-line-number="51"><span class="co"># summarize result</span></a>
+<a class="sourceLine" id="cb4-52" data-line-number="52"><span class="kw">summary</span>(qmap)</a>
+<a class="sourceLine" id="cb4-53" data-line-number="53">## This shows minimum, lower quantile, median, mean, upper quantile, and maximum values of variables.</a></code></pre></div>
 </div>
 </div>
 </div>

@@ -38,6 +38,8 @@ formals(read_xmap)$renew <-
 
 This vignette introduce a basic procedure of analysis using `qntmap` package using example data.
 
+See https://doi.org/10.2138/am-2018-6323CCBY for technical details.
+
 # Preparation
 
 ## Load package
@@ -147,9 +149,7 @@ cls_imgs <- dir(
     full.names = TRUE
   ) %>>%
   str_subset('\\.png$')
-```
 
-```{r, fig.width = 3, fig.height = 3, fig.show = 'hold'}
 cls_imgs %>>%
   map(png::readPNG) %>>%
   map(function(.x) {

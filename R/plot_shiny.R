@@ -142,6 +142,7 @@ layers_raster <- list(
 #' @importFrom ggplot2 theme_classic
 #' @importFrom ggplot2 theme
 #' @importFrom ggplot2 element_blank
+#' @importFrom ggplot2 element_rect
 #' @noRd
 layers_hist <- list(
   ggplot2::scale_fill_gradientn(
@@ -149,8 +150,8 @@ layers_hist <- list(
   ),
   ggplot2::theme_classic(),
   ggplot2::theme(
-    plot.background = element_rect(fill = '#f5f5f5', color = '#f5f5f5'),
-    panel.background = element_rect(fill = '#f5f5f5', color = '#f5f5f5'),
+    plot.background = ggplot2::element_rect(fill = '#f5f5f5', color = '#f5f5f5'),
+    panel.background = ggplot2::element_rect(fill = '#f5f5f5', color = '#f5f5f5'),
     legend.position = 'none', 
     axis.title = ggplot2::element_blank()
   )

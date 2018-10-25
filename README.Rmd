@@ -14,7 +14,7 @@ knitr::opts_chunk$set(echo = TRUE)
 This package provides functions to convert element characteristic X-ray intensity maps into element mass concentration maps.  
 Current version supports data from JEOL-style electron probe microanalyer (EPMA).  
 For conversion, you need to run spot analysis before mapping analysis.  
-See "How to" section for usage and Yasumoto et al. (submitted) for implementations.
+See "How to" section for usage and [Yasumoto et al. (2018)](https://doi.org/10.2138/am-2018-6323CCBY) for implementations.
 
 # Installation
 
@@ -118,6 +118,7 @@ dir_qnt <- '.qnt' # relative/absolute path to the directory containing .qnt file
 fine_phase <- NULL 
 
 ## A csv file indicating name of the phase of n-th quantitative point analysis.
+## The file path is absolute or relative to `dir_qnt`.
 ## If NULL, names are assumed to be specified in comments during EPMA analysis.
 phase_list <- NULL 
 

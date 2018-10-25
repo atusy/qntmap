@@ -64,9 +64,10 @@ tidy_epma <- function(
   qnt$elm$dwell <- beam['dwell'] / 1000
   qnt$elm$beam_map <- beam['beam_map']
 
+  ## Error if
+  if(all(is.na(qnt$cnd$nr))) stop('No points are quantified in mapping area.')
 
-
-  ##Let's join
+  ## Let's join
   qnt$cmp <- pipeline({
     xmap[qnt$elm$elint]
     setNames(qnt$elm$elem)
