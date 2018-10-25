@@ -3,7 +3,7 @@ read_qnt_elemw <- function(x, ...) UseMethod('read_qnt_elemw')
 
 #' @noRd
 read_qnt_elemw.default <- function(x, ...) {
-  read_qnt_elemw(read_cnd(x), ...)
+  read_qnt_elemw(structure(read_cnd(x), path = x), ...)
 }
 
 #' @noRd
@@ -11,7 +11,6 @@ read_qnt_elemw.map_cnd <- function(
   x,
   ...
 ) {
-  x <- read_cnd('/home/atusy/Desktop/EPMA_data/AC684_fujise_180613_0001_QNT/Pos_0001/data001.cnd')
   data.frame(
     bgp_pos = x[['XM_ELEM_WDS_BACK_PLUS']][[1]],
     bgm_pos = x[['XM_ELEM_WDS_BACK_MINUS']][[1]],
@@ -19,8 +18,6 @@ read_qnt_elemw.map_cnd <- function(
     bg_t = x[['XM_ELEM_WDS_QNT_BACK_TIME']][[1]]
   )
 }
-
-
 
 #' read all .cnd files under the specified directory
 #' @inheritParams read_cnd
@@ -53,14 +50,16 @@ read_qnt_elemw.0_cnd <- function(
   names(n) <- names(pattern)
   guessed <- lapply(n, seq, length(x), each)
   warning(
-    'some of regex patterns mismached when finding ',
-    paste(names(pattern), collapse = '\n'),
-    'in\n',
-    path,
-    '\n',
-    'check if values are in correct lines'
+    'Following variables are not detected by regular expressions, but by guessing which line contains them.\n',
+    paste0(names(guessed), ': ', lapply(guessed, paste, collapse = ' '), '\n'),
+    'Check a following file if values are in correct lines\n', 
+    normalizePath(attributes(x)[['path']]),
+    '\n'
   )
   if(length(n) != length(pattern)) stop('length of pattern and n must be same')
   
-  as.data.frame(lapply(guessed, function(i) val[i]))
+  print(as.data.frame(lapply(guessed, function(i) val[i])))
 }
+
+
+      
