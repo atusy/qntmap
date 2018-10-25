@@ -1,15 +1,18 @@
 Overview
 ========
 
-This package provides functions to convert element characteristic X-ray intensity maps into element mass concentration maps.
-Current version supports data from JEOL-style electron probe microanalyer (EPMA).
-For conversion, you need to run spot analysis before mapping analysis.
-See "How to" section for usage and Yasumoto et al. (submitted) for implementations.
+This package provides functions to convert element characteristic X-ray
+intensity maps into element mass concentration maps.  
+Current version supports data from JEOL-style electron probe
+microanalyer (EPMA).  
+For conversion, you need to run spot analysis before mapping analysis.  
+See “How to” section for usage and Yasumoto et al. (submitted) for
+implementations.
 
 Installation
 ============
 
-Install devtools package if you haven't.
+Install devtools package if you haven’t.
 
 ``` r
 install.packages("devtools")
@@ -32,7 +35,8 @@ Read below for details.
 EPMA analysis
 -------------
 
-QntMap handles matrix effect by preparing internal standards based on spot analysis.
+QntMap handles matrix effect by preparing internal standards based on
+spot analysis.
 
 ### Spot analysis
 
@@ -40,15 +44,23 @@ QntMap handles matrix effect by preparing internal standards based on spot analy
     -   Same as those conventionally applied in your lab.
     -   Use wavelength-dispersive X-ray spectrometer
 -   Spots to be analyzed
-    -   **20 spots per phase** in the area to be mapped (the more is better).
-    -   It is better but not necessary to quantify grains larger than mapping probe diameter.
-    -   Make sure at least **20 spots per element** are analyzing grains larger than mapping probe diameter.
+    -   **20 spots per phase** in the area to be mapped (the more is
+        better).
+    -   It is better but not necessary to quantify grains larger than
+        mapping probe diameter.
+    -   Make sure at least **20 spots per element** are analyzing grains
+        larger than mapping probe diameter.
 -   Commenting analysis
-    -   Give same comments on the same phase with the similar compositions. Do not number them.
-    -   e.g., quartz, plagioclase, ...
-    -   Otherwise, comment them with different name. This is important treatment for phase identification and handling matrix effect.
-    -   e.g., garnet-core, garnet-rim
-    -   If you give comments containing underscore such as "garnet\_core" and "garnet\_rim", then they are treated as if different phases in phase identification, but are treated as if their matrix effect are approximately same.
+    -   Give same comments on the same phase with the similar
+        compositions. Do not number them.
+        -   e.g., quartz, plagioclase, …
+    -   Otherwise, comment them with different name. This is important
+        treatment for phase identification and handling matrix effect.
+        -   e.g., garnet-core, garnet-rim
+    -   If you give comments containing underscore such as
+        “garnet\_core” and “garnet\_rim”, then they are treated as if
+        different phases in phase identification, but are treated as if
+        their matrix effect are approximately same.
     -   Alternatively, give comments manually by external file.
 
 Spot quantitative analytical conditions in your lab.
@@ -56,11 +68,19 @@ Spot quantitative analytical conditions in your lab.
 ### Mapping analysis
 
 -   Analytical conditions
-    -   Acceralating voltage should be same as one applied in spot analysis.
-    -   Probe diameter should be larger than spot analysis. The larger saves more time, but decreases spatial resolutions.
-    -   Probe current is recommended to be 100 nA following Lanari et al. (2014).
-    -   Dwell time is recommended to be 0.1 - 0.3 sec following Lanari et al. (2014).
-    -   Note that increasing probe current accepts decreasing dwell time, but probe current must not be too high to saturate X-ray detectors. If you prefer high probe current in some reason, consider changing dispersive crystals from those chosen in spot analysis.
+    -   Acceralating voltage should be same as one applied in spot
+        analysis.
+    -   Probe diameter should be larger than spot analysis. The larger
+        saves more time, but decreases spatial resolutions.
+    -   Probe current is recommended to be 100 nA following Lanari et
+        al. (2014).
+    -   Dwell time is recommended to be 0.1 - 0.3 sec following Lanari
+        et al. (2014).
+    -   Note that increasing probe current accepts decreasing dwell
+        time, but probe current must not be too high to saturate X-ray
+        detectors. If you prefer high probe current in some reason,
+        consider changing dispersive crystals from those chosen in spot
+        analysis.
         -   e.g., chose PET instead of TAP for Si
 
 ### Example of analytical conditions
@@ -80,7 +100,9 @@ Data processing with QntMap package on R
 
 ### Quantification
 
-By running following code, you'll see that phase identification result in 'clustering' directory and mass concentration data as csv files in 'qntmap' directory both under the directory contaning mapping data.
+By running following code, you’ll see that phase identification result
+in ‘clustering’ directory and mass concentration data as csv files in
+‘qntmap’ directory both under the directory contaning mapping data.
 
 #### Interactive mode
 
@@ -108,6 +130,7 @@ dir_qnt <- '.qnt' # relative/absolute path to the directory containing .qnt file
 fine_phase <- NULL 
 
 ## A csv file indicating name of the phase of n-th quantitative point analysis.
+## The file path is absolute or relative to `dir_qnt`.
 ## If NULL, names are assumed to be specified in comments during EPMA analysis.
 phase_list <- NULL 
 
