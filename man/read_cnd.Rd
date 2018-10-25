@@ -3,16 +3,28 @@
 \name{read_cnd}
 \alias{read_cnd}
 \alias{read_cnd.default}
+\alias{read_cnd.map_cnd}
+\alias{read_cnd.0_cnd}
 \title{read .cnd files}
 \usage{
 read_cnd(x, ...)
 
-\method{read_cnd}{default}(x, ...)
+\method{read_cnd}{default}(x, pattern = NULL, ...)
+
+\method{read_cnd}{map_cnd}(x, ...)
+
+\method{read_cnd}{0_cnd}(x, pattern = NULL, n = NULL, ...)
 }
 \arguments{
 \item{x}{A path to the file (e.g., '0.cnd', 'map.cnd', ...)}
 
 \item{...}{Other arguments passed to methods}
+
+\item{pattern}{character vector.
+Used to extract rows which contains phrase matching pattern.}
+
+\item{n}{integer vector of same length as pattern.
+Used to extract nth row of .cnd file in case pattern did not match any phrase.}
 }
 \description{
 read .cnd files
@@ -21,5 +33,13 @@ read .cnd files
 
 A default method which returns a result of \code{readLines(x)}
 with additional class according to the content of the file.
+}
+
+\section{read_cnd.map_cnd}{
+ A method for \code{map_cnd} class object.
+}
+
+\section{read_cnd.0_cnd}{
+ A method for \code{0_cnd} class object.
 }
 
