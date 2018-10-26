@@ -19,7 +19,7 @@
 plot_shiny <- function(x, y = setdiff(names(x), c('x', 'y'))[1], interactive = TRUE) {
 
   nm <- names(x)
-  # aes_fix <- do.call(aes, lapply(nm, as.name))
+
 
   U <- shinyUI(fluidPage(
     
@@ -31,10 +31,8 @@ plot_shiny <- function(x, y = setdiff(names(x), c('x', 'y'))[1], interactive = T
           numericInput('max', 'Max', value = NA),
           actionButton("goButton", "", icon("refresh"))
         ),
-        plotOutput('hist'),
-        br(),
-        numericInput('height', 'Height of graph [px]', value = 800),
-        br(),
+        plotOutput('hist'), br(),
+        splitLayout('Height of graph [px]', numericInput('height', NULL, value = 800)), br(),
         checkboxInput('interactive', 'Interactive', value = interactive)
       ), # sidebarPanel
       
@@ -53,7 +51,9 @@ plot_shiny <- function(x, y = setdiff(names(x), c('x', 'y'))[1], interactive = T
         )
       ) # mainPanel
     ), # sidebarLayout
+    
     tags$style(type='text/css', "#goButton { width:100%; margin-top: 25px;}")
+    
   )) # fluidPage, shinyUI
   
   S <- shinyServer(function(input, output) {
@@ -61,57 +61,40 @@ plot_shiny <- function(x, y = setdiff(names(x), c('x', 'y'))[1], interactive = T
     g_raster <- reactive({
       input$goButton
       isolate(
-        ggplot(
-          data = 
+          ggplot(
             mutate_at(
               x[c('x', 'y', input$fill)],
-              # x,
-              input$fill,
-              function(d) {
-                m_d <- min(d)
-                M_d <- max(d)
-                m_in <- input$min
-                M_in <- input$max
-                if(is.finite(m_in) && m_d < m_in && m_in < M_d) {
-                  d[d < m_in] <- m_in
-                  m_d <- m_in
-                }
-                if(is.finite(M_in) && m_d < M_in && M_in < M_d) 
-                  d[d > M_in] <- M_in
-                d
-              } # function
+              input$fill, trim, .min = input$min, .max = input$max
             ), # mutate_at
-          mapping = 
-            aes_string(x = 'x', y = 'y', fill = input$fill) # faster but less info
-            # setNames(aes_fix, str_replace(nm, paste0('^', input$fill, '$'), 'fill'))
-        ) # ggplot
+            aes_string('x', 'y', fill = input$fill) # faster but less info
+          ) + layers_raster # ggplot
       ) # isolate
     }) # reactive
       
-    output$plot <- renderPlot(
-      g_raster() + layers_raster,
-      height = reactive(input$height)
-    ) # renderPlot
+    output$plot <- renderPlot(g_raster(), height = reactive(input$height))
+
+    heatmap <- reactive({
+      input$goButton
+      isolate(plotly_heatmap(
+        x[['x']], x[['y']], trim(x[[input$fill]], input$min, input$max),
+        title = input$fill, height = input$height
+      ))
+    })
     
-    output$plotly <- plotly::renderPlotly(
-      ggplotly(
-        g_raster() + layers_raster,
-        height = input$height
-      ) 
-    ) # renderPlotly
+    output$plotly <- plotly::renderPlotly(heatmap())
     
     output$click <- renderPrint({
-      d <- event_data("plotly_click")
-      `if`(
-        is.null(d), 
-        cat('Click pixel & keep data here'),
-        unlist(x[x$x == d$x & x$y == -d$y, ])
-      )
-    }) # renderPrint
+        d <- event_data("plotly_click")
+        `if`(
+          is.null(d), 
+          cat('Click pixel & keep data here'),
+          unlist(x[x[['x']] == d[['x']] & x[['y']] == d[['y']], ])
+        )
+      }) # renderPrint
     
     output$hist <- renderPlot(
         gghist(x[[input$fill]], input[['min']], input[['max']])
-      ) # pipeline, renderPlot
+      )
   
   })
   
@@ -173,3 +156,47 @@ gghist <- function(x, .min = NA, .max = NA) {
     geom_col(width = d$mids[2] - d$mids[1]) +
     layers_hist
 }
+
+
+#' heatmap using plotly
+#' @importFrom plotly layout
+#' @importFrom plotly plot_ly
+#' @noRd
+plotly_heatmap <- function(x, y, z, title = '', ...) {
+  layout(
+    plot_ly(
+      x = x, y = y, z = z, type = 'heatmap',
+      colorbar = list(title = title, len = 1),
+      ...
+    ),
+    xaxis = xaxis, yaxis = yaxis
+  )
+}
+
+# xaxis for plotly_heatmap
+xaxis <- list(
+  rangemode = 'tozero',
+  showgrid = FALSE,
+  zeroline = FALSE
+)
+
+# yaxis for plotly_heatmap
+yaxis <- c(
+  xaxis,
+  scaleanchor = 'x', 
+  autorange = 'reversed'
+)
+
+# limit z
+trim <- function(x, .min, .max) {
+  range_x <- range(x)
+  if(is.finite(.min) && range_x[1] < .min && .min < range_x[2]) {
+    x[x < .min] <- .min
+    range_x[1] <- .min
+  }
+  if(is.finite(.max) && range_x[1] < .max && .max < range_x[2]) {
+    x[x > .max] <- .max
+  }
+  x
+}
+
