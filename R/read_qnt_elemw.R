@@ -60,7 +60,7 @@ read_qnt_elemw.0_cnd <- function(
   )
   if(length(n) != length(pattern)) stop('length of pattern and n must be same')
   
-  print(as.data.frame(lapply(guessed, function(i) val[i])))
+  print(as.data.frame(lapply(guessed, function(i) as.numeric(val[i]))))
 }
 
 
