@@ -2,8 +2,10 @@
 read_qnt_elemw <- function(x, ...) UseMethod('read_qnt_elemw')
 
 #' @noRd
-read_qnt_elemw.default <- function(x, ...) {
-  read_qnt_elemw(structure(read_cnd(x), path = x), ...)
+read_qnt_elemw.default <- function(x, recursive = TRUE, ...) {
+  cnd <- structure(read_cnd(x), path = x)
+  if(!recursive) return(cnd)
+  read_qnt_elemw(cnd, ...)
 }
 
 #' @noRd
@@ -58,7 +60,7 @@ read_qnt_elemw.0_cnd <- function(
   )
   if(length(n) != length(pattern)) stop('length of pattern and n must be same')
   
-  print(as.data.frame(lapply(guessed, function(i) val[i])))
+  print(as.data.frame(lapply(guessed, function(i) as.numeric(val[i]))))
 }
 
 
