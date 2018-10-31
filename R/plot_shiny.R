@@ -106,6 +106,7 @@ plot_shiny <- function(x, y = setdiff(names(x), c('x', 'y'))[1], interactive = T
 #' @importFrom ggplot2 geom_raster
 #' @importFrom ggplot2 coord_fixed
 #' @importFrom ggplot2 scale_fill_gradientn
+#' @importFrom ggplot2 scale_fill_viridis_c
 #' @importFrom ggplot2 theme_classic
 #' @importFrom ggplot2 theme
 #' @noRd
@@ -114,9 +115,11 @@ layers_raster <- list(
   ggplot2::coord_fixed(),
   ggplot2::theme_classic(),
   ggplot2::scale_y_reverse(),
-  ggplot2::scale_fill_gradientn(
-    colors = c('black','purple','blue','green','red','white')
-  )
+  ggplot2::scale_fill_viridis_c(),
+  # ggplot2::scale_fill_gradientn(
+  #   colors = c('black','purple','blue','green','red','white')
+  # ),
+  NULL
 )
 
 #' Layers for plotting mapping histograms
@@ -128,9 +131,10 @@ layers_raster <- list(
 #' @importFrom ggplot2 element_rect
 #' @noRd
 layers_hist <- list(
-  ggplot2::scale_fill_gradientn(
-    colors = c('black','purple','blue','green','red','white')
-  ),
+  ggplot2::scale_fill_viridis_c(),
+  # ggplot2::scale_fill_gradientn(
+  #   colors = c('black','purple','blue','green','red','white')
+  # ),
   ggplot2::theme_classic(),
   ggplot2::theme(
     plot.background = ggplot2::element_rect(fill = '#f5f5f5', color = '#f5f5f5'),
