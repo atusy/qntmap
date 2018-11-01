@@ -1,3 +1,31 @@
+# qntmap 0.2.2
+
+## Major changes
+
+### New features
+
+- `read_xmap()` 
+    - It checks version of QntMap which created former version of `xmap.RDS` 
+      in case `renew = FALSE`
+    - It's returning value has following attributes:
+        - deadtime: deadtime specified by a parameter DT
+        - dir_map: path of the directory which contains raw data
+        - dwell: dwell time
+        - current: probe current
+        - start: mapping starting position
+        - pixel: size of mapping area
+        - step: step size of pixels
+        - ver: version of qntmap package
+        - instrument: version of EPMA
+        - class: `c('qm_xmap', 'list')`
+
+## Minor changes
+
+- `read_cnd`, `read_map_pos`, and `read_map_beam` 
+  are no more in use but are remained for awhile.
+  Note they are not exported functions.
+- 
+
 # qntmap 0.2.1
 
 ## New features
