@@ -11,6 +11,7 @@
 #' @importFrom graphics hist
 #' @importFrom ggplot2 ggplot
 #' @importFrom ggplot2 aes
+#' @importFrom ggplot2 aes_string
 #' @importFrom dplyr mutate_at
 #' @importFrom scales squish
 #' @importFrom stringr str_replace
