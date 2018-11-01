@@ -10,9 +10,12 @@ qntmap <- function() {
   
   cat('(1) select any file in the directory which contains .map and .qnt directory\n')
   setwd(wd <- choose_dir()) # easycsv::choose_dir
-  if(!all(c('.map', '.qnt') %in% list.files(all.files = TRUE, include.dirs = TRUE)))
-    while(!all(c('.map', '.qnt') %in% list.files(all.files = TRUE, include.dirs = TRUE))) {
-      cat('(1) Selected directory does not contain .map and .qnt directory. Select again\n')
+  if(!all(file.exists(c('.map', '.qnt'))))
+    while(!all(file.exists(c('.map', '.qnt')))) {
+      cat(
+        '(1) Selected directory does not contain ',
+        '.map and .qnt directory. Select again\n'
+      )
       setwd(wd <- choose_dir()) # easycsv::choose_dir
     }
   cat('working directory is settled to\n')
@@ -65,7 +68,7 @@ qntmap <- function() {
   cat(dir_map)
   cat('/clustering\n\n')
   
-  cat('Select phases which tend to be fine grains compared to mapping probe diameter.\n')
+  cat('Select phases which tend to be fine grains compared to mapping probe diameter. Or 0 if none.\n')
   fine_phase <- select.list(colnames(cls$membership))
   cat('\n')
   
