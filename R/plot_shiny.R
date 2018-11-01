@@ -64,7 +64,7 @@ plot_shiny <- function(x, y = setdiff(names(x), c('x', 'y'))[1], interactive = T
           ggplot(
             mutate_at(
               x[c('x', 'y', input$fill)],
-              input$fill, trim, .min = input$min, .max = input$max
+              input$fill, squish, range = c(input$min, .max = input$max)
             ), # mutate_at
             aes_string('x', 'y', fill = input$fill) # faster but less info
           ) + layers_raster # ggplot
@@ -73,15 +73,14 @@ plot_shiny <- function(x, y = setdiff(names(x), c('x', 'y'))[1], interactive = T
       
     output$plot <- renderPlot(g_raster(), height = reactive(input$height))
 
-    heatmap <- reactive({
+    shiny_heatmap <- reactive({
       input$goButton
       isolate(plotly_heatmap(
         x[['x']], x[['y']], squish(x[[input$fill]], c(input$min, input$max)),
         title = input$fill, height = input$height
       ))
     })
-    
-    output$plotly <- plotly::renderPlotly(heatmap())
+    output$plotly <- plotly::renderPlotly(shiny_heatmap())
     
     output$click <- renderPrint({
         d <- event_data("plotly_click")
@@ -116,14 +115,10 @@ layers_raster <- list(
   ggplot2::theme_classic(),
   ggplot2::scale_y_reverse(),
   ggplot2::scale_fill_viridis_c(),
-  # ggplot2::scale_fill_gradientn(
-  #   colors = c('black','purple','blue','green','red','white')
-  # ),
   NULL
 )
 
 #' Layers for plotting mapping histograms
-#' @importFrom ggplot2 scale_fill_gradientn
 #' @importFrom ggplot2 theme_classic
 #' @importFrom ggplot2 theme
 #' @importFrom ggplot2 element_blank
@@ -131,9 +126,6 @@ layers_raster <- list(
 #' @noRd
 layers_hist <- list(
   ggplot2::scale_fill_viridis_c(),
-  # ggplot2::scale_fill_gradientn(
-  #   colors = c('black','purple','blue','green','red','white')
-  # ),
   ggplot2::theme_classic(),
   ggplot2::theme(
     plot.background = ggplot2::element_rect(fill = '#f5f5f5', color = '#f5f5f5'),
@@ -160,34 +152,4 @@ gghist <- function(x, .min = NA, .max = NA) {
     geom_col(width = d$mids[2] - d$mids[1]) +
     layers_hist
 }
-
-
-#' heatmap using plotly
-#' @importFrom plotly layout
-#' @importFrom plotly plot_ly
-#' @noRd
-plotly_heatmap <- function(x, y, z, title = '', ...) {
-  layout(
-    plot_ly(
-      x = x, y = y, z = z, type = 'heatmap',
-      colorbar = list(title = title, len = 1),
-      ...
-    ),
-    xaxis = xaxis, yaxis = yaxis
-  )
-}
-
-# xaxis for plotly_heatmap
-xaxis <- list(
-  rangemode = 'tozero',
-  showgrid = FALSE,
-  zeroline = FALSE
-)
-
-# yaxis for plotly_heatmap
-yaxis <- c(
-  xaxis,
-  scaleanchor = 'x', 
-  autorange = 'reversed'
-)
 
