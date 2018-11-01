@@ -7,7 +7,6 @@
 #' @import shiny
 #' @importFrom plotly renderPlotly
 #' @importFrom plotly plotlyOutput 
-#' @importFrom plotly ggplotly
 #' @importFrom plotly event_data
 #' @importFrom graphics hist
 #' @importFrom ggplot2 ggplot
@@ -124,7 +123,6 @@ layers_raster <- list(
 )
 
 #' Layers for plotting mapping histograms
-#' @importFrom ggplot2 geom_col
 #' @importFrom ggplot2 scale_fill_gradientn
 #' @importFrom ggplot2 theme_classic
 #' @importFrom ggplot2 theme
@@ -145,10 +143,11 @@ layers_hist <- list(
   )
 )
 
-#' Daraw a histgram for numeric vector based on Scott's choice
+#' Draw a histgram for numeric vector based on Scott's choice
 #' @importFrom graphics hist
 #' @importFrom ggplot2 ggplot
 #' @importFrom ggplot2 aes
+#' @importFrom ggplot2 geom_col
 #' @noRd
 gghist <- function(x, .min = NA, .max = NA) {
   if(!is.finite(.min)) .min <- min(x)
