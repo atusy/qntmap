@@ -65,7 +65,11 @@ read_qnt <- function(
   
   rm(elemw)
 
-  if(!file.exists(phase_list) && !grepl('/', phase_list)) {
+  if(
+    !is.null(phase_list) && 
+    !file.exists(phase_list) && 
+    !grepl('/', phase_list)
+  ) {
     phase_list2 <- file.path(cd, phase_list)
     if(!file.exists(phase_list2)) stop('"', phase_list, '" not found')
     warning(
