@@ -18,13 +18,18 @@
         - ver: version of qntmap package
         - instrument: version of EPMA
         - class: `c('qm_xmap', 'list')`
-
+- plot
+    - Uses viridis color scale: 
+      https://cran.r-project.org/web/packages/viridis/vignettes/intro-to-viridis.html
+- plot_shiny
+    - alos uses viridis color scale
+    - limits hover info for performance improvement
+    
 ## Minor changes
 
 - `read_cnd`, `read_map_pos`, and `read_map_beam` 
   are no more in use but are remained for awhile.
   Note they are not exported functions.
-- 
 
 # qntmap 0.2.1
 
