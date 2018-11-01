@@ -1,18 +1,23 @@
 #' read .cnd files
 #' 
 #' @param x A path to the file (e.g., '0.cnd', 'map.cnd', ...)
+#' @param pattern pattern to substract
 #' @param ... Other arguments passed to methods
 #' @export
-read_cnd <- function(x, ...) UseMethod("read_cnd")
+read_cnd <- function(x, pattern = NULL, ...) UseMethod("read_cnd")
 
 #' @rdname read_cnd
+#' @importFrom stringr str_detect
+#' @importFrom stringr str_subset
 #' @section .default: 
 #' A default method which returns a result of `readLines(x)` 
 #' with additional class according to the content of the file.
-read_cnd.default <- function(x, ...) {
+#' @export
+read_cnd.default <- function(x, pattern = NULL, ...) {
   cnd <- readLines(x)
-  class(cnd) <- `if`(all(grepl('^\\$', cnd)), 'map_cnd', '0_cnd')
-  read_cnd(cnd, ...)
+  if(!is.null(pattern)) cnd <- str_subset(cnd, pattern)
+  class(cnd) <- `if`(all(str_detect(cnd, '^\\$')), 'map_cnd', '0_cnd')
+  read_cnd(cnd, pattern = pattern, ...)
 }
 
 #' @rdname read_cnd
@@ -21,9 +26,10 @@ read_cnd.default <- function(x, ...) {
 #' @importFrom utils type.convert
 #' @importFrom dplyr arrange
 #' @importFrom stringr str_extract
-#' @noRd
-read_cnd.map_cnd <- function(x, ...) {pipeline({
+#' @export
+read_cnd.map_cnd <- function(x, pattern = NULL, ...) {pipeline({
   x
+    str_replace_all('[:blank:]+', ' ')
     strsplit(' ')
     lapply(`[`, seq(max(map_int(., length))))
     .x ~ Reduce(rbind, .x)
@@ -42,12 +48,11 @@ read_cnd.map_cnd <- function(x, ...) {pipeline({
 })}
 
 #' @rdname read_cnd
-#' @section read_cnd.map_cnd: A method for `0_cnd` class object.
-#' @param pattern character vector. 
+#' @section read_cnd.0_cnd: A method for `0_cnd` class object.
 #'   Used to extract rows which contains phrase matching pattern.
 #' @param n integer vector of same length as pattern. 
 #'   Used to extract nth row of .cnd file in case pattern did not match any phrase.
-#' @noRd
+#' @export
 read_cnd.0_cnd <- function(x, pattern = NULL, n = NULL, ...) {
   if(is.null(pattern)) return(x)
   

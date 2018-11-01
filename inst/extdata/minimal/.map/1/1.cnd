@@ -1,0 +1,7 @@
+$CM_INSTRUMENT      JXA-DUMMY
+$CM_CURRENT         1e-07
+$XM_ELEMENT         Si
+$XM_DWELL_TIME      100 msec
+$XM_STEP_SIZE       1000 1000  um
+$XM_MAP_START       0 0 0 mm
+$XM_POINTS          100 100

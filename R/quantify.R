@@ -36,16 +36,16 @@ quantify <- function(
   
   #mapping conditions
   dir_map <- attr(xmap, 'dir_map')
-  pos <- read_map_pos(dir(dir_map, pattern = '^(map|0)\\.cnd$', full.names = TRUE))
+  pixel <- attr(xmap, 'pixel')
 
-  if(is.null(maps_x)) maps_x <- pos$px[1]
-  if(is.null(maps_y)) maps_y <- pos$px[2]
+  if(is.null(maps_x)) maps_x <- pixel[1]
+  if(is.null(maps_y)) maps_y <- pixel[2]
 
   stg <- do.call(
     flag0,
     unclass(expand.grid(
-      x_stg = seq(0, pos$px[1] - 1) %/% maps_x + 1,
-      y_stg = seq(0, pos$px[2] - 1) %/% maps_y + 1
+      x_stg = seq(0, pixel[1] - 1) %/% maps_x + 1,
+      y_stg = seq(0, pixel[2] - 1) %/% maps_y + 1
     ))
   )
 
@@ -57,8 +57,8 @@ quantify <- function(
       mutate(
         net = net * (net > 0),
         phase3 = if(distinguished) phase else phase2,
-        x_stg = ((x_px - 1) %/% maps_x + 1) * (0 < x_px) * (x_px <= pos$px[1]), 
-        y_stg = ((y_px - 1) %/% maps_y + 1) * (0 < y_px) * (y_px <= pos$px[2]),
+        x_stg = ((x_px - 1) %/% maps_x + 1) * (0 < x_px) * (x_px <= pixel[1]), 
+        y_stg = ((y_px - 1) %/% maps_y + 1) * (0 < y_px) * (y_px <= pixel[2]),
         stg = ifelse((x_stg * y_stg) <= 0, NA, flag0(x_stg, y_stg)),
         mem = mem * 
           (str_replace(cls, '_.*', '') == phase2) *
@@ -123,7 +123,7 @@ quantify <- function(
 #' @param wd working directory which contains .qnt and .map directories
 #' @param dir_map ignored
 #' @param RDS_cluster path to the RDS file created by cluster_xmap
-#' @param qntmap qm_xmap class object
+#' @param qltmap qm_xmap class object (xmap param of quantify)
 #' @inheritParams quantify
 #' @export
 qntmap_quantify <- function(
