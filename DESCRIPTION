@@ -1,7 +1,7 @@
 Package: qntmap
 Type: Package
 Title: Enhance quantitative analysis of EPMA data
-Version: 0.2.1
+Version: 0.2.2
 Authors@R: c(
         person(given = 'YASUMOTO Atsushi', role = c('aut', 'cph', 'cre'), email = 'atusy.7+qntmap@gmail.com'),
         person(given = 'YOSHIDA Kenta', role = c('ctb')),
@@ -36,7 +36,8 @@ Imports: curl,
     stringr,
     shiny,
     tibble,
-    tidyr
+    tidyr,
+    utils
 Sugests: pkgdown,
     roxygen2,
     testthat
@@ -67,6 +68,7 @@ Collate:
     'read_qnt.R'
     'read_qnt_elemw.R'
     'read_xmap.R'
+    'read_xmap_cnd.R'
     'save.R'
     'segment.R'
     'summary.R'
