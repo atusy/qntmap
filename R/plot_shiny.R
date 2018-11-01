@@ -13,6 +13,7 @@
 #' @importFrom ggplot2 ggplot
 #' @importFrom ggplot2 aes
 #' @importFrom dplyr mutate_at
+#' @importFrom scales squish
 #' @importFrom stringr str_replace
 #' 
 #' @noRd
@@ -76,7 +77,7 @@ plot_shiny <- function(x, y = setdiff(names(x), c('x', 'y'))[1], interactive = T
     heatmap <- reactive({
       input$goButton
       isolate(plotly_heatmap(
-        x[['x']], x[['y']], trim(x[[input$fill]], input$min, input$max),
+        x[['x']], x[['y']], squish(x[[input$fill]], c(input$min, input$max)),
         title = input$fill, height = input$height
       ))
     })
@@ -190,17 +191,4 @@ yaxis <- c(
   scaleanchor = 'x', 
   autorange = 'reversed'
 )
-
-# limit z
-trim <- function(x, .min, .max) {
-  range_x <- range(x)
-  if(is.finite(.min) && range_x[1] < .min && .min < range_x[2]) {
-    x[x < .min] <- .min
-    range_x[1] <- .min
-  }
-  if(is.finite(.max) && range_x[1] < .max && .max < range_x[2]) {
-    x[x > .max] <- .max
-  }
-  x
-}
 
