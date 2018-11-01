@@ -61,7 +61,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">qntmap</a>
-        <span class="label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.2.1</span>
+        <span class="label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.2.2</span>
       </span>
     </div>
 
@@ -119,12 +119,58 @@
       <small>Source: <a href='https://github.com/atusy/qntmap/blob/master/NEWS.md'><code>NEWS.md</code></a></small>
     </div>
 
+    <div id="qntmap-0-2-2" class="section level1">
+<h1 class="page-header">
+<a href="#qntmap-0-2-2" class="anchor"></a>qntmap 0.2.2</h1>
+<div id="major-changes" class="section level2">
+<h2 class="hasAnchor">
+<a href="#major-changes" class="anchor"></a>Major changes</h2>
+<div id="new-features" class="section level3">
+<h3 class="hasAnchor">
+<a href="#new-features" class="anchor"></a>New features</h3>
+<ul>
+<li>
+<code><a href="../reference/read_xmap.html">read_xmap()</a></code>
+<ul>
+<li>It checks version of QntMap which created former version of <code>xmap.RDS</code> in case <code>renew = FALSE</code>
+</li>
+<li>It’s returning value has following attributes:
+<ul>
+<li>deadtime: deadtime specified by a parameter DT</li>
+<li>dir_map: path of the directory which contains raw data</li>
+<li>dwell: dwell time</li>
+<li>current: probe current</li>
+<li>start: mapping starting position</li>
+<li>pixel: size of mapping area</li>
+<li>step: step size of pixels</li>
+<li>ver: version of qntmap package</li>
+<li>instrument: version of EPMA</li>
+<li>class: <code>c('qm_xmap', 'list')</code>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+<div id="minor-changes" class="section level2">
+<h2 class="hasAnchor">
+<a href="#minor-changes" class="anchor"></a>Minor changes</h2>
+<ul>
+<li>
+<code>read_cnd</code>, <code>read_map_pos</code>, and <code>read_map_beam</code> are no more in use but are remained for awhile. Note they are not exported functions.</li>
+<li>
+</li>
+</ul>
+</div>
+</div>
     <div id="qntmap-0-2-1" class="section level1">
 <h1 class="page-header">
 <a href="#qntmap-0-2-1" class="anchor"></a>qntmap 0.2.1</h1>
-<div id="new-features" class="section level2">
+<div id="new-features-1" class="section level2">
 <h2 class="hasAnchor">
-<a href="#new-features" class="anchor"></a>New features</h2>
+<a href="#new-features-1" class="anchor"></a>New features</h2>
 <ul>
 <li>Visualize X-ray maps and quantitative maps using a <code>plot</code> function.
 <ul>
@@ -160,9 +206,9 @@
 <li>The above change cause <code>read_qnt</code> to save its result (<code>qnt.RDS</code>) and semi-product (<code>phase_list0.csv</code>) in the directory containing <code>.qnt</code> files unlike <code>qnt_load</code> saved them under the working directory.</li>
 </ul>
 </div>
-<div id="major-changes" class="section level2">
+<div id="major-changes-1" class="section level2">
 <h2 class="hasAnchor">
-<a href="#major-changes" class="anchor"></a>Major changes</h2>
+<a href="#major-changes-1" class="anchor"></a>Major changes</h2>
 <ul>
 <li>Monster functions are separated into smaller functions.
 <ul>
@@ -180,9 +226,9 @@
 <code>cluster_xmap</code> does not <code>group_clusters</code> by default.</li>
 </ul>
 </div>
-<div id="minor-changes" class="section level2">
+<div id="minor-changes-1" class="section level2">
 <h2 class="hasAnchor">
-<a href="#minor-changes" class="anchor"></a>Minor changes</h2>
+<a href="#minor-changes-1" class="anchor"></a>Minor changes</h2>
 <ul>
 <li>Performance improvements by simplifying codes, utilizing <code>matrixStats</code> package, and so on.</li>
 <li>
@@ -259,6 +305,7 @@
     <div id="tocnav">
       <h2>Contents</h2>
       <ul class="nav nav-pills nav-stacked">
+        <li><a href="#qntmap-0-2-2">0.2.2</a></li>
         <li><a href="#qntmap-0-2-1">0.2.1</a></li>
         <li><a href="#qntmap-0-2-0">0.2.0</a></li>
       </ul>
