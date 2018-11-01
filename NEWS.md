@@ -1,3 +1,21 @@
+# qntmap 0.2.1
+
+## New features
+
+- Visualize X-ray maps and quantitative maps using a `plot` function.
+    - Parameter `shiny = TRUE` gives rich interactive features 
+      although still under development.
+- Functions to add phases manually 
+  in case user finds some phases not quantified after EPMA analysis. 
+  See 
+  https://atusy.github.io/qntmap/articles/add_phase.html 
+  for more detail.
+- `mean` to calculate mean value of quantitative maps.
+    - Parameter `index` enables index or mask based calculation of mean.
+      See 
+      https://atusy.github.io/qntmap/articles/basic.html#summary-based-on-mask-images 
+      for more detail.
+
 # qntmap 0.2.0
 
 Check NEWS as 0.2.0 have lots of breaking changes.
