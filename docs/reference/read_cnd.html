@@ -129,13 +129,13 @@
     
     </div>
 
-    <pre class="usage"><span class='fu'>read_cnd</span>(<span class='no'>x</span>, <span class='no'>...</span>)
+    <pre class="usage"><span class='fu'>read_cnd</span>(<span class='no'>x</span>, <span class='kw'>pattern</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='no'>...</span>)
 
 <span class='co'># S3 method for default</span>
 <span class='fu'>read_cnd</span>(<span class='no'>x</span>, <span class='kw'>pattern</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='no'>...</span>)
 
 <span class='co'># S3 method for map_cnd</span>
-<span class='fu'>read_cnd</span>(<span class='no'>x</span>, <span class='no'>...</span>)
+<span class='fu'>read_cnd</span>(<span class='no'>x</span>, <span class='kw'>pattern</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='no'>...</span>)
 
 <span class='co'># S3 method for 0_cnd</span>
 <span class='fu'>read_cnd</span>(<span class='no'>x</span>, <span class='kw'>pattern</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>n</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='no'>...</span>)</pre>
@@ -148,12 +148,12 @@
       <td><p>A path to the file (e.g., '0.cnd', 'map.cnd', ...)</p></td>
     </tr>
     <tr>
-      <th>...</th>
-      <td><p>Other arguments passed to methods</p></td>
-    </tr>
-    <tr>
       <th>pattern</th>
       <td><p>pattern to substract</p></td>
+    </tr>
+    <tr>
+      <th>...</th>
+      <td><p>Other arguments passed to methods</p></td>
     </tr>
     <tr>
       <th>n</th>
