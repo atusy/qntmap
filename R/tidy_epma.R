@@ -38,8 +38,9 @@ tidy_epma <- function(
     `[`(1)
     read_cnd
   })
-  pos <- read_map_pos(cnd)
-  beam <- read_map_beam(cnd)
+  pos <- attributes(xmap)[c('start', 'pixel', 'step')]
+  beam <- setNames(attributes(xmap)[c('current', 'dwell')], c('beam_map', 'dwell'))
+  inst <- attributes(xmap)[['instrument']]
 
   #データの整形
 
@@ -49,20 +50,20 @@ tidy_epma <- function(
       filter(!is.na(phase))
       mutate(
         x_px = (round((x - pos$start[1]) * 1e3 / pos$step[1]) + 1) *
-          `if`(class(cnd)[1] == 'map_cnd', -1, 1),
+          `if`(inst %in% 'JXA8230', -1, 1),
         y_px = round((y - pos$start[2]) * 1e3 / pos$step[2]) + 1,
         nr0 = `if`(
-          class(cnd)[1] == 'map_cnd',
-          (x_px - 1) * pos$px[2] + y_px,
-          (y_px - 1) * pos$px[1] + x_px
+          inst %in% 'JXA8230',
+          (x_px - 1) * pos$pixel[2] + y_px,
+          (y_px - 1) * pos$pixel[1] + x_px
         ),
-        nr = ifelse(0 < nr0 & nr0 < prod(pos$px), nr0, NA),
+        nr = ifelse(0 < nr0 & nr0 < prod(pos$pixel), nr0, NA),
         phase2 = str_replace(phase, '_.*', '')
       )
       distinct(nr0, .keep_all = TRUE)
     })
-  qnt$elm$dwell <- beam['dwell'] / 1000
-  qnt$elm$beam_map <- beam['beam_map']
+  qnt$elm$dwell <- beam[['dwell']] / 1000
+  qnt$elm$beam_map <- beam[['beam_map']]
 
   ## Error if
   if(all(is.na(qnt$cnd$nr))) stop('No points are quantified in mapping area.')

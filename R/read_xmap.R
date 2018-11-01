@@ -28,43 +28,32 @@ read_xmap <- function(
   wd <- normalizePath(wd)
   setwd(wd)
   
+  # Read old file with version check
   if(!renew && file.exists('xmap.RDS')) {
     xmap <- readRDS('xmap.RDS')
-    return(structure(xmap, dir_map = wd))
+    ver_old <- attr(xmap, 'ver')
+    if(!is.null(ver_old) && ver == ver_old) {
+      return(structure(xmap, dir_map = wd))
+    }
+    rm(ver_old, xmap)
   }
   
   files_xmap <- dir(pattern = .map)
   files_cnd <- dir(pattern = .cnd)
   if(length(files_xmap) != length(files_cnd)) {
-    cat('file names of mapping data:', files_xmap)
+    cat('file names of mapping data:', files_xmap, '\n')
     cat('file names of mapping conditions:', files_cnd)
     stop(
       'Length of files of xmap and cnd are different.' , 
       'Check parameters .map and .cnd'
     )
   }
-
-  pattern_cnd <- paste(
-      c(
-        old = c('XM_ELEMENT', 'XM_DWELL_TIME', 'CM_CURRENT'),
-        new = c(
-          'XM_ELEM_NAME', 'XM_ELEM_IMS_SIGNAL_TYPE', 
-          'XM_AP_SA_DWELL_TIME', 'XM_DATA_PROBE_CURRENT'
-        )
-      ),
-      collapse = '|'
-    )
   
-  cnd <- lapply(files_cnd, read_cnd, pattern = pattern_cnd)
+  cnd <- lapply(files_cnd, read_xmap_cnd)
 
-  elm <- pipeline({
-    cnd
-      map(`[`, c('XM_ELEM_NAME', 'XM_ELEM_IMS_SIGNAL_TYPE', 'XM_ELEMENT'))
-      map(map, map, levels)
-      unlist(use.names = FALSE)
-  })
+  elm <- unlist(lapply(cnd, `[[`, 'elm'), use.names = FALSE)
   
-  dwell <- read_map_beam(cnd[[1]])['dwell'] * 1e-3
+  dwell <- as.integer(cnd[[1]][['dwell']][1])
 
   #####load, save, and return map files
   # load qltmap from RDS file when qltmap_load() has already been done
@@ -85,7 +74,13 @@ read_xmap <- function(
         class = c('qm_xmap', class(.)),
         deadtime = DT,
         dir_map = wd,
-        dwell = dwell
+        dwell = dwell,
+        current = as.numeric(cnd[[1]][['current']][1]),
+        start = as.numeric(cnd[[1]][['start']][1:3]),
+        pixel = as.integer(cnd[[1]][['pixel']][1:2]),
+        step = as.numeric(cnd[[1]][['step']][1:2]),
+        instrument = cnd[[1]][['instrument']][1],
+        ver = ver
       )
       save4qm('xmap.RDS', saving)
   })
