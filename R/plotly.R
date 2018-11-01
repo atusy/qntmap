@@ -28,8 +28,17 @@ yaxis <- c(
   autorange = 'reversed'
 )
 
-viridis <- scales::gradient_n_pal(
-    scales::viridis_pal(alpha = 1, begin = 0, end = 1, direction = 1, option = 'viridis')(6), 
+#' @importFrom scales gradient_n_pal
+# scales::gradient_n_pal
+
+#' @importFrom scales viridis_pal
+# scales::viridis_pal
+
+#' @noRd
+viridis <- getExportedValue('scales', 'gradient_n_pal')(
+    getExportedValue('scales', 'viridis_pal')(
+      alpha = 1, begin = 0, end = 1, direction = 1, option = 'viridis'
+    )(6), 
     values = NULL, space = "Lab"
   )
 
