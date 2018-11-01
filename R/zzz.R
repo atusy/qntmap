@@ -115,3 +115,8 @@ prioritize <- function(x, prior) {
     sort(setdiff(nm, prior))
   )]
 }
+
+#' Version of QntMap
+#' @importFrom utils packageVersion
+#' @noRd
+ver <- getExportedValue('utils', 'packageVersion')('qntmap')

@@ -18,8 +18,8 @@ read_xmap <- function(
   DT = 0,
   renew = FALSE,
   saving = TRUE,
-  .map = '(data)?[0-9]*[1-9](\\.csv|_map\\.txt)', 
-  .cnd = '(data)?[0-9]*[1-9]\\.cnd'
+  .map = '(data[0-9]+\\.csv)|([1-9][0-9]*_map\\.txt)', 
+  .cnd = '(data[0-9]+|[1-9][0-9]*)\\.cnd'
 ) {
   #when the argument "wd" is assigned, setwd to the argument on start and to the current wd on exit.
   
@@ -28,42 +28,40 @@ read_xmap <- function(
   wd <- normalizePath(wd)
   setwd(wd)
   
+  # Read old file with version check
   if(!renew && file.exists('xmap.RDS')) {
     xmap <- readRDS('xmap.RDS')
-    return(structure(xmap, dir_map = wd))
+    ver_old <- attr(xmap, 'ver')
+    if(!is.null(ver_old) && ver == ver_old) {
+      return(structure(xmap, dir_map = wd))
+    }
+    rm(ver_old, xmap)
   }
   
-  dwell <- read_map_beam(dir(pattern = '^(0|map)\\.cnd$'))['dwell'] * 1e-3
+  files_xmap <- dir(pattern = .map)
+  files_cnd <- dir(pattern = .cnd)
+  if(length(files_xmap) != length(files_cnd)) {
+    cat('file names of mapping data:', files_xmap, '\n')
+    cat('file names of mapping conditions:', files_cnd)
+    stop(
+      'Length of files of xmap and cnd are different.' , 
+      'Check parameters .map and .cnd'
+    )
+  }
+  
+  cnd <- lapply(files_cnd, read_xmap_cnd)
 
-  #file name patterns of required files
-  patterns <- list(
-    pm = '\\.[[:alpha:]]+\\.(pm|bmp)',
-    map = '(_map\\.txt)|(data.*\\.csv)'
-  )
-
-  #required files
-  filenames <- lapply(patterns, function(x) dir(pattern = x))
-  n <- pipeline({
-    filenames
-    lapply(str_extract, '[:number:]+')
-    lapply(as.integer)
-    lapply(order)
-  })
-    
-  filenames <- Map(`[`, filenames, n)
-  filenames$elm <- pipeline({
-    filenames$pm
-      str_replace('^[0-9]+\\.', '')
-      str_replace('\\.(pm|bmp)$', '')
-  })
+  elm <- unlist(lapply(cnd, `[[`, 'elm'), use.names = FALSE)
+  
+  dwell <- as.integer(cnd[[1]][['dwell']][1])
 
   #####load, save, and return map files
-  #load qltmap from RDS file when qltmap_load() has already been done
+  # load qltmap from RDS file when qltmap_load() has already been done
   # load qltmap from text images when the RDS file does not exist,
   # there is something wrong with RDS file, or renew = TRUE
   pipeline({
-    lapply(filenames$map, fread)
-      setNames(filenames$elm) 
+    lapply(files_xmap, fread)
+      setNames(elm) 
       prioritize(.component)
       map_at( # Dead time corrections except for electron signals (e.g., BSE)
         setdiff(names(.), .electron),
@@ -75,7 +73,14 @@ read_xmap <- function(
       structure(
         class = c('qm_xmap', class(.)),
         deadtime = DT,
-        dir_map = wd
+        dir_map = wd,
+        dwell = dwell,
+        current = as.numeric(cnd[[1]][['current']][1]),
+        start = as.numeric(cnd[[1]][['start']][1:3]),
+        pixel = as.integer(cnd[[1]][['pixel']][1:2]),
+        step = as.numeric(cnd[[1]][['step']][1:2]),
+        instrument = cnd[[1]][['instrument']][1],
+        ver = ver
       )
       save4qm('xmap.RDS', saving)
   })

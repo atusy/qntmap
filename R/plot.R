@@ -41,7 +41,7 @@ NULL
 #' @importFrom ggplot2 coord_fixed
 #' @importFrom ggplot2 ggtitle
 #' @importFrom ggplot2 scale_y_reverse
-#' @importFrom ggplot2 scale_fill_gradientn
+#' @importFrom ggplot2 scale_fill_viridis_c
 #' @importFrom plotly ggplotly
 plot.qm_raster <- function(
   x, y = setdiff(names(x), c('x', 'y'))[1], legend_fill = y, interactive = TRUE, ..., shiny = FALSE
@@ -59,10 +59,11 @@ plot.qm_raster <- function(
     coord_fixed() +
     ggtitle(y) +
     scale_y_reverse() +
-    scale_fill_gradientn(
-      name = legend_fill, 
-      colors = c('black','purple','blue','green','red','white')
-    )
+    scale_fill_viridis_c(name = legend_fill)
+    # scale_fill_gradientn(
+    #   name = legend_fill, 
+    #   colors = c('black','purple','blue','green','red','white')
+    # )
   
   if(shiny) return(plot_shiny(x, y, interactive))
   if(interactive) return(ggplotly(g))

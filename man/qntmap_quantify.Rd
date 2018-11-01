@@ -26,9 +26,9 @@ qntmap_quantify(wd = ".", dir_map, RDS_cluster, maps_x = NULL,
 
 \item{qnt}{\code{qm_qnt} class object returned by \code{read_qnt()}.}
 
-\item{cluster}{\code{qm_cluster} class object returned by \code{cluter_xmap()}.}
+\item{qltmap}{qm_xmap class object (xmap param of quantify)}
 
-\item{qntmap}{qm_xmap class object}
+\item{cluster}{\code{qm_cluster} class object returned by \code{cluter_xmap()}.}
 }
 \description{
 (Deprecated) Use quantify.

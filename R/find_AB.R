@@ -7,6 +7,7 @@
 #' @importFrom tidyr nest 
 #' @importFrom tidyr spread
 #' @importFrom tidyr unnest
+#' @importFrom tibble tibble
 #' @param A A
 #' @param B B
 #' @param stg stg
