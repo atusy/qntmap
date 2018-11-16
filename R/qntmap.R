@@ -67,10 +67,8 @@ qntmap <- function() {
   cat('Finished cluster analysis. Result is in ', dir_map, '/clustering\n\n')
   
   cat(
-    'Enter one or more numbers separated by spaces to ,',
-    'specify phases tending to be ',
-    'finer than mapping probe diameter',
-    'Or 0 if none'
+    'Specify phases tending to be ',
+    'finer than mapping probe diameter'
   )
   fine_phase <- select.list(
     colnames(cls$membership), multiple = TRUE
