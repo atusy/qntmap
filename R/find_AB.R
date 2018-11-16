@@ -1,12 +1,8 @@
 #' Find AB
-#' @importFrom dplyr mutate
-#' @importFrom dplyr right_join
-#' @importFrom dplyr select
+#' @importFrom dplyr mutate right_join select
 #' @importFrom purrr map 
 #' @importFrom stats setNames
-#' @importFrom tidyr nest 
-#' @importFrom tidyr spread
-#' @importFrom tidyr unnest
+#' @importFrom tidyr nest spread unnest
 #' @importFrom tibble tibble
 #' @param A A
 #' @param B B

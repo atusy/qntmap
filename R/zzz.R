@@ -9,10 +9,8 @@
 #'
 #' @importFrom dplyr bind_cols
 #' @importFrom pipeR pipeline
-#' @importFrom purrr map
-#' @importFrom purrr map2
-#' @importFrom stats qgamma
-#' @importFrom stats setNames
+#' @importFrom purrr map map2
+#' @importFrom stats qgamma setNames
 #' @noRd
 cipois <- function(x, vars = names(x), offset = 1L, conf.level = 0.95) {
   low <- (1L - conf.level) / 2L

@@ -5,13 +5,9 @@
 #' @inheritParams plot.qm_raster
 #' 
 #' @import shiny
-#' @importFrom plotly renderPlotly
-#' @importFrom plotly plotlyOutput 
-#' @importFrom plotly event_data
+#' @importFrom plotly renderPlotly plotlyOutput event_data
 #' @importFrom graphics hist
-#' @importFrom ggplot2 ggplot
-#' @importFrom ggplot2 aes
-#' @importFrom ggplot2 aes_string
+#' @importFrom ggplot2 ggplot aes aes_string
 #' @importFrom dplyr mutate_at
 #' @importFrom scales squish
 #' @importFrom stringr str_replace
@@ -81,7 +77,7 @@ plot_shiny <- function(x, y = setdiff(names(x), c('x', 'y'))[1], interactive = T
         title = input$fill, height = input$height
       ))
     })
-    output$plotly <- plotly::renderPlotly(shiny_heatmap())
+    output$plotly <- renderPlotly(shiny_heatmap())
     
     output$click <- renderPrint({
         d <- event_data("plotly_click")
@@ -103,12 +99,9 @@ plot_shiny <- function(x, y = setdiff(names(x), c('x', 'y'))[1], interactive = T
 }
 
 #' Layers for plotting mapping data
-#' @importFrom ggplot2 geom_raster
-#' @importFrom ggplot2 coord_fixed
-#' @importFrom ggplot2 scale_fill_gradientn
-#' @importFrom ggplot2 scale_fill_viridis_c
-#' @importFrom ggplot2 theme_classic
-#' @importFrom ggplot2 theme
+#' @importFrom ggplot2 geom_raster coord_fixed
+#' @importFrom ggplot2 scale_fill_gradientn scale_fill_viridis_c
+#' @importFrom ggplot2 theme theme_classic
 #' @noRd
 layers_raster <- list(
   ggplot2::geom_raster(),
@@ -120,10 +113,7 @@ layers_raster <- list(
 )
 
 #' Layers for plotting mapping histograms
-#' @importFrom ggplot2 theme_classic
-#' @importFrom ggplot2 theme
-#' @importFrom ggplot2 element_blank
-#' @importFrom ggplot2 element_rect
+#' @importFrom ggplot2 element_blank element_rect theme theme_classic
 #' @noRd
 layers_hist <- list(
   ggplot2::scale_fill_viridis_c(),
@@ -138,9 +128,7 @@ layers_hist <- list(
 
 #' Draw a histgram for numeric vector based on Scott's choice
 #' @importFrom graphics hist
-#' @importFrom ggplot2 ggplot
-#' @importFrom ggplot2 aes
-#' @importFrom ggplot2 geom_col
+#' @importFrom ggplot2 aes geom_col ggplot
 #' @noRd
 gghist <- function(x, .min = NA, .max = NA) {
   if(!is.finite(.min)) .min <- min(x)

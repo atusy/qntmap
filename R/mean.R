@@ -46,11 +46,9 @@ NULL
 #' ## In such a case, mean of A is around 50 fo 'L' and 30 for 'R'
 #' mean(qm, index = rep(c('L', 'R'), each = 100))
 #' 
-#' @importFrom dplyr group_by
-#' @importFrom dplyr summarize
+#' @importFrom dplyr group_by summarize
 #' @importFrom pipeR pipeline
-#' @importFrom tidyr gather
-#' @importFrom tidyr spread
+#' @importFrom tidyr gather spread
 #' 
 #' @export
 mean.qntmap <- function(x, index = 'Whole area', ...) {

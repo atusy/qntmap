@@ -1,8 +1,7 @@
 #' interactively quantify X-ray maps
 #' 
 #' @importFrom easycsv choose_dir
-#' @importFrom utils select.list
-#' @importFrom utils menu
+#' @importFrom utils menu select.list
 #' @export
 qntmap <- function() {
   

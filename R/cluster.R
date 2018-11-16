@@ -30,11 +30,9 @@ cluster <- function(x, centers, xte = NULL, ...) {
 #' @param saving `TRUE` or `FALSE` to save result.
 #' @param group_cluster `TRUE` (default) or `FALSE` to integrate same phase subgrouped using suffix. For example, when there are clusters named as Pl_NaRich and Pl_NaPoor, they are grouped as Pl.
 #'
-#' @importFrom dplyr group_by
-#' @importFrom dplyr ungroup
+#' @importFrom dplyr group_by ungroup
 #' @importFrom pipeR pipeline
-#' @importFrom tidyr gather
-#' @importFrom tidyr spread
+#' @importFrom tidyr gather spread
 #' @importFrom matrixStats rowMaxs
 #'
 #' @export

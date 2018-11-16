@@ -7,8 +7,7 @@
 read_cnd <- function(x, pattern = NULL, ...) UseMethod("read_cnd")
 
 #' @rdname read_cnd
-#' @importFrom stringr str_detect
-#' @importFrom stringr str_subset
+#' @importFrom stringr str_detect str_subset
 #' @section .default: 
 #' A default method which returns a result of `readLines(x)` 
 #' with additional class according to the content of the file.

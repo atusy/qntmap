@@ -12,10 +12,7 @@
 #'
 #' @importFrom data.table fwrite
 #' @importFrom pipeR pipeline
-#' @importFrom purrr map
-#' @importFrom purrr map_at
-#' @importFrom purrr map2
-#' @importFrom purrr walk2
+#' @importFrom purrr map map_at map2 walk2
 #' @importFrom stats setNames
 #' @importFrom stringr str_replace
 #'

@@ -1,17 +1,10 @@
 #' find AG
 #' @param epma epma data
 #' @param not_quantified a character vector specifying phases who weren't analyzed during point analysis # JAMSTEC
-#' @importFrom dplyr group_by
-#' @importFrom dplyr mutate
-#' @importFrom dplyr summarise
-#' @importFrom dplyr ungroup
+#' @importFrom dplyr group_by mutate summarise ungroup
 #' @importFrom pipeR pipeline
-#' @importFrom purrr map_dbl
-#' @importFrom purrr map
-#' @importFrom stats sd
-#' @importFrom stats lm 
-#' @importFrom stats coef
-#' @importFrom stats vcov
+#' @importFrom purrr map_dbl map
+#' @importFrom stats sd lm coef vcov
 #' @noRd
 find_AG <- function(
   epma, 

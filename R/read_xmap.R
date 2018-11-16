@@ -9,7 +9,6 @@
 #' @importFrom pipeR pipeline
 #' @importFrom purrr map_at
 #' @importFrom stringr str_replace
-#' @importFrom data.table fread
 #' @importFrom stats setNames
 #' @export
 #'

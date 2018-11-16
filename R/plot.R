@@ -35,13 +35,8 @@ NULL
 #' plot(d, 'fill')
 #' 
 #' @importFrom stats setNames
-#' @importFrom ggplot2 aes
-#' @importFrom ggplot2 ggplot
-#' @importFrom ggplot2 geom_raster
-#' @importFrom ggplot2 coord_fixed
-#' @importFrom ggplot2 ggtitle
-#' @importFrom ggplot2 scale_y_reverse
-#' @importFrom ggplot2 scale_fill_viridis_c
+#' @importFrom ggplot2 aes ggplot geom_raster coord_fixed ggtitle 
+#' @importFrom ggplot2 scale_y_reverse scale_fill_viridis_c
 #' @importFrom plotly ggplotly
 plot.qm_raster <- function(
   x, y = setdiff(names(x), c('x', 'y'))[1], legend_fill = y, interactive = TRUE, ..., shiny = FALSE

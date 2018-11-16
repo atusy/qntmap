@@ -38,9 +38,7 @@ save4qm.data.frame <- function(x, nm, saving, ...) {
 #' Object is saved as RDS file and png file.
 #' The latter shows distribution of phases among a mapped area.
 #' @importFrom png writePNG
-#' @importFrom grDevices dev.copy
-#' @importFrom grDevices dev.off
-#' @importFrom grDevices png
+#' @importFrom grDevices dev.copy dev.off png
 #' @importFrom graphics pie
 save4qm.qm_cluster <- function(x, nm, saving, ...) {
   #setting for output
