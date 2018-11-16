@@ -23,7 +23,9 @@ read_qnt_elemw.map_cnd <- function(
 
 #' read all .cnd files under the specified directory
 #' @inheritParams read_cnd
+#' 
 #' @param pattern named character vectors
+#' @importFrom stringr str_replace str_detect
 #' @param n number of rows
 #' @param each n appears in each rows
 #' @noRd
@@ -42,7 +44,7 @@ read_qnt_elemw.0_cnd <- function(
   val <- str_replace(x, '[:blank:].*', '')
   
   # match pattern and return values
-  matched <- lapply(pattern, grepl, x)
+  matched <- lapply(pattern, function(pattern) str_detect(x, pattern))
   
   if(length(unique(lapply(matched, sum))) == 1) return(
     as.data.frame(lapply(matched, function(i) as.numeric(val[i])))

@@ -66,8 +66,13 @@ qntmap <- function() {
   cls <- cluster_xmap(xmap = xmap, centers = centers)
   cat('Finished cluster analysis. Result is in ', dir_map, '/clustering\n\n')
   
-  cat('Select phases which tend to be fine grains compared to mapping probe diameter. Or 0 if none.\n')
-  fine_phase <- select.list(colnames(cls$membership))
+  cat(
+    'Specify phases tending to be ',
+    'finer than mapping probe diameter'
+  )
+  fine_phase <- select.list(
+    colnames(cls$membership), multiple = TRUE
+  )
   cat('\n')
   
   cat('Quantifying mapping data\n')
