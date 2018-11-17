@@ -10,7 +10,6 @@
 #' @importFrom ggplot2 ggplot aes aes_string
 #' @importFrom dplyr mutate_at
 #' @importFrom scales squish
-#' @importFrom stringr str_replace
 #' 
 #' @noRd
 plot_shiny <- function(x, y = setdiff(names(x), c('x', 'y'))[1], interactive = TRUE) {
