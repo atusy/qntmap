@@ -1,7 +1,7 @@
 #' Segment mapping area
 #' 
 #' Make index to segment mapping area.
-#' The obtained index is further utilized in [mean.qntmap()].
+#' The obtained index is further utilized in [`mean.qntmap()`].
 # © 2018 JAMSTEC
 
 #' 
@@ -10,7 +10,7 @@
 #' 
 #' @return A character vector indicating pixel colors in RGBA style for input image.
 #' 
-#' @seealso [mean.qntmap()]
+#' @seealso [`mean.qntmap()`]
 #' 
 #' @export
 segment <- function(x, ...) {

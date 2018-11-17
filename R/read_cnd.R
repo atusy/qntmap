@@ -9,7 +9,7 @@ read_cnd <- function(x, pattern = NULL, ...) UseMethod("read_cnd")
 #' @rdname read_cnd
 #' @importFrom stringr str_detect str_subset
 #' @section .default: 
-#' A default method which returns a result of `readLines(x)` 
+#' A default method which returns a result of [`readLines()`] 
 #' with additional class according to the content of the file.
 #' @export
 read_cnd.default <- function(x, pattern = NULL, ...) {
@@ -76,10 +76,15 @@ read_cnd.0_cnd <- function(x, pattern = NULL, n = NULL, ...) {
   # warn if any pattern did not match any phrase
   if(any(mismatch <- detection_n == 0)) {
     warning(
-      'Some of the regular expression patterns matched 0 phrases in "', path, '".\n',
-      'Such patterns as follows are assumed to be in lines specified by a parameter n.\n',
+      'Some of the regular expression patterns matched 0 phrases in "', 
+      path, '".\n',
+      'Such patterns as follows are assumed to be in lines specified',
+      'by a parameter n.\n',
       paste(
-        paste0('"', pattern[mismatch], '"', ' is considered to be in line ', n[mismatch]),
+        paste0(
+          '"', pattern[mismatch], '"', 
+          ' is considered to be in line ', n[mismatch]
+        ),
         collapse = '\n'
       )
     )

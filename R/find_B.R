@@ -1,5 +1,5 @@
 #' find B
-#' @param epma epma data
+#' @param epma A tidy epma data output by [`tidy_epma()`]
 #' @param fix fix B
 #' @importFrom dplyr group_by mutate summarise ungroup
 #' @importFrom tidyr nest

@@ -54,7 +54,8 @@ read_qnt_elemw.0_cnd <- function(
   names(n) <- names(pattern)
   guessed <- lapply(n, seq, length(x), each)
   warning(
-    'Following variables are not detected by regular expressions, but by guessing which line contains them.\n',
+    'Following variables are not detected by regular expressions, ',
+    'but by guessing which line contains them.\n',
     paste0(names(guessed), ': ', lapply(guessed, paste, collapse = ' '), '\n'),
     'Check a following file if values are in correct lines\n', 
     normalizePath(attributes(x)[['path']]),

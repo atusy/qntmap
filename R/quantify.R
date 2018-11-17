@@ -1,13 +1,15 @@
-#' quantify qualtitative mapping data
+#' Quantify X-ray maps
 #'
-#' @param xmap `qm_xmap` class object returned by `read_xmap()`.
-#' @param qnt `qm_qnt` class object returned by `read_qnt()`.
-#' @param cluster `qm_cluster` class object returned by `cluter_xmap()`.
-#' @param maps_x A x-axis size of maps comprising guide net map (default: `NULL`).
-#' @param maps_y A y-axis size of maps comprising guide net map (default: `NULL`).
+#' @param xmap `qm_xmap` class object returned by [`read_xmap()`].
+#' @param qnt `qm_qnt` class object returned by [`read_qnt()`].
+#' @param cluster `qm_cluster` class object returned by [`cluter_xmap()`].
+#' @param maps_x,maps_y
+#' Sizes of maps along x- and y-axes comprising guide net map.
+#' (default: `NULL`).
 #' @inheritParams find_centers
 #' @param fine_th 0.9
-#' @param fixAB fix AB in case compositions of a mineral is constant (default: `NULL`).
+#' @param fixAB 
+#' fix AB in case compositions of a mineral is constant (default: `NULL`).
 #' @param fixB fix B (default: `NULL`).
 #'
 #' @importFrom data.table fwrite
@@ -116,7 +118,7 @@ quantify <- function(
   })
 }
 
-#' (Deprecated) Use quantify.
+#' (DEPRECATED) Use quantify.
 #' @param wd working directory which contains .qnt and .map directories
 #' @param dir_map ignored
 #' @param RDS_cluster path to the RDS file created by cluster_xmap

@@ -1,6 +1,8 @@
 #' find AG
-#' @param epma epma data
-#' @param not_quantified a character vector specifying phases who weren't analyzed during point analysis # JAMSTEC
+#' @param epma A tidy epma data output by [`tidy_epma()`]
+#' @param not_quantified 
+#' A character vector specifying phases who weren't analyzed 
+#' during point analysis # JAMSTEC
 #' @importFrom dplyr group_by mutate summarise ungroup
 #' @importFrom pipeR pipeline
 #' @importFrom purrr map_dbl map

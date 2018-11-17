@@ -1,4 +1,4 @@
-#' heatmap using plotly
+#' heatmap using [`plotly::plot_ly()`]
 #' @importFrom plotly layout plot_ly
 #' @noRd
 plotly_heatmap <- function(x, y, z, title = '', ...) {
@@ -13,14 +13,12 @@ plotly_heatmap <- function(x, y, z, title = '', ...) {
   )
 }
 
-# xaxis for plotly_heatmap
+# x- and y-axes for plotly_heatmap
 xaxis <- list(
   rangemode = 'tozero',
   showgrid = FALSE,
   zeroline = FALSE
 )
-
-# yaxis for plotly_heatmap
 yaxis <- c(
   xaxis,
   scaleanchor = 'x', 

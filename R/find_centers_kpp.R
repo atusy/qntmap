@@ -1,7 +1,7 @@
 #' Generate initial centroids for clustering randomly
 #'
-#' @param x An object which can be coerced to `matrix`, 
-#' typically `matrix` itself or `data.frame`.
+#' @param x An object which can be coerced to [`matrix`], 
+#' typically [`matrix`] itself or [`data.frame`].
 #' @param k A number of clusters.
 #' @param given Given centers. Not yet implemented.
 #'

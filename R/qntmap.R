@@ -1,4 +1,4 @@
-#' interactively quantify X-ray maps
+#' Interactively quantify X-ray maps
 #' 
 #' @importFrom easycsv choose_dir
 #' @importFrom utils menu select.list
@@ -8,7 +8,7 @@ qntmap <- function() {
   cd <- getwd()
   on.exit(setwd(cd))
   
-  cat('(1) select any file in the directory which contains .map and .qnt directory\n')
+  cat('(1) Select a directory containing .map and .qnt directories\n')
   setwd(wd <- choose_dir()) # easycsv::choose_dir
   if(!all(file.exists(c('.map', '.qnt'))))
     while(!all(file.exists(c('.map', '.qnt')))) {
@@ -18,16 +18,16 @@ qntmap <- function() {
       )
       setwd(wd <- choose_dir()) # easycsv::choose_dir
     }
-  cat('working directory is settled to\n', wd, '\n\n')
+  cat('Working directory is settled to\n', wd, '\n\n')
   
-  cat('(2) select directory which contains *_map.txt files to be clustered or quantified\n')
+  cat('(2) Select directory containing *_map.txt files to be analyzed\n')
   dir_map <- select.list(list.dirs('.map', recursive = FALSE))
   cat('*_map.txt in a following directory will be clustered or quantified\n', dir_map, '\n\n')
 
   if(!length(list.files(dir_map, pattern = '_map\\.txt')))
     stop(
       'Selected directory does not contain *_map.txt files. ',
-      'Did you converted mapping data to ASCII files from Utility menu in JEOL EPMA?'
+      'Check if results are ASCII converted by and exported from EPMA.'
     )
   
   cat(
@@ -39,7 +39,7 @@ qntmap <- function() {
   DT <- as.numeric(readline())
   cat('Dead time is ', DT, ' nano seconds\n\n')
   
-  cat('Identify phase names of quantified points based on')
+  cat('Identify phases of quantified points based on')
   selection <- menu(
     c(
       'comments input during quantification',
@@ -51,9 +51,7 @@ qntmap <- function() {
   if(selection == 2) {
       cat('Choose an external csv file\n')
       phase_list <- file.choose()
-      cat('Chosen')
-      cat(phase_list)
-      cat('\n\n')
+      cat('Chosen', phase_list, '\n\n')
     }
   
   cat('Loading mapping data\n')
