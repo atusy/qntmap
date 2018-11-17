@@ -27,7 +27,7 @@ find_AB <- function(A, B, stg) {pipeline({
                 .B,
                 mutate,
                 val = b * .A$a,
-                se = sqrt((b * .A$a_se) ^ 2 + (.A$a * b_se) ^ 2),
+                se = L2(b * .A$a_se, .A$a * b_se),
                 b = NULL,
                 b_se = NULL
               )
