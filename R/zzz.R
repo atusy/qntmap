@@ -46,15 +46,15 @@ flag0 <- function(...) {
     'paste0',
     lapply(
       unname(list(...)),
-      function(x) {
+      function (x) {
         formatC(
           x,
           width = floor(log10(max(x, na.rm = TRUE))) + 1L, 
           flag = '0'
-        )
-      }
-    )
-  )
+        ) # formatC
+      } # function
+    ) # lapply
+  ) # do.call
 }
 
 #' color LUT
