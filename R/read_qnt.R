@@ -92,10 +92,10 @@ read_qnt <- function(
       beam = qnt$mes$V3,
       phase =
         if(is.null(phase_list)) {
-          comment %>>%
-            str_replace_all('[:blank:]{2,}', ' ') %>>%
-            str_replace(' $', '') %>>%
-            str_replace('^ ', '')
+          str_replace_all(
+            comment,
+            c('[:blank:]{2,}' = ' ', ' $' = '', '^ ' = '')
+          )
         } else {
           phase_list %>>%
             fread %>>%
