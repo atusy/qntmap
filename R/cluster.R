@@ -13,8 +13,8 @@ cluster <- function(x, centers, xte = NULL, ...) {
   x_trans <- t(x)
   y <- pipeline({
     centers
-    apply(1, function(y) colSums((x_trans - y) ^ 2))
-    apply(1, which.min)
+    apply(1L, function(y) colSums((x_trans - y) ^ 2L))
+    apply(1L, which.min)
   })
   rm(x_trans)
   Classify(x, y, `if`(is.null(xte), x, xte), ...)
@@ -86,11 +86,11 @@ cluster_xmap <- function(
   if(nrow(centers) == ncol(result$membership)) {
     colnames(result$membership) <- centers$phase
   } else {
-    if(ncol(result$membership) == 1) {
-      colnames(result$membership) <- names(result$ytehat[1])
+    if(ncol(result$membership) == 1L) {
+      colnames(result$membership) <- names(result$ytehat[1L])
     } else {
       TF <- !duplicated(result$cluster)
-      colnames(result$membership)[apply(result$membership[TF, ], 1, which.max)] <-
+      colnames(result$membership)[apply(result$membership[TF, ], 1L, which.max)] <-
         result$cluster[TF]
       rm(TF)
     }
@@ -98,8 +98,8 @@ cluster_xmap <- function(
     result$membership <- cbind(
         result$membership,
         matrix(
-          0,
-          nrow(result$membership),
+          0L,
+          nrow = nrow(result$membership),
           ncol = length(missings),
           dimnames = list(NULL, missings)
         )
