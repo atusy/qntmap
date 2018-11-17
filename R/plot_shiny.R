@@ -19,15 +19,14 @@
 #' @noRd
 plot_shiny <- function(x, y = setdiff(names(x), c('x', 'y'))[1], interactive = TRUE) {
 
-  nm <- names(x)
-
+  elm <- setdiff(names(x), c('x', 'y'))
 
   U <- shinyUI(fluidPage(
     
     sidebarLayout(
       sidebarPanel(
         splitLayout(
-          selectInput('fill', 'Element', setdiff(nm, c('x', 'y')), selected = y, selectize = FALSE),
+          selectInput('fill', 'Element', elm, selected = y, selectize = FALSE),
           numericInput('min', 'Min', value = NA),
           numericInput('max', 'Max', value = NA),
           actionButton("goButton", "", icon("refresh"))

@@ -86,10 +86,8 @@ find_AB_fix <- function(AB, fix = NULL, X, fine_th = .90, xmap) {
             map(unlist, use.names = FALSE)
             map2_dbl(w, weightedMedian, na.rm = TRUE)
         }),
-        w = NULL,
         val = wt / i,
-        wt = NULL,
-        i = NULL
+        w = NULL, wt = NULL, i = NULL
       )
       nest(-elm, -phase)
       mutate(data = setNames(data, phase), phase = NULL)
