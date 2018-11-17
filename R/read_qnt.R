@@ -97,11 +97,11 @@ read_qnt <- function(
             c('[:blank:]{2,}' = ' ', ' $' = '', '^ ' = '')
           )
         } else {
-          phase_list %>>%
-            fread %>>%
-            mutate(use = if(exists('use')) use else TRUE) %>>%
-            mutate(phase = ifelse(use, phase, NA)) %>>%
-            (phase)
+          mutate(
+            fread(phase_list),
+            use = `if`(exists('use'), use, TRUE),
+            phase = ifelse(use, phase, NA)
+          )[["phase"]]
         }
     )
 
@@ -116,7 +116,7 @@ read_qnt <- function(
   
   save4qm(
     structure(
-      list(elm = elm, cnd = cnd, cmp = cmp), #, raw = list(cnd = cnd0, qnt = qnt)),
+      list(elm = elm, cnd = cnd, cmp = cmp),
       dir_qnt = wd,
       class = c('qm_qnt', 'list')
     ),
