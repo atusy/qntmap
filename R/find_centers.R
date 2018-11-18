@@ -43,7 +43,7 @@ find_centers <- function(
       .tmp = is.finite(map),
       map_est =
         pkint * lsfit(pkint[.tmp], map[.tmp], w[.tmp], intercept = FALSE)$coef,
-      map_fnite = NULL, 
+      .tmp = NULL, 
       pi_L = qnbinom(0.005, map_est, 0.5),
       pi_H = qnbinom(0.995, map_est + 1, 0.5)
     )
