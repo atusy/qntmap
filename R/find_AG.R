@@ -49,7 +49,7 @@ find_AG <- function(
       a_se = unlist(ifelse(is.na(a), map(fit_na, vcov), map(fit, vcov))),
       a = ifelse(is.na(a), map_dbl(fit_na, coef), a),
       ag = a * g,
-      ag_se = sqrt((a * g_se) ^ 2 + (g * a_se) ^ 2),
+      ag_se = L2(a * g_se, g * a_se),
       fit = NULL, fit_na = NULL, g = NULL, g_se = NULL
     )
 })}

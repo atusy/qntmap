@@ -21,14 +21,6 @@ tidy_epma <- function(
 ) {
 
   #load mapping conditions
-  cnd <- pipeline({
-    xmap
-    attr('dir_map')
-    paste0('/', c('0', 'map'), '.cnd')
-    `[`(file.exists(.))
-    `[`(1)
-    read_cnd
-  })
   pos <- attributes(xmap)[c('start', 'pixel', 'step')]
   beam <- setNames(attributes(xmap)[c('current', 'dwell')], c('beam_map', 'dwell'))
   inst <- attributes(xmap)[['instrument']]

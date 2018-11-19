@@ -55,10 +55,6 @@ plot.qm_raster <- function(
     ggtitle(y) +
     scale_y_reverse() +
     scale_fill_viridis_c(name = legend_fill)
-    # scale_fill_gradientn(
-    #   name = legend_fill, 
-    #   colors = c('black','purple','blue','green','red','white')
-    # )
   
   if(shiny) return(plot_shiny(x, y, interactive))
   if(interactive) return(ggplotly(g))

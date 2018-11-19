@@ -26,10 +26,7 @@ find_B <- function(epma, fix = NULL) {pipeline({
       fit = ifelse(is.na(b), fit_na, fit),
       b_se = ifelse(fix, 0, map_dbl(fit, vcov) / k),
       b = ifelse(fix, 1, ifelse(is.na(b), map_dbl(fit_na, coef), b)) / k,
-      fit = NULL,
-      fit_na = NULL,
-      k = NULL,
-      fix = NULL
+      fit = NULL, fit_na = NULL, k = NULL, fix = NULL
     ) 
     nest(-stg, .key = '.B')
 })}

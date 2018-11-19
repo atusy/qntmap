@@ -23,7 +23,7 @@ find_AB <- function(A, B, stg) {pipeline({
                 .B,
                 mutate,
                 val = b * .A$a,
-                se = sqrt((b * .A$a_se) ^ 2 + (.A$a * b_se) ^ 2),
+                se = L2(b * .A$a_se, .A$a * b_se),
                 b = NULL,
                 b_se = NULL
               )
@@ -81,10 +81,8 @@ find_AB_fix <- function(AB, fix = NULL, X, fine_th = .90, xmap) {
             map(unlist, use.names = FALSE)
             map2_dbl(w, weightedMedian, na.rm = TRUE)
         }),
-        w = NULL,
         val = wt / i,
-        wt = NULL,
-        i = NULL
+        w = NULL, wt = NULL, i = NULL
       )
       nest(-elm, -phase)
       mutate(data = setNames(data, phase), phase = NULL)

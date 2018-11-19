@@ -5,3 +5,7 @@
 .Rprofile
 qntmap.Rproj
 *.sync-conflict*
+
+vignettes/center_add\.csv
+
+vignettes/centers0\.csv
