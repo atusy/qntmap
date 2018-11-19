@@ -35,7 +35,7 @@ patterns_xmap_cnd <- pipeR::pipeline({
 #' @param patterns list of patterns
 #' @noRd
 read_xmap_cnd <- function(x, patterns = patterns_xmap_cnd) {
-  if(is.null(patterns)) readLines(x)
+  if(is.null(patterns)) return(readLines(x))
   pipeline({
     x
     readLines
