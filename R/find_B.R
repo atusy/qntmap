@@ -1,17 +1,11 @@
 #' find B
-#' @param epma epma data
+#' @param epma A tidy epma data output by [`tidy_epma()`]
 #' @param fix fix B
-#' @importFrom dplyr group_by
-#' @importFrom dplyr mutate
-#' @importFrom dplyr summarise
-#' @importFrom dplyr ungroup
+#' @importFrom dplyr group_by mutate summarise ungroup
 #' @importFrom tidyr nest
-#' @importFrom stats lm
-#' @importFrom stats na.omit
-#' @importFrom stats vcov
-#' @importFrom stats coef
-#' @importFrom purrr map_dbl
+#' @importFrom stats lm na.omit vcov coef
 #' @importFrom pipeR pipeline 
+#' @importFrom purrr map_dbl
 #' @noRd
 find_B <- function(epma, fix = NULL) {pipeline({
   epma[!is.na(epma$stg), ] 

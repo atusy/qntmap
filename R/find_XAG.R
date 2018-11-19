@@ -3,8 +3,7 @@
 #' @param AG AG
 #' @importFrom dplyr transmute_at
 #' @importFrom stats setNames
-#' @importFrom purrr map
-#' @importFrom purrr map_at
+#' @importFrom purrr map map_at
 #' @noRd
 find_XAG <- function(X, AG) {pipeline({
   AG 

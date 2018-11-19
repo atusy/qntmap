@@ -1,6 +1,5 @@
-#' heatmap using plotly
-#' @importFrom plotly layout
-#' @importFrom plotly plot_ly
+#' heatmap using [`plotly::plot_ly()`]
+#' @importFrom plotly layout plot_ly
 #' @noRd
 plotly_heatmap <- function(x, y, z, title = '', ...) {
   layout(
@@ -14,26 +13,19 @@ plotly_heatmap <- function(x, y, z, title = '', ...) {
   )
 }
 
-# xaxis for plotly_heatmap
+# x- and y-axes for plotly_heatmap
 xaxis <- list(
   rangemode = 'tozero',
   showgrid = FALSE,
   zeroline = FALSE
 )
-
-# yaxis for plotly_heatmap
 yaxis <- c(
   xaxis,
   scaleanchor = 'x', 
   autorange = 'reversed'
 )
 
-#' @importFrom scales gradient_n_pal
-# scales::gradient_n_pal
-
-#' @importFrom scales viridis_pal
-# scales::viridis_pal
-
+#' @importFrom scales gradient_n_pal viridis_pal
 #' @noRd
 viridis <- getExportedValue('scales', 'gradient_n_pal')(
     getExportedValue('scales', 'viridis_pal')(

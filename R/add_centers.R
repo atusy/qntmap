@@ -3,8 +3,7 @@
 #' 
 #' Add centroids manually by picking X-ray counts of selected pixels in X-ray maps.
 #' 
-#' @seealso [pick()]
-#' @seealso [find_centers()]
+#' @seealso [pick()], [find_centers()]
 #' 
 #' @examples 
 #' centers <- data.frame(

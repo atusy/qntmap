@@ -1,11 +1,15 @@
-#' Poisson distribution based custering based on `PoiClaClu:Classify()`
+#' Poisson distribution based custering based on [`PoiClaClu:Classify()`]
 #' 
-#' @param centers c-by-p matrix returned by `find_centers()` or by manually; c clusters and p features. Used to guess initial centers (or centroids) of clusters. A value returned by , typically `data.frame` or `matrix`, indicating initial guess centers (or centroids) or clusters. See `find_centers()`.
+#' @param centers c-by-p matrix returned by [`find_centers()`] or by manually; 
+#' c clusters and p features. 
+#' Used to guess initial centers (or centroids) of clusters. 
+#' A value returned by , typically [`data.frame`] or [`matrix`], 
+#' indicating initial guess centers (or centroids) or clusters. 
+#' See [`find_centers()`].
 #' @inheritParams PoiClaClu::Classify
 #' @inheritDotParams PoiClaClu::Classify -x -y -xte
-#' @inherit PoiClaClu::Classify return
-#' @inherit PoiClaClu::Classify references
-#' @seealso \link[PoiClaClu]{Classify}
+#' @inherit PoiClaClu::Classify return references
+#' @seealso [PoiClaClu::Classify()], [find_centers()]
 #'
 #' @importFrom PoiClaClu Classify
 #' @export
@@ -25,16 +29,19 @@ cluster <- function(x, centers, xte = NULL, ...) {
 #' Cluster mapping data into mineral species
 #'
 #' @inheritParams cluster
-#' @param xmap a `qm_xmap` class object returned by `read_xmap`
-#' @param elements A character vector indicating which elements to be utilized in cluster analysis. `NULL`, in default, selects as much elements as possible are utilized in cluster analysis.
+#' @param xmap a `qm_xmap` class object returned by [`read_xmap()`]
+#' @param elements 
+#' A character vector to chose elements to be utilized in cluster analysis. 
+#' `NULL` (default) selects as much elements as possible.
 #' @param saving `TRUE` or `FALSE` to save result.
-#' @param group_cluster `TRUE` (default) or `FALSE` to integrate same phase subgrouped using suffix. For example, when there are clusters named as Pl_NaRich and Pl_NaPoor, they are grouped as Pl.
+#' @param group_cluster 
+#' `FALSE` (default) or `TRUE` to integrate same phase subgrouped using suffix.
+#' For example, 
+#' clusters named "Pl_NaRich" and "Pl_NaPoor" are integrated to "Pl" cluster .
 #'
-#' @importFrom dplyr group_by
-#' @importFrom dplyr ungroup
+#' @importFrom dplyr group_by ungroup
 #' @importFrom pipeR pipeline
-#' @importFrom tidyr gather
-#' @importFrom tidyr spread
+#' @importFrom tidyr gather spread
 #' @importFrom matrixStats rowMaxs
 #'
 #' @export
@@ -122,9 +129,10 @@ cluster_xmap <- function(
 
 
 
-#' (Deprecated) Use `cluster_xmap()`
+#' (DEPRECATED) Use `cluster_xmap()`
 #' 
-#' @param centers_initial Equivalent to `centers_initial` parameter of `cluster_xmap`
+#' @param centers_initial 
+#' Equivalent to `centers_initial` parameter of `cluster_xmap`
 #' @param qltmap Equivalent to `xmap` parameter of `cluster_xmap`
 #' @param wd Path to the working directory.
 #' @param integration Equivalent to `group_cluster` parameter of `cluster_xmap`

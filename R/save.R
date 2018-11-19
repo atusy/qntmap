@@ -34,13 +34,12 @@ save4qm.data.frame <- function(x, nm, saving, ...) {
 
 #' @rdname save4qm
 #' @section `save4qm.qm_cluster`: 
-#' A method for `qm_cluster` class returned by `cluster_xmap()` or `cluster_group()`.
+#' A method for `qm_cluster` class returned by 
+#' [`cluster_xmap()`] or [`cluster_group()`].
 #' Object is saved as RDS file and png file.
 #' The latter shows distribution of phases among a mapped area.
 #' @importFrom png writePNG
-#' @importFrom grDevices dev.copy
-#' @importFrom grDevices dev.off
-#' @importFrom grDevices png
+#' @importFrom grDevices dev.copy dev.off png
 #' @importFrom graphics pie
 save4qm.qm_cluster <- function(x, nm, saving, ...) {
   #setting for output

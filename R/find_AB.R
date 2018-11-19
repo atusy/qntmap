@@ -1,12 +1,8 @@
 #' Find AB
-#' @importFrom dplyr mutate
-#' @importFrom dplyr right_join
-#' @importFrom dplyr select
+#' @importFrom dplyr mutate right_join select
 #' @importFrom purrr map 
 #' @importFrom stats setNames
-#' @importFrom tidyr nest 
-#' @importFrom tidyr spread
-#' @importFrom tidyr unnest
+#' @importFrom tidyr nest spread unnest
 #' @importFrom tibble tibble
 #' @param A A
 #' @param B B
@@ -60,13 +56,12 @@ find_AB <- function(A, B, stg) {pipeline({
 
 #' fix AB value when composition of certain phases are constant
 #' @inheritParams find_AB
-#' @param AB AB
-#' @param fix csv file indicating composition of the phases. NULL returns input AB
-#' @param X membership
-#' @param fine_th threshold of X
-#' @importFrom data.table fread
-#' @importFrom purrr map
-#' @importFrom purrr map2_dbl
+#' @param AB A list of parameters alpha and beta
+#' @param fix 
+#' Csv file indicating composition of the phases. `NULL`` returns input AB.
+#' @param X Membership degrees.
+#' @param fine_th A threshold of X
+#' @importFrom purrr map map2_dbl
 #' @importFrom matrixStats weightedMedian
 #' @noRd
 find_AB_fix <- function(AB, fix = NULL, X, fine_th = .90, xmap) {

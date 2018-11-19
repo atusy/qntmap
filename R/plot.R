@@ -5,7 +5,7 @@
 #' @title Plot methods for `qntmap` package
 #' @description
 #' S3 methods to plot object with original classes in `qntmap` package. 
-#' See [graphics::plot()] for general use of `plot`. 
+#' See [`graphics::plot()`] for general use of `plot`. 
 #' Mapping data (`qm_xmap` and `qm_qntmap` classes) are visualized by heat maps. 
 #' 
 #' @param x 
@@ -17,12 +17,12 @@
 #' A string to specify legend name for fill. 
 #' Default value is taken from `y`.
 #' @param interactive
-#' `TRUE` returns `plotly` object (default), and 
-#' `FALSE` returns `ggplot` object.
+#' `TRUE` produces plots with [`plotly::ggplotly()`], and 
+#' `FALSE` produces plots with [`ggplot2::ggplot()`].
 #' @param ... ignored
 #' @param shiny See plots using Shiny (default: `FALSE`)
 #' 
-#' @seealso [graphics::plot()]
+#' @seealso [`graphics::plot()`]
 #' 
 #' @importFrom graphics plot
 NULL
@@ -35,13 +35,8 @@ NULL
 #' plot(d, 'fill')
 #' 
 #' @importFrom stats setNames
-#' @importFrom ggplot2 aes
-#' @importFrom ggplot2 ggplot
-#' @importFrom ggplot2 geom_raster
-#' @importFrom ggplot2 coord_fixed
-#' @importFrom ggplot2 ggtitle
-#' @importFrom ggplot2 scale_y_reverse
-#' @importFrom ggplot2 scale_fill_viridis_c
+#' @importFrom ggplot2 aes ggplot geom_raster coord_fixed ggtitle 
+#' @importFrom ggplot2 scale_y_reverse scale_fill_viridis_c
 #' @importFrom plotly ggplotly
 plot.qm_raster <- function(
   x, y = setdiff(names(x), c('x', 'y'))[1], legend_fill = y, interactive = TRUE, ..., shiny = FALSE

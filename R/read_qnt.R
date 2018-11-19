@@ -5,13 +5,9 @@
 #' @param renew if TRUE and the file specified by RDS exists, that file will be loaded
 #' @param saving whether or not to save the data as RDS file
 #'
-#' @importFrom dplyr select
-#' @importFrom dplyr one_of
-#' @importFrom dplyr mutate
+#' @importFrom dplyr select one_of mutate
 #' @importFrom pipeR %>>%
-#' @importFrom stringr str_replace_all
-#' @importFrom stringr str_replace
-#' @importFrom stringr str_detect
+#' @importFrom stringr str_replace_all str_replace str_detect
 #' @importFrom data.table fwrite
 #'
 #' @export
