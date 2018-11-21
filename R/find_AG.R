@@ -35,6 +35,7 @@ find_AG <- function(
             .,
             phase3 = list(not_quantified), # © 2018 JAMSTEC
             fit = fit_na[1], # © 2018 JAMSTEC
+            fit_na = fit_na[1],
             g = g_na[1], # © 2018 JAMSTEC
             g_se = g_na_se[1] # © 2018 JAMSTEC
           ),
