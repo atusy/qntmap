@@ -46,7 +46,10 @@ read_qnt_elemw.0_cnd <- function(
   # match pattern and return values
   matched <- lapply(pattern, function(pattern) str_detect(x, pattern))
   
-  if(length(unique(lapply(matched, sum))) == 1) return(
+  if(
+    any(unlist(matched, use.names = FALSE)) &&
+    length(unique(lapply(matched, sum))) == 1
+  ) return(
     as.data.frame(lapply(matched, function(i) as.numeric(val[i])))
   )
   
