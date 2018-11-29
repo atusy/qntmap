@@ -5,7 +5,7 @@
 # © 2018 JAMSTEC
 
 #' 
-#' @param x A path to the image file (PNG, JPEG, and BMP).
+#' @param x A path to the PNG image file.
 #' @param ... ignored
 #' 
 #' @return A character vector indicating pixel colors in RGBA style for input image.
@@ -21,17 +21,11 @@ segment <- function(x, ...) {
 #' @rdname segment
 #' 
 #' @examples
-#' library(imager)
-#' x <- system.file('extdata/parrots.png',package='imager')
-#' print(x) # x is a path to the example image file. 
-#' head(segment(x)) # [1] "#747458" "#757559" "#78785C" "#77765B" "#78785C" "#78785C"
-#' \dontrun{
-#' segment(matrix(1:9, 3, 3)) 
-#' # This gives error as current version only support a path of a image file as input
-#' }
+#' x <- system.file("img", "Rlogo.png", package="png")
+#' head(segment(x))
 #' 
 #' @importFrom grDevices rgb
-#' @importFrom imager load.image
+#' @importFrom png readPNG
 #' @importFrom pipeR pipeline
 #' @importFrom purrr pmap
 #' @importFrom stats setNames
@@ -39,9 +33,8 @@ segment <- function(x, ...) {
 #' @export
 segment.character <- function(x, ...) {
   pipeline({
-    load.image(x)[,,1,]
+    readPNG(x)
     apply(3, list)
-    lapply(lapply, t)
     setNames(names(formals(rgb))[seq_along(.)])
     pmap(rgb)
     unlist(use.names = FALSE)
