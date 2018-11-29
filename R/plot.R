@@ -13,53 +13,36 @@
 #' [read_xmap()], [quantify()], or [qntmap()].
 #' @param y
 #' A string specifying a component of `x` to determine colors to fill the map.
-#' @param legend_fill
-#' A string to specify legend name for fill. 
-#' Default value is taken from `y`.
+#' @param colors
+#' A color pallete to use. Either "viridis" (default) or "gray".
 #' @param interactive
-#' `TRUE` produces plots with [`plotly::ggplotly()`], and 
+#' `TRUE` (default) produces plots with shiny WebUI, and 
 #' `FALSE` produces plots with [`ggplot2::ggplot()`].
 #' @param ... ignored
-#' @param shiny See plots using Shiny (default: `FALSE`)
 #' 
 #' @seealso [`graphics::plot()`]
 #' 
 #' @importFrom graphics plot
 NULL
 
-#' @noRd
+#' @rdname plot
 #' @examples
 #' # qm_raster class object
 #' d <- data.frame(x = sample.int(5), y = sample.int(5), fill = runif(5))
 #' class(d) <- c('qm_raster', class(d))
-#' plot(d, 'fill')
+#' plot(d, 'fill', interactive = FALSE)
 #' 
-#' @importFrom stats setNames
-#' @importFrom ggplot2 aes ggplot geom_raster coord_fixed ggtitle 
-#' @importFrom ggplot2 scale_y_reverse scale_fill_viridis_c
-#' @importFrom plotly ggplotly
+#' @export
 plot.qm_raster <- function(
-  x, y = setdiff(names(x), c('x', 'y'))[1], legend_fill = y, interactive = TRUE, ..., shiny = FALSE
+  x, y = setdiff(names(x), c('x', 'y'))[1], 
+  colors = c("viridis", "gray"),
+  interactive = TRUE, ...
 ) {
-  nm <- names(x)
-  
-  if(any(c('x', 'y') %nin% nm)) stop('data.frame must contain column x and y')
-  
-  args <- setNames(lapply(nm, as.name), nm)
-  names(args)[names(args) == y] <- 'fill'
-  aes_fix <- do.call(aes, args)
-  
-  g <- ggplot(data = as.data.frame(x), mapping = aes_fix) +
-    geom_raster() +
-    coord_fixed() +
-    ggtitle(y) +
-    scale_y_reverse() +
-    scale_fill_viridis_c(name = legend_fill)
-  
-  if(shiny) return(plot_shiny(x, y, interactive))
-  if(interactive) return(ggplotly(g))
-  
-  g
+  if (any(c('x', 'y') %nin% names(x))) 
+    stop ('Column x or y not found')
+  if (interactive) 
+    return (plot_shiny(x, y, pcol = colors == "viridis", ...))
+  ggheat(x = x[["x"]], y = x[["y"]], z = x[[y]], y)
 }
 
 #' @rdname plot
@@ -67,42 +50,61 @@ plot.qm_raster <- function(
 #' # qm_xmap class object
 #' xm <- list(A = as.data.frame(matrix(runif(25), 5)))
 #' class(xm) <- c('qm_xmap', 'list')
-#' plot(xm)
+#' plot(xm, interactive = FALSE)
 #' 
 #' @importFrom pipeR pipeline 
+#' @importFrom dplyr bind_cols
 #' @export
-plot.qm_xmap <- function() {
-  pipeline({
-    dim(x[[1]])
-    setNames(c('y', 'x'))
-    lapply(seq)
-    expand.grid()
-    list()
-    c(lapply(x, unlist, use.names = FALSE))
-    as.data.frame()
-    `class<-`(c('qm_raster', class(.)))
-    plot(y = y, legend_fill = legend_fill, interactive = interactive, ..., shiny = shiny)
-  })
+plot.qm_xmap <- function(x, y = setdiff(names(x), c('x', 'y'))[1], ...) {
+  plot.qm_raster(
+    bind_cols(
+      expand.grid(
+        y = seq(1, nrow(x[[1]])),
+        x = seq(1, ncol(x[[1]]))
+      )[c("x", "y")],
+      lapply(x, unlist, use.names = FALSE)
+    ),
+    y = y, ...
+  ) 
 }
-formals(plot.qm_xmap) <- formals(plot.qm_raster)
-
 
 #' @rdname plot
 #' @examples 
 #' # qntmap class object
 #' qm <- list(A = list(wt = as.data.frame(matrix(runif(25), 5))))
 #' class(qm) <- c( 'qntmap', 'list')
-#' plot(qm)
+#' plot(qm, interactive = FALSE)
 #' 
-#' @importFrom pipeR pipeline 
 #' @export
-plot.qntmap <- function() {
-  pipeline({
-    x
-    lapply(`[[`, 'wt')
-    lapply(round, 2)
-    `class<-`(c('qm_xmap', 'list'))
-    plot(y = y, legend_fill = legend_fill, interactive = interactive, ..., shiny = shiny)
-  })
+plot.qntmap <- function(
+  x, y = setdiff(names(x), c('x', 'y'))[1], ...
+) {
+  plot.qm_xmap(
+    lapply(lapply(x, `[[`, 'wt'), round, 2), y = y, ...
+  )
 }
-formals(plot.qntmap) <- formals(plot.qm_raster)
+
+# © 2018 YASUMOTO Atsushi
+#' @rdname plot
+#' @examples
+#' # qm_cluster class object
+#' cls <- list(
+#'   ytehat = sample.int(3, 9, replace = TRUE), 
+#'   dims = c(3, 3)
+#' )
+#' names(cls$ytehat) <- letters[cls$ytehat]
+#' class(cls) <- "qm_cluster"
+#' plot(cls, interactive = FALSE)
+#' 
+#' @importFrom pipeR pipeline
+#' @export
+plot.qm_cluster <- function(x, y = NULL, ...) {
+  pipeline({
+    lapply(x$dims, seq)
+    setNames(c("y", "x"))
+    expand.grid
+    mutate(Phase = !!names(x$ytehat))
+    select(x, y, Phase)
+    plot.qm_raster(y = "Phase", ...)
+  })
+} 
