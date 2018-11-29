@@ -2,7 +2,7 @@
 #'
 #' @param xmap `qm_xmap` class object returned by [`read_xmap()`].
 #' @param qnt `qm_qnt` class object returned by [`read_qnt()`].
-#' @param cluster `qm_cluster` class object returned by [`cluter_xmap()`].
+#' @param cluster `qm_cluster` class object returned by [`cluster_xmap()`].
 #' @param maps_x,maps_y
 #' Sizes of maps along x- and y-axes comprising guide net map.
 #' (default: `NULL`).

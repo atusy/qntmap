@@ -1,8 +1,9 @@
 # read .cnd files of X-ray mapping data
 
 #' list of patterns in cnd files
+#' @importFrom pipeR pipeline
 #' @noRd
-patterns_xmap_cnd <- pipeR::pipeline({
+patterns_xmap_cnd <- pipeline({
   list(
     jxa8800 = list(
       elm = 'XM_ELEMENT', 

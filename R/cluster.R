@@ -1,4 +1,4 @@
-#' Poisson distribution based custering based on [`PoiClaClu:Classify()`]
+#' Poisson distribution based custering based on [`PoiClaClu::Classify()`]
 #' 
 #' @param centers c-by-p matrix returned by [`find_centers()`] or by manually; 
 #' c clusters and p features. 
@@ -161,7 +161,6 @@ qntmap_cls_pois <- function(
   if(is.null(elements)) elements <- 
     intersect(names(qltmap), colnames(centers_initial))
   
-  xmap <- 
   cluster_xmap(
     qltmap,
     centers_initial,
