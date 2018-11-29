@@ -8,15 +8,23 @@ cluster_xmap(xmap, centers, elements = intersect(names(xmap),
   colnames(centers)), saving = TRUE, group_cluster = FALSE)
 }
 \arguments{
-\item{xmap}{a \code{qm_xmap} class object returned by \code{read_xmap}}
+\item{xmap}{a \code{qm_xmap} class object returned by \code{\link[=read_xmap]{read_xmap()}}}
 
-\item{centers}{c-by-p matrix returned by \code{find_centers()} or by manually; c clusters and p features. Used to guess initial centers (or centroids) of clusters. A value returned by , typically \code{data.frame} or \code{matrix}, indicating initial guess centers (or centroids) or clusters. See \code{find_centers()}.}
+\item{centers}{c-by-p matrix returned by \code{\link[=find_centers]{find_centers()}} or by manually;
+c clusters and p features.
+Used to guess initial centers (or centroids) of clusters.
+A value returned by , typically \code{\link{data.frame}} or \code{\link{matrix}},
+indicating initial guess centers (or centroids) or clusters.
+See \code{\link[=find_centers]{find_centers()}}.}
 
-\item{elements}{A character vector indicating which elements to be utilized in cluster analysis. \code{NULL}, in default, selects as much elements as possible are utilized in cluster analysis.}
+\item{elements}{A character vector to chose elements to be utilized in cluster analysis.
+\code{NULL} (default) selects as much elements as possible.}
 
 \item{saving}{\code{TRUE} or \code{FALSE} to save result.}
 
-\item{group_cluster}{\code{TRUE} (default) or \code{FALSE} to integrate same phase subgrouped using suffix. For example, when there are clusters named as Pl_NaRich and Pl_NaPoor, they are grouped as Pl.}
+\item{group_cluster}{\code{FALSE} (default) or \code{TRUE} to integrate same phase subgrouped using suffix.
+For example,
+clusters named "Pl_NaRich" and "Pl_NaPoor" are integrated to "Pl" cluster .}
 }
 \description{
 Cluster mapping data into mineral species

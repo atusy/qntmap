@@ -1,46 +1,41 @@
 ---
-title: "QntMap"
-output: 
-  md_document:
-    variant: markdown_github
+title: Enhance quantitative analysis of EPMA maps with QntMap
+output: github_document
 ---
 
 ```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE)
+knitr::opts_chunk$set(echo = TRUE, eval = FALSE)
+library(knitr)
 ```
 
 # Overview
 
-This package provides functions to convert element characteristic X-ray intensity maps into element mass concentration maps.  
-Current version supports data from JEOL-style electron probe microanalyer (EPMA).  
-For conversion, you need to run spot analysis before mapping analysis.  
-See "How to" section for usage and [Yasumoto et al. (2018)](https://doi.org/10.2138/am-2018-6323CCBY) for implementations.
+This package generates mass concentration maps and phase distribution maps based on X-ray mapping data and spot analysis data from EPMA.
+
+See "[How to]" for a usage and [Yasumoto et al. (2018)](https://doi.org/10.2138/am-2018-6323CCBY) for implementations.
+
+Current version supports data from JEOL-style EPMA.
 
 # Installation
 
-Install devtools package if you haven't.
+Copy & paste a following command to R.
 
-```{r devtools, eval = FALSE}
-install.packages("devtools")
-```
-
-Then, run following code.
-
-```{r qntmap, eval = FALSE}
-devtools::install_github("atusy/qntmap")
+```{r install}
+source("https://install-github.me/atusy/qntmap")
 ```
 
 # How to
 
-1. Export data from EPMA analysis.
-1. Run QntMap
+1. [EPMA analysis] (spot before map)
+1. [Export data] from EPMA to PC
+1. [Run QntMap on R] for data processing.
 
-Read below for details.
+Details below.
 
 ## EPMA analysis
 
-QntMap handles matrix effect by preparing internal standards based on spot analysis.
-
+Conversion is performed by utilizing spot analysis data as internal standards.
+Thus, [spot analysis][Spot analysis] must be done prior to [mapping][Mapping].
 
 ### Spot analysis
 
@@ -51,30 +46,20 @@ QntMap handles matrix effect by preparing internal standards based on spot analy
     - **20 spots per phase** in the area to be mapped (the more is better).
     - It is better but not necessary to quantify grains larger than mapping probe diameter.
     - Make sure at least **20 spots per element** are analyzing grains larger than mapping probe diameter.
-- Commenting analysis
-    - Give same comments on the same phase with the similar compositions. Do not number them.
-      - e.g., quartz, plagioclase, ...
-    - Otherwise, comment them with different name. This is important treatment for phase identification and handling matrix effect.
-      - e.g., garnet-core, garnet-rim
-    - If you give comments containing underscore such as "garnet_core" and "garnet_rim", then they are treated as if different phases in phase identification, but are treated as if their matrix effect are approximately same. 
-    - Alternatively, give comments manually by external file.
-    
-Spot quantitative analytical conditions in your lab.
+- Identify phases in comment
+    - Give same comments on the same phase with the similar compositions.
+      - e.g., quartz, plagioclase, garnet-core, garnet-rim, ...
+    - An alternative is to use external file later.
 
-### Mapping analysis
+### Mapping
 
 - Analytical conditions
-    - Acceralating voltage should be same as one applied in spot analysis.
-    - Probe diameter should be larger than spot analysis. The larger saves more time, but decreases spatial resolutions.
+    - Acceralating voltage must be same as that in spot analysis.
+    - Probe diameter should be larger than that in spot analysis. 
     - Probe current is recommended to be 100 nA following Lanari et al. (2014).
     - Dwell time is recommended to be 0.1 - 0.3 sec following Lanari et al. (2014).
-    - Note that increasing probe current accepts decreasing dwell time, but probe current must not be too high to saturate X-ray detectors. If you prefer high probe current in some reason, consider changing dispersive crystals from those chosen in spot analysis.
-        - e.g., chose PET instead of TAP for Si
-
 
 ### Example of analytical conditions
-
-Yasumoto et al. (submitted)
 
 |                     | Spot  | Map     | Comment                         |
 |:--------------------|------:|--------:|:--------------------------------|
@@ -85,25 +70,94 @@ Yasumoto et al. (submitted)
 |Background dwell     |  5 sec| NA      | No need to analyze in map       |
 
 
-## Data processing with QntMap package on R
+## Export data {#Export}
 
-### Quantification
+1. **ASCII conert** mapping data into matrix format,
+   and save the result in the directory
+   where raw data is stored (e.g., `.map/1`).
+1. Export whole directory of analysis containing 
+   `.map` directory and `.qnt` directory
 
-By running following code, you'll see that phase identification result in 'clustering' directory and mass concentration data as csv files in 'qntmap' directory both under the directory contaning mapping data.
+### File structure
 
-#### Interactive mode
+A minimal example.
+See links for descrptions.
+`*` is a wild card.
+
+- .map/\*/
+    - \*_map.txt
+    - \*.cnd
+- .qnt/
+    - [.cnd/elemw.cnd](#elemwcnd)
+    - [bgm.qnt](#bgmqnt-bgpqnt-pkintqnt-netqnt)
+    - [bgp.qnt](#bgmqnt-bgpqnt-pkintqnt-netqnt)
+    - [elem.qnt](#elemqnt-elintqnt)
+    - [elint.qnt](#elemqnt-elintqnt)
+    - [mes.qnt](#mesqnt)
+    - [net.qnt](#bgmqnt-bgpqnt-pkintqnt-netqnt)
+    - [peak.qnt](#peakqnt)
+    - [stg.qnt](#stgqnt)
+    - [wt.qnt](#wtqnt)
+
+#### elemw.cnd
+
+includes dwell time for peak and background, 
+relative positions of backgrounds.
+
+In some case, this file is incomplete or missing, and needs to be prepared manually (e.g., https://gist.github.com/atusy/f1577b67b8874c9e915941c0725d0e22).
+
+#### bgm.qnt, bgp.qnt, pkint.qnt, net.qnt
+
+include
+background (minus and plus), peak, and net intensities of each analysis.
+In some environemts, `pkint.qnt` is missing, but is complemented within QntMap.
+
+#### elem.qnt and elint.qnt
+
+include name of elements 
+data correction ("elem.qnt"; oxide or metal in ZAF),
+counting intensities ("elint.qnt").
+
+#### mes.qnt
+
+includes probe current of each analysis.
+
+#### peak.qnt
+
+includes positions of peak intensities of each element of each analysis.
+
+#### stg.qnt
+
+includes coordinates and comments of each analysis.
+
+#### wt.qnt
+
+includes mass concentrations of each analysis.
+
+## Run QntMap on R
+
+For data processing
+
+### Interactive mode
 
 Follow instructions shown by running the following code.
 
-```{r eval = FALSE}
+```{r interactive}
 library(qntmap)
 qntmap()
 ```
 
+As a result, phase identification result is saved in "`clustering`" directory and mass concentration data as csv files in "`qntmap`" directory both under the directory contaning mapping data.
 
-#### Manual mode for experts (example)
+Note that interactive mode has limited functions.
+Use [manual mode][Manual mode] for full functionality.
 
-```{r eval = FALSE}
+### Manual mode
+
+A work-flow with example dataset is available at
+https://atusy.github.io/qntmap/articles/basic.html .
+
+```{r manual}
 library(qntmap)
 
 # Required parameters
@@ -140,21 +194,21 @@ qnt <- read_qnt(wd = dir_qnt, phase_list = phase_list, renew = TRUE)
 # Determine initial cluster centers
 centers <- find_centers(xmap = xmap, qnt = qnt, fine_phase = fine_phase)
 ## Check 'centers0.csv' under the `wd` and modify on demand.
-## if modified, assign content of the modified csv file by running
+## If modified, assign content of the modified csv file by running
 ## centers <- data.table::fread('path to the modified csv file')
 
 # Phase identification
-# assign group_cluster = TRUE if you want to integrate same phases subgrouped by suffix after '_' 
+# Assign group_cluster = TRUE if you want to integrate same phases subgrouped by suffix after '_' 
 # (e.g., garnet_a and garnet_b are integrated to garnet if TRUE)
 cls <- cluster_xmap(xmap = xmap, centers = centers, group_cluster = FALSE)
 
-# quantify X-ray maps
+# Quantify X-ray maps
 qmap <- quantify(
   xmap = xmap, qnt = qnt, cluster = cls, fine_phase = fine_phase
 )
 ## Resulting files are saved in `qntmap` directory` under `dir_map`.
 
-# summarize result
+# Summarize result
 summary(qmap)
 ## This shows minimum, lower quantile, median, mean, upper quantile, and maximum values of variables.
 ```

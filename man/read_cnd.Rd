@@ -30,7 +30,7 @@ read .cnd files
 }
 \section{.default}{
 
-A default method which returns a result of \code{readLines(x)}
+A default method which returns a result of \code{\link[=readLines]{readLines()}}
 with additional class according to the content of the file.
 }
 

@@ -1,3 +1,22 @@
+# qntmap 0.3.0
+
+## Major changes
+
+- `plot()`
+    - Interactive plot is a combination of shiny, ggplot2, and more. No more using plotly.
+        - Color control with histogram
+        - Hover information of pixels
+        - Zooming
+        - Moving
+        - Summarizing data in a table below heatmap
+            - Double click to keep pixel data
+            - Box select to keep mean values of data
+    - Grayscale is supported in addition to viridis.
+    - Clustering result is supported.
+- `segment()`
+    - Only allows PNG format as an input. 
+      No more JPG nor BMP allowed.
+
 # qntmap 0.2.2
 
 ## Major changes

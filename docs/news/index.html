@@ -61,7 +61,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">qntmap</a>
-        <span class="label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.2.2</span>
+        <span class="label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.3.0</span>
       </span>
     </div>
 
@@ -119,12 +119,49 @@
       <small>Source: <a href='https://github.com/atusy/qntmap/blob/master/NEWS.md'><code>NEWS.md</code></a></small>
     </div>
 
-    <div id="qntmap-0-2-2" class="section level1">
+    <div id="qntmap-0-3-0" class="section level1">
 <h1 class="page-header">
-<a href="#qntmap-0-2-2" class="anchor"></a>qntmap 0.2.2</h1>
+<a href="#qntmap-0-3-0" class="anchor"></a>qntmap 0.3.0</h1>
 <div id="major-changes" class="section level2">
 <h2 class="hasAnchor">
 <a href="#major-changes" class="anchor"></a>Major changes</h2>
+<ul>
+<li>
+<code><a href="../reference/plot.html">plot()</a></code>
+<ul>
+<li>Interactive plot is a combination of shiny, ggplot2, and more. No more using plotly.
+<ul>
+<li>Color control with histogram</li>
+<li>Hover information of pixels</li>
+<li>Zooming</li>
+<li>Moving</li>
+<li>Summarizing data in a table below heatmap
+<ul>
+<li>Double click to keep pixel data</li>
+<li>Box select to keep mean values of data</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>Grayscale is supported in addition to viridis.</li>
+<li>Clustering result is supported.</li>
+</ul>
+</li>
+<li>
+<code><a href="../reference/segment.html">segment()</a></code>
+<ul>
+<li>Only allows PNG format as an input. No more JPG nor BMP allowed.</li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+    <div id="qntmap-0-2-2" class="section level1">
+<h1 class="page-header">
+<a href="#qntmap-0-2-2" class="anchor"></a>qntmap 0.2.2</h1>
+<div id="major-changes-1" class="section level2">
+<h2 class="hasAnchor">
+<a href="#major-changes-1" class="anchor"></a>Major changes</h2>
 <div id="new-features" class="section level3">
 <h3 class="hasAnchor">
 <a href="#new-features" class="anchor"></a>New features</h3>
@@ -216,9 +253,9 @@
 <li>The above change cause <code>read_qnt</code> to save its result (<code>qnt.RDS</code>) and semi-product (<code>phase_list0.csv</code>) in the directory containing <code>.qnt</code> files unlike <code>qnt_load</code> saved them under the working directory.</li>
 </ul>
 </div>
-<div id="major-changes-1" class="section level2">
+<div id="major-changes-2" class="section level2">
 <h2 class="hasAnchor">
-<a href="#major-changes-1" class="anchor"></a>Major changes</h2>
+<a href="#major-changes-2" class="anchor"></a>Major changes</h2>
 <ul>
 <li>Monster functions are separated into smaller functions.
 <ul>
@@ -315,6 +352,7 @@
     <div id="tocnav">
       <h2>Contents</h2>
       <ul class="nav nav-pills nav-stacked">
+        <li><a href="#qntmap-0-3-0">0.3.0</a></li>
         <li><a href="#qntmap-0-2-2">0.2.2</a></li>
         <li><a href="#qntmap-0-2-1">0.2.1</a></li>
         <li><a href="#qntmap-0-2-0">0.2.0</a></li>

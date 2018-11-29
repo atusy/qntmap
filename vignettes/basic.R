@@ -54,8 +54,8 @@ plot(xmap, 'Si', interactive = FALSE) +
     data = epma, inherit.aes = FALSE
   )
 
-## ------------------------------------------------------------------------
-plot(xmap, 'Mg', interactive = TRUE)
+## ---- echo = FALSE-------------------------------------------------------
+plot(xmap, 'Mg', interactive = FALSE)
 
 ## ------------------------------------------------------------------------
 centers <- find_centers(xmap, qnt)

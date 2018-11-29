@@ -1,7 +1,7 @@
 Package: qntmap
 Type: Package
-Title: Enhance quantitative analysis of EPMA data
-Version: 0.2.2
+Title: Enhance quantitative analysis of EPMA map
+Version: 0.3.0
 Authors@R: c(
         person(given = 'YASUMOTO Atsushi', role = c('aut', 'cph', 'cre'), email = 'atusy.7+qntmap@gmail.com'),
         person(given = 'YOSHIDA Kenta', role = c('ctb')),
@@ -17,16 +17,17 @@ Description: A main function of this packages is
 License: MIT + file LICENSE
 Encoding: UTF-8
 LazyData: true
-RoxygenNote: 6.1.0
+RoxygenNote: 6.1.1
 Depends: R(>= 3.1.2)
 Imports: curl,
     data.table,
     dplyr,
-    ggplot2,
+    DT,
     easycsv,
-    imager,
+    ggplot2,
+    htmltools,
+    knitr,
     matrixStats,
-    plotly,
     pipeR,
     PoiClaClu,
     png,
@@ -35,6 +36,7 @@ Imports: curl,
     scales,
     stringr,
     shiny,
+    shinyWidgets,
     tibble,
     tidyr,
     utils
@@ -56,15 +58,13 @@ Collate:
     'find_centers_kpp.R'
     'group_cluster.R'
     'mean.R'
+    'plot-shiny.R'
     'plot.R'
-    'plot_shiny.R'
-    'plotly.R'
+    'plot_gg.R'
     'print.R'
     'qntmap.R'
     'quantify.R'
     'read_cnd.R'
-    'read_map_beam.R'
-    'read_map_pos.R'
     'read_qnt.R'
     'read_qnt_elemw.R'
     'read_xmap.R'
@@ -78,6 +78,7 @@ Collate:
 Roxygen: list(markdown = TRUE)
 Suggests: 
     knitr,
+    pkgdown,
     rmarkdown,
     testthat
 VignetteBuilder: knitr

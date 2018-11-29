@@ -2,7 +2,7 @@
 % Please edit documentation in R/cluster.R
 \name{qntmap_cls_pois}
 \alias{qntmap_cls_pois}
-\title{(Deprecated) Use \code{cluster_xmap()}}
+\title{(DEPRECATED) Use \code{cluster_xmap()}}
 \usage{
 qntmap_cls_pois(centers_initial, qltmap = NULL, elements = NULL,
   wd = ".", saving = TRUE, integration = TRUE)
@@ -12,7 +12,8 @@ qntmap_cls_pois(centers_initial, qltmap = NULL, elements = NULL,
 
 \item{qltmap}{Equivalent to \code{xmap} parameter of \code{cluster_xmap}}
 
-\item{elements}{A character vector indicating which elements to be utilized in cluster analysis. \code{NULL}, in default, selects as much elements as possible are utilized in cluster analysis.}
+\item{elements}{A character vector to chose elements to be utilized in cluster analysis.
+\code{NULL} (default) selects as much elements as possible.}
 
 \item{wd}{Path to the working directory.}
 
@@ -21,5 +22,5 @@ qntmap_cls_pois(centers_initial, qltmap = NULL, elements = NULL,
 \item{integration}{Equivalent to \code{group_cluster} parameter of \code{cluster_xmap}}
 }
 \description{
-(Deprecated) Use \code{cluster_xmap()}
+(DEPRECATED) Use \code{cluster_xmap()}
 }

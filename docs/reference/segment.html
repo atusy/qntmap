@@ -65,7 +65,7 @@ The obtained index is further utilized in mean.qntmap()." />
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">qntmap</a>
-        <span class="label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.2.2</span>
+        <span class="label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.3.0</span>
       </span>
     </div>
 
@@ -141,7 +141,7 @@ The obtained index is further utilized in <code><a href='mean.html'>mean.qntmap(
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
       <th>x</th>
-      <td><p>A path to the image file (PNG, JPEG, and BMP).</p></td>
+      <td><p>A path to the PNG image file.</p></td>
     </tr>
     <tr>
       <th>...</th>
@@ -159,20 +159,8 @@ The obtained index is further utilized in <code><a href='mean.html'>mean.qntmap(
     
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='fu'>library</span>(<span class='no'>imager</span>)</div><div class='output co'>#&gt; <span class='message'>Loading required package: magrittr</span></div><div class='output co'>#&gt; <span class='message'></span>
-#&gt; <span class='message'>Attaching package: ‘magrittr’</span></div><div class='output co'>#&gt; <span class='message'>The following objects are masked from ‘package:testthat’:</span>
-#&gt; <span class='message'></span>
-#&gt; <span class='message'>    equals, is_less_than, not</span></div><div class='output co'>#&gt; <span class='message'></span>
-#&gt; <span class='message'>Attaching package: ‘imager’</span></div><div class='output co'>#&gt; <span class='message'>The following object is masked from ‘package:magrittr’:</span>
-#&gt; <span class='message'></span>
-#&gt; <span class='message'>    add</span></div><div class='output co'>#&gt; <span class='message'>The following objects are masked from ‘package:stats’:</span>
-#&gt; <span class='message'></span>
-#&gt; <span class='message'>    convolve, spectrum</span></div><div class='output co'>#&gt; <span class='message'>The following object is masked from ‘package:graphics’:</span>
-#&gt; <span class='message'></span>
-#&gt; <span class='message'>    frame</span></div><div class='output co'>#&gt; <span class='message'>The following object is masked from ‘package:base’:</span>
-#&gt; <span class='message'></span>
-#&gt; <span class='message'>    save.image</span></div><div class='input'><span class='no'>x</span> <span class='kw'>&lt;-</span> <span class='fu'>system.file</span>(<span class='st'>'extdata/parrots.png'</span>,<span class='kw'>package</span><span class='kw'>=</span><span class='st'>'imager'</span>)
-<span class='fu'>print</span>(<span class='no'>x</span>) <span class='co'># x is a path to the example image file. </span></div><div class='output co'>#&gt; [1] "/home/atusy/R/x86_64-pc-linux-gnu-library/3.5/imager/extdata/parrots.png"</div><div class='input'><span class='fu'>head</span>(<span class='fu'>segment</span>(<span class='no'>x</span>)) <span class='co'># [1] "#747458" "#757559" "#78785C" "#77765B" "#78785C" "#78785C"</span></div><div class='output co'>#&gt; [1] "#747458" "#7A775C" "#7E7B5E" "#838163" "#878565" "#8D886B"</div><span class='co'># NOT RUN {</span>
+    <pre class="examples"><div class='input'><span class='no'>x</span> <span class='kw'>&lt;-</span> <span class='fu'>system.file</span>(<span class='st'>"img"</span>, <span class='st'>"Rlogo.png"</span>, <span class='kw'>package</span><span class='kw'>=</span><span class='st'>"png"</span>)
+<span class='fu'>head</span>(<span class='fu'>segment</span>(<span class='no'>x</span>)) <span class='co'># [1] "#747458" "#757559" "#78785C" "#77765B" "#78785C" "#78785C"</span></div><div class='output co'>#&gt; [1] "#00000000" "#00000000" "#00000000" "#00000000" "#00000000" "#00000000"</div><span class='co'># NOT RUN {</span>
 <span class='fu'>segment</span>(<span class='fu'>matrix</span>(<span class='fl'>1</span>:<span class='fl'>9</span>, <span class='fl'>3</span>, <span class='fl'>3</span>))
 <span class='co'># This gives error as current version only support a path of a image file as input</span>
 <span class='co'># }</span><div class='input'>

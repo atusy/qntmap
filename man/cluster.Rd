@@ -2,7 +2,7 @@
 % Please edit documentation in R/cluster.R
 \name{cluster}
 \alias{cluster}
-\title{Poisson distribution based custering based on \code{PoiClaClu:Classify()}}
+\title{Poisson distribution based custering based on \code{\link[PoiClaClu:Classify]{PoiClaClu::Classify()}}}
 \usage{
 cluster(x, centers, xte = NULL, ...)
 }
@@ -12,7 +12,12 @@ A n-by-p training data matrix; n observations and p features. Used to train the
 classifier.
 }
 
-\item{centers}{c-by-p matrix returned by \code{find_centers()} or by manually; c clusters and p features. Used to guess initial centers (or centroids) of clusters. A value returned by , typically \code{data.frame} or \code{matrix}, indicating initial guess centers (or centroids) or clusters. See \code{find_centers()}.}
+\item{centers}{c-by-p matrix returned by \code{\link[=find_centers]{find_centers()}} or by manually;
+c clusters and p features.
+Used to guess initial centers (or centroids) of clusters.
+A value returned by , typically \code{\link{data.frame}} or \code{\link{matrix}},
+indicating initial guess centers (or centroids) or clusters.
+See \code{\link[=find_centers]{find_centers()}}.}
 
 \item{xte}{
 A m-by-p data matrix: m test observations and p features. The classifier
@@ -94,12 +99,12 @@ xte belongs to class k.}
 \item{alpha}{Power transformation used (if transform=TRUE).}
 }
 \description{
-Poisson distribution based custering based on \code{PoiClaClu:Classify()}
+Poisson distribution based custering based on \code{\link[PoiClaClu:Classify]{PoiClaClu::Classify()}}
 }
 \references{
 D Witten (2011) Classification and clustering of sequencing data using a
 Poisson model. To appear in Annals of Applied Statistics.
 }
 \seealso{
-\link[PoiClaClu]{Classify}
+\code{\link[PoiClaClu:Classify]{PoiClaClu::Classify()}}, \code{\link[=find_centers]{find_centers()}}
 }

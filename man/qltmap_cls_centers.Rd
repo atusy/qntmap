@@ -2,7 +2,7 @@
 % Please edit documentation in R/find_centers.R
 \name{qltmap_cls_centers}
 \alias{qltmap_cls_centers}
-\title{(Deprecated) Use find_centers}
+\title{(DEPRECATED) Use find_centers}
 \usage{
 qltmap_cls_centers(wd = NULL, dir_map, phase_fine = NULL,
   qnt = read_qnt(paste0(wd, "/.qnt")), qltmap = read_xmap(dir_map),
@@ -22,5 +22,5 @@ qltmap_cls_centers(wd = NULL, dir_map, phase_fine = NULL,
 \item{saving}{file name to save. FALSE if not saving.}
 }
 \description{
-(Deprecated) Use find_centers
+(DEPRECATED) Use find_centers
 }
