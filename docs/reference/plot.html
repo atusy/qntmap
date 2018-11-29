@@ -66,7 +66,7 @@ Mapping data (qm_xmap and qm_qntmap classes) are visualized by heat maps." />
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">qntmap</a>
-        <span class="label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.2.2</span>
+        <span class="label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.3.0</span>
       </span>
     </div>
 
@@ -133,13 +133,18 @@ Mapping data (<code>qm_xmap</code> and <code>qm_qntmap</code> classes) are visua
     
     </div>
 
-    <pre class="usage"><span class='co'># S3 method for qm_xmap</span>
+    <pre class="usage"><span class='co'># S3 method for qm_raster</span>
 <span class='fu'>plot</span>(<span class='no'>x</span>, <span class='kw'>y</span> <span class='kw'>=</span> <span class='fu'>setdiff</span>(<span class='fu'>names</span>(<span class='no'>x</span>), <span class='fu'>c</span>(<span class='st'>"x"</span>, <span class='st'>"y"</span>))[<span class='fl'>1</span>],
-  <span class='kw'>legend_fill</span> <span class='kw'>=</span> <span class='no'>y</span>, <span class='kw'>interactive</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='no'>...</span>, <span class='kw'>shiny</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>)
+  <span class='kw'>colors</span> <span class='kw'>=</span> <span class='fu'>c</span>(<span class='st'>"viridis"</span>, <span class='st'>"gray"</span>), <span class='kw'>interactive</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='no'>...</span>)
+
+<span class='co'># S3 method for qm_xmap</span>
+<span class='fu'>plot</span>(<span class='no'>x</span>, <span class='kw'>y</span> <span class='kw'>=</span> <span class='fu'>setdiff</span>(<span class='fu'>names</span>(<span class='no'>x</span>), <span class='fu'>c</span>(<span class='st'>"x"</span>, <span class='st'>"y"</span>))[<span class='fl'>1</span>], <span class='no'>...</span>)
 
 <span class='co'># S3 method for qntmap</span>
-<span class='fu'>plot</span>(<span class='no'>x</span>, <span class='kw'>y</span> <span class='kw'>=</span> <span class='fu'>setdiff</span>(<span class='fu'>names</span>(<span class='no'>x</span>), <span class='fu'>c</span>(<span class='st'>"x"</span>, <span class='st'>"y"</span>))[<span class='fl'>1</span>],
-  <span class='kw'>legend_fill</span> <span class='kw'>=</span> <span class='no'>y</span>, <span class='kw'>interactive</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='no'>...</span>, <span class='kw'>shiny</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>)</pre>
+<span class='fu'>plot</span>(<span class='no'>x</span>, <span class='kw'>y</span> <span class='kw'>=</span> <span class='fu'>setdiff</span>(<span class='fu'>names</span>(<span class='no'>x</span>), <span class='fu'>c</span>(<span class='st'>"x"</span>, <span class='st'>"y"</span>))[<span class='fl'>1</span>], <span class='no'>...</span>)
+
+<span class='co'># S3 method for qm_cluster</span>
+<span class='fu'>plot</span>(<span class='no'>x</span>, <span class='kw'>y</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='no'>...</span>)</pre>
     
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -154,22 +159,17 @@ Mapping data (<code>qm_xmap</code> and <code>qm_qntmap</code> classes) are visua
       <td><p>A string specifying a component of <code>x</code> to determine colors to fill the map.</p></td>
     </tr>
     <tr>
-      <th>legend_fill</th>
-      <td><p>A string to specify legend name for fill.
-Default value is taken from <code>y</code>.</p></td>
+      <th>colors</th>
+      <td><p>A color pallete to use. Either "viridis" (default) or "gray".</p></td>
     </tr>
     <tr>
       <th>interactive</th>
-      <td><p><code>TRUE</code> returns <code>plotly</code> object (default), and
-<code>FALSE</code> returns <code>ggplot</code> object.</p></td>
+      <td><p><code>TRUE</code> (default) produces plots with shiny WebUI, and
+<code>FALSE</code> produces plots with <code><a href='https://ggplot2.tidyverse.org/reference/ggplot.html'>ggplot2::ggplot()</a></code>.</p></td>
     </tr>
     <tr>
       <th>...</th>
       <td><p>ignored</p></td>
-    </tr>
-    <tr>
-      <th>shiny</th>
-      <td><p>See plots using Shiny (default: <code>FALSE</code>)</p></td>
     </tr>
     </table>
     
@@ -179,15 +179,27 @@ Default value is taken from <code>y</code>.</p></td>
     
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='co'># qm_xmap class object</span>
+    <pre class="examples"><div class='input'><span class='co'># qm_raster class object</span>
+<span class='no'>d</span> <span class='kw'>&lt;-</span> <span class='fu'>data.frame</span>(<span class='kw'>x</span> <span class='kw'>=</span> <span class='fu'>sample.int</span>(<span class='fl'>5</span>), <span class='kw'>y</span> <span class='kw'>=</span> <span class='fu'>sample.int</span>(<span class='fl'>5</span>), <span class='kw'>fill</span> <span class='kw'>=</span> <span class='fu'>runif</span>(<span class='fl'>5</span>))
+<span class='fu'>class</span>(<span class='no'>d</span>) <span class='kw'>&lt;-</span> <span class='fu'>c</span>(<span class='st'>'qm_raster'</span>, <span class='fu'>class</span>(<span class='no'>d</span>))
+<span class='fu'>plot</span>(<span class='no'>d</span>, <span class='st'>'fill'</span>, <span class='kw'>interactive</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>)</div><div class='img'><img src='plot-1.png' alt='' width='700' height='433' /></div><div class='input'>
+<span class='co'># qm_xmap class object</span>
 <span class='no'>xm</span> <span class='kw'>&lt;-</span> <span class='fu'>list</span>(<span class='kw'>A</span> <span class='kw'>=</span> <span class='fu'>as.data.frame</span>(<span class='fu'>matrix</span>(<span class='fu'>runif</span>(<span class='fl'>25</span>), <span class='fl'>5</span>)))
 <span class='fu'>class</span>(<span class='no'>xm</span>) <span class='kw'>&lt;-</span> <span class='fu'>c</span>(<span class='st'>'qm_xmap'</span>, <span class='st'>'list'</span>)
-<span class='fu'>plot</span>(<span class='no'>xm</span>)
-
+<span class='fu'>plot</span>(<span class='no'>xm</span>, <span class='kw'>interactive</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>)</div><div class='img'><img src='plot-2.png' alt='' width='700' height='433' /></div><div class='input'>
 <span class='co'># qntmap class object</span>
 <span class='no'>qm</span> <span class='kw'>&lt;-</span> <span class='fu'>list</span>(<span class='kw'>A</span> <span class='kw'>=</span> <span class='fu'>list</span>(<span class='kw'>wt</span> <span class='kw'>=</span> <span class='fu'>as.data.frame</span>(<span class='fu'>matrix</span>(<span class='fu'>runif</span>(<span class='fl'>25</span>), <span class='fl'>5</span>))))
 <span class='fu'>class</span>(<span class='no'>qm</span>) <span class='kw'>&lt;-</span> <span class='fu'>c</span>( <span class='st'>'qntmap'</span>, <span class='st'>'list'</span>)
-<span class='fu'>plot</span>(<span class='no'>qm</span>)</div></pre>
+<span class='fu'>plot</span>(<span class='no'>qm</span>, <span class='kw'>interactive</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>)</div><div class='img'><img src='plot-3.png' alt='' width='700' height='433' /></div><div class='input'>
+<span class='co'># qm_cluster class object</span>
+<span class='no'>cls</span> <span class='kw'>&lt;-</span> <span class='fu'>list</span>(
+  <span class='kw'>ytehat</span> <span class='kw'>=</span> <span class='fu'>sample.int</span>(<span class='fl'>3</span>, <span class='fl'>9</span>, <span class='kw'>replace</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>),
+  <span class='kw'>dims</span> <span class='kw'>=</span> <span class='fu'>c</span>(<span class='fl'>3</span>, <span class='fl'>3</span>)
+)
+<span class='fu'>names</span>(<span class='no'>cls</span>$<span class='no'>ytehat</span>) <span class='kw'>&lt;-</span> <span class='no'>letters</span>[<span class='no'>cls</span>$<span class='no'>ytehat</span>]
+<span class='fu'>class</span>(<span class='no'>cls</span>) <span class='kw'>&lt;-</span> <span class='st'>"qm_cluster"</span>
+<span class='fu'>plot</span>(<span class='no'>cls</span>, <span class='kw'>interactive</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>)</div><div class='img'><img src='plot-4.png' alt='' width='700' height='433' /></div><div class='input'>
+</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
     <h2>Contents</h2>

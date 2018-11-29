@@ -4,21 +4,12 @@
 #' @param xmap object returned by read_xmap
 #' @param cluster object returned by cluster_xmap
 #'
-#' @importFrom dplyr distinct
-#' @importFrom dplyr left_join
-#' @importFrom dplyr mutate
-#' @importFrom dplyr mutate_at
-#' @importFrom dplyr rename
-#' @importFrom dplyr transmute
+#' @importFrom dplyr distinct left_join mutate mutate_at rename transmute
 #' @importFrom matrixStats rowMaxs
 #' @importFrom pipeR %>>%
-#' @importFrom purrr map2
-#' @importFrom purrr map_int
+#' @importFrom purrr map2 map_int
 #' @importFrom stats setNames
-#' @importFrom stringr str_c
-#' @importFrom stringr str_replace_all
-#' @importFrom stringr str_replace
-#' @importFrom stringr str_detect
+#' @importFrom stringr str_c str_replace_all str_replace str_detect
 #'
 #' @export
 #'
@@ -30,14 +21,6 @@ tidy_epma <- function(
 ) {
 
   #load mapping conditions
-  cnd <- pipeline({
-    xmap
-    attr('dir_map')
-    paste0('/', c('0', 'map'), '.cnd')
-    `[`(file.exists(.))
-    `[`(1)
-    read_cnd
-  })
   pos <- attributes(xmap)[c('start', 'pixel', 'step')]
   beam <- setNames(attributes(xmap)[c('current', 'dwell')], c('beam_map', 'dwell'))
   inst <- attributes(xmap)[['instrument']]

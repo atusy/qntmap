@@ -34,13 +34,12 @@ save4qm.data.frame <- function(x, nm, saving, ...) {
 
 #' @rdname save4qm
 #' @section `save4qm.qm_cluster`: 
-#' A method for `qm_cluster` class returned by `cluster_xmap()` or `cluster_group()`.
+#' A method for `qm_cluster` class returned by 
+#' [`cluster_xmap()`] or [`group_cluster()`].
 #' Object is saved as RDS file and png file.
 #' The latter shows distribution of phases among a mapped area.
 #' @importFrom png writePNG
-#' @importFrom grDevices dev.copy
-#' @importFrom grDevices dev.off
-#' @importFrom grDevices png
+#' @importFrom grDevices dev.copy dev.off png
 #' @importFrom graphics pie
 save4qm.qm_cluster <- function(x, nm, saving, ...) {
   #setting for output
@@ -82,16 +81,13 @@ save4qm.qm_cluster <- function(x, nm, saving, ...) {
 #' A method for `qntmap` class returned by `qntmap()` or `quantify()`
 #' 
 #' @importFrom data.table fwrite
-#' @importFrom pipeR pipeline
 #' @importFrom purrr walk2
 save4qm.qntmap <- function(x, nm, dir_qntmap, ...) {
-  cd <- getwd(); on.exit(setwd(cd))
-  setwd(dir_qntmap)
-  saveRDS(x, 'qntmap.RDS')
+  saveRDS(x, file.path(dir_qntmap, 'qntmap.RDS'))
   pipeline({
     unlist(x, recursive = FALSE)
     walk2(
-      paste0(str_replace(names(.), '\\.', '_'), '.csv'),
+      file.path(dir_qntmap, paste0(str_replace(names(.), '\\.', '_'), '.csv')),
       fwrite
     )
   })

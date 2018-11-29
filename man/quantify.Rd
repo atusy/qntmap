@@ -2,23 +2,23 @@
 % Please edit documentation in R/quantify.R
 \name{quantify}
 \alias{quantify}
-\title{quantify qualtitative mapping data}
+\title{Quantify X-ray maps}
 \usage{
 quantify(xmap, qnt, cluster, maps_x = NULL, maps_y = NULL,
   fine_phase = NULL, fine_th = 0.9, fixAB = NULL, fixB = NULL)
 }
 \arguments{
-\item{xmap}{\code{qm_xmap} class object returned by \code{read_xmap()}.}
+\item{xmap}{\code{qm_xmap} class object returned by \code{\link[=read_xmap]{read_xmap()}}.}
 
-\item{qnt}{\code{qm_qnt} class object returned by \code{read_qnt()}.}
+\item{qnt}{\code{qm_qnt} class object returned by \code{\link[=read_qnt]{read_qnt()}}.}
 
-\item{cluster}{\code{qm_cluster} class object returned by \code{cluter_xmap()}.}
+\item{cluster}{\code{qm_cluster} class object returned by \code{\link[=cluster_xmap]{cluster_xmap()}}.}
 
-\item{maps_x}{A x-axis size of maps comprising guide net map (default: \code{NULL}).}
+\item{maps_x, maps_y}{Sizes of maps along x- and y-axes comprising guide net map.
+(default: \code{NULL}).}
 
-\item{maps_y}{A y-axis size of maps comprising guide net map (default: \code{NULL}).}
-
-\item{fine_phase}{A character vector to specify fine grained phases which tend to comprise multi-phase pixels e.g., c('Pl', 'Amp')}
+\item{fine_phase}{A character vector to specify fine grained phases
+which tend to comprise multi-phase pixels e.g., c('Pl', 'Amp')}
 
 \item{fine_th}{0.9}
 
@@ -27,5 +27,5 @@ quantify(xmap, qnt, cluster, maps_x = NULL, maps_y = NULL,
 \item{fixB}{fix B (default: \code{NULL}).}
 }
 \description{
-quantify qualtitative mapping data
+Quantify X-ray maps
 }

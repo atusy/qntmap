@@ -29,11 +29,10 @@ pick <- function(
   i = data.frame(x, y, phase), 
   ...
 ) {
-  if(
-    length(unique(lapply(list(x, y, phase), length))) != 1
-  ) {
+  `if`(
+    length(unique(lapply(list(x, y, phase), length))) != 1,
     stop('lengths of x, y, and phase must be same')
-  }
+  )
   UseMethod('pick')
 }
 

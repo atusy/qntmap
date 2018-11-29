@@ -2,7 +2,7 @@
 % Please edit documentation in R/quantify.R
 \name{qntmap_quantify}
 \alias{qntmap_quantify}
-\title{(Deprecated) Use quantify.}
+\title{(DEPRECATED) Use quantify.}
 \usage{
 qntmap_quantify(wd = ".", dir_map, RDS_cluster, maps_x = NULL,
   maps_y = NULL, fine_phase = NULL, fine_th = 0.9,
@@ -16,20 +16,23 @@ qntmap_quantify(wd = ".", dir_map, RDS_cluster, maps_x = NULL,
 
 \item{RDS_cluster}{path to the RDS file created by cluster_xmap}
 
-\item{maps_x}{A x-axis size of maps comprising guide net map (default: \code{NULL}).}
+\item{maps_x}{Sizes of maps along x- and y-axes comprising guide net map.
+(default: \code{NULL}).}
 
-\item{maps_y}{A y-axis size of maps comprising guide net map (default: \code{NULL}).}
+\item{maps_y}{Sizes of maps along x- and y-axes comprising guide net map.
+(default: \code{NULL}).}
 
-\item{fine_phase}{A character vector to specify fine grained phases which tend to comprise multi-phase pixels e.g., c('Pl', 'Amp')}
+\item{fine_phase}{A character vector to specify fine grained phases
+which tend to comprise multi-phase pixels e.g., c('Pl', 'Amp')}
 
 \item{fine_th}{0.9}
 
-\item{qnt}{\code{qm_qnt} class object returned by \code{read_qnt()}.}
+\item{qnt}{\code{qm_qnt} class object returned by \code{\link[=read_qnt]{read_qnt()}}.}
 
 \item{qltmap}{qm_xmap class object (xmap param of quantify)}
 
-\item{cluster}{\code{qm_cluster} class object returned by \code{cluter_xmap()}.}
+\item{cluster}{\code{qm_cluster} class object returned by \code{\link[=cluster_xmap]{cluster_xmap()}}.}
 }
 \description{
-(Deprecated) Use quantify.
+(DEPRECATED) Use quantify.
 }

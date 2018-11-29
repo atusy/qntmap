@@ -64,7 +64,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">qntmap</a>
-        <span class="label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.2.2</span>
+        <span class="label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.3.0</span>
       </span>
     </div>
 
@@ -137,15 +137,21 @@
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
       <th>xmap</th>
-      <td><p>a <code>qm_xmap</code> class object returned by <code>read_xmap</code></p></td>
+      <td><p>a <code>qm_xmap</code> class object returned by <code><a href='read_xmap.html'>read_xmap()</a></code></p></td>
     </tr>
     <tr>
       <th>centers</th>
-      <td><p>c-by-p matrix returned by <code><a href='find_centers.html'>find_centers()</a></code> or by manually; c clusters and p features. Used to guess initial centers (or centroids) of clusters. A value returned by , typically <code>data.frame</code> or <code>matrix</code>, indicating initial guess centers (or centroids) or clusters. See <code><a href='find_centers.html'>find_centers()</a></code>.</p></td>
+      <td><p>c-by-p matrix returned by <code><a href='find_centers.html'>find_centers()</a></code> or by manually;
+c clusters and p features.
+Used to guess initial centers (or centroids) of clusters.
+A value returned by , typically <code>data.frame</code> or <code>matrix</code>,
+indicating initial guess centers (or centroids) or clusters.
+See <code><a href='find_centers.html'>find_centers()</a></code>.</p></td>
     </tr>
     <tr>
       <th>elements</th>
-      <td><p>A character vector indicating which elements to be utilized in cluster analysis. <code>NULL</code>, in default, selects as much elements as possible are utilized in cluster analysis.</p></td>
+      <td><p>A character vector to chose elements to be utilized in cluster analysis.
+<code>NULL</code> (default) selects as much elements as possible.</p></td>
     </tr>
     <tr>
       <th>saving</th>
@@ -153,7 +159,9 @@
     </tr>
     <tr>
       <th>group_cluster</th>
-      <td><p><code>TRUE</code> (default) or <code>FALSE</code> to integrate same phase subgrouped using suffix. For example, when there are clusters named as Pl_NaRich and Pl_NaPoor, they are grouped as Pl.</p></td>
+      <td><p><code>FALSE</code> (default) or <code>TRUE</code> to integrate same phase subgrouped using suffix.
+For example,
+clusters named "Pl_NaRich" and "Pl_NaPoor" are integrated to "Pl" cluster .</p></td>
     </tr>
     </table>
     

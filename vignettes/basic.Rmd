@@ -38,7 +38,9 @@ formals(read_xmap)$renew <-
 
 This vignette introduce a basic procedure of analysis using `qntmap` package using example data.
 
-See https://doi.org/10.2138/am-2018-6323CCBY for technical details.
+See https://atusy.github.io/qntmap/#epma-analysis for preparing EPMA data.
+
+See https://doi.org/10.2138/am-2018-6323CCBY for implementations.
 
 # Preparation
 
@@ -109,13 +111,19 @@ plot(xmap, 'Si', interactive = FALSE) +
 
 ## Plot X-ray map data as heatmap
 
-Plots are by default **interactive**. 
-Specify 'Si' instead of 'Mg' to see Si map. 
-Specify `interactive = FALSE` if necessary.
+Plots are by default **interactive** with webui.
+Selection of elements can be done on webui.
 
-```{r}
-plot(xmap, 'Mg', interactive = TRUE)
+```{.r}
+plot(xmap)
+# A following example is non-interactive mode run by
+# plot(xmap, 'Mg', interactive = FALSE)
 ```
+
+```{r, echo = FALSE}
+plot(xmap, 'Mg', interactive = FALSE)
+```
+
 
 ## Cluster analysis
 

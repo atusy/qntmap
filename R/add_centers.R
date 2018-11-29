@@ -3,8 +3,7 @@
 #' 
 #' Add centroids manually by picking X-ray counts of selected pixels in X-ray maps.
 #' 
-#' @seealso [pick()]
-#' @seealso [find_centers()]
+#' @seealso [pick()], [find_centers()]
 #' 
 #' @examples 
 #' centers <- data.frame(
@@ -25,20 +24,18 @@
 #' @inheritParams pick
 #' 
 #' @importFrom dplyr bind_rows
-#' @importFrom pipeR pipeline
 #' @export
-add_centers <- function(
-  centers,
-  xmap
-) {
-  pipeline({
-    as.data.frame(centers)
+add_centers <- function (centers, xmap) {
+  save4qm(
+    structure(
       bind_rows(
+        as.data.frame(centers),
         pick(xmap, x = x, y = y, phase = phase, i = i)[names(centers)]
-      )
-      `class<-`(class(centers))
-      save4qm(nm = saveas, saving = is.character(saveas))
-  })
+      ),
+      class = class(centers)
+    ),
+    nm = saveas, saving = is.character(saveas)
+  )
 }
 formals(add_centers) <- c(
   formals(add_centers), 

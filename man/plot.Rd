@@ -2,15 +2,20 @@
 % Please edit documentation in R/plot.R
 \name{plot}
 \alias{plot}
+\alias{plot.qm_raster}
 \alias{plot.qm_xmap}
 \alias{plot.qntmap}
+\alias{plot.qm_cluster}
 \title{Plot methods for \code{qntmap} package}
 \usage{
-\method{plot}{qm_xmap}(x, y = setdiff(names(x), c("x", "y"))[1],
-  legend_fill = y, interactive = TRUE, ..., shiny = FALSE)
+\method{plot}{qm_raster}(x, y = setdiff(names(x), c("x", "y"))[1],
+  colors = c("viridis", "gray"), interactive = TRUE, ...)
 
-\method{plot}{qntmap}(x, y = setdiff(names(x), c("x", "y"))[1],
-  legend_fill = y, interactive = TRUE, ..., shiny = FALSE)
+\method{plot}{qm_xmap}(x, y = setdiff(names(x), c("x", "y"))[1], ...)
+
+\method{plot}{qntmap}(x, y = setdiff(names(x), c("x", "y"))[1], ...)
+
+\method{plot}{qm_cluster}(x, y = NULL, ...)
 }
 \arguments{
 \item{x}{\code{qm_xmap} or \code{qntmap} class objects returned by
@@ -18,15 +23,12 @@
 
 \item{y}{A string specifying a component of \code{x} to determine colors to fill the map.}
 
-\item{legend_fill}{A string to specify legend name for fill.
-Default value is taken from \code{y}.}
+\item{colors}{A color pallete to use. Either "viridis" (default) or "gray".}
 
-\item{interactive}{\code{TRUE} returns \code{plotly} object (default), and
-\code{FALSE} returns \code{ggplot} object.}
+\item{interactive}{\code{TRUE} (default) produces plots with shiny WebUI, and
+\code{FALSE} produces plots with \code{\link[ggplot2:ggplot]{ggplot2::ggplot()}}.}
 
 \item{...}{ignored}
-
-\item{shiny}{See plots using Shiny (default: \code{FALSE})}
 }
 \description{
 S3 methods to plot object with original classes in \code{qntmap} package.
@@ -34,15 +36,29 @@ See \code{\link[graphics:plot]{graphics::plot()}} for general use of \code{plot}
 Mapping data (\code{qm_xmap} and \code{qm_qntmap} classes) are visualized by heat maps.
 }
 \examples{
+# qm_raster class object
+d <- data.frame(x = sample.int(5), y = sample.int(5), fill = runif(5))
+class(d) <- c('qm_raster', class(d))
+plot(d, 'fill', interactive = FALSE)
+
 # qm_xmap class object
 xm <- list(A = as.data.frame(matrix(runif(25), 5)))
 class(xm) <- c('qm_xmap', 'list')
-plot(xm)
+plot(xm, interactive = FALSE)
 
 # qntmap class object
 qm <- list(A = list(wt = as.data.frame(matrix(runif(25), 5))))
 class(qm) <- c( 'qntmap', 'list')
-plot(qm)
+plot(qm, interactive = FALSE)
+
+# qm_cluster class object
+cls <- list(
+  ytehat = sample.int(3, 9, replace = TRUE), 
+  dims = c(3, 3)
+)
+names(cls$ytehat) <- letters[cls$ytehat]
+class(cls) <- "qm_cluster"
+plot(cls, interactive = FALSE)
 
 }
 \seealso{

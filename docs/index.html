@@ -5,12 +5,12 @@
 <meta charset="utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Enhance quantitative analysis of EPMA data • qntmap</title>
+<title>Enhance quantitative analysis of EPMA map • qntmap</title>
 <link rel="shortcut icon" type="image/x-icon" href="favicon.ico">
 <!-- jquery --><script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script><!-- Bootstrap --><link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script><!-- Font Awesome icons --><link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet" integrity="sha384-T8Gy5hrqNKT+hzMclPo118YTQO6cYprQmhrYwIiQ/3axmI1hQomh7Ud2hPOy8SP1" crossorigin="anonymous">
 <!-- clipboard.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.1/clipboard.min.js" integrity="sha256-hIvIxeqhGZF+VVeM55k0mJvWpQ6gTkWk3Emc+NmowYA=" crossorigin="anonymous"></script><!-- sticky kit --><script src="https://cdnjs.cloudflare.com/ajax/libs/sticky-kit/1.1.3/sticky-kit.min.js" integrity="sha256-c4Rlo1ZozqTPE2RLuvbusY3+SU1pQaJC0TjuhygMipw=" crossorigin="anonymous"></script><!-- pkgdown --><link href="pkgdown.css" rel="stylesheet">
-<script src="pkgdown.js"></script><meta property="og:title" content="Enhance quantitative analysis of EPMA data">
+<script src="pkgdown.js"></script><meta property="og:title" content="Enhance quantitative analysis of EPMA map">
 <meta property="og:description" content="A main function of this packages is 
     to produce chemical mass concentration map based on 
     x-ray maps and some quantified points among the mapped area.">
@@ -33,7 +33,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="index.html">qntmap</a>
-        <span class="label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.2.2</span>
+        <span class="label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.3.0</span>
       </span>
     </div>
 
@@ -92,31 +92,32 @@
 <div id="overview" class="section level1">
 <div class="page-header"><h1 class="hasAnchor">
 <a href="#overview" class="anchor"></a>Overview</h1></div>
-<p>This package provides functions to convert element characteristic X-ray intensity maps into element mass concentration maps.<br>
-Current version supports data from JEOL-style electron probe microanalyer (EPMA).<br>
-For conversion, you need to run spot analysis before mapping analysis.<br>
-See “How to” section for usage and <a href="https://doi.org/10.2138/am-2018-6323CCBY">Yasumoto et al. (2018)</a> for implementations.</p>
+<p>This package generates mass concentration maps and phase distribution maps based on X-ray mapping data and spot analysis data from EPMA.</p>
+<p>See “<a href="#how-to">How to</a>” for a usage and <a href="https://doi.org/10.2138/am-2018-6323CCBY">Yasumoto et al. (2018)</a> for implementations.</p>
+<p>Current version supports data from JEOL-style EPMA.</p>
 </div>
 <div id="installation" class="section level1">
 <h1 class="hasAnchor">
 <a href="#installation" class="anchor"></a>Installation</h1>
-<p>Install devtools package if you haven’t.</p>
-<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb1-1" data-line-number="1"><span class="kw">install.packages</span>(<span class="st">"devtools"</span>)</a></code></pre></div>
-<p>Then, run following code.</p>
-<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb2-1" data-line-number="1">devtools<span class="op">::</span><span class="kw"><a href="http://www.rdocumentation.org/packages/devtools/topics/reexports">install_github</a></span>(<span class="st">"atusy/qntmap"</span>)</a></code></pre></div>
+<p>Copy &amp; paste a following command to R.</p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb1-1" data-line-number="1"><span class="kw">source</span>(<span class="st">"https://install-github.me/atusy/qntmap"</span>)</a></code></pre></div>
 </div>
 <div id="how-to" class="section level1">
 <h1 class="hasAnchor">
 <a href="#how-to" class="anchor"></a>How to</h1>
 <ol style="list-style-type: decimal">
-<li>Export data from EPMA analysis.</li>
-<li>Run QntMap</li>
+<li>
+<a href="#epma-analysis">EPMA analysis</a> (spot before map)</li>
+<li>
+<a href="#Export">Export data</a> from EPMA to PC</li>
+<li>
+<a href="#run-qntmap-on-r">Run QntMap on R</a> for data processing.</li>
 </ol>
-<p>Read below for details.</p>
+<p>Details below.</p>
 <div id="epma-analysis" class="section level2">
 <h2 class="hasAnchor">
 <a href="#epma-analysis" class="anchor"></a>EPMA analysis</h2>
-<p>QntMap handles matrix effect by preparing internal standards based on spot analysis.</p>
+<p>Conversion is performed by utilizing spot analysis data as internal standards. Thus, <a href="#spot-analysis">spot analysis</a> must be done prior to <a href="#mapping">mapping</a>.</p>
 <div id="spot-analysis" class="section level3">
 <h3 class="hasAnchor">
 <a href="#spot-analysis" class="anchor"></a>Spot analysis</h3>
@@ -135,40 +136,28 @@ See “How to” section for usage and <a href="https://doi.org/10.2138/am-2018-
 <li>Make sure at least <strong>20 spots per element</strong> are analyzing grains larger than mapping probe diameter.</li>
 </ul>
 </li>
-<li>Commenting analysis
+<li>Identify phases in comment
 <ul>
-<li>Give same comments on the same phase with the similar compositions. Do not number them.
+<li>Give same comments on the same phase with the similar compositions.
 <ul>
-<li>e.g., quartz, plagioclase, …</li>
+<li>e.g., quartz, plagioclase, garnet-core, garnet-rim, …</li>
 </ul>
 </li>
-<li>Otherwise, comment them with different name. This is important treatment for phase identification and handling matrix effect.
-<ul>
-<li>e.g., garnet-core, garnet-rim</li>
-</ul>
-</li>
-<li>If you give comments containing underscore such as “garnet_core” and “garnet_rim”, then they are treated as if different phases in phase identification, but are treated as if their matrix effect are approximately same.</li>
-<li>Alternatively, give comments manually by external file.</li>
+<li>An alternative is to use external file later.</li>
 </ul>
 </li>
 </ul>
-<p>Spot quantitative analytical conditions in your lab.</p>
 </div>
-<div id="mapping-analysis" class="section level3">
+<div id="mapping" class="section level3">
 <h3 class="hasAnchor">
-<a href="#mapping-analysis" class="anchor"></a>Mapping analysis</h3>
+<a href="#mapping" class="anchor"></a>Mapping</h3>
 <ul>
 <li>Analytical conditions
 <ul>
-<li>Acceralating voltage should be same as one applied in spot analysis.</li>
-<li>Probe diameter should be larger than spot analysis. The larger saves more time, but decreases spatial resolutions.</li>
+<li>Acceralating voltage must be same as that in spot analysis.</li>
+<li>Probe diameter should be larger than that in spot analysis.</li>
 <li>Probe current is recommended to be 100 nA following Lanari et al. (2014).</li>
 <li>Dwell time is recommended to be 0.1 - 0.3 sec following Lanari et al. (2014).</li>
-<li>Note that increasing probe current accepts decreasing dwell time, but probe current must not be too high to saturate X-ray detectors. If you prefer high probe current in some reason, consider changing dispersive crystals from those chosen in spot analysis.
-<ul>
-<li>e.g., chose PET instead of TAP for Si</li>
-</ul>
-</li>
 </ul>
 </li>
 </ul>
@@ -176,7 +165,6 @@ See “How to” section for usage and <a href="https://doi.org/10.2138/am-2018-
 <div id="example-of-analytical-conditions" class="section level3">
 <h3 class="hasAnchor">
 <a href="#example-of-analytical-conditions" class="anchor"></a>Example of analytical conditions</h3>
-<p>Yasumoto et al. (submitted)</p>
 <table class="table table">
 <thead><tr class="header">
 <th align="left"></th>
@@ -219,77 +207,148 @@ See “How to” section for usage and <a href="https://doi.org/10.2138/am-2018-
 </table>
 </div>
 </div>
-<div id="data-processing-with-qntmap-package-on-r" class="section level2">
+<div id="Export" class="section level2">
 <h2 class="hasAnchor">
-<a href="#data-processing-with-qntmap-package-on-r" class="anchor"></a>Data processing with QntMap package on R</h2>
-<div id="quantification" class="section level3">
+<a href="#Export" class="anchor"></a>Export data</h2>
+<ol style="list-style-type: decimal">
+<li>
+<strong>ASCII conert</strong> mapping data into matrix format, and save the result in the directory where raw data is stored (e.g., <code>.map/1</code>).</li>
+<li>Export whole directory of analysis containing <code>.map</code> directory and <code>.qnt</code> directory</li>
+</ol>
+<div id="file-structure" class="section level3">
 <h3 class="hasAnchor">
-<a href="#quantification" class="anchor"></a>Quantification</h3>
-<p>By running following code, you’ll see that phase identification result in ‘clustering’ directory and mass concentration data as csv files in ‘qntmap’ directory both under the directory contaning mapping data.</p>
-<div id="interactive-mode" class="section level4">
+<a href="#file-structure" class="anchor"></a>File structure</h3>
+<p>A minimal example. See links for descrptions. <code>*</code> is a wild card.</p>
+<ul>
+<li>.map/*/
+<ul>
+<li>*_map.txt</li>
+<li>*.cnd</li>
+</ul>
+</li>
+<li>.qnt/
+<ul>
+<li><a href="#elemwcnd">.cnd/elemw.cnd</a></li>
+<li><a href="#bgmqnt-bgpqnt-pkintqnt-netqnt">bgm.qnt</a></li>
+<li><a href="#bgmqnt-bgpqnt-pkintqnt-netqnt">bgp.qnt</a></li>
+<li><a href="#elemqnt-elintqnt">elem.qnt</a></li>
+<li><a href="#elemqnt-elintqnt">elint.qnt</a></li>
+<li><a href="#mesqnt">mes.qnt</a></li>
+<li><a href="#bgmqnt-bgpqnt-pkintqnt-netqnt">net.qnt</a></li>
+<li><a href="#peakqnt">peak.qnt</a></li>
+<li><a href="#stgqnt">stg.qnt</a></li>
+<li><a href="#wtqnt">wt.qnt</a></li>
+</ul>
+</li>
+</ul>
+<div id="elemw-cnd" class="section level4">
 <h4 class="hasAnchor">
-<a href="#interactive-mode" class="anchor"></a>Interactive mode</h4>
+<a href="#elemw-cnd" class="anchor"></a>elemw.cnd</h4>
+<p>includes dwell time for peak and background, relative positions of backgrounds.</p>
+<p>In some case, this file is incomplete or missing, and needs to be prepared manually (e.g., <a href="https://gist.github.com/atusy/f1577b67b8874c9e915941c0725d0e22" class="uri">https://gist.github.com/atusy/f1577b67b8874c9e915941c0725d0e22</a>).</p>
+</div>
+<div id="bgm-qnt-bgp-qnt-pkint-qnt-net-qnt" class="section level4">
+<h4 class="hasAnchor">
+<a href="#bgm-qnt-bgp-qnt-pkint-qnt-net-qnt" class="anchor"></a>bgm.qnt, bgp.qnt, pkint.qnt, net.qnt</h4>
+<p>include background (minus and plus), peak, and net intensities of each analysis. In some environemts, <code>pkint.qnt</code> is missing, but is complemented within QntMap.</p>
+</div>
+<div id="elem-qnt-and-elint-qnt" class="section level4">
+<h4 class="hasAnchor">
+<a href="#elem-qnt-and-elint-qnt" class="anchor"></a>elem.qnt and elint.qnt</h4>
+<p>include name of elements data correction (“elem.qnt”; oxide or metal in ZAF), counting intensities (“elint.qnt”).</p>
+</div>
+<div id="mes-qnt" class="section level4">
+<h4 class="hasAnchor">
+<a href="#mes-qnt" class="anchor"></a>mes.qnt</h4>
+<p>includes probe current of each analysis.</p>
+</div>
+<div id="peak-qnt" class="section level4">
+<h4 class="hasAnchor">
+<a href="#peak-qnt" class="anchor"></a>peak.qnt</h4>
+<p>includes positions of peak intensities of each element of each analysis.</p>
+</div>
+<div id="stg-qnt" class="section level4">
+<h4 class="hasAnchor">
+<a href="#stg-qnt" class="anchor"></a>stg.qnt</h4>
+<p>includes coordinates and comments of each analysis.</p>
+</div>
+<div id="wt-qnt" class="section level4">
+<h4 class="hasAnchor">
+<a href="#wt-qnt" class="anchor"></a>wt.qnt</h4>
+<p>includes mass concentrations of each analysis.</p>
+</div>
+</div>
+</div>
+<div id="run-qntmap-on-r" class="section level2">
+<h2 class="hasAnchor">
+<a href="#run-qntmap-on-r" class="anchor"></a>Run QntMap on R</h2>
+<p>For data processing</p>
+<div id="interactive-mode" class="section level3">
+<h3 class="hasAnchor">
+<a href="#interactive-mode" class="anchor"></a>Interactive mode</h3>
 <p>Follow instructions shown by running the following code.</p>
+<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb2-1" data-line-number="1"><span class="kw">library</span>(qntmap)</a>
+<a class="sourceLine" id="cb2-2" data-line-number="2"><span class="kw"><a href="reference/qntmap.html">qntmap</a></span>()</a></code></pre></div>
+<p>As a result, phase identification result is saved in “<code>clustering</code>” directory and mass concentration data as csv files in “<code>qntmap</code>” directory both under the directory contaning mapping data.</p>
+<p>Note that interactive mode has limited functions. Use <a href="#manual-mode">manual mode</a> for full functionality.</p>
+</div>
+<div id="manual-mode" class="section level3">
+<h3 class="hasAnchor">
+<a href="#manual-mode" class="anchor"></a>Manual mode</h3>
+<p>A work-flow with example dataset is available at <a href="https://atusy.github.io/qntmap/articles/basic.html" class="uri">https://atusy.github.io/qntmap/articles/basic.html</a> .</p>
 <div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb3-1" data-line-number="1"><span class="kw">library</span>(qntmap)</a>
-<a class="sourceLine" id="cb3-2" data-line-number="2"><span class="kw"><a href="reference/qntmap.html">qntmap</a></span>()</a></code></pre></div>
-</div>
-<div id="manual-mode-for-experts-example" class="section level4">
-<h4 class="hasAnchor">
-<a href="#manual-mode-for-experts-example" class="anchor"></a>Manual mode for experts (example)</h4>
-<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb4-1" data-line-number="1"><span class="kw">library</span>(qntmap)</a>
-<a class="sourceLine" id="cb4-2" data-line-number="2"></a>
-<a class="sourceLine" id="cb4-3" data-line-number="3"><span class="co"># Required parameters</span></a>
-<a class="sourceLine" id="cb4-4" data-line-number="4">wd &lt;-<span class="st"> '.'</span> <span class="co"># path to the working directory</span></a>
-<a class="sourceLine" id="cb4-5" data-line-number="5">dir_map &lt;-<span class="st"> '.map/1'</span> <span class="co"># relative/absolute path to the directory containing ascii converted X-ray map files (1_map.txt, 2_map.txt, and so on)"</span></a>
-<a class="sourceLine" id="cb4-6" data-line-number="6">dir_qnt &lt;-<span class="st"> '.qnt'</span> <span class="co"># relative/absolute path to the directory containing .qnt files (pkint.qnt, net.qnt, and so on)"</span></a>
-<a class="sourceLine" id="cb4-7" data-line-number="7"></a>
-<a class="sourceLine" id="cb4-8" data-line-number="8"></a>
-<a class="sourceLine" id="cb4-9" data-line-number="9"><span class="co"># Optional parameters</span></a>
-<a class="sourceLine" id="cb4-10" data-line-number="10"></a>
-<a class="sourceLine" id="cb4-11" data-line-number="11">## A character vector to specify phases tend to be smaller than mapping probe diameter</a>
-<a class="sourceLine" id="cb4-12" data-line-number="12">fine_phase &lt;-<span class="st"> </span><span class="ot">NULL</span> </a>
-<a class="sourceLine" id="cb4-13" data-line-number="13"></a>
-<a class="sourceLine" id="cb4-14" data-line-number="14">## A csv file indicating name of the phase of n-th quantitative point analysis.</a>
-<a class="sourceLine" id="cb4-15" data-line-number="15">## The file path is absolute or relative to `dir_qnt`.</a>
-<a class="sourceLine" id="cb4-16" data-line-number="16">## If NULL, names are assumed to be specified in comments during EPMA analysis.</a>
-<a class="sourceLine" id="cb4-17" data-line-number="17">phase_list &lt;-<span class="st"> </span><span class="ot">NULL</span> </a>
-<a class="sourceLine" id="cb4-18" data-line-number="18"></a>
-<a class="sourceLine" id="cb4-19" data-line-number="19"><span class="co"># Run analysis</span></a>
-<a class="sourceLine" id="cb4-20" data-line-number="20"></a>
-<a class="sourceLine" id="cb4-21" data-line-number="21"><span class="co"># Set working directory</span></a>
-<a class="sourceLine" id="cb4-22" data-line-number="22"><span class="kw">setwd</span>(wd)</a>
-<a class="sourceLine" id="cb4-23" data-line-number="23"></a>
-<a class="sourceLine" id="cb4-24" data-line-number="24"><span class="co"># Load mapping data</span></a>
-<a class="sourceLine" id="cb4-25" data-line-number="25"><span class="co"># Change value of DT (dead time in nanoseconds) depending on EPMA.</span></a>
-<a class="sourceLine" id="cb4-26" data-line-number="26"><span class="co"># 1100 ns is a value applied by JEOL JXA-8105.</span></a>
-<a class="sourceLine" id="cb4-27" data-line-number="27">xmap &lt;-<span class="st"> </span><span class="kw"><a href="reference/read_xmap.html">read_xmap</a></span>(<span class="dt">wd =</span> dir_map, <span class="dt">DT =</span> <span class="dv">1100</span>)</a>
-<a class="sourceLine" id="cb4-28" data-line-number="28"></a>
-<a class="sourceLine" id="cb4-29" data-line-number="29"><span class="co"># Compile quantitative data</span></a>
-<a class="sourceLine" id="cb4-30" data-line-number="30">qnt &lt;-<span class="st"> </span><span class="kw"><a href="reference/read_qnt.html">read_qnt</a></span>(<span class="dt">wd =</span> dir_qnt, <span class="dt">phase_list =</span> phase_list, <span class="dt">renew =</span> <span class="ot">TRUE</span>)</a>
-<a class="sourceLine" id="cb4-31" data-line-number="31">## Check 'phase_list0.csv' under 'dir_qnt' to see if name of phases are provided properly.</a>
-<a class="sourceLine" id="cb4-32" data-line-number="32">## If not, modify the csv file and specify the path of modified one to `phase_list` in "Optional parameters" section and rerun the above code.</a>
-<a class="sourceLine" id="cb4-33" data-line-number="33"></a>
-<a class="sourceLine" id="cb4-34" data-line-number="34"><span class="co"># Determine initial cluster centers</span></a>
-<a class="sourceLine" id="cb4-35" data-line-number="35">centers &lt;-<span class="st"> </span><span class="kw"><a href="reference/find_centers.html">find_centers</a></span>(<span class="dt">xmap =</span> xmap, <span class="dt">qnt =</span> qnt, <span class="dt">fine_phase =</span> fine_phase)</a>
-<a class="sourceLine" id="cb4-36" data-line-number="36">## Check 'centers0.csv' under the `wd` and modify on demand.</a>
-<a class="sourceLine" id="cb4-37" data-line-number="37">## if modified, assign content of the modified csv file by running</a>
-<a class="sourceLine" id="cb4-38" data-line-number="38">## centers &lt;- data.table::fread('path to the modified csv file')</a>
-<a class="sourceLine" id="cb4-39" data-line-number="39"></a>
-<a class="sourceLine" id="cb4-40" data-line-number="40"><span class="co"># Phase identification</span></a>
-<a class="sourceLine" id="cb4-41" data-line-number="41"><span class="co"># assign group_cluster = TRUE if you want to integrate same phases subgrouped by suffix after '_' </span></a>
-<a class="sourceLine" id="cb4-42" data-line-number="42"><span class="co"># (e.g., garnet_a and garnet_b are integrated to garnet if TRUE)</span></a>
-<a class="sourceLine" id="cb4-43" data-line-number="43">cls &lt;-<span class="st"> </span><span class="kw"><a href="reference/cluster_xmap.html">cluster_xmap</a></span>(<span class="dt">xmap =</span> xmap, <span class="dt">centers =</span> centers, <span class="dt">group_cluster =</span> <span class="ot">FALSE</span>)</a>
-<a class="sourceLine" id="cb4-44" data-line-number="44"></a>
-<a class="sourceLine" id="cb4-45" data-line-number="45"><span class="co"># quantify X-ray maps</span></a>
-<a class="sourceLine" id="cb4-46" data-line-number="46">qmap &lt;-<span class="st"> </span><span class="kw"><a href="reference/quantify.html">quantify</a></span>(</a>
-<a class="sourceLine" id="cb4-47" data-line-number="47">  <span class="dt">xmap =</span> xmap, <span class="dt">qnt =</span> qnt, <span class="dt">cluster =</span> cls, <span class="dt">fine_phase =</span> fine_phase</a>
-<a class="sourceLine" id="cb4-48" data-line-number="48">)</a>
-<a class="sourceLine" id="cb4-49" data-line-number="49">## Resulting files are saved in `qntmap` directory` under `dir_map`.</a>
-<a class="sourceLine" id="cb4-50" data-line-number="50"></a>
-<a class="sourceLine" id="cb4-51" data-line-number="51"><span class="co"># summarize result</span></a>
-<a class="sourceLine" id="cb4-52" data-line-number="52"><span class="kw">summary</span>(qmap)</a>
-<a class="sourceLine" id="cb4-53" data-line-number="53">## This shows minimum, lower quantile, median, mean, upper quantile, and maximum values of variables.</a></code></pre></div>
-</div>
+<a class="sourceLine" id="cb3-2" data-line-number="2"></a>
+<a class="sourceLine" id="cb3-3" data-line-number="3"><span class="co"># Required parameters</span></a>
+<a class="sourceLine" id="cb3-4" data-line-number="4">wd &lt;-<span class="st"> '.'</span> <span class="co"># path to the working directory</span></a>
+<a class="sourceLine" id="cb3-5" data-line-number="5">dir_map &lt;-<span class="st"> '.map/1'</span> <span class="co"># relative/absolute path to the directory containing ascii converted X-ray map files (1_map.txt, 2_map.txt, and so on)"</span></a>
+<a class="sourceLine" id="cb3-6" data-line-number="6">dir_qnt &lt;-<span class="st"> '.qnt'</span> <span class="co"># relative/absolute path to the directory containing .qnt files (pkint.qnt, net.qnt, and so on)"</span></a>
+<a class="sourceLine" id="cb3-7" data-line-number="7"></a>
+<a class="sourceLine" id="cb3-8" data-line-number="8"></a>
+<a class="sourceLine" id="cb3-9" data-line-number="9"><span class="co"># Optional parameters</span></a>
+<a class="sourceLine" id="cb3-10" data-line-number="10"></a>
+<a class="sourceLine" id="cb3-11" data-line-number="11">## A character vector to specify phases tend to be smaller than mapping probe diameter</a>
+<a class="sourceLine" id="cb3-12" data-line-number="12">fine_phase &lt;-<span class="st"> </span><span class="ot">NULL</span> </a>
+<a class="sourceLine" id="cb3-13" data-line-number="13"></a>
+<a class="sourceLine" id="cb3-14" data-line-number="14">## A csv file indicating name of the phase of n-th quantitative point analysis.</a>
+<a class="sourceLine" id="cb3-15" data-line-number="15">## The file path is absolute or relative to `dir_qnt`.</a>
+<a class="sourceLine" id="cb3-16" data-line-number="16">## If NULL, names are assumed to be specified in comments during EPMA analysis.</a>
+<a class="sourceLine" id="cb3-17" data-line-number="17">phase_list &lt;-<span class="st"> </span><span class="ot">NULL</span> </a>
+<a class="sourceLine" id="cb3-18" data-line-number="18"></a>
+<a class="sourceLine" id="cb3-19" data-line-number="19"><span class="co"># Run analysis</span></a>
+<a class="sourceLine" id="cb3-20" data-line-number="20"></a>
+<a class="sourceLine" id="cb3-21" data-line-number="21"><span class="co"># Set working directory</span></a>
+<a class="sourceLine" id="cb3-22" data-line-number="22"><span class="kw">setwd</span>(wd)</a>
+<a class="sourceLine" id="cb3-23" data-line-number="23"></a>
+<a class="sourceLine" id="cb3-24" data-line-number="24"><span class="co"># Load mapping data</span></a>
+<a class="sourceLine" id="cb3-25" data-line-number="25"><span class="co"># Change value of DT (dead time in nanoseconds) depending on EPMA.</span></a>
+<a class="sourceLine" id="cb3-26" data-line-number="26"><span class="co"># 1100 ns is a value applied by JEOL JXA-8105.</span></a>
+<a class="sourceLine" id="cb3-27" data-line-number="27">xmap &lt;-<span class="st"> </span><span class="kw"><a href="reference/read_xmap.html">read_xmap</a></span>(<span class="dt">wd =</span> dir_map, <span class="dt">DT =</span> <span class="dv">1100</span>)</a>
+<a class="sourceLine" id="cb3-28" data-line-number="28"></a>
+<a class="sourceLine" id="cb3-29" data-line-number="29"><span class="co"># Compile quantitative data</span></a>
+<a class="sourceLine" id="cb3-30" data-line-number="30">qnt &lt;-<span class="st"> </span><span class="kw"><a href="reference/read_qnt.html">read_qnt</a></span>(<span class="dt">wd =</span> dir_qnt, <span class="dt">phase_list =</span> phase_list, <span class="dt">renew =</span> <span class="ot">TRUE</span>)</a>
+<a class="sourceLine" id="cb3-31" data-line-number="31">## Check 'phase_list0.csv' under 'dir_qnt' to see if name of phases are provided properly.</a>
+<a class="sourceLine" id="cb3-32" data-line-number="32">## If not, modify the csv file and specify the path of modified one to `phase_list` in "Optional parameters" section and rerun the above code.</a>
+<a class="sourceLine" id="cb3-33" data-line-number="33"></a>
+<a class="sourceLine" id="cb3-34" data-line-number="34"><span class="co"># Determine initial cluster centers</span></a>
+<a class="sourceLine" id="cb3-35" data-line-number="35">centers &lt;-<span class="st"> </span><span class="kw"><a href="reference/find_centers.html">find_centers</a></span>(<span class="dt">xmap =</span> xmap, <span class="dt">qnt =</span> qnt, <span class="dt">fine_phase =</span> fine_phase)</a>
+<a class="sourceLine" id="cb3-36" data-line-number="36">## Check 'centers0.csv' under the `wd` and modify on demand.</a>
+<a class="sourceLine" id="cb3-37" data-line-number="37">## If modified, assign content of the modified csv file by running</a>
+<a class="sourceLine" id="cb3-38" data-line-number="38">## centers &lt;- data.table::fread('path to the modified csv file')</a>
+<a class="sourceLine" id="cb3-39" data-line-number="39"></a>
+<a class="sourceLine" id="cb3-40" data-line-number="40"><span class="co"># Phase identification</span></a>
+<a class="sourceLine" id="cb3-41" data-line-number="41"><span class="co"># Assign group_cluster = TRUE if you want to integrate same phases subgrouped by suffix after '_' </span></a>
+<a class="sourceLine" id="cb3-42" data-line-number="42"><span class="co"># (e.g., garnet_a and garnet_b are integrated to garnet if TRUE)</span></a>
+<a class="sourceLine" id="cb3-43" data-line-number="43">cls &lt;-<span class="st"> </span><span class="kw"><a href="reference/cluster_xmap.html">cluster_xmap</a></span>(<span class="dt">xmap =</span> xmap, <span class="dt">centers =</span> centers, <span class="dt">group_cluster =</span> <span class="ot">FALSE</span>)</a>
+<a class="sourceLine" id="cb3-44" data-line-number="44"></a>
+<a class="sourceLine" id="cb3-45" data-line-number="45"><span class="co"># Quantify X-ray maps</span></a>
+<a class="sourceLine" id="cb3-46" data-line-number="46">qmap &lt;-<span class="st"> </span><span class="kw"><a href="reference/quantify.html">quantify</a></span>(</a>
+<a class="sourceLine" id="cb3-47" data-line-number="47">  <span class="dt">xmap =</span> xmap, <span class="dt">qnt =</span> qnt, <span class="dt">cluster =</span> cls, <span class="dt">fine_phase =</span> fine_phase</a>
+<a class="sourceLine" id="cb3-48" data-line-number="48">)</a>
+<a class="sourceLine" id="cb3-49" data-line-number="49">## Resulting files are saved in `qntmap` directory` under `dir_map`.</a>
+<a class="sourceLine" id="cb3-50" data-line-number="50"></a>
+<a class="sourceLine" id="cb3-51" data-line-number="51"><span class="co"># Summarize result</span></a>
+<a class="sourceLine" id="cb3-52" data-line-number="52"><span class="kw">summary</span>(qmap)</a>
+<a class="sourceLine" id="cb3-53" data-line-number="53">## This shows minimum, lower quantile, median, mean, upper quantile, and maximum values of variables.</a></code></pre></div>
 </div>
 </div>
 </div>

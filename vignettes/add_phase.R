@@ -65,7 +65,7 @@ centers <- find_centers(xmap, qnt)
 centers
 
 ## ------------------------------------------------------------------------
-plot(xmap, 'Si', interactive = TRUE)
+plot(xmap, 'Si', interactive = FALSE)
 
 ## ------------------------------------------------------------------------
 centers <- add_centers(centers = centers, xmap = xmap, x = 18, y = 28, p = 'Qtz')

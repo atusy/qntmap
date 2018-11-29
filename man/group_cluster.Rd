@@ -7,7 +7,7 @@
 group_cluster(x, saving = TRUE, suffix = "_.*")
 }
 \arguments{
-\item{x}{\code{qm_cluster} class object returned by \code{qltmap_cls_pois()}.}
+\item{x}{\code{qm_cluster} class object returned by \code{\link[=cluster_xmap]{cluster_xmap()}}.}
 
 \item{saving}{\code{TRUE} or \code{FALSE} to save result (default: \code{TRUE}).}
 

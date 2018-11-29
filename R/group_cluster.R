@@ -3,7 +3,7 @@
 #' When data points are assigned to clusters A_1 and A_2, 
 #' their clusters are renamed to be A by matching regular expressions.
 #'
-#' @param x `qm_cluster` class object returned by `qltmap_cls_pois()`.
+#' @param x `qm_cluster` class object returned by [`cluster_xmap()`].
 #' @param saving `TRUE` or `FALSE` to save result (default: `TRUE`).
 #' @param suffix A regular expression of suffix (default: `'_.*'`)
 #'

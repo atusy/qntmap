@@ -7,7 +7,8 @@
 find_centers_kpp(x, k, given = NULL)
 }
 \arguments{
-\item{x}{An object which can be coerced to \code{matrix}, typically \code{matrix} itself or \code{data.frame}.}
+\item{x}{An object which can be coerced to \code{\link{matrix}},
+typically \code{\link{matrix}} itself or \code{\link{data.frame}}.}
 
 \item{k}{A number of clusters.}
 

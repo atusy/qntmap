@@ -158,7 +158,7 @@ centers
 ### Compare the initial centroids with X-ray map plotted with heatmap
 
 ```{r}
-plot(xmap, 'Si', interactive = TRUE)
+plot(xmap, 'Si', interactive = FALSE)
 ```
 
 In this case, an analysist will notice there is something other than olivine.

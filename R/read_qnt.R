@@ -5,13 +5,9 @@
 #' @param renew if TRUE and the file specified by RDS exists, that file will be loaded
 #' @param saving whether or not to save the data as RDS file
 #'
-#' @importFrom dplyr select
-#' @importFrom dplyr one_of
-#' @importFrom dplyr mutate
+#' @importFrom dplyr select one_of mutate
 #' @importFrom pipeR %>>%
-#' @importFrom stringr str_replace_all
-#' @importFrom stringr str_replace
-#' @importFrom stringr str_detect
+#' @importFrom stringr str_replace_all str_replace str_detect
 #' @importFrom data.table fwrite
 #'
 #' @export
@@ -92,16 +88,16 @@ read_qnt <- function(
       beam = qnt$mes$V3,
       phase =
         if(is.null(phase_list)) {
-          comment %>>%
-            str_replace_all('[:blank:]{2,}', ' ') %>>%
-            str_replace(' $', '') %>>%
-            str_replace('^ ', '')
+          str_replace_all(
+            comment,
+            c('[:blank:]{2,}' = ' ', ' $' = '', '^ ' = '')
+          )
         } else {
-          phase_list %>>%
-            fread %>>%
-            mutate(use = if(exists('use')) use else TRUE) %>>%
-            mutate(phase = ifelse(use, phase, NA)) %>>%
-            (phase)
+          mutate(
+            fread(phase_list),
+            use = `if`(exists('use'), use, TRUE),
+            phase = ifelse(use, phase, NA)
+          )[["phase"]]
         }
     )
 
@@ -116,7 +112,7 @@ read_qnt <- function(
   
   save4qm(
     structure(
-      list(elm = elm, cnd = cnd, cmp = cmp), #, raw = list(cnd = cnd0, qnt = qnt)),
+      list(elm = elm, cnd = cnd, cmp = cmp),
       dir_qnt = wd,
       class = c('qm_qnt', 'list')
     ),

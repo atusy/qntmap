@@ -17,11 +17,11 @@ An index can be created using mask image through \code{\link[=segment]{segment()
 }
 \description{
 S3 methods for the arithmetric mean.
-See \code{\link[base:mean]{base::mean()}}  for general use of \code{plot}.
+See \code{\link[base:mean]{base::mean()}}  for general use of \code{mean()}.
 }
 \section{mean.qntmap}{
 
-returns a \code{data.frame} whose first column lists elements in \code{qntmap} class object.
+returns a \code{\link{data.frame}} whose first column lists elements in \code{qntmap} class object.
 Second to last columns lists \code{mean} values of each elements for each index.
 }
 
@@ -52,11 +52,5 @@ mean(qm, index = rep(c('L', 'R'), each = 100))
 
 }
 \seealso{
-\code{\link[base:mean]{base::mean()}}
-
-\code{\link[=segment]{segment()}}
-
-\code{\link[=quantify]{quantify()}}
-
-\code{\link[=qntmap]{qntmap()}}
+\code{\link[base:mean]{base::mean()}}, \code{\link[=segment]{segment()}}, \code{\link[=quantify]{quantify()}}, \code{\link[=qntmap]{qntmap()}}
 }

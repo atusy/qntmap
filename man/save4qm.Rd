@@ -50,7 +50,8 @@ together with invisible return of \code{x}.
 
 \section{\code{save4qm.qm_cluster}}{
 
-A method for \code{qm_cluster} class returned by \code{cluster_xmap()} or \code{cluster_group()}.
+A method for \code{qm_cluster} class returned by
+\code{\link[=cluster_xmap]{cluster_xmap()}} or \code{\link[=group_cluster]{group_cluster()}}.
 Object is saved as RDS file and png file.
 The latter shows distribution of phases among a mapped area.
 }

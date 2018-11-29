@@ -10,7 +10,7 @@ segment(x, ...)
 \method{segment}{character}(x, ...)
 }
 \arguments{
-\item{x}{A path to the image file (PNG, JPEG, and BMP).}
+\item{x}{A path to the PNG image file.}
 
 \item{...}{ignored}
 }
@@ -22,14 +22,8 @@ Make index to segment mapping area.
 The obtained index is further utilized in \code{\link[=mean.qntmap]{mean.qntmap()}}.
 }
 \examples{
-library(imager)
-x <- system.file('extdata/parrots.png',package='imager')
-print(x) # x is a path to the example image file. 
-head(segment(x)) # [1] "#747458" "#757559" "#78785C" "#77765B" "#78785C" "#78785C"
-\dontrun{
-segment(matrix(1:9, 3, 3)) 
-# This gives error as current version only support a path of a image file as input
-}
+x <- system.file("img", "Rlogo.png", package="png")
+head(segment(x))
 
 }
 \seealso{
