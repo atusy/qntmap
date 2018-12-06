@@ -77,15 +77,21 @@ dir(file.path(wd, 'minimal'), recursive = TRUE, all.files = TRUE)
 
 ## Specify directories containing data
 
-```{r}
+
+```{r, include = FALSE}
 dir_map <- file.path(wd, 'minimal/.map/1')
 dir_qnt <- file.path(wd, 'minimal/.qnt')
+```
+
+``` r
+dir_map <- 'minimal/.map/1'
+dir_qnt <- 'minimal/.qnt'
 ```
 
 
 ## Load data
 
-```{r}
+```{r, message = FALSE}
 xmap <- read_xmap(dir_map)
 qnt <- read_qnt(dir_qnt)
 ```
@@ -120,7 +126,7 @@ Be sure to specify a path to modified csv file to `phase_list` parameter of `rea
 Also, `renew` parameter of `read_qnt` must be `TRUE`.
 
 ```{r}
-phase_list <- read.csv(file.path(dir_qnt, 'phase_list0.csv'))
+phase_list <- read.csv('phase_list0.csv')
 phase_list$use[phase_list$phase == 'Qtz'] <- FALSE
 write.csv(phase_list, file.path(dir_qnt, 'phase_list_no_qtz.csv'))
 qnt <- read_qnt(dir_qnt, phase_list = file.path(dir_qnt, 'phase_list_no_qtz.csv'), renew = TRUE)

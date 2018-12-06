@@ -80,15 +80,20 @@ dir(file.path(wd, 'minimal'), recursive = TRUE, all.files = TRUE)
 
 ## Specify directories containing data
 
-```{r}
+```{r, include = FALSE}
 dir_map <- file.path(wd, 'minimal/.map/1')
 dir_qnt <- file.path(wd, 'minimal/.qnt')
+```
+
+``` r
+dir_map <- 'minimal/.map/1'
+dir_qnt <- 'minimal/.qnt'
 ```
 
 
 ## Load data
 
-```{r}
+```{r, message = FALSE}
 xmap <- read_xmap(dir_map)
 qnt <- read_qnt(dir_qnt)
 ```
@@ -96,7 +101,7 @@ qnt <- read_qnt(dir_qnt)
 This is an artifact example data which contains olivine and quartz within the mapping area.
 The phases are quantified 20 points each.
 
-```{r, message = FALSE, echo = FALSE}
+```{r, message = FALSE, echo = FALSE, warning = FALSE}
 epma <- tidy_epma(qnt, xmap) %>>%
   filter(elm == elm[[1]]) %>>%
   select(x_px, y_px, phase)
@@ -105,6 +110,12 @@ plot(xmap, 'Si', interactive = FALSE) +
   geom_point(
     aes(y_px, x_px, colour = phase),
     data = epma, inherit.aes = FALSE
+  ) +
+  guides(
+    fill = 
+      guide_colourbar(
+        barheight = grid::unit(1, "npc") - unit(10, "line")
+      )
   )
 ```
 
@@ -140,43 +151,13 @@ centers
 
 ### Run cluster analysis {#run-cls}
 
-
-```{r eval = FALSE}
-cluster <- cluster_xmap(xmap, centers)
-```
-
 The result is saved as a binary file and as png format images in `clustering` directory below the directory containing mapping data.
 
-```{r, include = FALSE}
+For a quick look, `plot()`{.r} function is also available.
+
+```{r ,eval = TRUE, fig.keep = "last"}
 cluster <- cluster_xmap(xmap, centers)
-```
-
-```{r, echo = FALSE, fig.width = 3, fig.height = 3, fig.show = 'hold'}
-cls_imgs <- dir(
-    file.path(dir_map, 'clustering'), 
-    full.names = TRUE
-  ) %>>%
-  str_subset('\\.png$')
-
-cls_imgs %>>%
-  map(png::readPNG) %>>%
-  map(function(.x) {
-    expand.grid(
-      y = seq(nrow(.x), 1),
-      x = seq(ncol(.x))
-    ) %>>%
-      mutate(
-        fill = rgb(c(.x[, , 1]), c(.x[, , 2]), c(.x[, , 3]))
-      )
-  }) %>>%
-  map(ggplot, aes(x, y, fill = fill)) %>>%
-  map(`+`, list(
-    geom_raster(),
-    coord_fixed(),
-    scale_fill_identity(),
-    theme_void()
-  )) %>>%
-  walk(print)
+plot(cluster, interactive = FALSE)
 ```
 
 
@@ -254,9 +235,19 @@ Let's use an image from cluster analysis [above](#run-cls).
 
 Input path to the image to `segment` function.
 
-```{r}
-i <- segment(cls_imgs[grepl('_map.png$', cls_imgs)][1])
+```{r img-path, include = FALSE}
+img <- dir(
+  file.path(dir_map, "clustering"), 
+  pattern = "_map.png",
+  full.names = TRUE
+)[[1]]
+i <- segment(img)
 ```
+
+``` r
+i <- segment(dir("`r img`"))
+```
+
 
 Then, input the result of `segment()` to `index` parameter of `mean()`.
 
