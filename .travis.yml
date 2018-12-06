@@ -4,6 +4,15 @@ language: R
 sudo: required
 env: _R_CHECK_CRAN_INCOMING_=FALSE
 cache: packages
+jobs:
+  include:
+  - r: oldrel
+  - r: release
+  - r: devel
+  - os: osx
+    r: release
+r_binary_packages:
+  - covr
 warnings_are_errors: false
 after_success:
   - Rscript -e 'covr::codecov()'
