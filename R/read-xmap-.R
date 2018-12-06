@@ -26,22 +26,26 @@ read_xmap <- function(
   on.exit(setwd(cd))
   wd <- normalizePath(wd)
   setwd(wd)
-  
+
   # Read old file with version check
-  if(!renew && file.exists('xmap.RDS')) {
-    xmap <- readRDS('xmap.RDS')
+  rds <- "xmap.RDS"
+  if(!renew && file.exists(rds)) {
+    xmap <- readRDS(rds)
     ver_old <- attr(xmap, 'ver')
-    if(!is.null(ver_old) && ver == ver_old) {
-      return(structure(xmap, dir_map = wd))
-    }
-    rm(ver_old, xmap)
+    deadtime <- attr(xmap, "deadtime")
+    if (!is.null(ver_old)) 
+      if (ver == ver_old && deadtime == DT)
+        return(structure(xmap, dir_map = wd))
+    rm(xmap, ver_old, deadtime)
   }
   
   files_xmap <- dir(pattern = .map)
   files_cnd <- dir(pattern = .cnd)
   if(length(files_xmap) != length(files_cnd)) {
-    cat('file names of mapping data:', files_xmap, '\n')
-    cat('file names of mapping conditions:', files_cnd)
+    cat(
+      'file names of mapping data:', files_xmap, '\n',
+      'file names of mapping conditions:', files_cnd
+    )
     stop(
       'Length of files of xmap and cnd are different.' , 
       'Check parameters .map and .cnd'
@@ -59,7 +63,8 @@ read_xmap <- function(
   # load qltmap from text images when the RDS file does not exist,
   # there is something wrong with RDS file, or renew = TRUE
   pipeline({
-    lapply(files_xmap, fread)
+    files_xmap
+    lapply(fread)
       setNames(elm) 
       prioritize(.component)
       map_at( # Dead time corrections except for electron signals (e.g., BSE)
@@ -81,7 +86,7 @@ read_xmap <- function(
         instrument = cnd[[1]][['instrument']][1],
         ver = ver
       )
-      save4qm('xmap.RDS', saving)
+      save4qm(rds, saving)
   })
 }
 

@@ -17,74 +17,69 @@ read_qnt <- function(
   renew = FALSE,
   saving = TRUE
 ) {
-
+  
   cd <- getwd()
   on.exit(setwd(cd))
-
+  
+  if(is.character(phase_list)) {
+    phase_list <- normalizePath(phase_list)
+    if(!file.exists(phase_list))
+      stop(
+        "phase_list needs be specified as",
+        "an absolute path or",
+        "a relative path from the current directory: ",
+        cd
+      )
+  }
+  
   wd <- normalizePath(wd)
   setwd(wd)
-
-  if(!renew && file.exists('qnt.RDS')) {
+  
+  if(!renew && is.null(phase_list) && file.exists('qnt.RDS')) {
     QNT <- readRDS('qnt.RDS')
     attr(QNT, 'dir_qnt') <- wd
+    message(
+      "Loaded ", file.path(wd, "qnt.RDS"), "\n"
+    )
     return(QNT)
   }
   
   #load .qnt files
   qnt <- c(
-      'bgm',
-      'bgp',
-      'elem',
-      'elint',
-      # 'krat',
-      # 'kraw',
-      'mes',
-      'net',
-      'pkint',
-      'peak',
-      # 'sigma',
-      'stg',
-      'wt'
-    ) %>>%
+    'bgm',
+    'bgp',
+    'elem',
+    'elint',
+    # 'krat',
+    # 'kraw',
+    'mes',
+    'net',
+    'pkint',
+    'peak',
+    # 'sigma',
+    'stg',
+    'wt'
+  ) %>>%
     (setNames(paste0(., '.qnt'), .)) %>>%
     `[`(file.exists(.)) %>>%
     lapply(fread)
-
+  
   elemw <- c('.cnd/elemw.cnd', 'Pos_0001/data001.cnd')
   
   #extract elemental data
   elm <- data.frame(
-      elem = unlist(qnt$elem[1, -c(1, 2)], use.names = FALSE),
-      elint = unlist(qnt$elint[1, -c(1, 2)], use.names = FALSE),
-      read_qnt_elemw(elemw[file.exists(elemw)][1])
-    )
+    elem = unlist(qnt$elem[1, -c(1, 2)], use.names = FALSE),
+    elint = unlist(qnt$elint[1, -c(1, 2)], use.names = FALSE),
+    read_qnt_elemw(elemw[file.exists(elemw)][1])
+  )
   
   rm(elemw)
-
-  if(
-    !is.null(phase_list) && 
-    !file.exists(phase_list) && 
-    !grepl('/', phase_list)
-  ) {
-    phase_list2 <- file.path(cd, phase_list)
-    if(!file.exists(phase_list2)) stop('"', phase_list, '" not found')
-    warning(
-      '\n',
-      'Found phase_list in current directory: ',
-      cd,
-      '\n',
-      'From qntmap v0.2.0, ', 
-      'phase_list parameter needs be an absolute path, ', 
-      'or a relative path from parameter wd', 
-      '\n\n'
-    )
-    phase_list <- phase_list2
-    rm(phase_list2)
-  }
   
-  cnd <- qnt$stg[, c(1, 5, 6, 7, 10)] %>>% 
-    setNames(c('id', 'x', 'y', 'z', 'comment')) %>>%
-    mutate(
+  cnd <- mutate(
+      setNames(
+          qnt$stg[, c(1, 5, 6, 7, 10)],
+          c('id', 'x', 'y', 'z', 'comment')
+        ),
       beam = qnt$mes$V3,
       phase =
         if(is.null(phase_list)) {
@@ -104,11 +99,17 @@ read_qnt <- function(
   #extract compositional data
   #bgm, bgp, pkint, bgint [cps/uA]
   cmp <- qnt[names(qnt) %in% c('bgm', 'bgp', 'net', 'pkint', 'wt')] %>>%
-    lapply(setNames, c('id', 'num', elm$elem, 'sum')) %>>%
-    lapply(select, one_of(elm$elem))
+    # 1st and 2nd collumns are id and integeer, last column is sum
+    lapply(`[`, seq_along(elm$elem) + 2) %>>% 
+    lapply(setNames, elm$elem)
 
-  if(is.null(phase_list) && !file.exists('phase_list0.csv')) 
-    fwrite(cbind(cnd[c('id', 'phase')], use =TRUE), 'phase_list0.csv')
+  if(is.null(phase_list) && !file.exists('phase_list0.csv') && saving) {
+    fwrite(
+      cbind(cnd[c('id', 'phase')], use =TRUE), 
+      file.path(cd, 'phase_list0.csv')
+    )
+    message("phase_list0.csv is created in ", cd)
+  }
   
   save4qm(
     structure(
