@@ -1,5 +1,7 @@
 # © 2018 JAMSTEC
-context("test-add_ceters.R")
+library(testthat)
+
+context("test-add-ceters.R")
 
 test_that("Add centers without saving csv", {
   centers <- data.frame(phase = 'a', X1 = 1, X2 = 1)
