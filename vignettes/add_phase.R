@@ -29,11 +29,11 @@ file.copy(
 ## ------------------------------------------------------------------------
 dir(file.path(wd, 'minimal'), recursive = TRUE, all.files = TRUE)
 
-## ------------------------------------------------------------------------
+## ---- include = FALSE----------------------------------------------------
 dir_map <- file.path(wd, 'minimal/.map/1')
 dir_qnt <- file.path(wd, 'minimal/.qnt')
 
-## ------------------------------------------------------------------------
+## ---- message = FALSE----------------------------------------------------
 xmap <- read_xmap(dir_map)
 qnt <- read_qnt(dir_qnt)
 
@@ -41,7 +41,7 @@ qnt <- read_qnt(dir_qnt)
 table(qnt$cnd$phase)
 
 ## ------------------------------------------------------------------------
-phase_list <- read.csv(file.path(dir_qnt, 'phase_list0.csv'))
+phase_list <- read.csv('phase_list0.csv')
 phase_list$use[phase_list$phase == 'Qtz'] <- FALSE
 write.csv(phase_list, file.path(dir_qnt, 'phase_list_no_qtz.csv'))
 qnt <- read_qnt(dir_qnt, phase_list = file.path(dir_qnt, 'phase_list_no_qtz.csv'), renew = TRUE)

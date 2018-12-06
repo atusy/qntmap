@@ -1,6 +1,6 @@
-pandoc: 2.2.1
-pkgdown: 1.1.0.9000
-pkgdown_sha: 6e70f7b8610b52658ada49e40e2d05bcf2c0616a
+pandoc: '2.4'
+pkgdown: 1.2.0
+pkgdown_sha: ~
 articles:
   add_phase: add_phase.html
   basic: basic.html
