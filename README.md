@@ -1,13 +1,21 @@
 Enhance quantitative analysis of EPMA maps with QntMap
 ================
 
+[![Travis build
+status](https://travis-ci.org/atusy/qntmap.svg?branch=master)](https://travis-ci.org/atusy/qntmap)
+[![Coverage
+status](https://codecov.io/gh/atusy/qntmap/branch/master/graph/badge.svg)](https://codecov.io/github/atusy/qntmap?branch=master)
+[![AppVeyor build
+status](https://ci.appveyor.com/api/projects/status/github/atusy/qntmap?branch=master&svg=true)](https://ci.appveyor.com/project/atusy/qntmap)
+
 # Overview
 
 This package generates mass concentration maps and phase distribution
 maps based on X-ray mapping data and spot analysis data from EPMA.
 
-See “[How to](#how-to)” for a usage and [Yasumoto et al.
-(2018)](https://doi.org/10.2138/am-2018-6323CCBY) for implementations.
+See “[How to](#how-to)” for a usage and [Yasumoto et
+al. (2018)](https://doi.org/10.2138/am-2018-6323CCBY) for
+implementations.
 
 Current version supports data from JEOL-style EPMA.
 
@@ -57,10 +65,10 @@ standards. Thus, [spot analysis](#spot-analysis) must be done prior to
       - Acceralating voltage must be same as that in spot analysis.
       - Probe diameter should be larger than that in spot analysis.
       - Probe current is recommended to be 100 nA following Lanari et
-        al. (2014).
+        al. (2014).
       - Dwell time is recommended to be 0.1 - 0.3 sec following Lanari
-        et al.
-(2014).
+        et
+al. (2014).
 
 ### Example of analytical conditions
 

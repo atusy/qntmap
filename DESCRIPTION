@@ -9,7 +9,7 @@ Authors@R: c(
         person(given = 'Japan Agency for Marine-Earth Science and Technology (JAMSTEC)', role = c('cph', 'fnd')),
         person(given = 'JST PRESTO (Grant No. JPMJPR1676)', role = c('fnd'))
     )
-Authors: YASUMOTO Atsushi [aut, cph, cre]
+Author: YASUMOTO Atsushi [aut, cph, cre]
 Maintainer: YASUMOTO Atsushi <atusy.7+qntmap@gmail.com>
 Description: A main function of this packages is 
     to produce chemical mass concentration map based on 
@@ -40,12 +40,15 @@ Imports: curl,
     tibble,
     tidyr,
     utils
-Sugests: pkgdown,
+Suggests: pkgdown,
     roxygen2,
-    testthat
+    testthat,
+    here,
+    covr
 URL: https://github.com/atusy/qntmap/
 BugReports: https://github.com/atusy/qntmap/issues
 Collate:
+    '0.R'
     'pick.R'
     'add-centers.R'
     'cluster.R'
@@ -65,8 +68,8 @@ Collate:
     'qntmap.R'
     'quantify.R'
     'read-cnd.R'
+    'read-qnt-.R'
     'read-qnt-elemw.R'
-    'read-qnt.R'
     'read-xmap-.R'
     'read-xmap-cnd.R'
     'save.R'
@@ -76,9 +79,5 @@ Collate:
     'wrappers.R'
     'zzz.R'
 Roxygen: list(markdown = TRUE)
-Suggests: 
-    knitr,
-    pkgdown,
-    rmarkdown,
-    testthat
 VignetteBuilder: knitr
+
