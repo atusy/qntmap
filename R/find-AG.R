@@ -43,7 +43,7 @@ lm_AG <- function(epma, ...) {
     )),
     a = map(fit, coef, complete = FALSE),
     a_se = map(fit, vcov, complete = FALSE),
-    len_eq_1 = map_int(a, length) == 1 & map_int(a_se, length) == 1,
+    len_eq_1 = lengths(a) == 1 & lengths(a_se) == 1,
     a = unlist(ifelse(len_eq_1, a, NA_real_), use.names = FALSE),
     a_se = unlist(ifelse(len_eq_1, a_se, NA_real_), use.names = FALSE),
     len_eq_1 = NULL,

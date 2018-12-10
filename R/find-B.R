@@ -46,7 +46,7 @@ lm_B <- function(epma, ...) {
     )),
     b = map(fit, coef, complete = FALSE),
     b_se = map(fit, vcov, complete = FALSE),
-    .kept = map_int(b, length) == 1 & map_int(b_se, length) == 1,
+    .kept = lengths(b) == 1 & lengths(b_se) == 1,
     b = unlist(ifelse(.kept, b, NA_real_), use.names = FALSE) / k,
     b_se = unlist(ifelse(.kept, b_se, NA_real_), use.names = FALSE) / k,
     .kept = NULL,
