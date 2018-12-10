@@ -116,3 +116,28 @@ tidy_epma <- function(
     ) %>>%
     as.data.frame
 }
+
+
+
+#' Only used interanlly by quantify
+#' @noRd
+tidy_epma_for_quantify <- function(
+  epma, maps_x, maps_y, elements,
+  distinguished = FALSE, fine_phase = NULL, fine_th = .9
+) {
+  pipeline({
+    epma
+      filter(elm %in% !!elements) 
+      mutate(
+        net = net * (net > 0),
+        phase3 = if (!!distinguished) phase else phase2,
+        x_stg = ((x_px - 1) %/% !!maps_x + 1) * (0 < x_px) * (x_px <= maps_x), 
+        y_stg = ((y_px - 1) %/% !!maps_y + 1) * (0 < y_px) * (y_px <= maps_y),
+        stg = ifelse((x_stg * y_stg) <= 0, NA, flag0(x_stg, y_stg)),
+        mem = mem * 
+          (str_replace(cls, '_.*', '') == phase2) *
+          (cls %nin% fine_phase) * 
+          (mem > fine_th) 
+      )
+  })
+}

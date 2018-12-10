@@ -33,7 +33,7 @@ quantify <- function(
 
   cd <- getwd(); on.exit(setwd(cd))
   
-  #mapping conditions
+  # Mapping conditions
   dir_map <- attr(xmap, 'dir_map')
   pixel <- attr(xmap, 'pixel')
 
@@ -48,23 +48,13 @@ quantify <- function(
     ))
   )
 
-  #tidy compilation of epma data
-  distinguished <- any(grepl('_', colnames(cluster$membership)))
-  epma <- pipeline({
-    tidy_epma(qnt = qnt, xmap = xmap, cluster = cluster) 
-      filter(elm %in% qnt$elm$elem) 
-      mutate(
-        net = net * (net > 0),
-        phase3 = if(distinguished) phase else phase2,
-        x_stg = ((x_px - 1) %/% maps_x + 1) * (0 < x_px) * (x_px <= pixel[1]), 
-        y_stg = ((y_px - 1) %/% maps_y + 1) * (0 < y_px) * (y_px <= pixel[2]),
-        stg = ifelse((x_stg * y_stg) <= 0, NA, flag0(x_stg, y_stg)),
-        mem = mem * 
-          (str_replace(cls, '_.*', '') == phase2) *
-          (cls %nin% fine_phase) * 
-          (mem > fine_th) 
-      )
-  })
+  # Tidy compilation of epma data
+  epma <- tidy_epma_for_quantify(
+      tidy_epma(qnt = qnt, xmap = xmap, cluster = cluster),
+      maps_x, maps_y, 
+      distinguished = any(grepl('_', colnames(cluster$membership))),
+      elements = qnt$elm$elem
+    )
 
   xmap <- xmap[qnt$elm$elint[order(qnt$elm$elem)]]
     
@@ -76,7 +66,7 @@ quantify <- function(
   
   AG <- find_AG(epma, setdiff(names(X), unique(epma$phase3))) # return also A
 
-  B <- find_B(epma)
+  B <- nest(find_B(epma), -stg, .key = ".B")
 
   rm(epma)
 

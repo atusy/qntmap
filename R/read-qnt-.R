@@ -22,14 +22,15 @@ read_qnt <- function(
   on.exit(setwd(cd))
   
   if(is.character(phase_list)) {
-    phase_list <- normalizePath(phase_list)
     if(!file.exists(phase_list))
       stop(
-        "phase_list needs be specified as",
-        "an absolute path or",
+        phase_list, 
+        "\n not found.",
+        "Specify phase_list parameter by an absolute path or",
         "a relative path from the current directory: ",
         cd
       )
+    phase_list <- normalizePath(phase_list)
   }
   
   wd <- normalizePath(wd)

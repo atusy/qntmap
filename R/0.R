@@ -4,7 +4,7 @@ utils::globalVariables(
     "bgm_pos", "bgm.H", "bgm.L", "bgm2", "bgp", "bgp_pos", "bgp2", 
     "cls", "components", "count", "data", "dwell", "elem", "Element", 
     "elint", "elm", "fit", "fit_na", "g", "g_na", "g_na_se", "g_se", 
-    "i", "id", "ID", "k", "map_est", "mem", "n_within_pi", "net", 
+    "i", "id", "ID", "k", "map_est", "mapint", "mem", "n_within_pi", "net", 
     "no", "not_mapped_phase", "nr", "nr0", "path", "phase", "Phase", 
     "phase2", "phase3", "pi_H", "pi_L", "pk_t", "pkint", "pkint.H", 
     "pkint.L", "se", "stat", "stg", "use", "V0", "val", "var", "w", 
