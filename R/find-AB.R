@@ -8,51 +8,77 @@
 #' @param B B
 #' @param stg stg
 #' @noRd
-find_AB <- function(A, B, stg) {pipeline({
-  A  #AB
-    select(phase3, elm, a, a_se) 
-    nest(-phase3, .key = '.A') 
-    mutate(
-      .A = 
-        map(
-          .A,
-          function(.A)
-            mutate(
-              B, 
-              .B = map(
-                .B,
-                mutate,
-                val = b * .A$a,
-                se = L2(b * .A$a_se, .A$a * b_se),
-                b = NULL,
-                b_se = NULL
-              )
-            )
-        ) 
-    )  
-    unnest 
-    unnest  
-    nest(-elm) 
-    mutate(
-      val = pipeline({
-          data 
-            map(select, -se) 
-            map(spread, phase3, val)
-        }),
-      se =  pipeline({
-          data 
-            map(select, -val) 
-            map(spread, phase3, se)
-        }),
-      data = NULL
-    )  
-    nest(-elm) 
-    mutate(data = setNames(data, elm)) 
-    `[[`('data') 
-    map(unlist, recursive = FALSE)  
-    map(map, right_join, tibble(stg), by = 'stg') 
-    map(map, select, -stg) 
+# > AG
+#   elm phase3      g     g_se            a         a_se
+# 1  Mg     Ol 5797.0 16.15739 0.0001011356 1.200497e-14
+# 2  Si     Ol 4282.5 10.12659 0.0001011270 1.129788e-14
+# 3  Si    Qtz 9891.0 14.91865 0.0001009895 3.593501e-15
+# 4  Mg    Qtz    0.0  0.00000 0.0001011356 5.848577e-15
+
+# > B
+#   elm stg        b         b_se
+# 1  Mg  11 99.75446 0.0004009793
+# 2  Si  11 99.88468 0.0003773498
+
+# > AB
+# elm stg phase3         ab        ab_se
+# 1  Mg  11     Ol 0.01008873 4.055329e-08
+# 2  Mg  11    Qtz 0.01008873 4.055329e-08
+# 3  Si  11     Ol 0.01010103 3.816024e-08
+# 4  Si  11    Qtz 0.01008730 3.810836e-08
+find_AB <- function(AG, B) {
+  mutate(
+    right_join(
+      AG[, c("elm", "phase3", "a", "a_se")],
+      B, by = "elm"
+    ),
+    ab = a * b,
+    ab_se = L2(a * b_se, b * a_se),
+    a = NULL, a_se = NULL, b = NULL, b_se = NULL
+  )
+}
+
+#' Expand AB along stg
+#' @importFrom tidyr gather spread
+#' @importFrom dplyr right_join, select
+#' @importFrom purrr map
+#' @noRd
+#' @note
+#' > AB
+#' elm stg phase3         ab        ab_se
+#' 1  Mg  11     Ol 0.01008873 4.055329e-08
+#' 2  Mg  11    Qtz 0.01008873 4.055329e-08
+#' 3  Si  11     Ol 0.01010103 3.816024e-08
+#' 4  Si  11    Qtz 0.01008730 3.810836e-08
+#' > stg
+#' c("11", "11")
+#' > expand_AB(AB, stg)
+#' List of 2
+#' $ Mg:List of 2
+#' ..$ ab   :'data.frame':	2 obs. of  2 variables:
+#'   .. ..$ Ol : num [1:2] 0.0101 0.0101
+#' .. ..$ Qtz: num [1:2] 0.0101 0.0101
+#' ..$ ab_se:'data.frame':	2 obs. of  2 variables:
+#'   .. ..$ Ol : num [1:2] 4.06e-08 4.06e-08
+#' .. ..$ Qtz: num [1:2] 4.06e-08 4.06e-08
+#' $ Si:List of 2
+#' ..$ ab   :'data.frame':	2 obs. of  2 variables:
+#'   .. ..$ Ol : num [1:2] 0.0101 0.0101
+#' .. ..$ Qtz: num [1:2] 0.0101 0.0101
+#' ..$ ab_se:'data.frame':	2 obs. of  2 variables:
+#'   .. ..$ Ol : num [1:2] 3.82e-08 3.82e-08
+#' .. ..$ Qtz: num [1:2] 3.81e-08 3.81e-08
+expand_AB <- function(AB, stg) {pipeline({
+  gather(AB, .var, .val, -elm, -stg, -phase3)
+  spread(phase3, .val)
+  split(.$elm)
+  map(function(x) split(x, x$.var))
+  map(map, select, -elm, -.var)
+  map(map, right_join, data.frame(stg = stg), by = "stg")
+  map(map, select, -stg)
 })}
+
+
 
 #' fix AB value when composition of certain phases are constant
 #' @inheritParams find_AB

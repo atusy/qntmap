@@ -79,7 +79,8 @@ quantify <- function(
   dir.create(dir_qntmap, FALSE)
 
   pipeline({
-    find_AB(AG, B, stg) #AB
+    find_AB(AG, B) #AB
+      expand_AB(stg)
       find_AB_fix(fixAB, X, fine_th, xmap)
       map(map, `*`, X) #XAB
       map(map_at, 'se', map, square) 

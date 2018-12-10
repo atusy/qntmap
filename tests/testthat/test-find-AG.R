@@ -12,17 +12,6 @@ epma <- tidy_epma_for_quantify(
   elements = qnt$elm$elem
 )
 
-
-xmap <- read_xmap("minimal/.map/1", saving = FALSE)
-qnt <- read_qnt("minimal/.qnt", saving = FALSE)
-cluster <- cluster_xmap(xmap, find_centers(xmap, qnt), saving = FALSE)
-epma <- tidy_epma_for_quantify(
-  tidy_epma(qnt, xmap, cluster),
-  maps_x = attr(xmap, "pixel")[1],
-  maps_y = attr(xmap, "pixel")[2],
-  elements = qnt$elm$elem
-)
-
 # lm_AG
 
 test_that("lm_AG(): returns data frame named at least by 'a', 'a_se', 'g', and 'g_se'", {
