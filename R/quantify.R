@@ -64,7 +64,10 @@ quantify <- function(
 
   rm(cluster)
   
-  AG <- find_AG(epma, setdiff(names(X), unique(epma$phase3))) # return also A
+  AG <- mutate(
+    find_AG(epma, setdiff(names(X), unique(epma$phase3))), # returns A and G
+    ag = a * g, ag_se = L2(a * g_se, g * a_se), g = NULL, g_se = NULL # returns A and A * G
+  )
 
   B <- nest(find_B(epma), -stg, .key = ".B")
 

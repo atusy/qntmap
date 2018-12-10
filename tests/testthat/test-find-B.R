@@ -54,8 +54,11 @@ test_that("find_B(): In case map should be divided into smaller maps (e.g., guid
       beam_map = epma$beam_map[1]
     )
   )
-  B_11 <- B[B$stg == "11", names(B) != "stg"]
-  B_dummy <- B[B$stg == "dummy", names(B) != "stg"]
+  nm <- setdiff(names(B), "stg")
+  B_11 <- B[B$stg == "11", nm]
+  B_11 <- B_11[order(B_11$elm),]
+  B_dummy <- B[B$stg == "dummy", nm]
+  B_dummy <- B_dummy[order(B_dummy$elm),]
   rownames(B_11) <- rownames(B_dummy) <- NULL
   expect_identical(B_11, B_dummy)
 })

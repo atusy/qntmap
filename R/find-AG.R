@@ -4,53 +4,50 @@
 #' A character vector specifying phases who weren't analyzed 
 #' during point analysis # JAMSTEC
 #' @importFrom dplyr group_by mutate summarise ungroup
-#' @importFrom pipeR pipeline
 #' @importFrom purrr map_dbl map
 #' @importFrom stats sd lm coef vcov
 #' @noRd
 find_AG <- function(
   epma, 
   not_quantified = character(0) # © 2018 JAMSTEC
-) {pipeline({
-  epma
-    group_by(elm)
-    mutate(
-      fit_na = list(lm(wt ~ 0 + net)),
-      g_na = mean(bgint), # © 2018 JAMSTEC
-      g_na_se = sd(g_na) / (length(g_na) - 1) # © 2018 JAMSTEC
-    ) 
-    group_by(elm, phase3) # © 2018 JAMSTEC changed group_by(phase3, elm) -> group_by(elm, phase3) 
-    summarise(
+) {
+  AG <- lm_AG(epma, elm, phase3)
+  AG_mean <- lm_AG(epma, elm)
+  kept <- is.finite(AG[["a"]] *AG[["a_se"]])
+  as.data.frame(bind_rows(
+    AG[kept, ],
+    left_join(
+      AG[!kept, c("elm", "phase3", "g", "g_se")], 
+      AG_mean[, c("elm", "a", "a_se")], 
+      by = "elm"
+    ),
+    if(length(not_quantified) > 0)
+      unnest(mutate(AG_mean, phase3 = not_quantified))
+  ))
+}
+
+#' @param epma `tidy_epma``
+#' @param ... Grouping variables in NSE.
+#' @importFrom dplyr group_by mutate summarize ungroup
+#' @importFrom purrr map_dbl
+#' @importFrom stats coef lm vcov
+#' @seealso [`find_B()`]
+#' @noRd
+lm_AG <- function(epma, ...) {
+  mutate(
+    ungroup(summarize(
+      group_by(epma, ...), 
       fit = list(lm(wt ~ 0 + net)),
-      fit_na = fit_na[1],
       g = mean(bgint),
-      g_se = sd(bgint) / (length(bgint) - 1),
-      g_na = g_na[1], #  © 2018 JAMSTEC
-      g_na_se = g_na_se[1] # © 2018 JAMSTEC
-    ) 
-    bind_rows(
-      if(length(not_quantified)) {
-        unnest(
-          summarize(
-            .,
-            phase3 = list(not_quantified), # © 2018 JAMSTEC
-            fit = fit_na[1], # © 2018 JAMSTEC
-            fit_na = fit_na[1],
-            g = g_na[1], # © 2018 JAMSTEC
-            g_se = g_na_se[1] # © 2018 JAMSTEC
-          ),
-          phase3
-        ) # © 2018 JAMSTEC
-      } # © 2018 JAMSTEC
-    ) # © 2018 JAMSTEC
-    ungroup 
-    mutate(
-      g_na = NULL, g_na_se = NULL, # © 2018 JAMSTEC
-      a = map_dbl(fit, coef),
-      a_se = unlist(ifelse(is.na(a), map(fit_na, vcov), map(fit, vcov))),
-      a = ifelse(is.na(a), map_dbl(fit_na, coef), a),
-      ag = a * g,
-      ag_se = L2(a * g_se, g * a_se),
-      fit = NULL, fit_na = NULL, g = NULL, g_se = NULL
-    )
-})}
+      g_se = sd(bgint) / (length(bgint) - 1)
+    )),
+    a = map(fit, coef, complete = FALSE),
+    a_se = map(fit, vcov, complete = FALSE),
+    len_eq_1 = map_int(a, length) == 1 & map_int(a_se, length) == 1,
+    a = unlist(ifelse(len_eq_1, a, NA_real_), use.names = FALSE),
+    a_se = unlist(ifelse(len_eq_1, a_se, NA_real_), use.names = FALSE),
+    len_eq_1 = NULL,
+    # a = map_dbl(fit, coef), a_se = map_dbl(fit, vcov), # Simpler codes works R 3.5.x
+    fit = NULL
+  )
+}

@@ -41,14 +41,16 @@ lm_B <- function(epma, ...) {
   mutate(
     ungroup(summarize(
       group_by(epma, ...), 
-      zeros = all(mem == 0),
       fit = list(lm(pkint ~ 0 + mapint, weights = mem)),
       k = dwell[1] * beam_map[1] * 1e+6
     )),
-    b = unlist(ifelse(zeros, NA_real_, map(fit, coef)), use.names = FALSE),
-    b_se = unlist(ifelse(zeros, NA_real_, map(fit, vcov)), use.names = FALSE),
-    zeros = NULL,
-    # map_dbl(fit, coef) / k, b_se = map_dbl(fit, vcov) / k, # Simpler codes works R 3.5.x
+    b = map(fit, coef, complete = FALSE),
+    b_se = map(fit, vcov, complete = FALSE),
+    .kept = map_int(b, length) == 1 & map_int(b_se, length) == 1,
+    b = unlist(ifelse(.kept, b, NA_real_), use.names = FALSE) / k,
+    b_se = unlist(ifelse(.kept, b_se, NA_real_), use.names = FALSE) / k,
+    .kept = NULL,
+    # b = map_dbl(fit, coef) / k, b_se = map_dbl(fit, vcov) / k, # Simpler codes works R 3.5.x
     fit = NULL, k = NULL
   )
 }
