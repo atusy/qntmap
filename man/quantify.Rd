@@ -4,8 +4,9 @@
 \alias{quantify}
 \title{Quantify X-ray maps}
 \usage{
-quantify(xmap, qnt, cluster, maps_x = NULL, maps_y = NULL,
-  fine_phase = NULL, fine_th = 0.9, fixAB = NULL, fixB = NULL)
+quantify(xmap, qnt, cluster, maps_x = attr(xmap, "pixel")[1],
+  maps_y = attr(xmap, "pixel")[2], fine_phase = NULL, fine_th = 0.9,
+  fixAB = NULL, fixB = NULL, saving = TRUE)
 }
 \arguments{
 \item{xmap}{\code{qm_xmap} class object returned by \code{\link[=read_xmap]{read_xmap()}}.}
@@ -20,7 +21,7 @@ quantify(xmap, qnt, cluster, maps_x = NULL, maps_y = NULL,
 \item{fine_phase}{A character vector to specify fine grained phases
 which tend to comprise multi-phase pixels e.g., c('Pl', 'Amp')}
 
-\item{fine_th}{0.9}
+\item{fine_th}{A threshold of membership degrees to 0.9}
 
 \item{fixAB}{fix AB in case compositions of a mineral is constant (default: \code{NULL}).}
 

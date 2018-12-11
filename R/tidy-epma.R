@@ -7,7 +7,7 @@
 #' @importFrom dplyr distinct left_join mutate mutate_at rename transmute
 #' @importFrom matrixStats rowMaxs
 #' @importFrom pipeR %>>%
-#' @importFrom purrr map2 map_int
+#' @importFrom purrr map2
 #' @importFrom stats setNames
 #' @importFrom stringr str_c str_replace_all str_replace str_detect
 #'
@@ -70,7 +70,7 @@ tidy_epma <- function(
   #calculate 95% ci of data
   qnt$cnd %>>%
     mutate(
-      cls = `if`(is.null(cluster), NA, names(cluster$ytehat)[qnt$cnd$nr]),
+      cls = `if`(is.null(cluster), NA, cluster$cluster[qnt$cnd$nr]),
       mem = `if`(is.null(cluster), NA, rowMaxs(cluster$membership[qnt$cnd$nr, ])),
       elm = list(qnt$elm)
     ) %>>%

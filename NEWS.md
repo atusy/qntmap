@@ -1,3 +1,13 @@
+# qntmap 0.3.1
+
+Upcoming release
+
+- Refactors
+    - Simplify codes
+    - Separate monster functions into small ones
+- Continuous integrations
+    - Travis CI, AppVeyor, and Codecov are introduced
+
 # qntmap 0.3.0
 
 ## Major changes

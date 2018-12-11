@@ -2,6 +2,7 @@
 
 #' list of patterns in cnd files
 #' @importFrom pipeR pipeline
+#' @importFrom purrr pmap
 #' @noRd
 patterns_xmap_cnd <- pipeline({
   list(
@@ -34,6 +35,11 @@ patterns_xmap_cnd <- pipeline({
 #' Read cnd files of X-ray mapping data
 #' @param x path to the cnd file
 #' @param patterns list of patterns
+#' @importFrom pipeR pipeline
+#' @importFrom purrr map map_int
+#' @importFrom stringr str_detect str_replace_all str_subset
+#' @importFrom stats setNames
+#' 
 #' @noRd
 read_xmap_cnd <- function(x, patterns = patterns_xmap_cnd) {
   if(is.null(patterns)) return(readLines(x))
@@ -48,9 +54,9 @@ read_xmap_cnd <- function(x, patterns = patterns_xmap_cnd) {
     }))
     str_replace_all(c('^\\$' = '', '[:blank:]+' = ' '))
     strsplit(' ')
-    `[`(map_int(., length) > 1)
+    `[`(lengths(.) > 1)
     setNames(pipeline({ # set names based on names(patterns_map_cnd)
-      map(., `[`, 1)
+      map(., 1)
       map(function(pattern) str_detect(patterns, pattern))
       map_int(which)
       (function(i) names(patterns)[i])()

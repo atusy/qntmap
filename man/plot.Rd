@@ -53,10 +53,9 @@ plot(qm, interactive = FALSE)
 
 # qm_cluster class object
 cls <- list(
-  ytehat = sample.int(3, 9, replace = TRUE), 
+  cluster = letters[sample.int(3, 9, replace = TRUE)], 
   dims = c(3, 3)
 )
-names(cls$ytehat) <- letters[cls$ytehat]
 class(cls) <- "qm_cluster"
 plot(cls, interactive = FALSE)
 

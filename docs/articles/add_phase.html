@@ -86,9 +86,9 @@
       <h1>Add phases after EPMA analysis</h1>
                         <h4 class="author">YASUMOTO Atsushi</h4>
             
-            <h4 class="date">2018-12-06</h4>
+            <h4 class="date">2018-12-11</h4>
       
-      <small class="dont-index">Source: <a href="https://github.com/atusy/qntmap/blob/master/vignettes/add_phase.Rmd"><code>vignettes/add_phase.Rmd</code></a></small>
+      <small class="dont-index">Source: <a href="https://github.com/atusy/qntmap/blob/master/tests/testthat/vignettes/add_phase.Rmd"><code>tests/testthat/vignettes/add_phase.Rmd</code></a></small>
       <div class="hidden name"><code>add_phase.Rmd</code></div>
 
     </div>
@@ -139,15 +139,14 @@
 <div id="specify-directories-containing-data" class="section level2">
 <h2 class="hasAnchor">
 <a href="#specify-directories-containing-data" class="anchor"></a>Specify directories containing data</h2>
-<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb5-1" title="1">dir_map &lt;-<span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/file.path">file.path</a></span>(wd, <span class="st">'minimal/.map/1'</span>)</a>
-<a class="sourceLine" id="cb5-2" title="2">dir_qnt &lt;-<span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/file.path">file.path</a></span>(wd, <span class="st">'minimal/.qnt'</span>)</a></code></pre></div>
+<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb5-1" title="1">dir_map &lt;-<span class="st"> 'minimal/.map/1'</span></a>
+<a class="sourceLine" id="cb5-2" title="2">dir_qnt &lt;-<span class="st"> 'minimal/.qnt'</span></a></code></pre></div>
 </div>
 <div id="load-data" class="section level2">
 <h2 class="hasAnchor">
 <a href="#load-data" class="anchor"></a>Load data</h2>
 <div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb6-1" title="1">xmap &lt;-<span class="st"> </span><span class="kw"><a href="../reference/read_xmap.html">read_xmap</a></span>(dir_map)</a>
-<a class="sourceLine" id="cb6-2" title="2">qnt &lt;-<span class="st"> </span><span class="kw"><a href="../reference/read_qnt.html">read_qnt</a></span>(dir_qnt)</a>
-<a class="sourceLine" id="cb6-3" title="3"><span class="co">#&gt; phase_list0.csv is created in /home/atusy/Documents/R/pkg/qntmap/vignettes</span></a></code></pre></div>
+<a class="sourceLine" id="cb6-2" title="2">qnt &lt;-<span class="st"> </span><span class="kw"><a href="../reference/read_qnt.html">read_qnt</a></span>(dir_qnt)</a></code></pre></div>
 </div>
 <div id="check-quantified-data" class="section level2">
 <h2 class="hasAnchor">

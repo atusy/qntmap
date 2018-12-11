@@ -89,21 +89,22 @@ plot.qntmap <- function(
 #' @examples
 #' # qm_cluster class object
 #' cls <- list(
-#'   ytehat = sample.int(3, 9, replace = TRUE), 
+#'   cluster = letters[sample.int(3, 9, replace = TRUE)], 
 #'   dims = c(3, 3)
 #' )
-#' names(cls$ytehat) <- letters[cls$ytehat]
 #' class(cls) <- "qm_cluster"
 #' plot(cls, interactive = FALSE)
 #' 
 #' @importFrom pipeR pipeline
+#' @importFrom dplyr mutate select
+#' @importFrom stats setNames
 #' @export
 plot.qm_cluster <- function(x, y = NULL, ...) {
   pipeline({
     lapply(x$dims, seq)
     setNames(c("y", "x"))
     expand.grid
-    mutate(Phase = !!names(x$ytehat))
+    mutate(Phase = !!x$cluster)
     select(x, y, Phase)
     plot.qm_raster(y = "Phase", ...)
   })

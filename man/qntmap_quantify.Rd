@@ -25,7 +25,7 @@ qntmap_quantify(wd = ".", dir_map, RDS_cluster, maps_x = NULL,
 \item{fine_phase}{A character vector to specify fine grained phases
 which tend to comprise multi-phase pixels e.g., c('Pl', 'Amp')}
 
-\item{fine_th}{0.9}
+\item{fine_th}{A threshold of membership degrees to 0.9}
 
 \item{qnt}{\code{qm_qnt} class object returned by \code{\link[=read_qnt]{read_qnt()}}.}
 

@@ -40,7 +40,7 @@ find_AB <- function(AG, B) {
 
 #' Expand AB along stg
 #' @importFrom tidyr gather spread
-#' @importFrom dplyr right_join, select
+#' @importFrom dplyr right_join select
 #' @importFrom purrr map
 #' @note
 #' > AB

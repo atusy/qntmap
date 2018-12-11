@@ -16,7 +16,7 @@ save4qm(x, nm = "", saving = TRUE, ...)
 
 \method{save4qm}{qm_cluster}(x, nm, saving, ...)
 
-\method{save4qm}{qntmap}(x, nm, dir_qntmap, ...)
+\method{save4qm}{qntmap}(x, nm, saving, ...)
 }
 \arguments{
 \item{x}{object to save}

@@ -86,9 +86,9 @@
       <h1>Basic usage</h1>
                         <h4 class="author">Atsushi YASUMOTO</h4>
             
-            <h4 class="date">2018-12-06</h4>
+            <h4 class="date">2018-12-11</h4>
       
-      <small class="dont-index">Source: <a href="https://github.com/atusy/qntmap/blob/master/vignettes/basic.Rmd"><code>vignettes/basic.Rmd</code></a></small>
+      <small class="dont-index">Source: <a href="https://github.com/atusy/qntmap/blob/master/tests/testthat/vignettes/basic.Rmd"><code>tests/testthat/vignettes/basic.Rmd</code></a></small>
       <div class="hidden name"><code>basic.Rmd</code></div>
 
     </div>
@@ -247,7 +247,7 @@ E(SiO2_{bulk}) =
 <p>However, by using mask image, <code>mean</code> values of each element are calculated for each mask areas with same colors.</p>
 <p>Let’s use an image from cluster analysis <a href="#run-cls">above</a>.</p>
 <p>Input path to the image to <code>segment</code> function.</p>
-<div class="sourceCode" id="cb15"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb15-1" title="1">i &lt;-<span class="st"> </span><span class="kw"><a href="../reference/segment.html">segment</a></span>(<span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/list.files">dir</a></span>(<span class="st">"/tmp/RtmpBlVq4C/minimal/.map/1/clustering/181206_1903_pois_k2_SiMg_map.png"</span>))</a></code></pre></div>
+<div class="sourceCode" id="cb15"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb15-1" title="1">i &lt;-<span class="st"> </span><span class="kw"><a href="../reference/segment.html">segment</a></span>(<span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/list.files">dir</a></span>(<span class="st">"/tmp/RtmpJArf2J/minimal/.map/1/clustering/181211_1908_pois_k2_SiMg_map.png"</span>))</a></code></pre></div>
 <p>Then, input the result of <code><a href="../reference/segment.html">segment()</a></code> to <code>index</code> parameter of <code><a href="../reference/mean.html">mean()</a></code>.</p>
 <div class="sourceCode" id="cb16"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb16-1" title="1"><span class="kw"><a href="../reference/mean.html">mean</a></span>(qmap, <span class="dt">index =</span> i)</a>
 <a class="sourceLine" id="cb16-2" title="2"><span class="co">#&gt;   Element  #000000  #FFFFFF</span></a>

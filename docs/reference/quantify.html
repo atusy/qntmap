@@ -128,8 +128,9 @@
     
     </div>
 
-    <pre class="usage"><span class='fu'>quantify</span>(<span class='no'>xmap</span>, <span class='no'>qnt</span>, <span class='no'>cluster</span>, <span class='kw'>maps_x</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>maps_y</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
-  <span class='kw'>fine_phase</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>fine_th</span> <span class='kw'>=</span> <span class='fl'>0.9</span>, <span class='kw'>fixAB</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>fixB</span> <span class='kw'>=</span> <span class='kw'>NULL</span>)</pre>
+    <pre class="usage"><span class='fu'>quantify</span>(<span class='no'>xmap</span>, <span class='no'>qnt</span>, <span class='no'>cluster</span>, <span class='kw'>maps_x</span> <span class='kw'>=</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/attr'>attr</a></span>(<span class='no'>xmap</span>, <span class='st'>"pixel"</span>)[<span class='fl'>1</span>],
+  <span class='kw'>maps_y</span> <span class='kw'>=</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/attr'>attr</a></span>(<span class='no'>xmap</span>, <span class='st'>"pixel"</span>)[<span class='fl'>2</span>], <span class='kw'>fine_phase</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>fine_th</span> <span class='kw'>=</span> <span class='fl'>0.9</span>,
+  <span class='kw'>fixAB</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>fixB</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>saving</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)</pre>
     
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -158,7 +159,7 @@ which tend to comprise multi-phase pixels e.g., c('Pl', 'Amp')</p></td>
     </tr>
     <tr>
       <th>fine_th</th>
-      <td><p>0.9</p></td>
+      <td><p>A threshold of membership degrees to 0.9</p></td>
     </tr>
     <tr>
       <th>fixAB</th>

@@ -94,7 +94,7 @@ cluster_xmap <- function(
     colnames(result$membership) <- centers$phase
   } else {
     if(ncol(result$membership) == 1L) {
-      colnames(result$membership) <- names(result$ytehat[1L])
+      colnames(result$membership) <- result$cluster[1L]
     } else {
       TF <- !duplicated(result$cluster)
       colnames(result$membership)[apply(result$membership[TF, ], 1L, which.max)] <-

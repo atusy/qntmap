@@ -7,7 +7,8 @@
 #' Sizes of maps along x- and y-axes comprising guide net map.
 #' (default: `NULL`).
 #' @inheritParams find_centers
-#' @param fine_th 0.9
+#' @param fine_th 
+#' A threshold of membership degrees to 0.9
 #' @param fixAB 
 #' fix AB in case compositions of a mineral is constant (default: `NULL`).
 #' @param fixB fix B (default: `NULL`).
@@ -23,12 +24,13 @@ quantify <- function(
   xmap,
   qnt,
   cluster,
-  maps_x = NULL,
-  maps_y = NULL,
+  maps_x = attr(xmap, 'pixel')[1],
+  maps_y = attr(xmap, 'pixel')[2],
   fine_phase = NULL,
   fine_th = 0.9,
   fixAB = NULL,
-  fixB = NULL
+  fixB = NULL,
+  saving = TRUE
 ) {
 
   cd <- getwd(); on.exit(setwd(cd))
@@ -36,9 +38,6 @@ quantify <- function(
   # Mapping conditions
   dir_map <- attr(xmap, 'dir_map')
   pixel <- attr(xmap, 'pixel')
-
-  if(is.null(maps_x)) maps_x <- pixel[1]
-  if(is.null(maps_y)) maps_y <- pixel[2]
 
   stg <- do.call(
     flag0,
@@ -66,16 +65,13 @@ quantify <- function(
 
   rm(cluster)
   
-  AG <- mutate(
-    find_AG(epma, setdiff(names(X), unique(epma$phase3))), # returns A and G
-    ag = a * g, ag_se = L2(a * g_se, g * a_se), g = NULL, g_se = NULL # returns A and A * G
-  )
+  AG <- find_AG(epma, setdiff(names(X), unique(epma$phase3))) # returns A and G
 
   B <- find_B(epma)
 
   rm(epma)
 
-  XAG <- find_XAG(X, AG)
+  XAG <- find_XAG(X, mutate(AG, ag = a * g, ag_se = L2(a * g_se, g * a_se), g = NULL, g_se = NULL))
 
   dir_qntmap <- paste0(dir_map, '/qntmap')
   dir.create(dir_qntmap, FALSE)
@@ -92,25 +88,13 @@ quantify <- function(
       map2(XAG, map2, `-`) #XABI - XAG
       map(setNames, c('wt', 'se')) 
       map(function(x) map(x, `*`, x$wt > 0)) 
-      c(
-        list(Total = list(
-          wt = pipeline({
-            map(., `[[`, 'wt') 
-            reduce_add 
-            as.data.frame
-          }),
-          se = pipeline({
-            map(., `[[`, 'se') 
-            map(square) 
-            reduce_add 
-            sqrt 
-            as.data.frame
-          })
-        ))
-      ) 
+      c(list(Total = list(
+        wt = as.data.frame(reduce_add(map(., 'wt'))),
+        se = as.data.frame(sqrt(reduce_add(map(map(., 'se'), square))))
+      ))) 
       prioritize(.component)
       `class<-`(c('qntmap', 'list')) 
-      save4qm(dir_qntmap = dir_qntmap)
+      save4qm(nm = dir_qntmap, saving = saving)
   })
 }
 

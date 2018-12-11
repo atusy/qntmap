@@ -82,12 +82,12 @@ save4qm.qm_cluster <- function(x, nm, saving, ...) {
 #' 
 #' @importFrom data.table fwrite
 #' @importFrom purrr walk2
-save4qm.qntmap <- function(x, nm, dir_qntmap, ...) {
-  saveRDS(x, file.path(dir_qntmap, 'qntmap.RDS'))
+save4qm.qntmap <- function(x, nm, saving, ...) {
+  saveRDS(x, file.path(nm, 'qntmap.RDS'))
   pipeline({
     unlist(x, recursive = FALSE)
     walk2(
-      file.path(dir_qntmap, paste0(str_replace(names(.), '\\.', '_'), '.csv')),
+      file.path(nm, paste0(str_replace(names(.), '\\.', '_'), '.csv')),
       fwrite
     )
   })

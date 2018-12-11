@@ -30,19 +30,19 @@ read_cnd.map_cnd <- function(x, pattern = NULL, ...) {pipeline({
   x
     str_replace_all('[:blank:]+', ' ')
     strsplit(' ')
-    lapply(`[`, seq(max(map_int(., length))))
+    lapply(`[`, seq(max(lengths(.))))
     .x ~ Reduce(rbind, .x)
     as.data.frame
     setNames(paste0('V', seq(0, by = 1, length.out = length(.))))
     mutate(V0 = str_replace(V0, '\\$', ''))
     separate('V0', into = c('id', 'no'), sep = '%', fill = 'right', convert = TRUE)
     split(.$id)
-    map(select, -id)
-    map(map, type.convert, as.is = TRUE)
-    map(map, unname)
-    map(as.data.frame)
-    map(arrange, no)
-    map(select, -no)
+    lapply(select, -id)
+    lapply(lapply, type.convert, as.is = TRUE)
+    lapply(lapply, unname)
+    lapply(as.data.frame)
+    lapply(arrange, no)
+    lapply(select, -no)
     `class<-`('map_cnd')
 })}
 
