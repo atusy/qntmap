@@ -42,7 +42,6 @@ find_AB <- function(AG, B) {
 #' @importFrom tidyr gather spread
 #' @importFrom dplyr right_join, select
 #' @importFrom purrr map
-#' @noRd
 #' @note
 #' > AB
 #' elm stg phase3         ab        ab_se
@@ -68,6 +67,7 @@ find_AB <- function(AG, B) {
 #' ..$ ab_se:'data.frame':	2 obs. of  2 variables:
 #'   .. ..$ Ol : num [1:2] 3.82e-08 3.82e-08
 #' .. ..$ Qtz: num [1:2] 3.81e-08 3.81e-08
+#' @noRd
 expand_AB <- function(AB, stg) {pipeline({
   gather(AB, .var, .val, -elm, -stg, -phase3)
   spread(phase3, .val)

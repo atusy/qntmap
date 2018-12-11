@@ -52,8 +52,10 @@ quantify <- function(
   epma <- tidy_epma_for_quantify(
       tidy_epma(qnt = qnt, xmap = xmap, cluster = cluster),
       maps_x, maps_y, 
+      elements = qnt$elm$elem,
       distinguished = any(grepl('_', colnames(cluster$membership))),
-      elements = qnt$elm$elem
+      fine_phase = fine_phase,
+      fine_th = fine_th
     )
 
   xmap <- xmap[qnt$elm$elint[order(qnt$elm$elem)]]
@@ -69,7 +71,7 @@ quantify <- function(
     ag = a * g, ag_se = L2(a * g_se, g * a_se), g = NULL, g_se = NULL # returns A and A * G
   )
 
-  B <- nest(find_B(epma), -stg, .key = ".B")
+  B <- find_B(epma)
 
   rm(epma)
 
