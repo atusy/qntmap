@@ -24,27 +24,31 @@ read_cnd.default <- function(x, pattern = NULL, ...) {
 #' @importFrom tidyr separate
 #' @importFrom utils type.convert
 #' @importFrom dplyr arrange
+#' @importFrom pipeR %>>%
 #' @importFrom stringr str_extract
 #' @export
-read_cnd.map_cnd <- function(x, pattern = NULL, ...) {pipeline({
-  x
-    str_replace_all('[:blank:]+', ' ')
-    strsplit(' ')
-    lapply(`[`, seq(max(lengths(.))))
-    .x ~ Reduce(rbind, .x)
-    as.data.frame
-    setNames(paste0('V', seq(0, by = 1, length.out = length(.))))
-    mutate(V0 = str_replace(V0, '\\$', ''))
-    separate('V0', into = c('id', 'no'), sep = '%', fill = 'right', convert = TRUE)
-    split(.$id)
-    lapply(select, -id)
-    lapply(lapply, type.convert, as.is = TRUE)
-    lapply(lapply, unname)
-    lapply(as.data.frame)
-    lapply(arrange, no)
-    lapply(select, -no)
+read_cnd.map_cnd <- function(x, pattern = NULL, ...) {
+  x %>>%
+    str_replace_all('[:blank:]+', ' ') %>>%
+    strsplit(' ') %>>%
+    lapply(`[`, seq(max(lengths(.)))) %>>%
+    .x ~ Reduce(rbind, .x) %>>%
+    as.data.frame %>>%
+    setNames(paste0('V', seq(0, by = 1, length.out = length(.)))) %>>%
+    mutate(V0 = str_replace(V0, '\\$', '')) %>>%
+    separate(
+      'V0', into = c('id', 'no'), 
+      sep = '%', fill = 'right', convert = TRUE
+    ) %>>%
+    split(.$id) %>>%
+    lapply(select, -id) %>>%
+    lapply(lapply, type.convert, as.is = TRUE) %>>%
+    lapply(lapply, unname) %>>%
+    lapply(as.data.frame) %>>%
+    lapply(arrange, no) %>>%
+    lapply(select, -no) %>>%
     `class<-`('map_cnd')
-})}
+}
 
 #' @rdname read_cnd
 #' @section read_cnd.0_cnd: A method for `0_cnd` class object.
@@ -67,7 +71,10 @@ read_cnd.0_cnd <- function(x, pattern = NULL, n = NULL, ...) {
       path,
       '"\n',
       paste(
-        paste0('"', pattern[too_many], '"\n matched lines ', lapply(detection[too_many], paste, collapse = ', ')),
+        paste0(
+          '"', pattern[too_many], '"\n matched lines ', 
+          lapply(detection[too_many], paste, collapse = ', ')
+        ),
         collapse = '\n'
       )
     )

@@ -23,9 +23,12 @@ which tend to comprise multi-phase pixels e.g., c('Pl', 'Amp')}
 
 \item{fine_th}{A threshold of membership degrees to 0.9}
 
-\item{fixAB}{fix AB in case compositions of a mineral is constant (default: \code{NULL}).}
+\item{fixAB}{Fix AB in case compositions of a mineral is constant (default: \code{NULL}).}
 
-\item{fixB}{fix B (default: \code{NULL}).}
+\item{fixB}{Fix B (default: \code{NULL}).}
+
+\item{saving}{\code{TRUE} (default) saves the results into \code{qntmap} directory under
+the directory \code{xmap} is read from. \code{FALSE} does not save.`}
 }
 \description{
 Quantify X-ray maps

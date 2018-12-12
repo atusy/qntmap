@@ -33,17 +33,15 @@ test_that("expand_AB() returns AB for each pixels depending on stg", {
     ),
     stg = c("11", "12")
   )
-  
+
   ans <- list(
     A = list(
       ab = data.frame(a = c(1L, 3L), b = c(2L, 4L)),
       ab_se = data.frame(a = c(5L, 7L), b = c(6L, 8L))
     )
   )
-  
+
   expect_identical(AB_expanded, ans)
 })
 
-
 if(interactive()) setwd(here())
-

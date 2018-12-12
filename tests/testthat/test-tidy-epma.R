@@ -1,6 +1,7 @@
 context("test-tidy-epma.R")
 
 if(interactive()) setwd(here("tests/testthat"))
+
 xmap <- read_xmap("minimal/.map/1", saving = FALSE)
 qnt <- read_qnt("minimal/.qnt", saving = FALSE)
 cls <- cluster_xmap(xmap, find_centers(xmap, qnt), saving = FALSE)

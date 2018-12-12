@@ -6,7 +6,7 @@
 #' @param saving whether or not to save the data as RDS file
 #' @param .map,.cnd regular expressions to match ASCII converted mapping results (`.map`) and condition files (`.cnd`)
 #'
-#' @importFrom pipeR pipeline
+#' @importFrom pipeR %>>%
 #' @importFrom purrr map_at
 #' @importFrom stringr str_replace
 #' @importFrom stats setNames
@@ -39,8 +39,8 @@ read_xmap <- function(
     rm(xmap, ver_old, deadtime)
   }
   
-  files_xmap <- dir(pattern = .map)
-  files_cnd <- dir(pattern = .cnd)
+  files_xmap <- dir(pattern = .map, full.names = TRUE)
+  files_cnd <- dir(pattern = .cnd, full.names = TRUE)
   if(length(files_xmap) != length(files_cnd)) {
     cat(
       'file names of mapping data:', files_xmap, '\n',
@@ -52,7 +52,7 @@ read_xmap <- function(
     )
   }
   
-  cnd <- lapply(files_cnd, read_xmap_cnd)
+  cnd <- lapply(files_cnd, read_xmap_cnd, patterns = patterns_xmap_cnd)
 
   elm <- unlist(lapply(cnd, `[[`, 'elm'), use.names = FALSE)
   
@@ -62,32 +62,30 @@ read_xmap <- function(
   # load qltmap from RDS file when qltmap_load() has already been done
   # load qltmap from text images when the RDS file does not exist,
   # there is something wrong with RDS file, or renew = TRUE
-  pipeline({
-    files_xmap
-    lapply(fread)
-      setNames(elm) 
-      prioritize(.component)
-      map_at( # Dead time corrections except for electron signals (e.g., BSE)
-        setdiff(names(.), .electron),
-        function(x) dwell * x / (dwell - DT * 1e-9 * x)
-      ) 
-      lapply(round) 
-      lapply(lapply, as.integer) 
-      lapply(as.data.frame) 
-      structure(
-        class = c('qm_xmap', class(.)),
-        deadtime = DT,
-        dir_map = wd,
-        dwell = dwell,
-        current = as.numeric(cnd[[1]][['current']][1]),
-        start = as.numeric(cnd[[1]][['start']][1:3]),
-        pixel = as.integer(cnd[[1]][['pixel']][1:2]),
-        step = as.numeric(cnd[[1]][['step']][1:2]),
-        instrument = cnd[[1]][['instrument']][1],
-        ver = ver
-      )
-      save4qm(rds, saving)
-  })
+  files_xmap %>>%
+    lapply(fread) %>>%
+    setNames(elm) %>>%
+    prioritize(.component) %>>%
+    map_at( # Dead time corrections except for electron signals (e.g., BSE)
+      setdiff(names(.), .electron),
+      function(x) dwell * x / (dwell - DT * 1e-9 * x)
+    ) %>>%
+    lapply(round) %>>%
+    lapply(lapply, as.integer) %>>%
+    lapply(as.data.frame) %>>%
+    structure(
+      class = c('qm_xmap', class(.)),
+      deadtime = DT,
+      dir_map = wd,
+      dwell = dwell,
+      current = as.numeric(cnd[[1]][['current']][1]),
+      start = as.numeric(cnd[[1]][['start']][1:3]),
+      pixel = as.integer(cnd[[1]][['pixel']][1:2]),
+      step = as.numeric(cnd[[1]][['step']][1:2]),
+      instrument = cnd[[1]][['instrument']][1],
+      ver = ver
+    ) %>>%
+    save4qm(rds, saving)
 }
 
 #' (DEPRECATED) Use read_xmap

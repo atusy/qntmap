@@ -47,5 +47,4 @@ test_that("find_AG(): In case map should be divided into smaller maps (e.g., gui
   expect_true(all(!is.na(AG$a_se)))
 })
 
-
 if(interactive()) setwd(here())

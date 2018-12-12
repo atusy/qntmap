@@ -52,7 +52,7 @@ plot.qm_raster <- function(
 #' class(xm) <- c('qm_xmap', 'list')
 #' plot(xm, interactive = FALSE)
 #' 
-#' @importFrom pipeR pipeline 
+#' @importFrom pipeR %>>% 
 #' @importFrom dplyr bind_cols
 #' @export
 plot.qm_xmap <- function(x, y = setdiff(names(x), c('x', 'y'))[1], ...) {
@@ -95,17 +95,15 @@ plot.qntmap <- function(
 #' class(cls) <- "qm_cluster"
 #' plot(cls, interactive = FALSE)
 #' 
-#' @importFrom pipeR pipeline
+#' @importFrom pipeR %>>%
 #' @importFrom dplyr mutate select
 #' @importFrom stats setNames
 #' @export
 plot.qm_cluster <- function(x, y = NULL, ...) {
-  pipeline({
-    lapply(x$dims, seq)
-    setNames(c("y", "x"))
-    expand.grid
-    mutate(Phase = !!x$cluster)
-    select(x, y, Phase)
+  lapply(x$dims, seq) %>>%
+    setNames(c("y", "x")) %>>%
+    expand.grid %>>%
+    mutate(Phase = !!x$cluster) %>>%
+    select(x, y, Phase) %>>%
     plot.qm_raster(y = "Phase", ...)
-  })
 } 

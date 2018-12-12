@@ -1,10 +1,10 @@
 # read .cnd files of X-ray mapping data
 
 #' list of patterns in cnd files
-#' @importFrom pipeR pipeline
+#' @importFrom pipeR %>>% 
 #' @importFrom purrr pmap
 #' @noRd
-patterns_xmap_cnd <- pipeline({
+patterns_xmap_cnd <- 
   list(
     jxa8800 = list(
       elm = 'XM_ELEMENT', 
@@ -25,42 +25,40 @@ patterns_xmap_cnd <- pipeline({
       step = 'XM_AP_SA_PIXEL_SIZE%0',
       instrument = 'XM_ANALYSIS_INSTRUMENT'
     )
-  )
-  (~ if(length(unique(lapply(., names))) != 1) stop('check list'))
-  pmap(c, use.names = FALSE)
-  lapply(paste, collapse = '|')
+  ) %>>% 
+  (~ if(length(unique(lapply(., names))) != 1) stop('check list')) %>>% 
+  pmap(c, use.names = FALSE) %>>% 
+  lapply(paste, collapse = '|') %>>% 
   unlist
-})
 
 #' Read cnd files of X-ray mapping data
 #' @param x path to the cnd file
 #' @param patterns list of patterns
-#' @importFrom pipeR pipeline
-#' @importFrom purrr map map_int
+#' @importFrom pipeR %>>%
+#' @importFrom purrr map_int
 #' @importFrom stringr str_detect str_replace_all str_subset
 #' @importFrom stats setNames
 #' 
 #' @noRd
 read_xmap_cnd <- function(x, patterns = patterns_xmap_cnd) {
-  if(is.null(patterns)) return(readLines(x))
-  pipeline({
-    x
-    readLines
-    str_subset(pipeline({
-      patterns
-      unlist(use.names = FALSE)
-      paste(collapse = '|')
-      (function(x) paste0('^\\$(', x, ')[:blank:]'))()
-    }))
-    str_replace_all(c('^\\$' = '', '[:blank:]+' = ' '))
-    strsplit(' ')
-    `[`(lengths(.) > 1)
-    setNames(pipeline({ # set names based on names(patterns_map_cnd)
-      map(., 1)
-      map(function(pattern) str_detect(patterns, pattern))
-      map_int(which)
-      (function(i) names(patterns)[i])()
-    }))
-    lapply(`[`, -1)
-  })
+  y <- readLines(x)
+  if(length(patterns) == 0) return(y)
+  y <- strsplit(
+      str_replace_all(
+        str_subset(y, collapse_patterns(patterns)),
+        pattern = c('^\\$' = '', '[:blank:]+' = ' ')
+      ),
+      ' '
+    )
+  y <- y[(lengths(y) > 1)]
+  names(y) <- names(patterns)[map_int(y, function(.p) which(str_detect(patterns, .p[1])))]
+  lapply(y, `[`, -1)
+}
+
+collapse_patterns <- function(x) {
+  paste0(
+    '^\\$(', 
+    paste(unlist(x, use.names = FALSE), collapse = '|'), 
+    ')[:blank:]'
+  )
 }

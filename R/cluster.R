@@ -12,14 +12,13 @@
 #' @seealso [PoiClaClu::Classify()], [find_centers()]
 #'
 #' @importFrom PoiClaClu Classify
+#' @importFrom pipeR %>>%
 #' @export
 cluster <- function(x, centers, xte = NULL, ...) {
   x_trans <- t(x)
-  y <- pipeline({
-    centers
-    apply(1L, function(y) colSums((x_trans - y) ^ 2L))
+  y <- centers %>>%
+    apply(1L, function(y) colSums(square(x_trans - y))) %>>%
     apply(1L, which.min)
-  })
   rm(x_trans)
   Classify(x, y, `if`(is.null(xte), x, xte), ...)
 }
@@ -40,7 +39,7 @@ cluster <- function(x, centers, xte = NULL, ...) {
 #' clusters named "Pl_NaRich" and "Pl_NaPoor" are integrated to "Pl" cluster .
 #'
 #' @importFrom dplyr group_by ungroup
-#' @importFrom pipeR pipeline
+#' @importFrom pipeR %>>%
 #' @importFrom tidyr gather spread
 #' @importFrom matrixStats rowMaxs
 #'
@@ -67,28 +66,21 @@ cluster_xmap <- function(
   names(result$ytehat) <- result$cluster <- centers$phase[result$ytehat]
   
   # Find representative values of each clusters (~ centers)
-  result$center <- pipeline({
-    x
-    lapply(as.double)
-    as.data.frame
-    mutate(phase = result$cluster)
-    gather(elm, val, -phase)
-    group_by(phase, elm)
-    summarise(val = median(val))
-    ungroup
+  result$center <- as.data.frame(lapply(x, as.double)) %>>%
+    mutate(phase = result$cluster) %>>%
+    gather(elm, val, -phase) %>>%
+    group_by(phase, elm) %>>%
+    summarise(val = median(val)) %>>%
+    ungroup %>>%
     spread(elm, val)
-  })
 
   # estimate membership of each clusters
-  result$membership <- pipeline({
-    result$discriminant
-    `-`(rowMaxs(.))
-    exp
+  result$membership <- result$discriminant %>>%
+    `-`(rowMaxs(.)) %>>%
+    exp %>>%
     `/`(rowSums(.))
-    # as.matrix # maybe not needed
-  })
-  
-  result$discriminant <-NULL
+
+  result$discriminant <- NULL
 
   if(nrow(centers) == ncol(result$membership)) {
     colnames(result$membership) <- centers$phase

@@ -68,15 +68,15 @@ find_AB <- function(AG, B) {
 #'   .. ..$ Ol : num [1:2] 3.82e-08 3.82e-08
 #' .. ..$ Qtz: num [1:2] 3.81e-08 3.81e-08
 #' @noRd
-expand_AB <- function(AB, stg) {pipeline({
-  gather(AB, .var, .val, -elm, -stg, -phase3)
-  spread(phase3, .val)
-  split(.$elm)
-  map(function(x) split(x, x$.var))
-  map(map, select, -elm, -.var)
-  map(map, right_join, data.frame(stg = stg), by = "stg")
-  map(map, select, -stg)
-})}
+expand_AB <- function(AB, stg) {
+  gather(AB, .var, .val, -elm, -stg, -phase3) %>>% 
+    spread(phase3, .val) %>>% 
+    split(.$elm) %>>% 
+    map(function(x) split(x, x$.var)) %>>% 
+    map(map, select, -elm, -.var) %>>% 
+    map(map, right_join, data.frame(stg = stg), by = "stg") %>>% 
+    map(map, select, -stg)
+}
 
 
 
@@ -94,31 +94,28 @@ find_AB_fix <- function(AB, fix = NULL, X, fine_th = .90, xmap) {
   
   if(is.null(fix)) return(AB)
 
-  AB_fix <- pipeline({
-    fix
-      fread
-      select(which(names(.) %in% c('phase', names(AB))))
-      filter(phase %in% names(AB[[1]]$val))
-      mutate(w = unclass(X * (X > fine_th))[phase])
-      gather(elm, wt, -phase, -w)
-      mutate(
-        i = pipeline({
-          xmap[str_replace(elm, '[0-9]*O[0-9]*', '')]
-            map(unlist, use.names = FALSE)
-            map2_dbl(w, weightedMedian, na.rm = TRUE)
-        }),
-        val = wt / i,
-        w = NULL, wt = NULL, i = NULL
-      )
-      nest(-elm, -phase)
-      mutate(data = setNames(data, phase), phase = NULL)
-      nest(-elm)
-      mutate(data = setNames(data, elm), elm = NULL)
-      `[[`('data')
-      map(`[[`, 'data')
-      map(map, unlist, use.names = FALSE)
-      map(unlist)
-  }) 
+  AB_fix <- fix %>>% 
+    fread %>>% 
+    select(which(names(.) %in% c('phase', names(AB)))) %>>% 
+    filter(phase %in% names(AB[[1]]$val)) %>>% 
+    mutate(w = unclass(X * (X > fine_th))[phase]) %>>% 
+    gather(elm, wt, -phase, -w) %>>% 
+    mutate(
+      i = xmap[str_replace(elm, '[0-9]*O[0-9]*', '')] %>>% 
+        map(unlist, use.names = FALSE) %>>% 
+        map2_dbl(w, weightedMedian, na.rm = TRUE),
+      val = wt / i,
+      w = NULL, wt = NULL, i = NULL
+    ) %>>% 
+    nest(-elm, -phase) %>>% 
+    mutate(data = setNames(data, phase), phase = NULL) %>>% 
+    nest(-elm) %>>% 
+    mutate(data = setNames(data, elm), elm = NULL) %>>% 
+    `[[`('data') %>>% 
+    map(`[[`, 'data') %>>% 
+    map(map, unlist, use.names = FALSE) %>>% 
+    map(unlist)
+ 
   
   for(e in names(AB_fix)) {
     for(p in names(AB_fix[[e]])){

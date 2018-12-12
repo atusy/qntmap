@@ -40,8 +40,6 @@ test_that("find_B(): returns a data frame", {
   expect_named(B, c("elm", "stg", "b", "b_se"))
 })
 
-
-
 test_that("find_B(): In case map should be divided into smaller maps (e.g., guidenet map)", {
   B <- find_B(
     add_row(
@@ -62,6 +60,5 @@ test_that("find_B(): In case map should be divided into smaller maps (e.g., guid
   rownames(B_11) <- rownames(B_dummy) <- NULL
   expect_identical(B_11, B_dummy)
 })
-
 
 if(interactive()) setwd(here())

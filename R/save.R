@@ -76,20 +76,18 @@ save4qm.qm_cluster <- function(x, nm, saving, ...) {
 }
 
 #' @rdname save4qm
-#' @param dir_qntmap A path to the directory to save `x`.
 #' @section `save4qm.qntmap`: 
 #' A method for `qntmap` class returned by `qntmap()` or `quantify()`
 #' 
 #' @importFrom data.table fwrite
+#' @importFrom pipeR %>>%
 #' @importFrom purrr walk2
 save4qm.qntmap <- function(x, nm, saving, ...) {
   saveRDS(x, file.path(nm, 'qntmap.RDS'))
-  pipeline({
-    unlist(x, recursive = FALSE)
+  unlist(x, recursive = FALSE) %>>%
     walk2(
       file.path(nm, paste0(str_replace(names(.), '\\.', '_'), '.csv')),
       fwrite
     )
-  })
   invisible(x)
 }

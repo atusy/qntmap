@@ -26,8 +26,6 @@ save4qm(x, nm = "", saving = TRUE, ...)
 \item{saving}{\code{TRUE} or \code{FALSE} to save result file(s).}
 
 \item{...}{other arguments passed to class methods}
-
-\item{dir_qntmap}{A path to the directory to save \code{x}.}
 }
 \value{
 \code{invisible(x)}

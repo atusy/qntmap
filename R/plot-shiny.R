@@ -75,7 +75,7 @@ ui <- function(elm, selected = elm[[1]], pcol = TRUE) {fluidPage(
 
 
 
-#' @importFrom pipeR pipeline
+#' @importFrom pipeR %>>% 
 #' @importFrom DT renderDT
 #' @importFrom dplyr everything mutate select summarize_if
 #' @importFrom scales squish
@@ -87,12 +87,10 @@ server <- function(data) {
     range_y <- range(data$y)
 
     .env <- new.env()
-    .env$log <- pipeline({
-      data
-        summarize_if(is.numeric, mean)
-        mutate(ID = 0, Area = "Whole")
-        select(Area, x, y, everything())
-    })
+    .env$log <- data %>>% 
+      summarize_if(is.numeric, mean) %>>% 
+      mutate(ID = 0, Area = "Whole") %>>% 
+      select(Area, x, y, everything())
     .env$id <- 0
     
     function(input, output) {
@@ -218,32 +216,29 @@ format_hover <- function (h) {
 #' @noRd
 summarize_box <- function (data, xmin, xmax, ymin, ymax, .env) {
   .env$id <- .env$id + 1
-  .env$log <- pipeline({
-    data[
+  .env$log <- data[
       xmin <= data$x & data$x <= xmax & 
         ymin <= data$y & data$y <= ymax, 
-      ]
-    summarize_if(is.numeric, mean)
-    cbind(ID = .env$id)
-    mutate(Area = "Box")
-    select(ID, Area, x, y, everything())
+    ] %>>% 
+    summarize_if(is.numeric, mean) %>>% 
+    cbind(ID = .env$id) %>>% 
+    mutate(Area = "Box") %>>% 
+    select(ID, Area, x, y, everything()) %>>% 
     bind_rows(.env$log)
-  })
   invisible()
 }
 
 
 #' @importFrom dplyr bind_rows everything mutate select
+#' @importFrom pipeR %>>% 
 #' @noRd
 summarize_click <- function (data, x, y, .env) {
   .env$id <- .env$id + 1
-  .env$log <- pipeline({
-    data[data$x == round(x) & data$y == round(y), ]
-    cbind(ID = .env$id)
-    mutate(Area = "Click")
-    select(ID, Area, x, y, everything())
+  .env$log <- data[data$x == round(x) & data$y == round(y), ] %>>% 
+    cbind(ID = .env$id) %>>% 
+    mutate(Area = "Click") %>>% 
+    select(ID, Area, x, y, everything()) %>>% 
     bind_rows(.env$log)
-  })
   invisible()
 }
 

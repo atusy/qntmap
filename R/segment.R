@@ -26,17 +26,15 @@ segment <- function(x, ...) {
 #' 
 #' @importFrom grDevices rgb
 #' @importFrom png readPNG
-#' @importFrom pipeR pipeline
+#' @importFrom pipeR %>>%
 #' @importFrom purrr pmap
 #' @importFrom stats setNames
 #'  
 #' @export
 segment.character <- function(x, ...) {
-  pipeline({
-    readPNG(x)
-    apply(3, list)
-    setNames(names(formals(rgb))[seq_along(.)])
-    pmap(rgb)
+  readPNG(x) %>>%
+    apply(3, list) %>>%
+    setNames(names(formals(rgb))[seq_along(.)]) %>>%
+    pmap(rgb) %>>%
     unlist(use.names = FALSE)
-  })
 }

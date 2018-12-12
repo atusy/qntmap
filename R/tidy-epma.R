@@ -20,17 +20,15 @@ tidy_epma <- function(
   cluster = NULL
 ) {
 
-  #load mapping conditions
+  # load mapping conditions
   pos <- attributes(xmap)[c('start', 'pixel', 'step')]
   beam <- setNames(attributes(xmap)[c('current', 'dwell')], c('beam_map', 'dwell'))
   inst <- attributes(xmap)[['instrument']]
 
-  #データの整形
+  # tidy data
 
-  #ステージ位置をmmからピクセル位置に変換
-  qnt$cnd <- pipeline({
-      qnt$cnd
-      filter(!is.na(phase))
+  ## mm -> px
+  qnt$cnd <- qnt$cnd[!is.na(qnt$cnd$phase), ] %>>%
       mutate(
         x_px = (round((x - pos$start[1]) * 1e3 / pos$step[1]) + 1) *
           `if`(inst %in% 'JXA8230', -1, 1),
@@ -42,9 +40,9 @@ tidy_epma <- function(
         ),
         nr = ifelse(0 < nr0 & nr0 < prod(pos$pixel), nr0, NA),
         phase2 = str_replace(phase, '_.*', '')
-      )
+      ) %>>%
       distinct(nr0, .keep_all = TRUE)
-    })
+  
   qnt$elm$dwell <- beam[['dwell']] / 1000
   qnt$elm$beam_map <- beam[['beam_map']]
 
@@ -52,22 +50,21 @@ tidy_epma <- function(
   if(all(is.na(qnt$cnd$nr))) stop('No points are quantified in mapping area.')
 
   ## Let's join
-  qnt$cmp <- pipeline({
-    xmap[qnt$elm$elint]
-    setNames(qnt$elm$elem)
-    lapply(unlist, use.names = FALSE)
-    as.data.frame
-    `[`(qnt$cnd$nr, )
-    list
-    setNames('map')
-    c(map(qnt$cmp, `[`, qnt$cnd$id, ))
-    map(mutate, id = qnt$cnd$id)
-    bind_rows(.id = 'var')
-    gather(elm, val, -var, -id)
-    spread(var, val)
-  })
-  #join cmp, cnd, elem in qnt
-  #calculate 95% ci of data
+  qnt$cmp <- xmap[qnt$elm$elint] %>>%
+    setNames(qnt$elm$elem) %>>%
+    lapply(unlist, use.names = FALSE) %>>%
+    as.data.frame %>>%
+    `[`(qnt$cnd$nr, ) %>>%
+    list %>>%
+    setNames('map') %>>%
+    c(map(qnt$cmp, `[`, qnt$cnd$id, )) %>>%
+    map(mutate, id = qnt$cnd$id) %>>%
+    bind_rows(.id = '.var') %>>%
+    gather(elm, .val, -.var, -id) %>>%
+    spread(.var, .val)
+
+  ## join cmp, cnd, elem in qnt
+  ## calculate 95% ci of data
   qnt$cnd %>>%
     mutate(
       cls = `if`(is.null(cluster), NA, cluster$cluster[qnt$cnd$nr]),
@@ -120,24 +117,23 @@ tidy_epma <- function(
 
 
 #' Only used interanlly by quantify
+#' @importFrom dplyr mutate
+#' @importFrom stringr str_replace
 #' @noRd
 tidy_epma_for_quantify <- function(
   epma, maps_x, maps_y, elements,
   distinguished = FALSE, fine_phase = NULL, fine_th = .9
 ) {
-  pipeline({
-    epma
-      filter(elm %in% !!elements) 
-      mutate(
-        net = net * (net > 0),
-        phase3 = if (!!distinguished) phase else phase2,
-        x_stg = ((x_px - 1) %/% !!maps_x + 1) * (0 < x_px) * (x_px <= maps_x), 
-        y_stg = ((y_px - 1) %/% !!maps_y + 1) * (0 < y_px) * (y_px <= maps_y),
-        stg = ifelse((x_stg * y_stg) <= 0, NA, flag0(x_stg, y_stg)),
-        mem = mem * 
-          (str_replace(cls, '_.*', '') == phase2) *
-          (cls %nin% fine_phase) * 
-          (mem > fine_th) 
-      )
-  })
+  mutate(
+    epma[epma$elm %in% elements, ],
+    net = net * (net > 0),
+    phase3 = if (!!distinguished) phase else phase2,
+    x_stg = ((x_px - 1) %/% !!maps_x + 1) * (0 < x_px) * (x_px <= maps_x), 
+    y_stg = ((y_px - 1) %/% !!maps_y + 1) * (0 < y_px) * (y_px <= maps_y),
+    stg = ifelse((x_stg * y_stg) <= 0, NA, flag0(x_stg, y_stg)),
+    mem = mem * 
+      (str_replace(cls, '_.*', '') == phase2) *
+      (cls %nin% fine_phase) * 
+      (mem > fine_th) 
+  )
 }

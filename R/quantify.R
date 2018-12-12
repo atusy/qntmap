@@ -10,11 +10,14 @@
 #' @param fine_th 
 #' A threshold of membership degrees to 0.9
 #' @param fixAB 
-#' fix AB in case compositions of a mineral is constant (default: `NULL`).
-#' @param fixB fix B (default: `NULL`).
+#' Fix AB in case compositions of a mineral is constant (default: `NULL`).
+#' @param fixB Fix B (default: `NULL`).
+#' @param saving 
+#' `TRUE` (default) saves the results into `qntmap` directory under 
+#' the directory `xmap` is read from. `FALSE` does not save.`
 #'
 #' @importFrom data.table fwrite
-#' @importFrom pipeR pipeline
+#' @importFrom pipeR %>>%
 #' @importFrom purrr map map_at map2 walk2
 #' @importFrom stats setNames
 #' @importFrom stringr str_replace
@@ -76,26 +79,24 @@ quantify <- function(
   dir_qntmap <- paste0(dir_map, '/qntmap')
   dir.create(dir_qntmap, FALSE)
 
-  pipeline({
-    find_AB(AG, B) #AB
-      expand_AB(stg)
-      find_AB_fix(fixAB, X, fine_th, xmap)
-      map(map, `*`, X) #XAB
-      map(map_at, 'se', map, square) 
-      map(map, reduce_add) 
-      map(map_at, 'se', sqrt) 
-      map2(xmap, function(xab, i) map(xab, `*`, i)) #XABI
-      map2(XAG, map2, `-`) #XABI - XAG
-      map(setNames, c('wt', 'se')) 
-      map(function(x) map(x, `*`, x$wt > 0)) 
-      c(list(Total = list(
-        wt = as.data.frame(reduce_add(map(., 'wt'))),
-        se = as.data.frame(sqrt(reduce_add(map(map(., 'se'), square))))
-      ))) 
-      prioritize(.component)
-      `class<-`(c('qntmap', 'list')) 
-      save4qm(nm = dir_qntmap, saving = saving)
-  })
+  find_AB(AG, B) %>>% #AB
+    expand_AB(stg) %>>%
+    find_AB_fix(fixAB, X, fine_th, xmap) %>>%
+    map(map, `*`, X) %>>% #XAB
+    map(map_at, 'se', map, square) %>>%
+    map(map, reduce_add) %>>%
+    map(map_at, 'se', sqrt) %>>%
+    map2(xmap, function(xab, i) map(xab, `*`, i)) %>>%#XABI
+    map2(XAG, map2, `-`) %>>% #XABI - XAG
+    map(setNames, c('wt', 'se')) %>>%
+    map(function(x) map(x, `*`, x$wt > 0)) %>>%
+    c(list(Total = list(
+      wt = as.data.frame(reduce_add(map(., 'wt'))),
+      se = as.data.frame(sqrt(reduce_add(map(map(., 'se'), square))))
+    ))) %>>%
+    prioritize(.component) %>>%
+    `class<-`(c('qntmap', 'list')) %>>%
+    save4qm(nm = dir_qntmap, saving = saving)
 }
 
 #' (DEPRECATED) Use quantify.

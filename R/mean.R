@@ -44,28 +44,25 @@ NULL
 #' mean(qm, index = rep(c('L', 'R'), each = 100))
 #' 
 #' @importFrom dplyr group_by summarize
-#' @importFrom pipeR pipeline
+#' @importFrom pipeR %>>%
 #' @importFrom tidyr gather spread
 #' 
 #' @export
 mean.qntmap <- function(x, index = 'Whole area', ...) {
-  pipeline({
-    x
-    lapply(`[[`, 'wt')
-    lapply(unlist, use.names = FALSE)
+    x %>>%
+    lapply(`[[`, 'wt') %>>%
+    lapply(unlist, use.names = FALSE) %>>%
     (~ if(length(index) %nin% c(1, length(.[[1]]))) {
       stop(
         'length of index must be 1 ',
         'or same as number of pixels of qntmap:', 
         length(.[[1]]))
-    })
-    c(.index = list(index))
+    }) %>>%
+    c(.index = list(index)) %>>%
+    as.data.frame() %>>%
+    gather(Element, val, -.index, factor_key = TRUE) %>>%
+    group_by(Element, .index) %>>%
+    summarize(val = mean.default(val, ...)) %>>%
+    spread(.index, val) %>>%
     as.data.frame()
-    gather(Element, val, -.index, factor_key = TRUE)
-    group_by(Element, .index)
-    summarize(val = mean.default(val, ...))
-    spread(.index, val)
-    as.data.frame()
-  })
 }
-

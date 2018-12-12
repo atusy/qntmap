@@ -8,7 +8,7 @@
 #' @param conf.level confidence level for the returned confidence interval.
 #'
 #' @importFrom dplyr bind_cols
-#' @importFrom pipeR pipeline
+#' @importFrom pipeR %>>%
 #' @importFrom purrr map map2
 #' @importFrom stats qgamma setNames
 #' @noRd
@@ -16,10 +16,9 @@ cipois <- function(x, vars = names(x), offset = 1L, conf.level = 0.95) {
   low <- (1L - conf.level) / 2L
   high <- 1L - low
 
-  pipeline({
-    x[vars]
-    map2(offset, `*`)
-    map(round)
+  x[vars] %>>%
+    map2(offset, `*`) %>>%
+    map(round) %>>%
     map(
       function(x) {
         data.frame(
@@ -27,12 +26,11 @@ cipois <- function(x, vars = names(x), offset = 1L, conf.level = 0.95) {
           H = qgamma(high, x + 1L)
         )
       }
-    )
-    map2(offset, `/`)
-    map(setNames, c('L', 'H'))
-    unlist(recursive = FALSE)
+    ) %>>%
+    map2(offset, `/`) %>>%
+    map(setNames, c('L', 'H')) %>>%
+    unlist(recursive = FALSE) %>>%
     bind_cols(x)
-  })
 }
 
 #' return integer as character flagged with 0
