@@ -32,7 +32,16 @@
 
 <meta property="og:title" content="Initialize centroids for <code><a href='cluster_xmap.html'>cluster_xmap()</a></code> — find_centers" />
 
-<meta property="og:description" content="Initialize centroids for cluster_xmap()" />
+<meta property="og:description" content="Initial centroids are guessed by comaring data from
+spot analysis and x-ray mapping.
+First, phase identification is done on some pixels in X-ray maps which
+is quantified by spot analysis.
+Second, for each phase, median values of X-ray maps are utilized as
+initial centroids.
+Note that X-ray mapping inevitably involves multi-phase pixels, and
+such pixels can be a member of training data set for initial centroids.
+See &quot;Multi-phase pixels&quot; section for
+automatic and manual special cares on such pixels." />
 <meta name="twitter:card" content="summary" />
 
 
@@ -63,7 +72,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">qntmap</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.3.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.3.1</span>
       </span>
     </div>
 
@@ -124,7 +133,16 @@
 
     <div class="ref-description">
     
-    <p>Initialize centroids for <code><a href='cluster_xmap.html'>cluster_xmap()</a></code></p>
+    <p>Initial centroids are guessed by comaring data from
+spot analysis and x-ray mapping.
+First, phase identification is done on some pixels in X-ray maps which
+is quantified by spot analysis.
+Second, for each phase, <code><a href='https://www.rdocumentation.org/packages/stats/topics/median'>median</a></code> values of X-ray maps are utilized as
+initial centroids.
+Note that X-ray mapping inevitably involves multi-phase pixels, and
+such pixels can be a member of training data set for initial centroids.
+See <a href='#multi-phase-pixels'>"Multi-phase pixels"</a> section for
+automatic and manual special cares on such pixels.</p>
     
     </div>
 
@@ -144,13 +162,57 @@
     <tr>
       <th>fine_phase</th>
       <td><p>A character vector to specify fine grained phases
-which tend to comprise multi-phase pixels e.g., c('Pl', 'Amp')</p></td>
+which tend to comprise multi-phase pixels.
+See <a href='#multi-phase-pixels'>"Multi-phase pixels"</a> section for details.</p></td>
     </tr>
     <tr>
       <th>saveas</th>
-      <td><p>File name to save result. FALSE if not saving.</p></td>
+      <td><p>File name to save result. <code>FALSE</code> if not saving.</p></td>
     </tr>
     </table>
+    
+    <h2 class="hasAnchor" id="multi-phase-pixels"><a class="anchor" href="#multi-phase-pixels"></a>Multi-phase pixels</h2>
+
+    
+    <p>X-ray mapping inevitably involves multi-phase pixels,
+especially for fine-grained phases.
+When the multi-phase pixels are member of training data set,
+guessing initial centroids can be biased.
+This is why guessing centroids is based on <code><a href='https://www.rdocumentation.org/packages/stats/topics/median'>median</a></code> instead of <code><a href='mean.html'>mean</a></code>.
+However, if pixels to guess centroids for cetrtain phase are
+comprising a large number of or even a full of multi-phase pixels,
+<code><a href='https://www.rdocumentation.org/packages/stats/topics/median'>median</a></code> is still vulnerable.
+For example, refer to a reprinted figure 5 from
+<a href='https://doi.org/10.2138/am-2018-6323CCBY'>Yasumoto et al. (2018)</a>, and
+captions in original article.
+Phases such as Amp, Di, and Pl are outlying the regression curves due to
+multi-phase pixels.
+For these phases, median values of peak X-ray intensities from
+X-ray mapping are unreliable values for initial centroids.
+Thus, training data set should exclude data points from multi-phase pixels.</p>
+<p><img src='figures/yasumoto-etal-2018-ccby-fig05.png' width=100% /></p>
+<p>Multi-phase pixels are automatically excluded by defining them as
+data points outlying 99% predictive intervals in a following model:
+$$I_{i, \mathrm{map}} \sim Poisson(\beta_i I_{i, \mathrm{qnt}}),$$
+where
+\(I_{i, \mathrm{map}}\) and
+\(I_{i, \mathrm{qnt}}\) are peak X-ray intensities of an element, \(i\),
+from X-ray mapping and quantitative spot analysis, respectively.
+\(\beta_i\) is a regression coefficient for an element, \(i\).</p>
+<p>In case all data points for certain phase are regarded as multi-phase pixels
+automatically by the above model or manually by the <code>fine_phase</code> paramter,
+initial centroids are set to medians of predictions by the above model.</p>
+    
+    <h2 class="hasAnchor" id="references"><a class="anchor" href="#references"></a>References</h2>
+
+    <p>Yasumoto, A., Yoshida, K., Kuwatani, T., Nakamura, D., Svojtka, M., &amp;
+Hirajima, T. (2018).
+A rapid and precise quantitative electron probe chemical mapping technique
+and its application to an ultrahigh-pressure eclogite
+from the Moldanubian Zone of the Bohemian Massif
+(Nové Dvory, Czech Republic).
+American Mineralogist, 103(10), 1690-1698,
+<a href='https://doi.org/10.2138/am-2018-6323CCBY'>https://doi.org/10.2138/am-2018-6323CCBY</a>.</p>
     
 
   </div>
@@ -158,7 +220,11 @@ which tend to comprise multi-phase pixels e.g., c('Pl', 'Amp')</p></td>
     <h2>Contents</h2>
     <ul class="nav nav-pills nav-stacked">
       <li><a href="#arguments">Arguments</a></li>
-                </ul>
+      
+      <li><a href="#multi-phase-pixels">Multi-phase pixels</a></li>
+
+      <li><a href="#references">References</a></li>
+          </ul>
 
   </div>
 </div>

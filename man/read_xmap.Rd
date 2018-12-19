@@ -2,7 +2,7 @@
 % Please edit documentation in R/read-xmap-.R
 \name{read_xmap}
 \alias{read_xmap}
-\title{read X-ray map data}
+\title{Read X-ray map data}
 \usage{
 read_xmap(wd = ".map/1", DT = 0, renew = FALSE, saving = TRUE,
   .map = "(data[0-9]+\\\\.csv)|([1-9][0-9]*_map\\\\.txt)",
@@ -13,12 +13,14 @@ read_xmap(wd = ".map/1", DT = 0, renew = FALSE, saving = TRUE,
 
 \item{DT}{dead time in nano seconds (0 nsec in default)}
 
-\item{renew}{if TRUE and the file specified by RDS exists, that file will be loaded}
+\item{renew}{\code{TRUE} (default) read all data from original files.
+\code{FALSE} tries to read \code{xmap.RDS} exists in \code{wd}, instead.}
 
-\item{saving}{whether or not to save the data as RDS file}
+\item{saving}{\code{TRUE} (default) or \code{FALSE} to save the result as \code{xmap.RDS} file in \code{wd}.}
 
-\item{.map, .cnd}{regular expressions to match ASCII converted mapping results (\code{.map}) and condition files (\code{.cnd})}
+\item{.map, .cnd}{Regular expressions to match file names of
+ASCII converted maps (\code{.map}) and condition files (\code{.cnd})}
 }
 \description{
-read X-ray map data
+Read X-ray map data
 }

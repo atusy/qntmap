@@ -7,7 +7,7 @@
 \method{print}{qntmap}(x, summarizing = TRUE, ...)
 }
 \arguments{
-\item{x}{\code{qntmap} class object returned by \code{\link[=quantify]{quantify()}} or \code{\link[=qntmap]{qntmap()}}.}
+\item{x}{A \code{qntmap} class object returned by \code{\link[=quantify]{quantify()}} or \code{\link[=qntmap]{qntmap()}}.}
 
 \item{summarizing}{\code{TRUE} or \code{FALSE} to summarize x (default: \code{TRUE}.}
 

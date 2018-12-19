@@ -18,7 +18,7 @@
 \method{plot}{qm_cluster}(x, y = NULL, ...)
 }
 \arguments{
-\item{x}{\code{qm_xmap} or \code{qntmap} class objects returned by
+\item{x}{A \code{qm_xmap} or \code{qntmap} class objects returned by
 \code{\link[=read_xmap]{read_xmap()}}, \code{\link[=quantify]{quantify()}}, or \code{\link[=qntmap]{qntmap()}}.}
 
 \item{y}{A string specifying a component of \code{x} to determine colors to fill the map.}
@@ -28,7 +28,7 @@
 \item{interactive}{\code{TRUE} (default) produces plots with shiny WebUI, and
 \code{FALSE} produces plots with \code{\link[ggplot2:ggplot]{ggplot2::ggplot()}}.}
 
-\item{...}{ignored}
+\item{...}{Ignored}
 }
 \description{
 S3 methods to plot object with original classes in \code{qntmap} package.

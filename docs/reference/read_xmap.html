@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>read X-ray map data — read_xmap • qntmap</title>
+<title>Read X-ray map data — read_xmap • qntmap</title>
 
 <!-- jquery -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
@@ -30,9 +30,9 @@
 
 
 
-<meta property="og:title" content="read X-ray map data — read_xmap" />
+<meta property="og:title" content="Read X-ray map data — read_xmap" />
 
-<meta property="og:description" content="read X-ray map data" />
+<meta property="og:description" content="Read X-ray map data" />
 <meta name="twitter:card" content="summary" />
 
 
@@ -63,7 +63,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">qntmap</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.3.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.3.1</span>
       </span>
     </div>
 
@@ -117,14 +117,14 @@
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>read X-ray map data</h1>
+    <h1>Read X-ray map data</h1>
     <small class="dont-index">Source: <a href='https://github.com/atusy/qntmap/blob/master/R/read-xmap-.R'><code>R/read-xmap-.R</code></a></small>
     <div class="hidden name"><code>read_xmap.Rd</code></div>
     </div>
 
     <div class="ref-description">
     
-    <p>read X-ray map data</p>
+    <p>Read X-ray map data</p>
     
     </div>
 
@@ -145,15 +145,17 @@
     </tr>
     <tr>
       <th>renew</th>
-      <td><p>if TRUE and the file specified by RDS exists, that file will be loaded</p></td>
+      <td><p><code>TRUE</code> (default) read all data from original files.
+<code>FALSE</code> tries to read <code>xmap.RDS</code> exists in <code>wd</code>, instead.</p></td>
     </tr>
     <tr>
       <th>saving</th>
-      <td><p>whether or not to save the data as RDS file</p></td>
+      <td><p><code>TRUE</code> (default) or <code>FALSE</code> to save the result as <code>xmap.RDS</code> file in <code>wd</code>.</p></td>
     </tr>
     <tr>
       <th>.map, .cnd</th>
-      <td><p>regular expressions to match ASCII converted mapping results (<code>.map</code>) and condition files (<code>.cnd</code>)</p></td>
+      <td><p>Regular expressions to match file names of
+ASCII converted maps (<code>.map</code>) and condition files (<code>.cnd</code>)</p></td>
     </tr>
     </table>
     

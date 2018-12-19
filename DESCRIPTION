@@ -58,23 +58,24 @@ Suggests: pkgdown,
 URL: https://github.com/atusy/qntmap/
 BugReports: https://github.com/atusy/qntmap/issues
 Collate:
-    '0.R'
     'pick.R'
     'add-centers.R'
     'cluster.R'
-    'data.R'
+    'defunct.R'
     'find-AB.R'
     'find-AG.R'
     'find-B.R'
     'find-XAG.R'
     'find-centers-.R'
     'find-centers-kpp.R'
+    'fix-params.R'
     'group-cluster.R'
     'mean.R'
     'plot-.R'
     'plot-gg.R'
     'plot-shiny.R'
     'print.R'
+    'qntmap-package.R'
     'qntmap.R'
     'quantify.R'
     'read-cnd.R'
@@ -90,4 +91,3 @@ Collate:
     'zzz.R'
 Roxygen: list(markdown = TRUE)
 VignetteBuilder: knitr
-

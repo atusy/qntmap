@@ -6,7 +6,7 @@
 \usage{
 quantify(xmap, qnt, cluster, maps_x = attr(xmap, "pixel")[1],
   maps_y = attr(xmap, "pixel")[2], fine_phase = NULL, fine_th = 0.9,
-  fixAB = NULL, fixB = NULL, saving = TRUE)
+  fix = NULL, saving = TRUE)
 }
 \arguments{
 \item{xmap}{\code{qm_xmap} class object returned by \code{\link[=read_xmap]{read_xmap()}}.}
@@ -19,13 +19,13 @@ quantify(xmap, qnt, cluster, maps_x = attr(xmap, "pixel")[1],
 (default: \code{NULL}).}
 
 \item{fine_phase}{A character vector to specify fine grained phases
-which tend to comprise multi-phase pixels e.g., c('Pl', 'Amp')}
+which tend to comprise multi-phase pixels.
+See \href{#multi-phase-pixels}{"Multi-phase pixels"} section for details.}
 
 \item{fine_th}{A threshold of membership degrees to 0.9}
 
-\item{fixAB}{Fix AB in case compositions of a mineral is constant (default: \code{NULL}).}
-
-\item{fixB}{Fix B (default: \code{NULL}).}
+\item{fix}{A path to the file specifying chemical compositions of
+some elements in some phases (default: \code{NULL}).}
 
 \item{saving}{\code{TRUE} (default) saves the results into \code{qntmap} directory under
 the directory \code{xmap} is read from. \code{FALSE} does not save.`}

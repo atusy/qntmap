@@ -60,7 +60,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">qntmap</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.3.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.3.1</span>
       </span>
     </div>
 
@@ -118,30 +118,59 @@
       <small>Source: <a href='https://github.com/atusy/qntmap/blob/master/NEWS.md'><code>NEWS.md</code></a></small>
     </div>
 
-    <div id="qntmap-0-3-1" class="section level1">
+    <div id="qntmap-031-unreleased" class="section level1">
 <h1 class="page-header">
-<a href="#qntmap-0-3-1" class="anchor"></a>qntmap 0.3.1</h1>
-<p>Upcoming release</p>
+<a href="#qntmap-031-unreleased" class="anchor"></a>qntmap 0.3.1 (Unreleased)</h1>
+<div id="major-changes" class="section level2">
+<h2 class="hasAnchor">
+<a href="#major-changes" class="anchor"></a>Major changes</h2>
 <ul>
-<li>Refactors
+<li>
+<code><a href="../reference/quantify.html">quantify()</a></code> supports fixing compositions of certain components of phases.</li>
+<li>Defunct deprecated functions:
 <ul>
-<li>Simplify codes</li>
-<li>Separate monster functions into small ones</li>
-</ul>
-</li>
-<li>Continuous integrations
-<ul>
-<li>Travis CI, AppVeyor, and Codecov are introduced</li>
+<li><code>qltmap_cls_centers</code></li>
+<li><code>qltmap_load</code></li>
+<li><code>qnt_load</code></li>
+<li><code>qntmap_cls_pois</code></li>
+<li><code>qntmap_quantify</code></li>
 </ul>
 </li>
 </ul>
 </div>
-    <div id="qntmap-0-3-0" class="section level1">
-<h1 class="page-header">
-<a href="#qntmap-0-3-0" class="anchor"></a>qntmap 0.3.0</h1>
-<div id="major-changes" class="section level2">
+<div id="minor-changes" class="section level2">
 <h2 class="hasAnchor">
-<a href="#major-changes" class="anchor"></a>Major changes</h2>
+<a href="#minor-changes" class="anchor"></a>Minor changes</h2>
+<ul>
+<li>Refactored to
+<ul>
+<li>simplify codes</li>
+<li>separate monster functions into small ones</li>
+</ul>
+</li>
+<li>Introduced continuous integrations:
+<ul>
+<li>Travis CI, AppVeyor, and Codecov</li>
+<li>As Travis CI passes building on macOS, <a href="https://github.com/atusy/qntmap/issues/23"><a href='https://github.com/atusy/qntmap/issues/23'>#23</a></a> is closed.</li>
+</ul>
+</li>
+</ul>
+</div>
+<div id="decisions" class="section level2">
+<h2 class="hasAnchor">
+<a href="#decisions" class="anchor"></a>Decisions</h2>
+<ul>
+<li>
+<code><a href="../reference/qntmap.html">qntmap()</a></code> will be maintained without new features to focus on developing web user interface with <code>shiny</code> package.</li>
+</ul>
+</div>
+</div>
+    <div id="qntmap-030" class="section level1">
+<h1 class="page-header">
+<a href="#qntmap-030" class="anchor"></a>qntmap 0.3.0</h1>
+<div id="major-changes-1" class="section level2">
+<h2 class="hasAnchor">
+<a href="#major-changes-1" class="anchor"></a>Major changes</h2>
 <ul>
 <li>
 <code><a href="../reference/plot.html">plot()</a></code>
@@ -160,25 +189,29 @@
 </li>
 </ul>
 </li>
-<li>Grayscale is supported in addition to viridis.</li>
-<li>Clustering result is supported.</li>
+<li>Grayscale is supported in addition to viridis. <a href="https://github.com/atusy/qntmap/issues/28"><a href='https://github.com/atusy/qntmap/issues/28'>#28</a></a>
+</li>
+<li>Clustering result is supported. <a href="https://github.com/atusy/qntmap/issues/28"><a href='https://github.com/atusy/qntmap/issues/28'>#28</a></a>
+</li>
 </ul>
 </li>
 <li>
 <code><a href="../reference/segment.html">segment()</a></code>
 <ul>
 <li>Only allows PNG format as an input. No more JPG nor BMP allowed.</li>
+<li>Independent from <code>imager</code> package. <a href="https://github.com/atusy/qntmap/issues/16"><a href='https://github.com/atusy/qntmap/issues/16'>#16</a></a>
+</li>
 </ul>
 </li>
 </ul>
 </div>
 </div>
-    <div id="qntmap-0-2-2" class="section level1">
+    <div id="qntmap-022" class="section level1">
 <h1 class="page-header">
-<a href="#qntmap-0-2-2" class="anchor"></a>qntmap 0.2.2</h1>
-<div id="major-changes-1" class="section level2">
+<a href="#qntmap-022" class="anchor"></a>qntmap 0.2.2</h1>
+<div id="major-changes-2" class="section level2">
 <h2 class="hasAnchor">
-<a href="#major-changes-1" class="anchor"></a>Major changes</h2>
+<a href="#major-changes-2" class="anchor"></a>Major changes</h2>
 <div id="new-features" class="section level3">
 <h3 class="hasAnchor">
 <a href="#new-features" class="anchor"></a>New features</h3>
@@ -220,18 +253,18 @@
 </ul>
 </div>
 </div>
-<div id="minor-changes" class="section level2">
+<div id="minor-changes-1" class="section level2">
 <h2 class="hasAnchor">
-<a href="#minor-changes" class="anchor"></a>Minor changes</h2>
+<a href="#minor-changes-1" class="anchor"></a>Minor changes</h2>
 <ul>
 <li>
 <code>read_cnd</code>, <code>read_map_pos</code>, and <code>read_map_beam</code> are no more in use but are remained for awhile. Note they are not exported functions.</li>
 </ul>
 </div>
 </div>
-    <div id="qntmap-0-2-1" class="section level1">
+    <div id="qntmap-021" class="section level1">
 <h1 class="page-header">
-<a href="#qntmap-0-2-1" class="anchor"></a>qntmap 0.2.1</h1>
+<a href="#qntmap-021" class="anchor"></a>qntmap 0.2.1</h1>
 <div id="new-features-1" class="section level2">
 <h2 class="hasAnchor">
 <a href="#new-features-1" class="anchor"></a>New features</h2>
@@ -251,9 +284,9 @@
 </ul>
 </div>
 </div>
-    <div id="qntmap-0-2-0" class="section level1">
+    <div id="qntmap-020" class="section level1">
 <h1 class="page-header">
-<a href="#qntmap-0-2-0" class="anchor"></a>qntmap 0.2.0</h1>
+<a href="#qntmap-020" class="anchor"></a>qntmap 0.2.0</h1>
 <p>Check NEWS as 0.2.0 have lots of breaking changes.</p>
 <div id="breaking-changes" class="section level2">
 <h2 class="hasAnchor">
@@ -270,9 +303,9 @@
 <li>The above change cause <code>read_qnt</code> to save its result (<code>qnt.RDS</code>) and semi-product (<code>phase_list0.csv</code>) in the directory containing <code>.qnt</code> files unlike <code>qnt_load</code> saved them under the working directory.</li>
 </ul>
 </div>
-<div id="major-changes-2" class="section level2">
+<div id="major-changes-3" class="section level2">
 <h2 class="hasAnchor">
-<a href="#major-changes-2" class="anchor"></a>Major changes</h2>
+<a href="#major-changes-3" class="anchor"></a>Major changes</h2>
 <ul>
 <li>Monster functions are separated into smaller functions.
 <ul>
@@ -290,9 +323,9 @@
 <code>cluster_xmap</code> does not <code>group_clusters</code> by default.</li>
 </ul>
 </div>
-<div id="minor-changes-1" class="section level2">
+<div id="minor-changes-2" class="section level2">
 <h2 class="hasAnchor">
-<a href="#minor-changes-1" class="anchor"></a>Minor changes</h2>
+<a href="#minor-changes-2" class="anchor"></a>Minor changes</h2>
 <ul>
 <li>Performance improvements by simplifying codes, utilizing <code>matrixStats</code> package, and so on.</li>
 <li>
@@ -369,11 +402,11 @@
     <div id="tocnav">
       <h2>Contents</h2>
       <ul class="nav nav-pills nav-stacked">
-        <li><a href="#qntmap-0-3-1">0.3.1</a></li>
-        <li><a href="#qntmap-0-3-0">0.3.0</a></li>
-        <li><a href="#qntmap-0-2-2">0.2.2</a></li>
-        <li><a href="#qntmap-0-2-1">0.2.1</a></li>
-        <li><a href="#qntmap-0-2-0">0.2.0</a></li>
+        <li><a href="#qntmap-031-unreleased">0.3.1</a></li>
+        <li><a href="#qntmap-030">0.3.0</a></li>
+        <li><a href="#qntmap-022">0.2.2</a></li>
+        <li><a href="#qntmap-021">0.2.1</a></li>
+        <li><a href="#qntmap-020">0.2.0</a></li>
       </ul>
     </div>
   </div>

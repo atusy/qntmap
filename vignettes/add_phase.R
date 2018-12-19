@@ -73,7 +73,7 @@ centers <- add_centers(centers = centers, xmap = xmap, x = 18, y = 28, p = 'Qtz'
 ## ------------------------------------------------------------------------
 print(centers)
 
-## ----fig.show = 'hide'---------------------------------------------------
+## ---- fig.show = 'hide'--------------------------------------------------
 cluster <- cluster_xmap(xmap, centers)
 qmap <- quantify(xmap, qnt, cluster)
 
@@ -81,6 +81,18 @@ qmap <- quantify(xmap, qnt, cluster)
 summary(cluster)
 summary(qmap)
 
-## ----include = FALSE-----------------------------------------------------
+## ------------------------------------------------------------------------
+csv <- paste(
+    'phase, element, wt',
+    'Qtz,   Si,      100',
+    sep = "\n"
+  )
+cat(csv)
+
+## ------------------------------------------------------------------------
+qmap2 <- quantify(xmap, qnt, cluster, fix = csv)
+summary(qmap2)
+
+## ----on-exit-unlink, include = FALSE-------------------------------------
 unlink(c('centers0.csv', 'center_add.csv'))
 

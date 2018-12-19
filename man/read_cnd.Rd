@@ -5,7 +5,7 @@
 \alias{read_cnd.default}
 \alias{read_cnd.map_cnd}
 \alias{read_cnd.0_cnd}
-\title{read .cnd files}
+\title{Read .cnd files}
 \usage{
 read_cnd(x, pattern = NULL, ...)
 
@@ -23,10 +23,10 @@ read_cnd(x, pattern = NULL, ...)
 \item{...}{Other arguments passed to methods}
 
 \item{n}{integer vector of same length as pattern.
-Used to extract nth row of .cnd file in case pattern did not match any phrase.}
+Used to extract nth row of .cnd file if no phrases match the \code{pattern}.}
 }
 \description{
-read .cnd files
+Read .cnd files
 }
 \section{.default}{
 
@@ -39,7 +39,8 @@ with additional class according to the content of the file.
 }
 
 \section{read_cnd.0_cnd}{
- A method for \code{0_cnd} class object.
+
+A method for \code{0_cnd} class object.
 Used to extract rows which contains phrase matching pattern.
 }
 

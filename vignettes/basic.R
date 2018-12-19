@@ -18,24 +18,24 @@ formals(read_xmap)$renew <-
   formals(read_qnt)$renew <- 
   TRUE
 
-## ---- eval = FALSE-------------------------------------------------------
+## ----load-qntmap, eval = FALSE-------------------------------------------
 #  library(qntmap)
 
-## ----eval = FALSE--------------------------------------------------------
+## ----setwd, eval = FALSE-------------------------------------------------
 #  wd <- tempdir() # Arbitrary
 #  setwd(wd)
 
-## ------------------------------------------------------------------------
+## ----copy-files----------------------------------------------------------
 file.copy(
   from = system.file('extdata', 'minimal', package = 'qntmap'),
   to = wd,
   recursive = TRUE
 )
 
-## ------------------------------------------------------------------------
+## ----file-list-----------------------------------------------------------
 dir(file.path(wd, 'minimal'), recursive = TRUE, all.files = TRUE)
 
-## ---- include = FALSE----------------------------------------------------
+## ----specify-directories, include = FALSE--------------------------------
 dir_map <- file.path(wd, 'minimal/.map/1')
 dir_qnt <- file.path(wd, 'minimal/.qnt')
 
@@ -50,14 +50,10 @@ epma <- tidy_epma(qnt, xmap) %>>%
 plot(xmap, 'Si', interactive = FALSE) +
   scale_fill_gradient(low = 'black', high = 'white') +
   geom_point(
-    aes(y_px, x_px, colour = phase),
-    data = epma, inherit.aes = FALSE
+    aes(y_px, x_px, colour = phase), data = epma, inherit.aes = FALSE
   ) +
   guides(
-    fill = 
-      guide_colourbar(
-        barheight = grid::unit(1, "npc") - unit(10, "line")
-      )
+    fill = guide_colourbar(barheight = grid::unit(1, "npc") - unit(10, "line"))
   )
 
 ## ---- echo = FALSE-------------------------------------------------------
@@ -67,7 +63,7 @@ plot(xmap, 'Mg', interactive = FALSE)
 centers <- find_centers(xmap, qnt)
 centers
 
-## ----eval = TRUE, fig.keep = "last"--------------------------------------
+## ---- eval = TRUE, fig.keep = "last"-------------------------------------
 cluster <- cluster_xmap(xmap, centers)
 plot(cluster, interactive = FALSE)
 

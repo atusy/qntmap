@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>read .cnd files — read_cnd • qntmap</title>
+<title>Read .cnd files — read_cnd • qntmap</title>
 
 <!-- jquery -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
@@ -30,9 +30,9 @@
 
 
 
-<meta property="og:title" content="read .cnd files — read_cnd" />
+<meta property="og:title" content="Read .cnd files — read_cnd" />
 
-<meta property="og:description" content="read .cnd files" />
+<meta property="og:description" content="Read .cnd files" />
 <meta name="twitter:card" content="summary" />
 
 
@@ -63,7 +63,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">qntmap</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.3.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.3.1</span>
       </span>
     </div>
 
@@ -117,14 +117,14 @@
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>read .cnd files</h1>
+    <h1>Read .cnd files</h1>
     <small class="dont-index">Source: <a href='https://github.com/atusy/qntmap/blob/master/R/read-cnd.R'><code>R/read-cnd.R</code></a></small>
     <div class="hidden name"><code>read_cnd.Rd</code></div>
     </div>
 
     <div class="ref-description">
     
-    <p>read .cnd files</p>
+    <p>Read .cnd files</p>
     
     </div>
 
@@ -157,7 +157,7 @@
     <tr>
       <th>n</th>
       <td><p>integer vector of same length as pattern.
-Used to extract nth row of .cnd file in case pattern did not match any phrase.</p></td>
+Used to extract nth row of .cnd file if no phrases match the <code>pattern</code>.</p></td>
     </tr>
     </table>
     
@@ -173,6 +173,7 @@ with additional class according to the content of the file.</p>
     
     <h2 class="hasAnchor" id="read-cnd-cnd"><a class="anchor" href="#read-cnd-cnd"></a>read_cnd.0_cnd</h2>
 
+    
     <p>A method for <code>0_cnd</code> class object.
 Used to extract rows which contains phrase matching pattern.</p>
     

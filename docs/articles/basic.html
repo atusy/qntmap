@@ -30,7 +30,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">qntmap</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.3.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.3.1</span>
       </span>
     </div>
 
@@ -86,9 +86,9 @@
       <h1>Basic usage</h1>
                         <h4 class="author">Atsushi YASUMOTO</h4>
             
-            <h4 class="date">2018-12-11</h4>
+            <h4 class="date">2018-12-19</h4>
       
-      <small class="dont-index">Source: <a href="https://github.com/atusy/qntmap/blob/master/tests/testthat/vignettes/basic.Rmd"><code>tests/testthat/vignettes/basic.Rmd</code></a></small>
+      <small class="dont-index">Source: <a href="https://github.com/atusy/qntmap/blob/master/vignettes/basic.Rmd"><code>vignettes/basic.Rmd</code></a></small>
       <div class="hidden name"><code>basic.Rmd</code></div>
 
     </div>
@@ -152,7 +152,7 @@
 <div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb6-1" title="1">xmap &lt;-<span class="st"> </span><span class="kw"><a href="../reference/read_xmap.html">read_xmap</a></span>(dir_map)</a>
 <a class="sourceLine" id="cb6-2" title="2">qnt &lt;-<span class="st"> </span><span class="kw"><a href="../reference/read_qnt.html">read_qnt</a></span>(dir_qnt)</a></code></pre></div>
 <p>This is an artifact example data which contains olivine and quartz within the mapping area. The phases are quantified 20 points each.</p>
-<p><img src="basic_files/figure-html/unnamed-chunk-7-1.png" width="672"></p>
+<p><img src="basic_files/figure-html/unnamed-chunk-2-1.png" width="672"></p>
 </div>
 <div id="plot-x-ray-map-data-as-heatmap" class="section level2">
 <h2 class="hasAnchor">
@@ -161,7 +161,7 @@
 <div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb7-1" title="1"><span class="kw"><a href="../reference/plot.html">plot</a></span>(xmap)</a>
 <a class="sourceLine" id="cb7-2" title="2"><span class="co"># A following example is non-interactive mode run by</span></a>
 <a class="sourceLine" id="cb7-3" title="3"><span class="co"># plot(xmap, 'Mg', interactive = FALSE)</span></a></code></pre></div>
-<p><img src="basic_files/figure-html/unnamed-chunk-8-1.png" width="672"></p>
+<p><img src="basic_files/figure-html/unnamed-chunk-3-1.png" width="672"></p>
 </div>
 <div id="cluster-analysis" class="section level2">
 <h2 class="hasAnchor">
@@ -185,15 +185,14 @@
 <p>For a quick look, <code class="sourceCode r"><span class="kw">plot</span>()</code> function is also available.</p>
 <div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb9-1" title="1">cluster &lt;-<span class="st"> </span><span class="kw"><a href="../reference/cluster_xmap.html">cluster_xmap</a></span>(xmap, centers)</a>
 <a class="sourceLine" id="cb9-2" title="2"><span class="kw"><a href="../reference/plot.html">plot</a></span>(cluster, <span class="dt">interactive =</span> <span class="ot">FALSE</span>)</a></code></pre></div>
-<p><img src="basic_files/figure-html/unnamed-chunk-10-1.png" width="672"></p>
+<p><img src="basic_files/figure-html/unnamed-chunk-5-1.png" width="672"></p>
 </div>
 <div id="summarize-cluster-analysis" class="section level3">
 <h3 class="hasAnchor">
 <a href="#summarize-cluster-analysis" class="anchor"></a>Summarize cluster analysis</h3>
 <p><code>summary</code> function gives abundance ratios of phases in the map.</p>
 <div class="sourceCode" id="cb10"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb10-1" title="1"><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/summary">summary</a></span>(cluster)</a>
-<a class="sourceLine" id="cb10-2" title="2"><span class="co">#&gt;         Ol        Qtz </span></a>
-<a class="sourceLine" id="cb10-3" title="3"><span class="co">#&gt; 0.90005667 0.09994333</span></a></code></pre></div>
+<a class="sourceLine" id="cb10-2" title="2"><span class="co">#&gt; [1] 0.90005667 0.09994333</span></a></code></pre></div>
 </div>
 </div>
 <div id="quantify" class="section level2">
@@ -205,7 +204,7 @@
 <a href="#plot-quantified-map" class="anchor"></a>Plot quantified map</h3>
 <p>Just like <a href="#Plot%20X-ray%20map">X-ray map</a>.</p>
 <div class="sourceCode" id="cb12"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb12-1" title="1"><span class="kw"><a href="../reference/plot.html">plot</a></span>(qmap, <span class="st">'Si'</span>, <span class="dt">interactive =</span> <span class="ot">FALSE</span>)</a></code></pre></div>
-<p><img src="basic_files/figure-html/unnamed-chunk-13-1.png" width="672"></p>
+<p><img src="basic_files/figure-html/unnamed-chunk-8-1.png" width="672"></p>
 </div>
 <div id="summarize-quantified-map" class="section level3">
 <h3 class="hasAnchor">
@@ -247,7 +246,7 @@ E(SiO2_{bulk}) =
 <p>However, by using mask image, <code>mean</code> values of each element are calculated for each mask areas with same colors.</p>
 <p>Let’s use an image from cluster analysis <a href="#run-cls">above</a>.</p>
 <p>Input path to the image to <code>segment</code> function.</p>
-<div class="sourceCode" id="cb15"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb15-1" title="1">i &lt;-<span class="st"> </span><span class="kw"><a href="../reference/segment.html">segment</a></span>(<span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/list.files">dir</a></span>(<span class="st">"/tmp/RtmpJArf2J/minimal/.map/1/clustering/181211_1908_pois_k2_SiMg_map.png"</span>))</a></code></pre></div>
+<div class="sourceCode" id="cb15"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb15-1" title="1">i &lt;-<span class="st"> </span><span class="kw"><a href="../reference/segment.html">segment</a></span>(<span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/list.files">dir</a></span>(<span class="st">"/tmp/Rtmpq0pHw7/minimal/.map/1/clustering/181219_1616_pois_k2_SiMg_map.png"</span>))</a></code></pre></div>
 <p>Then, input the result of <code><a href="../reference/segment.html">segment()</a></code> to <code>index</code> parameter of <code><a href="../reference/mean.html">mean()</a></code>.</p>
 <div class="sourceCode" id="cb16"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb16-1" title="1"><span class="kw"><a href="../reference/mean.html">mean</a></span>(qmap, <span class="dt">index =</span> i)</a>
 <a class="sourceLine" id="cb16-2" title="2"><span class="co">#&gt;   Element  #000000  #FFFFFF</span></a>

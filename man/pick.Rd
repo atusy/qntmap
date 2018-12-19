@@ -15,9 +15,8 @@ pick(.data, x = NULL, y = NULL, phase = if (is.null(x)) NULL else
 \arguments{
 \item{.data}{Mapping data. Currentl version only supports \code{qm_xmap} object.}
 
-\item{x, y}{Vectors of \code{integer} specifying x- and y-coordinates of pixels of mapping data.
-In other words, x- and y- corresponds to n-th column and row of a matrix.
-Defaults are set to \code{NULL} to control}
+\item{x, y}{Integer vectors specifying x- and y-coordinates of pixels of mapping data.
+In other words, x- and y- corresponds to n-th column and row of a matrix.}
 
 \item{phase}{Name of phases comprising the pixels to be picked.
 If not manually supplied \code{phase} is supplied by \code{c('P1', 'P2', ...)}.}
@@ -25,7 +24,7 @@ If not manually supplied \code{phase} is supplied by \code{c('P1', 'P2', ...)}.}
 \item{i}{A data frame with clumns \code{x}, \code{y}, and \code{phase}.
 \code{i} have priority to \code{x}, \code{y}, and \code{phase}.`}
 
-\item{...}{ignored}
+\item{...}{Ignored}
 }
 \value{
 \code{data.frame}

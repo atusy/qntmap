@@ -2,7 +2,7 @@
 % Please edit documentation in R/group-cluster.R
 \name{group_cluster}
 \alias{group_cluster}
-\title{group clusters who share same prefix}
+\title{Group clusters who share same prefix}
 \usage{
 group_cluster(x, saving = TRUE, suffix = "_.*")
 }

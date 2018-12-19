@@ -23,9 +23,8 @@ A n-by-p training data matrix; n observations and p features. Used to train the
 classifier.
 }
 
-\item{y}{Vectors of \code{integer} specifying x- and y-coordinates of pixels of mapping data.
-In other words, x- and y- corresponds to n-th column and row of a matrix.
-Defaults are set to \code{NULL} to control}
+\item{y}{Integer vectors specifying x- and y-coordinates of pixels of mapping data.
+In other words, x- and y- corresponds to n-th column and row of a matrix.}
 
 \item{phase}{Name of phases comprising the pixels to be picked.
 If not manually supplied \code{phase} is supplied by \code{c('P1', 'P2', ...)}.}
@@ -33,23 +32,16 @@ If not manually supplied \code{phase} is supplied by \code{c('P1', 'P2', ...)}.}
 \item{i}{A data frame with clumns \code{x}, \code{y}, and \code{phase}.
 \code{i} have priority to \code{x}, \code{y}, and \code{phase}.`}
 
-\item{...}{ignored}
+\item{...}{Ignored}
 
-\item{saveas}{File name to save result. FALSE if not saving.}
+\item{saveas}{File name to save result. \code{FALSE} if not saving.}
 }
 \description{
 Add centroids manually by picking X-ray counts of selected pixels in X-ray maps.
 }
 \examples{
-centers <- data.frame(
-  phase = 'a',
-  A = 1,
-  B = 1
-)
-xmap <- list(
-  A = data.frame(1:2),
-  B = data.frame(1:2)
-)
+centers <- data.frame(phase = 'a', A = 1, B = 1)
+xmap <- list(A = data.frame(1:2), B = data.frame(1:2))
 class(xmap) <- c('qm_xmap', 'list')
 add_centers(centers, xmap, x = 1, y = 2, saveas = FALSE)
 

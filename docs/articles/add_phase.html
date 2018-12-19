@@ -30,7 +30,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">qntmap</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.3.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.3.1</span>
       </span>
     </div>
 
@@ -86,9 +86,9 @@
       <h1>Add phases after EPMA analysis</h1>
                         <h4 class="author">YASUMOTO Atsushi</h4>
             
-            <h4 class="date">2018-12-11</h4>
+            <h4 class="date">2018-12-19</h4>
       
-      <small class="dont-index">Source: <a href="https://github.com/atusy/qntmap/blob/master/tests/testthat/vignettes/add_phase.Rmd"><code>tests/testthat/vignettes/add_phase.Rmd</code></a></small>
+      <small class="dont-index">Source: <a href="https://github.com/atusy/qntmap/blob/master/vignettes/add_phase.Rmd"><code>vignettes/add_phase.Rmd</code></a></small>
       <div class="hidden name"><code>add_phase.Rmd</code></div>
 
     </div>
@@ -233,18 +233,41 @@
 <div id="cluster-and-quantify" class="section level3">
 <h3 class="hasAnchor">
 <a href="#cluster-and-quantify" class="anchor"></a>Cluster and quantify</h3>
+<p>As Qtz is not quantified during spot analysis, calibration curves for Qtz is substituted by results of regression analysis without considering different phases. Try “<a href="#quasi-calibrations">Quasi-calibrations</a>” in case phases not quantified have known and constant chemical compositions.</p>
 <div class="sourceCode" id="cb14"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb14-1" title="1">cluster &lt;-<span class="st"> </span><span class="kw"><a href="../reference/cluster_xmap.html">cluster_xmap</a></span>(xmap, centers)</a>
 <a class="sourceLine" id="cb14-2" title="2">qmap &lt;-<span class="st"> </span><span class="kw"><a href="../reference/quantify.html">quantify</a></span>(xmap, qnt, cluster)</a></code></pre></div>
 <div class="sourceCode" id="cb15"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb15-1" title="1"><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/summary">summary</a></span>(cluster)</a>
-<a class="sourceLine" id="cb15-2" title="2"><span class="co">#&gt;         Ol        Qtz </span></a>
-<a class="sourceLine" id="cb15-3" title="3"><span class="co">#&gt; 0.90005667 0.09994333</span></a>
-<a class="sourceLine" id="cb15-4" title="4"><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/summary">summary</a></span>(qmap)</a>
-<a class="sourceLine" id="cb15-5" title="5"><span class="co">#&gt;   Element  Min. 1st Qu. Median   Mean 3rd Qu.   Max.</span></a>
-<a class="sourceLine" id="cb15-6" title="6"><span class="co">#&gt; 1      Si 40.54   42.49  42.97  48.69   43.52 103.91</span></a>
-<a class="sourceLine" id="cb15-7" title="7"><span class="co">#&gt; 2      Mg  0.00   56.46  57.10  51.49   57.68  59.87</span></a>
-<a class="sourceLine" id="cb15-8" title="8"><span class="co">#&gt; 3   Total 96.43   99.46 100.18 100.18  100.88 104.37</span></a>
-<a class="sourceLine" id="cb15-9" title="9"><span class="co">#&gt; </span></a>
-<a class="sourceLine" id="cb15-10" title="10"><span class="co">#&gt; Note that Total is not sum each column</span></a></code></pre></div>
+<a class="sourceLine" id="cb15-2" title="2"><span class="co">#&gt; [1] 0.90005667 0.09994333</span></a>
+<a class="sourceLine" id="cb15-3" title="3"><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/summary">summary</a></span>(qmap)</a>
+<a class="sourceLine" id="cb15-4" title="4"><span class="co">#&gt;   Element  Min. 1st Qu. Median   Mean 3rd Qu.   Max.</span></a>
+<a class="sourceLine" id="cb15-5" title="5"><span class="co">#&gt; 1      Si 40.54   42.49  42.97  48.69   43.52 103.91</span></a>
+<a class="sourceLine" id="cb15-6" title="6"><span class="co">#&gt; 2      Mg  0.00   56.46  57.10  51.49   57.68  59.87</span></a>
+<a class="sourceLine" id="cb15-7" title="7"><span class="co">#&gt; 3   Total 96.43   99.46 100.18 100.18  100.88 104.37</span></a>
+<a class="sourceLine" id="cb15-8" title="8"><span class="co">#&gt; </span></a>
+<a class="sourceLine" id="cb15-9" title="9"><span class="co">#&gt; Note that Total is not sum each column</span></a></code></pre></div>
+<div id="quasi-calibrations" class="section level4">
+<h4 class="hasAnchor">
+<a href="#quasi-calibrations" class="anchor"></a>Quasi-calibrations</h4>
+<p>In case phases without spot analysis have known chemical compositions, their calibration curves can be calculated by specifying their chemical compositions in csv format.</p>
+<p>For example, prepare a csv file, and specify it to <code>fix</code> parameter of <code><a href="../reference/quantify.html">quantify()</a></code>.</p>
+<div class="sourceCode" id="cb16"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb16-1" title="1">csv &lt;-<span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/paste">paste</a></span>(</a>
+<a class="sourceLine" id="cb16-2" title="2">    <span class="st">'phase, element, wt'</span>,</a>
+<a class="sourceLine" id="cb16-3" title="3">    <span class="st">'Qtz,   Si,      100'</span>,</a>
+<a class="sourceLine" id="cb16-4" title="4">    <span class="dt">sep =</span> <span class="st">"</span><span class="ch">\n</span><span class="st">"</span></a>
+<a class="sourceLine" id="cb16-5" title="5">  )</a>
+<a class="sourceLine" id="cb16-6" title="6"><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/cat">cat</a></span>(csv)</a>
+<a class="sourceLine" id="cb16-7" title="7"><span class="co">#&gt; phase, element, wt</span></a>
+<a class="sourceLine" id="cb16-8" title="8"><span class="co">#&gt; Qtz,   Si,      100</span></a></code></pre></div>
+<div class="sourceCode" id="cb17"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb17-1" title="1">qmap2 &lt;-<span class="st"> </span><span class="kw"><a href="../reference/quantify.html">quantify</a></span>(xmap, qnt, cluster, <span class="dt">fix =</span> csv)</a>
+<a class="sourceLine" id="cb17-2" title="2"><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/summary">summary</a></span>(qmap2)</a>
+<a class="sourceLine" id="cb17-3" title="3"><span class="co">#&gt;   Element  Min. 1st Qu. Median   Mean 3rd Qu.   Max.</span></a>
+<a class="sourceLine" id="cb17-4" title="4"><span class="co">#&gt; 1      Si 40.54   42.49  42.97  48.54   43.52 102.41</span></a>
+<a class="sourceLine" id="cb17-5" title="5"><span class="co">#&gt; 2      Mg  0.00   56.46  57.10  51.49   57.68  59.87</span></a>
+<a class="sourceLine" id="cb17-6" title="6"><span class="co">#&gt; 3   Total 96.43   99.34 100.04 100.03  100.73 104.37</span></a>
+<a class="sourceLine" id="cb17-7" title="7"><span class="co">#&gt; </span></a>
+<a class="sourceLine" id="cb17-8" title="8"><span class="co">#&gt; Note that Total is not sum each column</span></a></code></pre></div>
+<p>Of course, <code>csv</code> parameter can be a path to a csv file, unlike the above example, which gave csv data the <code>csv</code> parameter.</p>
+</div>
 </div>
 </div>
 </div>

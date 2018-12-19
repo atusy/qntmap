@@ -10,7 +10,7 @@
 \arguments{
 \item{x}{A \code{qntmap} class object returned by \code{\link[=quantify]{quantify()}} or \code{\link[=qntmap]{qntmap()}}.}
 
-\item{index}{a vector of length `1`` or length equal to number of pixels in map.
+\item{index}{A vector of length `1`` or length equal to number of pixels in map.
 An index can be created using mask image through \code{\link[=segment]{segment()}}.}
 
 \item{...}{Other arguments passed to \code{\link[base:mean.default]{base::mean.default()}}}
@@ -21,8 +21,8 @@ See \code{\link[base:mean]{base::mean()}}  for general use of \code{mean()}.
 }
 \section{mean.qntmap}{
 
-returns a \code{\link{data.frame}} whose first column lists elements in \code{qntmap} class object.
-Second to last columns lists \code{mean} values of each elements for each index.
+A returning value is a \code{\link{data.frame}} whose first column lists elements,
+and second to last columns lists \code{mean} values of each elements by index.
 }
 
 \examples{

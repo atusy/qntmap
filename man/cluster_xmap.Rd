@@ -8,7 +8,7 @@ cluster_xmap(xmap, centers, elements = intersect(names(xmap),
   colnames(centers)), saving = TRUE, group_cluster = FALSE)
 }
 \arguments{
-\item{xmap}{a \code{qm_xmap} class object returned by \code{\link[=read_xmap]{read_xmap()}}}
+\item{xmap}{A \code{qm_xmap} class object returned by \code{\link[=read_xmap]{read_xmap()}}}
 
 \item{centers}{c-by-p matrix returned by \code{\link[=find_centers]{find_centers()}} or by manually;
 c clusters and p features.

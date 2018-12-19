@@ -1,7 +1,10 @@
-pandoc: '2.4'
+pandoc: '2.5'
 pkgdown: 1.2.0
 pkgdown_sha: ~
 articles:
   add_phase: add_phase.html
   basic: basic.html
+urls:
+  reference: http://atusy.github.io/qntmap/reference
+  article: http://atusy.github.io/qntmap/articles
 
