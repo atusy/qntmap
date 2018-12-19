@@ -195,7 +195,13 @@ print(centers)
 
 ### Cluster and quantify
 
-```{r fig.show = 'hide'}
+As Qtz is not quantified during spot analysis,
+calibration curves for Qtz is substituted by results of regression analysis
+without considering different phases.
+Try "[Quasi-calibrations]" in case phases not quantified have known and 
+constant chemical compositions.
+
+```{r, fig.show = 'hide'}
 cluster <- cluster_xmap(xmap, centers)
 qmap <- quantify(xmap, qnt, cluster)
 ```
@@ -205,6 +211,34 @@ summary(cluster)
 summary(qmap)
 ```
 
-```{r include = FALSE}
+#### Quasi-calibrations
+
+In case phases without spot analysis have known chemical compositions,
+their calibration curves can be calculated by 
+specifying their chemical compositions in csv format.
+
+For example, prepare a csv file, and specify it to `fix` parameter of `quantify()`.
+
+```{r}
+csv <- paste(
+    'phase, element, wt',
+    'Qtz,   Si,      100',
+    sep = "\n"
+  )
+cat(csv)
+```
+
+```{r}
+qmap2 <- quantify(xmap, qnt, cluster, fix = csv)
+summary(qmap2)
+```
+
+Of course, `csv` parameter can be a path to a csv file, 
+unlike the above example, which gave csv data the `csv` parameter.
+
+
+
+
+```{r on-exit-unlink, include = FALSE}
 unlink(c('centers0.csv', 'center_add.csv'))
 ```

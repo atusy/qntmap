@@ -46,13 +46,13 @@ See https://doi.org/10.2138/am-2018-6323CCBY for implementations.
 
 ## Load package
 
-```{r, eval = FALSE}
+```{r load-qntmap, eval = FALSE}
 library(qntmap)
 ```
 
 ## Move to working directory
 
-```{r eval = FALSE}
+```{r setwd, eval = FALSE}
 wd <- tempdir() # Arbitrary
 setwd(wd)
 ```
@@ -61,7 +61,7 @@ setwd(wd)
 
 or any original data.
 
-```{r}
+```{r copy-files}
 file.copy(
   from = system.file('extdata', 'minimal', package = 'qntmap'),
   to = wd,
@@ -72,7 +72,7 @@ file.copy(
 `TRUE` indicates files are successfully copied. 
 Check if really files are copied by `dir()`.
 
-```{r}
+```{r file-list}
 dir(file.path(wd, 'minimal'), recursive = TRUE, all.files = TRUE)
 ```
 
@@ -80,7 +80,7 @@ dir(file.path(wd, 'minimal'), recursive = TRUE, all.files = TRUE)
 
 ## Specify directories containing data
 
-```{r, include = FALSE}
+```{r specify-directories, include = FALSE}
 dir_map <- file.path(wd, 'minimal/.map/1')
 dir_qnt <- file.path(wd, 'minimal/.qnt')
 ```
@@ -108,14 +108,10 @@ epma <- tidy_epma(qnt, xmap) %>>%
 plot(xmap, 'Si', interactive = FALSE) +
   scale_fill_gradient(low = 'black', high = 'white') +
   geom_point(
-    aes(y_px, x_px, colour = phase),
-    data = epma, inherit.aes = FALSE
+    aes(y_px, x_px, colour = phase), data = epma, inherit.aes = FALSE
   ) +
   guides(
-    fill = 
-      guide_colourbar(
-        barheight = grid::unit(1, "npc") - unit(10, "line")
-      )
+    fill = guide_colourbar(barheight = grid::unit(1, "npc") - unit(10, "line"))
   )
 ```
 
@@ -155,7 +151,7 @@ The result is saved as a binary file and as png format images in `clustering` di
 
 For a quick look, `plot()`{.r} function is also available.
 
-```{r ,eval = TRUE, fig.keep = "last"}
+```{r, eval = TRUE, fig.keep = "last"}
 cluster <- cluster_xmap(xmap, centers)
 plot(cluster, interactive = FALSE)
 ```
