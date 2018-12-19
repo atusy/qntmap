@@ -1,6 +1,6 @@
 context("test-find-B.R")
 
-if(interactive()) setwd(here("tests/testthat"))
+if(interactive()) setwd(here::here("tests/testthat"))
 
 xmap <- read_xmap("minimal/.map/1", saving = FALSE)
 qnt <- read_qnt("minimal/.qnt", saving = FALSE)
@@ -42,7 +42,7 @@ test_that("find_B(): returns a data frame", {
 
 test_that("find_B(): In case map should be divided into smaller maps (e.g., guidenet map)", {
   B <- find_B(
-    add_row(
+    tibble::add_row(
       epma,
       mem = 0,
       mapint = 0, pkint = 0,
@@ -61,4 +61,4 @@ test_that("find_B(): In case map should be divided into smaller maps (e.g., guid
   expect_identical(B_11, B_dummy)
 })
 
-if(interactive()) setwd(here())
+if(interactive()) setwd(here::here())

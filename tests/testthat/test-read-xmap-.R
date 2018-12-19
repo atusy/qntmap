@@ -1,6 +1,6 @@
 context("test-read-xmap-.R")
 
-if(interactive()) setwd(here("tests/testthat"))
+if(interactive()) setwd(here::here("tests/testthat"))
 
 wd <- "minimal/.map/1"
 

@@ -1,6 +1,6 @@
 context("test-find-AG.R")
 
-if(interactive()) setwd(here("tests/testthat"))
+if(interactive()) setwd(here::here("tests/testthat"))
 
 xmap <- read_xmap("minimal/.map/1", saving = FALSE)
 qnt <- read_qnt("minimal/.qnt", saving = FALSE)
@@ -47,4 +47,4 @@ test_that("find_AG(): In case map should be divided into smaller maps (e.g., gui
   expect_true(all(!is.na(AG$a_se)))
 })
 
-if(interactive()) setwd(here())
+if(interactive()) setwd(here::here())
