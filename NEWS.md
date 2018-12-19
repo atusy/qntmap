@@ -1,19 +1,37 @@
-# qntmap 0.3.1
+# qntmap 0.3.1 (Unreleased)
 
-Upcoming release
+## Major changes
 
-- Refactors
-    - Simplify codes
-    - Separate monster functions into small ones
-- Continuous integrations
-    - Travis CI, AppVeyor, and Codecov are introduced
+- `quantify()` supports fixing compositions of certain components of phases.
+- Defunct deprecated functions:
+    - `qltmap_cls_centers`
+    - `qltmap_load`
+    - `qnt_load`
+    - `qntmap_cls_pois`
+    - `qntmap_quantify`
+    
+## Minor changes
+
+- Refactored to
+    - simplify codes
+    - separate monster functions into small ones
+- Introduced continuous integrations:
+    - Travis CI, AppVeyor, and Codecov
+    - As Travis CI passes building on macOS, 
+      [#23](https://github.com/atusy/qntmap/issues/23) is closed.
+      
+## Decisions
+
+- `qntmap()` will be maintained without new features to focus on developing
+  web user interface with `shiny` package.
 
 # qntmap 0.3.0
 
 ## Major changes
 
 - `plot()`
-    - Interactive plot is a combination of shiny, ggplot2, and more. No more using plotly.
+    - Interactive plot is a combination of 
+      shiny, ggplot2, and more. No more using plotly.
         - Color control with histogram
         - Hover information of pixels
         - Zooming
@@ -21,11 +39,15 @@ Upcoming release
         - Summarizing data in a table below heatmap
             - Double click to keep pixel data
             - Box select to keep mean values of data
-    - Grayscale is supported in addition to viridis.
+    - Grayscale is supported in addition to viridis. 
+      [#28](https://github.com/atusy/qntmap/issues/28)
     - Clustering result is supported.
+      [#28](https://github.com/atusy/qntmap/issues/28)
 - `segment()`
     - Only allows PNG format as an input. 
       No more JPG nor BMP allowed.
+    - Independent from `imager` package.
+      [#16](https://github.com/atusy/qntmap/issues/16)
 
 # qntmap 0.2.2
 
