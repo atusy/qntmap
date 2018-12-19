@@ -127,14 +127,3 @@ read_qnt <- function(
   )
 
 }
-
-#' @rdname read_qnt
-#' @inheritParams read_qnt
-#' @param RDS ignored
-#' @export
-qnt_load <- function(
-  wd = NULL, RDS, phase_list = NULL, renew = FALSE, saving = TRUE
-) {
-  .Deprecated(new = 'read_qnt')
-  read_qnt(wd = wd, phase_list = phase_list, renew = renew, saving = saving)
-}

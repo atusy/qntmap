@@ -91,18 +91,3 @@ read_xmap <- function(
     ) %>>%
     save4qm(rds, saving)
 }
-
-#' (DEPRECATED) Use read_xmap
-#' @inheritParams read_xmap
-#' @param RDS ignored.
-#' @export
-qltmap_load <- function(
-  wd = '.',
-  DT = 0,
-  RDS, # ignored
-  renew = FALSE,
-  saving = TRUE
-) {
-  .Deprecated(new = 'read_xmap')
-  read_xmap(wd = wd, DT = DT, renew = renew, saving = saving)
-}
