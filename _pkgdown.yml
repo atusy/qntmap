@@ -1,0 +1,14 @@
+url: http://atusy.github.io/qntmap
+
+template:
+  ganalytics: "UA-131149709-1"
+  package: qntmap
+  default_assets: false
+
+home:
+  strip_header: true
+  links:
+  - text: Learn about a model
+    href: https://doi.org/10.2138/am-2018-6323CCBY
+  - text: Wiki in Japanese
+    href: https://github.com/atusy/qntmap/wiki
