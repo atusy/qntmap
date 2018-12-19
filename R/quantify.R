@@ -8,10 +8,9 @@
 #'   (default: `NULL`).
 #' @inheritParams find_centers
 #' @param fine_th A threshold of membership degrees to 0.9
-#' A threshold of membership degrees to 0.9
-#' @param fixAB 
-#' Fix AB in case compositions of a mineral is constant (default: `NULL`).
-#' @param fixB Fix B (default: `NULL`).
+#' @param fix
+#'   A path to the file specifying chemical compositions of 
+#'   some elements in some phases (default: `NULL`).
 #' @param saving 
 #'   `TRUE` (default) saves the results into `qntmap` directory under 
 #'   the directory `xmap` is read from. `FALSE` does not save.`
@@ -28,8 +27,7 @@ quantify <- function (
   maps_y = attr(xmap, 'pixel')[2],
   fine_phase = NULL,
   fine_th = 0.9,
-  fixAB = NULL,
-  fixB = NULL,
+  fix = NULL,
   saving = TRUE
 ) {
 
@@ -63,9 +61,19 @@ quantify <- function (
 
   X <- as.data.frame(cluster$membership)
 
+  if(is.character(fix)) {
+    params <- fread(fix)
+    
+    AB_fixed <- rename(
+        fix_params_by_wt(xmap = xmap, cls = cluster, params = params),
+        elm = element, phase3 = phase
+      )
+  } 
+    
   rm(cluster)
   
-  AG <- find_AG(epma, setdiff(names(X), unique(epma$phase3))) # returns A and G
+  AG <- find_AG(epma, setdiff(names(X), unique(epma$phase3)))
+    # returns A and G not a product of A and G
 
   B <- find_B(epma)
 
@@ -73,20 +81,33 @@ quantify <- function (
 
   XAG <- find_XAG(X, mutate(AG, ag = a * g, ag_se = L2(a * g_se, g * a_se), g = NULL, g_se = NULL))
 
+  AB <- find_AB(AG, B)
+  
+  rm(AG, B)
+
+  if (is.character(fix)) {
+    
+    AB <- semi_join(AB, AB_fixed, by = c("elm", "phase3")) %>>%
+      select(-ab, -ab_se) %>>%
+      left_join(AB_fixed, by = c("elm", "phase3")) %>>%
+      bind_rows(anti_join(AB, AB_fixed, by = c("elm", "phase3")))
+    
+    rm(AB_fixed)
+  }
+ 
   dir_qntmap <- paste0(dir_map, '/qntmap')
   dir.create(dir_qntmap, FALSE)
 
-  find_AB(AG, B) %>>% #AB
+  AB %>>% 
     expand_AB(stg) %>>%
-    find_AB_fix(fixAB, X, fine_th, xmap) %>>%
     map(map, `*`, X) %>>% #XAB
     map(map_at, 'se', map, square) %>>%
     map(map, reduce_add) %>>%
     map(map_at, 'se', sqrt) %>>%
-    map2(xmap, function(xab, i) map(xab, `*`, i)) %>>%#XABI
+    map2(xmap, function (xab, i) map(xab, `*`, i)) %>>%#XABI
     map2(XAG, map2, `-`) %>>% #XABI - XAG
     map(setNames, c('wt', 'se')) %>>%
-    map(function(x) map(x, `*`, x$wt > 0)) %>>%
+    map(function (x) map(x, `*`, x$wt > 0)) %>>%
     c(list(Total = list(
       wt = as.data.frame(reduce_add(map(., 'wt'))),
       se = as.data.frame(sqrt(reduce_add(map(map(., 'se'), square))))
