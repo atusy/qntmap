@@ -80,12 +80,4 @@ test_that("phase_list = 'does-not-exist'", {
   expect_error(read_qnt(wd, phase_list = 'does-not-exist'))
 })
 
-test_that("qnt_load is deprecated", {
-  prepare()
-  
-  expect_warning(
-    qnt_load(wd, phase_list = NULL, renew = TRUE, saving = TRUE)
-  )
-})
-
 prepare()
