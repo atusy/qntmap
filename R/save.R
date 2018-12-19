@@ -13,24 +13,24 @@ save4qm <- function(x, nm = '', saving = TRUE, ...) {
 
 #' @rdname save4qm
 #' @section `save4qm.default`: 
-#' A default method.
-#' This is a wrapper of `saveRDS` together with invisible return of `x`.
+#'   A default method.
+#'   This is a wrapper of `saveRDS` together with invisible return of `x`.
 save4qm.default <- function(x, nm, saving, ...) {
-    saveRDS(x, nm)
-    invisible(x)
-  }
+  saveRDS(x, nm)
+  invisible(x)
+}
 
 #' @rdname save4qm
 #' @section `save4qm.data.frame`:
-#' A method for `data.frame` class. 
-#' This is a wrapper of `data.table::fwrite` 
-#' together with invisible return of `x`.
+#'   A method for `data.frame` class. 
+#'   This is a wrapper of `data.table::fwrite` 
+#'   together with invisible return of `x`.
 #' 
 #' @importFrom data.table fwrite
 save4qm.data.frame <- function(x, nm, saving, ...) {
-    fwrite(x, nm)
-    invisible(x)
-  }
+  fwrite(x, nm)
+  invisible(x)
+}
 
 #' @rdname save4qm
 #' @section `save4qm.qm_cluster`: 
@@ -80,7 +80,6 @@ save4qm.qm_cluster <- function(x, nm, saving, ...) {
 #' A method for `qntmap` class returned by `qntmap()` or `quantify()`
 #' 
 #' @importFrom data.table fwrite
-#' @importFrom pipeR %>>%
 #' @importFrom purrr walk2
 save4qm.qntmap <- function(x, nm, saving, ...) {
   saveRDS(x, file.path(nm, 'qntmap.RDS'))

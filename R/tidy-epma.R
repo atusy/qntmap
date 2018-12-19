@@ -6,7 +6,6 @@
 #'
 #' @importFrom dplyr distinct left_join mutate mutate_at rename transmute
 #' @importFrom matrixStats rowMaxs
-#' @importFrom pipeR %>>%
 #' @importFrom purrr map2
 #' @importFrom stats setNames
 #' @importFrom stringr str_c str_replace_all str_replace str_detect
@@ -22,7 +21,8 @@ tidy_epma <- function(
 
   # load mapping conditions
   pos <- attributes(xmap)[c('start', 'pixel', 'step')]
-  beam <- setNames(attributes(xmap)[c('current', 'dwell')], c('beam_map', 'dwell'))
+  beam <- 
+    setNames(attributes(xmap)[c('current', 'dwell')], c('beam_map', 'dwell'))
   inst <- attributes(xmap)[['instrument']]
 
   # tidy data
@@ -65,10 +65,12 @@ tidy_epma <- function(
 
   ## join cmp, cnd, elem in qnt
   ## calculate 95% ci of data
+  clustered <- !is.null(cluster)
   qnt$cnd %>>%
     mutate(
-      cls = `if`(is.null(cluster), NA, cluster$cluster[qnt$cnd$nr]),
-      mem = `if`(is.null(cluster), NA, rowMaxs(cluster$membership[qnt$cnd$nr, ])),
+      cls = `if`(!! clustered, cluster$cluster[qnt$cnd$nr], NA_real_),
+      mem = 
+        `if`(!! clustered, rowMaxs(cluster$membership[qnt$cnd$nr, ]), NA_real_),
       elm = list(qnt$elm)
     ) %>>%
     unnest %>>%

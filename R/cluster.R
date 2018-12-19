@@ -1,23 +1,23 @@
 #' Poisson distribution based custering based on [`PoiClaClu::Classify()`]
 #' 
 #' @param centers c-by-p matrix returned by [`find_centers()`] or by manually; 
-#' c clusters and p features. 
-#' Used to guess initial centers (or centroids) of clusters. 
-#' A value returned by , typically [`data.frame`] or [`matrix`], 
-#' indicating initial guess centers (or centroids) or clusters. 
-#' See [`find_centers()`].
+#'   c clusters and p features. 
+#'   Used to guess initial centers (or centroids) of clusters. 
+#'   A value returned by , typically [`data.frame`] or [`matrix`], 
+#'   indicating initial guess centers (or centroids) or clusters. 
+#'   See [`find_centers()`].
 #' @inheritParams PoiClaClu::Classify
 #' @inheritDotParams PoiClaClu::Classify -x -y -xte
 #' @inherit PoiClaClu::Classify return references
 #' @seealso [PoiClaClu::Classify()], [find_centers()]
 #'
 #' @importFrom PoiClaClu Classify
-#' @importFrom pipeR %>>%
+#' @importFrom matrixStats colSums2
 #' @export
 cluster <- function(x, centers, xte = NULL, ...) {
   x_trans <- t(x)
   y <- centers %>>%
-    apply(1L, function(y) colSums(square(x_trans - y))) %>>%
+    apply(1L, function(y) colSums2(square(x_trans - y))) %>>%
     apply(1L, which.min)
   rm(x_trans)
   Classify(x, y, `if`(is.null(xte), x, xte), ...)
@@ -28,20 +28,21 @@ cluster <- function(x, centers, xte = NULL, ...) {
 #' Cluster mapping data into mineral species
 #'
 #' @inheritParams cluster
-#' @param xmap a `qm_xmap` class object returned by [`read_xmap()`]
+#' @param xmap 
+#'   A `qm_xmap` class object returned by [`read_xmap()`]
 #' @param elements 
-#' A character vector to chose elements to be utilized in cluster analysis. 
-#' `NULL` (default) selects as much elements as possible.
-#' @param saving `TRUE` or `FALSE` to save result.
+#'   A character vector to chose elements to be utilized in cluster analysis. 
+#'   `NULL` (default) selects as much elements as possible.
+#' @param saving 
+#'   `TRUE` or `FALSE` to save result.
 #' @param group_cluster 
-#' `FALSE` (default) or `TRUE` to integrate same phase subgrouped using suffix.
-#' For example, 
-#' clusters named "Pl_NaRich" and "Pl_NaPoor" are integrated to "Pl" cluster .
+#'   `FALSE` (default) or `TRUE` to integrate same phase subgrouped using suffix.
+#'   For example, 
+#'   clusters named "Pl_NaRich" and "Pl_NaPoor" are integrated to "Pl" cluster .
 #'
 #' @importFrom dplyr group_by ungroup
-#' @importFrom pipeR %>>%
 #' @importFrom tidyr gather spread
-#' @importFrom matrixStats rowMaxs
+#' @importFrom matrixStats rowMaxs rowSums2
 #'
 #' @export
 cluster_xmap <- function(
@@ -78,7 +79,7 @@ cluster_xmap <- function(
   result$membership <- result$discriminant %>>%
     `-`(rowMaxs(.)) %>>%
     exp %>>%
-    `/`(rowSums(.))
+    `/`(rowSums2(.))
 
   result$discriminant <- NULL
 

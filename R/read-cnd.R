@@ -1,5 +1,6 @@
-#' read .cnd files
+#' Read .cnd files
 #' 
+#' @name read_cnd
 #' @param x A path to the file (e.g., '0.cnd', 'map.cnd', ...)
 #' @param pattern pattern to substract
 #' @param ... Other arguments passed to methods
@@ -24,7 +25,6 @@ read_cnd.default <- function(x, pattern = NULL, ...) {
 #' @importFrom tidyr separate
 #' @importFrom utils type.convert
 #' @importFrom dplyr arrange
-#' @importFrom pipeR %>>%
 #' @importFrom stringr str_extract
 #' @export
 read_cnd.map_cnd <- function(x, pattern = NULL, ...) {
@@ -51,10 +51,12 @@ read_cnd.map_cnd <- function(x, pattern = NULL, ...) {
 }
 
 #' @rdname read_cnd
-#' @section read_cnd.0_cnd: A method for `0_cnd` class object.
+#' @section read_cnd.0_cnd: 
+#'   A method for `0_cnd` class object.
 #'   Used to extract rows which contains phrase matching pattern.
-#' @param n integer vector of same length as pattern. 
-#'   Used to extract nth row of .cnd file in case pattern did not match any phrase.
+#' @param n 
+#'   integer vector of same length as pattern. 
+#'   Used to extract nth row of .cnd file if no phrases match the `pattern`.
 #' @export
 read_cnd.0_cnd <- function(x, pattern = NULL, n = NULL, ...) {
   if(is.null(pattern)) return(x)
@@ -62,7 +64,7 @@ read_cnd.0_cnd <- function(x, pattern = NULL, n = NULL, ...) {
   detection <- lapply(pattern, function(i) which(str_detect(x, i)))
   
   # number of detections
-  detection_n <- unlist(lapply(detection, length), use.names = FALSE)
+  detection_n <- lengths(detection)
   
   # error if any pattern matched more than 1 phrase
   if(any(too_many <- detection_n > 1)) {

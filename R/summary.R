@@ -7,16 +7,15 @@ NULL
 #' @rdname summary_methods
 #' @aliases summary.qm_cluster
 #' @section summary.qm_cluster: Returns abundance ratios of clusters.
-#' @importFrom pipeR %>>% 
+#' @importFrom matrixStats colSums2
 #' @export
 summary.qm_cluster <- function(object, ...) {
   object$membership %>>%
-    colSums %>>%
+    colSums2 %>>%
     `/`(sum(.))
 }
 
 #' @section summary.qntmap: summary qntmap class data.
-#' @importFrom pipeR %>>%
 #' @importFrom dplyr bind_rows
 #' @export
 summary.qntmap <- function(object, ...) {

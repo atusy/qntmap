@@ -1,17 +1,21 @@
 # © 2018 JAMSTEC
 #' @name mean
 #' @title Arithmetric mean for `qntmap` package
-#' @description S3 methods for the arithmetric mean. 
-#' See [base::mean()]  for general use of `mean()`.
+#' @description 
+#'   S3 methods for the arithmetric mean. 
+#'   See [base::mean()]  for general use of `mean()`.
 #' 
-#' @param x A `qntmap` class object returned by [quantify()] or [qntmap()].
-#' @param index a vector of length `1`` or length equal to number of pixels in map. 
-#' An index can be created using mask image through [segment()].
-#' @param ... Other arguments passed to [base::mean.default()]
+#' @param x 
+#'   A `qntmap` class object returned by [quantify()] or [qntmap()].
+#' @param index 
+#'   A vector of length `1`` or length equal to number of pixels in map. 
+#'   An index can be created using mask image through [segment()].
+#' @param ... 
+#'   Other arguments passed to [base::mean.default()]
 #' 
 #' @section mean.qntmap:
-#' returns a [`data.frame`] whose first column lists elements in `qntmap` class object.
-#' Second to last columns lists `mean` values of each elements for each index.
+#'   A returning value is a [`data.frame`] whose first column lists elements,
+#'   and second to last columns lists `mean` values of each elements by index.
 #' 
 #' @seealso [base::mean()], [segment()], [quantify()], [qntmap()]
 NULL
@@ -44,7 +48,6 @@ NULL
 #' mean(qm, index = rep(c('L', 'R'), each = 100))
 #' 
 #' @importFrom dplyr group_by summarize
-#' @importFrom pipeR %>>%
 #' @importFrom tidyr gather spread
 #' 
 #' @export

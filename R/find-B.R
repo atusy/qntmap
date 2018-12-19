@@ -1,9 +1,8 @@
 #' find B
-#' @param epma A tidy epma data output by [`tidy_epma()`]
-#' @param fix fix B
-#' @importFrom dplyr bind_rows left_join
 #' @noRd
-find_B <- function(epma, fix = NULL) {
+#' @param epma A tidy epma data output by [`tidy_epma()`]
+#' @importFrom dplyr bind_rows left_join
+find_B <- function(epma) {
   epma <- epma[
     !is.na(epma$stg),
     c("elm", "pkint", "mapint", "mem", "stg", "dwell", "beam_map")
@@ -16,16 +15,16 @@ find_B <- function(epma, fix = NULL) {
     left_join(B[!kept, c("elm", "stg")], lm_B(epma, elm), by = "elm")
   )
   
-  B[B$elm %in% fix, c("b", "b_se")] <- list(1, NA_real_)
-  
   as.data.frame(B)
 }
 
-#' find beta (B) for small pieces of maps
+#' Find beta (B) for small pieces of maps
+#' @noRd
 #' 
 #' @note
 #' In case all weights are equal to `0`, 
 #' `lm` class object returns NA for `coef()` and `vcov()`
+#' 
 #' `x <- 1:5; y <- rnorm(5) + x; w <- numeric(5); fit <- lm(y~0+x,weights=w); coef(fit); vcov(lm(y~0+x,weights=w))`
 #' 
 #' For `coef()` and `vcov()`, `complete = FALSE` is used
@@ -36,7 +35,6 @@ find_B <- function(epma, fix = NULL) {
 #' @importFrom dplyr group_by mutate summarize ungroup
 #' @importFrom purrr map_dbl
 #' @importFrom stats coef lm vcov
-#' @noRd
 lm_B <- function(epma, ...) {
   mutate(
     ungroup(summarize(
@@ -50,7 +48,8 @@ lm_B <- function(epma, ...) {
     b = unlist(ifelse(.kept, b, NA_real_), use.names = FALSE) / k,
     b_se = unlist(ifelse(.kept, b_se, NA_real_), use.names = FALSE) / k,
     .kept = NULL,
-    # b = map_dbl(fit, coef) / k, b_se = map_dbl(fit, vcov) / k, # Simpler codes works R 3.5.x
+    # b = map_dbl(fit, coef) / k, b_se = map_dbl(fit, vcov) / k,
+    #  # Simple but works only after R 3.5.x
     fit = NULL, k = NULL
   )
 }

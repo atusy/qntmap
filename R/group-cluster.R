@@ -1,4 +1,4 @@
-#' group clusters who share same prefix
+#' Group clusters who share same prefix
 #'
 #' When data points are assigned to clusters A_1 and A_2, 
 #' their clusters are renamed to be A by matching regular expressions.
@@ -7,6 +7,7 @@
 #' @param saving `TRUE` or `FALSE` to save result (default: `TRUE`).
 #' @param suffix A regular expression of suffix (default: `'_.*'`)
 #'
+#' @importFrom matrixStats rowSums2
 #' @importFrom stringr str_replace
 #'
 #' @export
@@ -22,7 +23,7 @@ group_cluster <- function(x, saving = TRUE, suffix = '_.*') {
   # modify membership
   x$membership <- sapply(
     levels(.cls),
-    function(.cls) rowSums(x$membership[, .cn == .cls, drop = FALSE])
+    function(.cls) rowSums2(x$membership[, .cn == .cls, drop = FALSE])
   )
 
   class(x) <- c(class(x), 'integrated')

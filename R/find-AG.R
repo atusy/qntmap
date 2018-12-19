@@ -1,12 +1,11 @@
 #' find AG
+#' @noRd
 #' @param epma A tidy epma data output by [`tidy_epma()`]
 #' @param not_quantified 
-#' A character vector specifying phases who weren't analyzed 
-#' during point analysis # JAMSTEC
-#' @importFrom dplyr group_by mutate summarise ungroup
-#' @importFrom purrr map_dbl map
-#' @importFrom stats sd lm coef vcov
-#' @noRd
+#'   A character vector specifying phases who weren't analyzed 
+#'   during point analysis # JAMSTEC
+#' @importFrom dplyr bind_rows left_join mutate
+#' @importFrom tidyr unnest
 find_AG <- function(
   epma, 
   not_quantified = character(0) # © 2018 JAMSTEC
@@ -29,8 +28,8 @@ find_AG <- function(
 #' @param epma `tidy_epma``
 #' @param ... Grouping variables in NSE.
 #' @importFrom dplyr group_by mutate summarize ungroup
-#' @importFrom purrr map_dbl
-#' @importFrom stats coef lm vcov
+#' @importFrom purrr map map_dbl
+#' @importFrom stats coef lm sd vcov
 #' @seealso [`find_B()`]
 #' @noRd
 lm_AG <- function(epma, ...) {
@@ -47,7 +46,8 @@ lm_AG <- function(epma, ...) {
     a = unlist(ifelse(len_eq_1, a, NA_real_), use.names = FALSE),
     a_se = unlist(ifelse(len_eq_1, a_se, NA_real_), use.names = FALSE),
     len_eq_1 = NULL,
-    # a = map_dbl(fit, coef), a_se = map_dbl(fit, vcov), # Simpler codes works R 3.5.x
+    # a = map_dbl(fit, coef), a_se = map_dbl(fit, vcov),
+    #  # Simpler codes works R 3.5.x
     fit = NULL
   )
 }

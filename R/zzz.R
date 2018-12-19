@@ -2,13 +2,16 @@
 
 #' confidence interval of observed data from poisson process
 #'
-#' @param x data frame containing variable whose data is from poisson process
-#' @param vars a character vector indicating which variables of x are poisson process data
-#' @param offset vector, list, or data frame indicating rate of poisson process data.
-#' @param conf.level confidence level for the returned confidence interval.
+#' @param x 
+#'   A data frame with variables following Poisson process
+#' @param vars 
+#'   A character vector to specify columns of x following Poisson process.
+#' @param offset 
+#'   A vector, a list, or a data frame indicating rate of poisson process data.
+#' @param conf.level 
+#'   A confidence level for the returned confidence interval.
 #'
 #' @importFrom dplyr bind_cols
-#' @importFrom pipeR %>>%
 #' @importFrom purrr map map2
 #' @importFrom stats qgamma setNames
 #' @noRd
@@ -20,12 +23,7 @@ cipois <- function(x, vars = names(x), offset = 1L, conf.level = 0.95) {
     map2(offset, `*`) %>>%
     map(round) %>>%
     map(
-      function(x) {
-        data.frame(
-          L = qgamma(low, x),
-          H = qgamma(high, x + 1L)
-        )
-      }
+      function(x) data.frame(L = qgamma(low, x), H = qgamma(high, x + 1L))
     ) %>>%
     map2(offset, `/`) %>>%
     map(setNames, c('L', 'H')) %>>%
@@ -54,9 +52,15 @@ flag0 <- function(...) {
 }
 
 #' color LUT
-#' @param palette palette to be used as LUT. either pcol (pseudocolor) or gray. It is ignored when LUT is specified.
-#' @param n number of output colors. When n is more than number of colors in the specified palette, output contains duplicated colors.
-#' @param dec FALSE in default outputs a vector of RGB colors. TRUE outputs matrix whose columns are R, G, and B, and whose values are in decimals.
+#' @param palette 
+#'   A palette to be used as LUT: pcol (pseudocolor) or gray.
+#' @param n 
+#'   A number of required colors. 
+#'   A large `n` may return duplicates.
+#' @param dec 
+#'   `FALSE` (default) outputs a character vector in `#ffffff` format. 
+#'   `TRUE` outputs matrix with columns are R, G, and B, 
+#'   whose values are in decimals.
 #' @importFrom grDevices col2rgb
 #' @noRd
 mycolors <- function(palette = c('pcol', 'gray'), n = NULL, dec = FALSE) {
@@ -75,7 +79,7 @@ mycolors <- function(palette = c('pcol', 'gray'), n = NULL, dec = FALSE) {
   output
 }
 
-#' square
+#' Square
 #' @param x input
 #' @noRd
 square <- function(x) x ^ 2L
@@ -100,21 +104,18 @@ propagate_add <- function(x, x2, y, y2) {
 reduce_add <- function(x) Reduce(`+`, x)
 
 #' \%nin\%
-#' @param x x
-#' @param table table
+#' @inheritParams match
 #' @noRd
 `%nin%` <- function(x, table) !match(x, table, nomatch = 0L)
 
-#' Let certain components of x come prior to the alphabetically ordered others 
-#' @param x must be named
-#' @param prior priors
+#' Prioritize certain components of x, and order the others alphabetically
+#' @param x A named object
+#' @param prior 
+#'   A character vector specifying the name of `x` which needs be prioritized.
 #' @noRd
 prioritize <- function(x, prior) {
   nm <- names(x)
-  x[c(
-    intersect(prior, nm),
-    sort(setdiff(nm, prior))
-  )]
+  x[c(intersect(prior, nm), sort(setdiff(nm, prior)))]
 }
 
 #' Version of QntMap

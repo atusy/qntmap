@@ -1,14 +1,17 @@
-#' read X-ray map data
+#' Read X-ray map data
 #'
 #' @param wd directory path containing mapping data (e.g., ./.map/.1)
 #' @param DT dead time in nano seconds (0 nsec in default)
-#' @param renew if TRUE and the file specified by RDS exists, that file will be loaded
-#' @param saving whether or not to save the data as RDS file
-#' @param .map,.cnd regular expressions to match ASCII converted mapping results (`.map`) and condition files (`.cnd`)
+#' @param renew 
+#'   `TRUE` (default) read all data from original files.
+#'   `FALSE` tries to read `xmap.RDS` exists in `wd`, instead.
+#' @param saving 
+#'   `TRUE` (default) or `FALSE` to save the result as `xmap.RDS` file in `wd`.
+#' @param .map,.cnd 
+#'   Regular expressions to match file names of 
+#'   ASCII converted maps (`.map`) and condition files (`.cnd`)
 #'
-#' @importFrom pipeR %>>%
 #' @importFrom purrr map_at
-#' @importFrom stringr str_replace
 #' @importFrom stats setNames
 #' @export
 #'
@@ -20,7 +23,8 @@ read_xmap <- function(
   .map = '(data[0-9]+\\.csv)|([1-9][0-9]*_map\\.txt)', 
   .cnd = '(data[0-9]+|[1-9][0-9]*)\\.cnd'
 ) {
-  #when the argument "wd" is assigned, setwd to the argument on start and to the current wd on exit.
+  # when the argument "wd" is assigned, 
+  # `setwd()` to the argument on start and to the current `wd` on exit.
   
   cd <- getwd()
   on.exit(setwd(cd))
@@ -58,7 +62,7 @@ read_xmap <- function(
   
   dwell <- as.integer(cnd[[1]][['dwell']][1])
 
-  #####load, save, and return map files
+  ##### load, save, and return map files
   # load qltmap from RDS file when qltmap_load() has already been done
   # load qltmap from text images when the RDS file does not exist,
   # there is something wrong with RDS file, or renew = TRUE

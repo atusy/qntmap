@@ -1,9 +1,11 @@
 #' `print` method for `qntmap` class object
 #' 
-#' @param x `qntmap` class object returned by [`quantify()`] or [`qntmap()`].
-#' @param summarizing `TRUE` or `FALSE` to summarize x (default: `TRUE`. 
-#' @param ... Discarded.
-#'
+#' @param x 
+#'   A `qntmap` class object returned by [`quantify()`] or [`qntmap()`].
+#' @param summarizing 
+#'   `TRUE` or `FALSE` to summarize x (default: `TRUE`. 
+#' @param ... 
+#'   Discarded.
 #'
 #'@export
 #'

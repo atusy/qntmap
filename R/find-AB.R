@@ -1,4 +1,5 @@
 #' Find AB
+#' @noRd
 #' @importFrom dplyr mutate right_join select
 #' @importFrom purrr map 
 #' @importFrom stats setNames
@@ -7,7 +8,6 @@
 #' @param A A
 #' @param B B
 #' @param stg stg
-#' @noRd
 # > AG
 #   elm phase3      g     g_se            a         a_se
 # 1  Mg     Ol 5797.0 16.15739 0.0001011356 1.200497e-14
@@ -39,6 +39,7 @@ find_AB <- function(AG, B) {
 }
 
 #' Expand AB along stg
+#' @noRd
 #' @importFrom tidyr gather spread
 #' @importFrom dplyr right_join select
 #' @importFrom purrr map
@@ -67,7 +68,6 @@ find_AB <- function(AG, B) {
 #' ..$ ab_se:'data.frame':	2 obs. of  2 variables:
 #'   .. ..$ Ol : num [1:2] 3.82e-08 3.82e-08
 #' .. ..$ Qtz: num [1:2] 3.81e-08 3.81e-08
-#' @noRd
 expand_AB <- function(AB, stg) {
   gather(AB, .var, .val, -elm, -stg, -phase3) %>>% 
     spread(phase3, .val) %>>% 
@@ -84,7 +84,7 @@ expand_AB <- function(AB, stg) {
 #' @inheritParams find_AB
 #' @param AB A list of parameters alpha and beta
 #' @param fix 
-#' Csv file indicating composition of the phases. `NULL`` returns input AB.
+#'   Csv file indicating composition of the phases. `NULL`` returns input AB.
 #' @param X Membership degrees.
 #' @param fine_th A threshold of X
 #' @importFrom purrr map map2_dbl

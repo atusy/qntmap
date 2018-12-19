@@ -8,13 +8,15 @@
 #' @param x A path to the PNG image file.
 #' @param ... ignored
 #' 
-#' @return A character vector indicating pixel colors in RGBA style for input image.
+#' @return 
+#'   A character vector indicating pixel colors in RGBA style for input image.
 #' 
 #' @seealso [`mean.qntmap()`]
 #' 
 #' @export
 segment <- function(x, ...) {
-  if(!is.character(x) | length(x) != 1) stop('x must be a path to the image file')
+  if(!is.character(x) | length(x) != 1) 
+    stop('x must be a path to the image file')
   UseMethod('segment')
 }
 
@@ -26,7 +28,6 @@ segment <- function(x, ...) {
 #' 
 #' @importFrom grDevices rgb
 #' @importFrom png readPNG
-#' @importFrom pipeR %>>%
 #' @importFrom purrr pmap
 #' @importFrom stats setNames
 #'  

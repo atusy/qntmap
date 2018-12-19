@@ -4,26 +4,23 @@
 #' @param qnt `qm_qnt` class object returned by [`read_qnt()`].
 #' @param cluster `qm_cluster` class object returned by [`cluster_xmap()`].
 #' @param maps_x,maps_y
-#' Sizes of maps along x- and y-axes comprising guide net map.
-#' (default: `NULL`).
+#'   Sizes of maps along x- and y-axes comprising guide net map.
+#'   (default: `NULL`).
 #' @inheritParams find_centers
-#' @param fine_th 
+#' @param fine_th A threshold of membership degrees to 0.9
 #' A threshold of membership degrees to 0.9
 #' @param fixAB 
 #' Fix AB in case compositions of a mineral is constant (default: `NULL`).
 #' @param fixB Fix B (default: `NULL`).
 #' @param saving 
-#' `TRUE` (default) saves the results into `qntmap` directory under 
-#' the directory `xmap` is read from. `FALSE` does not save.`
+#'   `TRUE` (default) saves the results into `qntmap` directory under 
+#'   the directory `xmap` is read from. `FALSE` does not save.`
 #'
-#' @importFrom data.table fwrite
-#' @importFrom pipeR %>>%
-#' @importFrom purrr map map_at map2 walk2
+#' @importFrom purrr map map_at map2
 #' @importFrom stats setNames
-#' @importFrom stringr str_replace
 #'
 #' @export
-quantify <- function(
+quantify <- function (
   xmap,
   qnt,
   cluster,

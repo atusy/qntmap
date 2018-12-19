@@ -1,26 +1,35 @@
+#' @importFrom ggplot2
+#'   ggplot
+#'   aes
+NULL
+
 #' Draw a histgram for numeric vector based on Scott's choice
-#' @importFrom grDevices nclass.FD
-#' @importFrom ggplot2 aes coord_cartesian
-#' @importFrom ggplot2 element_blank element_rect
-#' @importFrom ggplot2 geom_bar geom_histogram ggplot
-#' @importFrom ggplot2 theme theme_classic 
-#' @importFrom ggplot2 scale_fill_manual
 #' @noRd
+#' 
+#' @importFrom grDevices nclass.FD
+#' @importFrom ggplot2 
+#'   coord_cartesian
+#'   element_blank 
+#'   element_rect
+#'   geom_bar
+#'   geom_histogram 
+#'   theme
+#'   theme_classic 
+#'   scale_fill_manual
 gghist <- function (x, .min = NA_real_, .max = NA_real_, colors) {
-  if(is.numeric(x)) {
+  layers <- if(is.numeric(x)) {
     if(!is.finite(.min)) .min <- min(x)
     if(!is.finite(.max)) .max <- max(x)
     x <- x[.min <= x & x <= .max]
-    layers <- list(
+    list(
       geom_histogram(aes(x, fill = stat(x)), bins = nclass.FD(x)),
       ggfill[[match.arg(colors)]]
     )
   } else {
-    n <- length(unique(x))
-    layers <- list(
+    list(
       geom_bar(aes(x, y = stat(count / sum(count)), fill = x), color = "black"),
       scale_fill_manual(
-        values = mycolors(palette = "pcol", n = n)
+        values = mycolors(palette = "pcol", n = length(unique(x)))
       )
     )
   }
@@ -41,11 +50,15 @@ gghist <- function (x, .min = NA_real_, .max = NA_real_, colors) {
 #' @param x,y,z x-, y-, and z-coordinates
 #' @param nm title for legend of fill
 #' @param colors A palette to chose when z is continuous.
-#' @importFrom ggplot2 aes coord_fixed
-#' @importFrom ggplot2 geom_raster ggplot
-#' @importFrom ggplot2 guides guide_colorbar guide_legend
-#' @importFrom ggplot2 scale_y_reverse scale_fill_manual
-#' @importFrom ggplot2 theme theme_classic 
+#' @importFrom ggplot2
+#'   coord_fixed
+#'   geom_raster 
+#'   guides 
+#'   guide_colorbar 
+#'   guide_legend
+#'   scale_y_reverse 
+#'   scale_fill_manual
+#'   theme_classic 
 #' @importFrom grid unit
 #' @importFrom rlang sym
 #' @importFrom stats setNames
@@ -77,8 +90,8 @@ ggheat <- function (
     }
 }
 
-#' @importFrom ggplot2 scale_fill_viridis_c scale_fill_gradient
 #' @noRd
+#' @importFrom ggplot2 scale_fill_viridis_c scale_fill_gradient
 ggfill <- list(
     viridis = scale_fill_viridis_c(),
     gray = scale_fill_gradient(low = "black", high = "white")

@@ -3,18 +3,19 @@
 #' 
 #' Pick values from mapping data based on coordinates of x and y.
 #' 
-#' @param .data Mapping data. Currentl version only supports `qm_xmap` object.
+#' @param .data 
+#'   Mapping data. Currentl version only supports `qm_xmap` object.
 #' @param x,y 
-#' Vectors of `integer` specifying x- and y-coordinates of pixels of mapping data. 
-#' In other words, x- and y- corresponds to n-th column and row of a matrix.
-#' Defaults are set to `NULL` to control 
+#'   Integer vectors specifying x- and y-coordinates of pixels of mapping data. 
+#'   In other words, x- and y- corresponds to n-th column and row of a matrix.
 #' @param phase 
-#' Name of phases comprising the pixels to be picked.
-#' If not manually supplied `phase` is supplied by `c('P1', 'P2', ...)`.
+#'   Name of phases comprising the pixels to be picked.
+#'   If not manually supplied `phase` is supplied by `c('P1', 'P2', ...)`.
 #' @param i
-#' A data frame with clumns `x`, `y`, and `phase`.
-#' `i` have priority to `x`, `y`, and `phase`.`
-#' @param ... ignored
+#'   A data frame with clumns `x`, `y`, and `phase`.
+#'   `i` have priority to `x`, `y`, and `phase`.`
+#' @param ... 
+#'   Ignored
 #' 
 #' @return `data.frame`
 #' 
@@ -30,8 +31,8 @@ pick <- function(
   ...
 ) {
   `if`(
-    length(unique(lapply(list(x, y, phase), length))) != 1,
-    stop('lengths of x, y, and phase must be same')
+    length(unique(lengths(list(x, y, phase)))) != 1,
+    stop('Lengths of x, y, and phase must be same')
   )
   UseMethod('pick')
 }

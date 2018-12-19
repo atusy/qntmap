@@ -4,21 +4,22 @@
 #' 
 #' @title Plot methods for `qntmap` package
 #' @description
-#' S3 methods to plot object with original classes in `qntmap` package. 
-#' See [`graphics::plot()`] for general use of `plot`. 
-#' Mapping data (`qm_xmap` and `qm_qntmap` classes) are visualized by heat maps. 
+#'   S3 methods to plot object with original classes in `qntmap` package. 
+#'   See [`graphics::plot()`] for general use of `plot`. 
+#'   Mapping data (`qm_xmap` and `qm_qntmap` classes) are visualized by heat maps. 
 #' 
 #' @param x 
-#' `qm_xmap` or `qntmap` class objects returned by 
-#' [read_xmap()], [quantify()], or [qntmap()].
+#'   A `qm_xmap` or `qntmap` class objects returned by 
+#'   [read_xmap()], [quantify()], or [qntmap()].
 #' @param y
-#' A string specifying a component of `x` to determine colors to fill the map.
+#'   A string specifying a component of `x` to determine colors to fill the map.
 #' @param colors
-#' A color pallete to use. Either "viridis" (default) or "gray".
+#'   A color pallete to use. Either "viridis" (default) or "gray".
 #' @param interactive
-#' `TRUE` (default) produces plots with shiny WebUI, and 
-#' `FALSE` produces plots with [`ggplot2::ggplot()`].
-#' @param ... ignored
+#'   `TRUE` (default) produces plots with shiny WebUI, and 
+#'   `FALSE` produces plots with [`ggplot2::ggplot()`].
+#' @param ... 
+#'   Ignored
 #' 
 #' @seealso [`graphics::plot()`]
 #' 
@@ -52,7 +53,6 @@ plot.qm_raster <- function(
 #' class(xm) <- c('qm_xmap', 'list')
 #' plot(xm, interactive = FALSE)
 #' 
-#' @importFrom pipeR %>>% 
 #' @importFrom dplyr bind_cols
 #' @export
 plot.qm_xmap <- function(x, y = setdiff(names(x), c('x', 'y'))[1], ...) {
@@ -95,7 +95,6 @@ plot.qntmap <- function(
 #' class(cls) <- "qm_cluster"
 #' plot(cls, interactive = FALSE)
 #' 
-#' @importFrom pipeR %>>%
 #' @importFrom dplyr mutate select
 #' @importFrom stats setNames
 #' @export

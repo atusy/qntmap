@@ -1,12 +1,16 @@
 #' compile quantitative data
 #'
 #' @param wd directory path containing .qnt files
-#' @param phase_list path to the csv file containing columns indicating phase of each analysis and true or false to use it for quantifying.
-#' @param renew if TRUE and the file specified by RDS exists, that file will be loaded
-#' @param saving whether or not to save the data as RDS file
+#' @param phase_list 
+#'   A path to a csv file containing columns indicating 
+#'   phase of each analysis and `TRUE` or `FALSE` to use it for quantifying.
+#' @param renew 
+#'   `TRUE` (default) read all data from original files.
+#'   `FALSE` tries to read `qnt.RDS` exists in `wd`, instead.
+#' @param saving 
+#'   `TRUE` (default) or `FALSE` to save the result as `qnt.RDS` file in `wd`.
 #'
 #' @importFrom dplyr select one_of mutate
-#' @importFrom pipeR %>>%
 #' @importFrom stringr str_replace_all str_replace str_detect
 #' @importFrom data.table fwrite
 #'

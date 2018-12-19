@@ -5,16 +5,24 @@
 #' @importFrom DT dataTableOutput
 #' @importFrom htmltools br tags
 #' @importFrom shinyWidgets radioGroupButtons
-#' @importFrom shiny brushOpts checkboxInput fluidPage hoverOpts htmlOutput mainPanel numericInput plotOutput selectInput sidebarLayout sidebarPanel splitLayout splitLayout uiOutput
-# #' @import shiny
+#' @importFrom shiny 
+#'   brushOpts 
+#'   checkboxInput 
+#'   fluidPage 
+#'   hoverOpts htmlOutput 
+#'   mainPanel 
+#'   numericInput 
+#'   plotOutput 
+#'   selectInput sidebarLayout sidebarPanel splitLayout splitLayout 
+#'   uiOutput
 #' @noRd
 ui <- function(elm, selected = elm[[1]], pcol = TRUE) {fluidPage(
   sidebarLayout(
     sidebarPanel(
       splitLayout(
         selectInput('fill', 'Element', elm, selected = selected, selectize = FALSE),
-        numericInput('min', 'Min', value = NA),
-        numericInput('max', 'Max', value = NA)#,
+        numericInput('min', 'Min', value = NA_real_),
+        numericInput('max', 'Max', value = NA_real_)#,
       ),
       plotOutput('hist'), br(),
       splitLayout(
@@ -56,7 +64,7 @@ ui <- function(elm, selected = elm[[1]], pcol = TRUE) {fluidPage(
         "heatmap", 
         hover = hoverOpts(id = "hover"),
         dblclick = "click",
-        brush = brushOpts(id = "brush", fill = NA, resetOnNew = TRUE),
+        brush = brushOpts(id = "brush", resetOnNew = TRUE),
         height = 'auto'
       ),
       uiOutput("tip"),
@@ -75,12 +83,12 @@ ui <- function(elm, selected = elm[[1]], pcol = TRUE) {fluidPage(
 
 
 
-#' @importFrom pipeR %>>% 
 #' @importFrom DT renderDT
 #' @importFrom dplyr everything mutate select summarize_if
 #' @importFrom scales squish
-#' @importFrom shiny htmlOutput reactive reactiveValues observeEvent 
-#' @importFrom shiny renderPlot renderPrint renderUI req 
+#' @importFrom shiny 
+#'   htmlOutput reactive reactiveValues observeEvent 
+#'   renderPlot renderPrint renderUI req 
 #' @noRd
 server <- function(data) {
     range_x <- range(data$x)
@@ -230,7 +238,6 @@ summarize_box <- function (data, xmin, xmax, ymin, ymax, .env) {
 
 
 #' @importFrom dplyr bind_rows everything mutate select
-#' @importFrom pipeR %>>% 
 #' @noRd
 summarize_click <- function (data, x, y, .env) {
   .env$id <- .env$id + 1
