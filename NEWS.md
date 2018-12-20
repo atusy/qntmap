@@ -1,4 +1,4 @@
-# qntmap 0.3.1 (Unreleased)
+# qntmap 0.3.1
 
 ## Major changes
 
