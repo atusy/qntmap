@@ -61,7 +61,7 @@ quantify <- function (
 
   X <- as.data.frame(cluster$membership)
 
-  params <- if(is.character(fix)) fread(fix)
+  params <- if(is.null(fix)) list() else fread(fix)
 
   AG <- find_AG(epma, setdiff(names(X), unique(epma$phase3)))
     # returns A and G not a product of A and G
@@ -72,24 +72,13 @@ quantify <- function (
 
   XAG <- find_XAG(X, mutate(AG, ag = a * g, ag_se = L2(a * g_se, g * a_se), g = NULL, g_se = NULL))
 
-  AB <- find_AB(AG, B)
-  
+  AB <- find_AB(AG, B) %>>%
+    join_AB(fix_AB_by_wt(
+      xmap = setNames(xmap, xmap_nm), cls = cluster, params = params
+    ))
+
   rm(AG, B)
-
-  if (any(is.finite(params$wt))) {
-    AB_fixed <- fix_params_by_wt(
-        xmap = setNames(xmap, xmap_nm), cls = cluster, params = params
-      ) %>>%
-      rename(elm = element, phase3 = phase)
-
-    AB <- semi_join(AB, AB_fixed, by = c("elm", "phase3")) %>>%
-      select(-ab, -ab_se) %>>%
-      left_join(AB_fixed, by = c("elm", "phase3")) %>>%
-      bind_rows(anti_join(AB, AB_fixed, by = c("elm", "phase3")))
-    
-    rm(AB_fixed)
-  }
- 
+  
   dir_qntmap <- paste0(dir_map, '/qntmap')
   dir.create(dir_qntmap, FALSE)
 

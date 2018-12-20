@@ -73,7 +73,6 @@ Collate:
     'find-XAG.R'
     'find-centers-.R'
     'find-centers-kpp.R'
-    'fix-params.R'
     'group-cluster.R'
     'mean.R'
     'plot-.R'

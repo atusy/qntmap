@@ -1,13 +1,8 @@
 #' Find AB
 #' @noRd
-#' @importFrom dplyr mutate right_join select
-#' @importFrom purrr map 
-#' @importFrom stats setNames
-#' @importFrom tidyr nest spread unnest
-#' @importFrom tibble tibble
-#' @param A A
+#' @importFrom dplyr mutate right_join 
+#' @param AG AG
 #' @param B B
-#' @param stg stg
 # > AG
 #   elm phase3      g     g_se            a         a_se
 # 1  Mg     Ol 5797.0 16.15739 0.0001011356 1.200497e-14
@@ -28,10 +23,7 @@
 # 4  Si  11    Qtz 0.01008730 3.810836e-08
 find_AB <- function(AG, B) {
   mutate(
-    right_join(
-      AG[, c("elm", "phase3", "a", "a_se")],
-      B, by = "elm"
-    ),
+    right_join(AG[, c("elm", "phase3", "a", "a_se")], B, by = "elm"),
     ab = a * b,
     ab_se = L2(a * b_se, b * a_se),
     a = NULL, a_se = NULL, b = NULL, b_se = NULL
@@ -40,6 +32,9 @@ find_AB <- function(AG, B) {
 
 #' Expand AB along stg
 #' @noRd
+#' @param AB AB
+#' @param stg stg
+#' 
 #' @importFrom tidyr gather spread
 #' @importFrom dplyr right_join select
 #' @importFrom purrr map
@@ -80,52 +75,45 @@ expand_AB <- function(AB, stg) {
 
 
 
-#' fix AB value when composition of certain phases are constant
-#' @inheritParams find_AB
-#' @param AB A list of parameters alpha and beta
-#' @param fix 
-#'   Csv file indicating composition of the phases. `NULL`` returns input AB.
-#' @param X Membership degrees.
-#' @param fine_th A threshold of X
-#' @importFrom purrr map map2_dbl
-#' @importFrom matrixStats weightedMedian
+#' Fix parameters alpha, beta, and gamma based on given chemical compositions.
 #' @noRd
-find_AB_fix <- function(AB, fix = NULL, X, fine_th = .90, xmap) {
-  
-  if(is.null(fix)) return(AB)
-
-  AB_fix <- fix %>>% 
-    fread %>>% 
-    select(which(names(.) %in% c('phase', names(AB)))) %>>% 
-    filter(phase %in% names(AB[[1]]$val)) %>>% 
-    mutate(w = unclass(X * (X > fine_th))[phase]) %>>% 
-    gather(elm, wt, -phase, -w) %>>% 
-    mutate(
-      i = xmap[str_replace(elm, '[0-9]*O[0-9]*', '')] %>>% 
-        map(unlist, use.names = FALSE) %>>% 
-        map2_dbl(w, weightedMedian, na.rm = TRUE),
-      val = wt / i,
-      w = NULL, wt = NULL, i = NULL
-    ) %>>% 
-    nest(-elm, -phase) %>>% 
-    mutate(data = setNames(data, phase), phase = NULL) %>>% 
-    nest(-elm) %>>% 
-    mutate(data = setNames(data, elm), elm = NULL) %>>% 
-    `[[`('data') %>>% 
-    map(`[[`, 'data') %>>% 
-    map(map, unlist, use.names = FALSE) %>>% 
-    map(unlist)
- 
-  
-  for(e in names(AB_fix)) {
-    for(p in names(AB_fix[[e]])){
-      if(is.finite(AB_fix[[e]][[p]])) {
-        AB[[e]][['val']][[p]][] <- AB_fix[[e]][[p]]
-        AB[[e]][['se']][[p]][] <- 0
-      }
-    }
-  }
-  
-  AB
+#' 
+#' @param xmap `qm_xmap` class object returned by [`read_xmap()`]
+#' @param cls `qm_cluster` class object returned by [`cluster_xmap()`]
+#' @param csv 
+#'   A file path to the csv file with columns `phase`, `element` and `wt`.
+#'   
+#' @importFrom matrixStats rowMaxs weightedMedian
+#' @importFrom dplyr 
+#'   filter group_by mutate right_join summarize
+#' @importFrom tidyr gather
+fix_AB_by_wt <- function(xmap, cls, params) {
+  if(!any(is.finite(params$wt))) return(NULL)
+  params <- filter(params, is.finite(wt))
+  xmap[(unique(params$element))] %>>%
+    lapply(unlist, use.names = FALSE) %>>%
+    c(list(phase = cls$cluster, w = rowMaxs(cls$membership))) %>>%
+    as.data.frame(stringsAsFactors = FALSE) %>>%
+    filter(phase %in% (!!params$phase)) %>>%
+    gather(element, mapint, -phase, -w) %>>%
+    group_by(phase, element) %>>%
+    summarize(mapint = weightedMedian(mapint, w)) %>>%
+    ungroup %>>%
+    right_join(params, by = c("phase", "element")) %>>%
+    mutate(ab = wt / mapint, mapint = NULL, wt = NULL) %>>%
+    rename(elm = element, phase3 = phase)
 }
 
+#' Join results of find_AB and fix_AB_by_wt
+#' @noRd
+#' @param AB returned by find_AB
+#' @param AB_fixed returnd by fix_AB_by_wt()
+#' 
+#' @importFrom dplyr anti_join bind_rows left_join select semi_join
+join_AB <- function(AB, AB_fixed = NULL) {
+  if(is.null(AB_fixed)) return(AB)
+  semi_join(AB, AB_fixed, by = c("elm", "phase3")) %>>%
+    select(-ab, -ab_se) %>>%
+    left_join(AB_fixed, by = c("elm", "phase3")) %>>%
+    bind_rows(anti_join(AB, AB_fixed, by = c("elm", "phase3")))
+}
