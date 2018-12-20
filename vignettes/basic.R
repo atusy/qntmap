@@ -35,13 +35,13 @@ file.copy(
 ## ----file-list-----------------------------------------------------------
 dir(file.path(wd, 'minimal'), recursive = TRUE, all.files = TRUE)
 
-## ----specify-directories, include = FALSE--------------------------------
+## ----specify-directories, include = FALSE, eval = TRUE-------------------
 dir_map <- file.path(wd, 'minimal/.map/1')
 dir_qnt <- file.path(wd, 'minimal/.qnt')
 
 ## ---- message = FALSE----------------------------------------------------
 xmap <- read_xmap(dir_map)
-qnt <- read_qnt(dir_qnt)
+qnt <- read_qnt(dir_qnt, renew = TRUE)
 
 ## ---- message = FALSE, echo = FALSE, warning = FALSE---------------------
 epma <- tidy_epma(qnt, xmap) %>>%

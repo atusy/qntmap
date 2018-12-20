@@ -6,9 +6,14 @@ Authors@R: c(
         person(
             given = 'YASUMOTO Atsushi', 
             role = c('aut', 'cph', 'cre'), 
-            email = 'atusy.7+qntmap@gmail.com'
+            email = 'atusy.7+qntmap@gmail.com',
+            comment = c(ORCID = "0000-0002-8335-495X")
         ),
-        person(given = 'YOSHIDA Kenta', role = c('ctb')),
+        person(
+            given = 'YOSHIDA Kenta', 
+            role = c('ctb'),
+            comment = c(ORCID = "0000-0001-9525-1598")
+        ),
         person(given = 'KUWATANI Tatsu', role = c('ctb')),
         person(
             given = c(
