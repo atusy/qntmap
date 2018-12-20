@@ -32,7 +32,7 @@ read_cnd.map_cnd <- function(x, pattern = NULL, ...) {
     str_replace_all('[:blank:]+', ' ') %>>%
     strsplit(' ') %>>%
     lapply(`[`, seq(max(lengths(.)))) %>>%
-    .x ~ Reduce(rbind, .x) %>>%
+    (.x ~ Reduce(rbind, .x)) %>>%
     as.data.frame %>>%
     setNames(paste0('V', seq(0, by = 1, length.out = length(.)))) %>>%
     mutate(V0 = str_replace(V0, '\\$', '')) %>>%

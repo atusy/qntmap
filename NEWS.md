@@ -9,6 +9,7 @@
     - `qnt_load`
     - `qntmap_cls_pois`
     - `qntmap_quantify`
+- Support for searching online documents: https://atusy.github.io/qntmap
     
 ## Minor changes
 

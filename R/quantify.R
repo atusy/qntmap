@@ -56,16 +56,19 @@ quantify <- function (
     )
 
   xmap <- xmap[qnt$elm$elint[order(qnt$elm$elem)]]
-    
+  xmap_nm <- setNames(qnt$elm$elem, qnt$elm$elint)[names(xmap)]
   rm(qnt)
 
   X <- as.data.frame(cluster$membership)
 
   if(is.character(fix)) {
     params <- fread(fix)
-    
+
     AB_fixed <- rename(
-        fix_params_by_wt(xmap = xmap, cls = cluster, params = params),
+        fix_params_by_wt(
+          xmap = setNames(xmap, xmap_nm), 
+          cls = cluster, params = params
+        ),
         elm = element, phase3 = phase
       )
   } 

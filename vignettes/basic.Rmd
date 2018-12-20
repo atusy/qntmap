@@ -80,7 +80,7 @@ dir(file.path(wd, 'minimal'), recursive = TRUE, all.files = TRUE)
 
 ## Specify directories containing data
 
-```{r specify-directories, include = FALSE}
+```{r specify-directories, include = FALSE, eval = TRUE}
 dir_map <- file.path(wd, 'minimal/.map/1')
 dir_qnt <- file.path(wd, 'minimal/.qnt')
 ```
@@ -95,7 +95,7 @@ dir_qnt <- 'minimal/.qnt'
 
 ```{r, message = FALSE}
 xmap <- read_xmap(dir_map)
-qnt <- read_qnt(dir_qnt)
+qnt <- read_qnt(dir_qnt, renew = TRUE)
 ```
 
 This is an artifact example data which contains olivine and quartz within the mapping area.

@@ -4,11 +4,15 @@ template:
   ganalytics: "UA-131149709-1"
   package: qntmap
   default_assets: false
+  params:
+    docsearch:
+      api_key: 7d529d89cf9d49d99a324143613b100e
+      index_name: qntmap
 
 home:
   strip_header: true
   links:
   - text: Learn about a model
     href: https://doi.org/10.2138/am-2018-6323CCBY
-  - text: Wiki in Japanese
+  - text: Wiki (日本語)
     href: https://github.com/atusy/qntmap/wiki
