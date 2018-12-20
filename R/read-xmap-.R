@@ -33,7 +33,7 @@ read_xmap <- function(
 
   # Read old file with version check
   rds <- "xmap.RDS"
-  if(isFALSE(renew) && file.exists(rds)) {
+  if((!renew) && file.exists(rds)) {
     xmap <- readRDS(rds)
     ver_old <- attr(xmap, 'ver')
     deadtime <- attr(xmap, "deadtime")

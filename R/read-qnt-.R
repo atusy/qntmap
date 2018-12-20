@@ -40,7 +40,7 @@ read_qnt <- function(
   wd <- normalizePath(wd)
   setwd(wd)
   
-  if(isFALSE(renew) & is.null(phase_list) & file.exists('qnt.RDS')) {
+  if((!renew) & is.null(phase_list) & file.exists('qnt.RDS')) {
     QNT <- readRDS('qnt.RDS')
     attr(QNT, 'dir_qnt') <- wd
     message(
@@ -108,7 +108,7 @@ read_qnt <- function(
     lapply(`[`, seq_along(elm$elem) + 2) %>>% 
     lapply(setNames, elm$elem)
 
-  if(is.null(phase_list) & isFALSE(file.exists('phase_list0.csv')) & saving) {
+  if(is.null(phase_list) & (!file.exists('phase_list0.csv')) & saving) {
     fwrite(
       cbind(cnd[c('id', 'phase')], use =TRUE), 
       file.path(cd, 'phase_list0.csv')
