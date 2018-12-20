@@ -61,20 +61,8 @@ quantify <- function (
 
   X <- as.data.frame(cluster$membership)
 
-  if(is.character(fix)) {
-    params <- fread(fix)
+  params <- if(is.character(fix)) fread(fix)
 
-    AB_fixed <- rename(
-        fix_params_by_wt(
-          xmap = setNames(xmap, xmap_nm), 
-          cls = cluster, params = params
-        ),
-        elm = element, phase3 = phase
-      )
-  } 
-    
-  rm(cluster)
-  
   AG <- find_AG(epma, setdiff(names(X), unique(epma$phase3)))
     # returns A and G not a product of A and G
 
@@ -88,8 +76,12 @@ quantify <- function (
   
   rm(AG, B)
 
-  if (is.character(fix)) {
-    
+  if (any(is.finite(params$wt))) {
+    AB_fixed <- fix_params_by_wt(
+        xmap = setNames(xmap, xmap_nm), cls = cluster, params = params
+      ) %>>%
+      rename(elm = element, phase3 = phase)
+
     AB <- semi_join(AB, AB_fixed, by = c("elm", "phase3")) %>>%
       select(-ab, -ab_se) %>>%
       left_join(AB_fixed, by = c("elm", "phase3")) %>>%
