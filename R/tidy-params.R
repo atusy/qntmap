@@ -12,7 +12,8 @@ tidy_params <- function (AG, B, qnt) {
       stage = stg, element = elm, elint, phase = phase3, 
       alpha = a, alpha_se = a_se,
       beta = b,  beta_se = b_se, 
-      gamma = g, gamma_se = g_se
+      gamma = g, gamma_se = g_se,
+      wt = NA_real_
     ) 
   if(length(unique(B$stg)) == 1L) params$stage <- NULL
   params
