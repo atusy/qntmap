@@ -3,24 +3,26 @@
 #' @importFrom dplyr mutate right_join 
 #' @param AG AG
 #' @param B B
-# > AG
-#   elm phase3      g     g_se            a         a_se
-# 1  Mg     Ol 5797.0 16.15739 0.0001011356 1.200497e-14
-# 2  Si     Ol 4282.5 10.12659 0.0001011270 1.129788e-14
-# 3  Si    Qtz 9891.0 14.91865 0.0001009895 3.593501e-15
-# 4  Mg    Qtz    0.0  0.00000 0.0001011356 5.848577e-15
-
-# > B
-#   elm stg        b         b_se
-# 1  Mg  11 99.75446 0.0004009793
-# 2  Si  11 99.88468 0.0003773498
-
-# > AB
-# elm stg phase3         ab        ab_se
-# 1  Mg  11     Ol 0.01008873 4.055329e-08
-# 2  Mg  11    Qtz 0.01008873 4.055329e-08
-# 3  Si  11     Ol 0.01010103 3.816024e-08
-# 4  Si  11    Qtz 0.01008730 3.810836e-08
+#' @examples 
+#' library(tibble)
+#' AG <- tribble(
+#'  ~ elm, ~ phase3,    ~ g,   ~ g_se,          ~ a,       ~ a_se,
+#'   "Mg",     "Ol", 5797.0, 16.15739, 0.0001011356, 1.200497e-14,
+#'   "Si",     "Ol", 4282.5, 10.12659, 0.0001011270, 1.129788e-14,
+#'   "Si",    "Qtz", 9891.0, 14.91865, 0.0001009895, 3.593501e-15,
+#'   "Mg",    "Qtz",    0.0,  0.00000, 0.0001011356, 5.848577e-15,
+#' )
+#' B <- tribble(
+#'  ~ elm, ~ stg,      ~ b,       ~ b_se,
+#'   "Mg",   11,  99.75446, 0.0004009793,
+#'   "Si",   11,  99.88468, 0.0003773498
+#' )
+#' find(AG, B)
+#' # elm stg phase3         ab        ab_se
+#' # 1  Mg  11     Ol 0.01008873 4.055329e-08
+#' # 2  Mg  11    Qtz 0.01008873 4.055329e-08
+#' # 3  Si  11     Ol 0.01010103 3.816024e-08
+#' # 4  Si  11    Qtz 0.01008730 3.810836e-08
 find_AB <- function(AG, B) {
   mutate(
     right_join(AG[, c("elm", "phase3", "a", "a_se")], B, by = "elm"),
@@ -89,7 +91,7 @@ expand_AB <- function(AB, stg) {
 #' @importFrom tidyr gather
 fix_AB_by_wt <- function(xmap, cls, params) {
   if(!any(is.finite(params$wt))) return(NULL)
-  params <- filter(params, is.finite(wt))
+  params <- params[is.finite(params$wt), c("phase", "element", "wt")]
   xmap[(unique(params$element))] %>>%
     lapply(unlist, use.names = FALSE) %>>%
     c(list(phase = cls$cluster, w = rowMaxs(cls$membership))) %>>%
