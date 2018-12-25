@@ -1,3 +1,12 @@
+# qntmap 0.3.2
+
+## Major changes
+
+- `quantify()` saves parameters alpha, beta, gamma, 
+  and their standard errors when `saving = TRUE`.
+- `quantify()` loads parameters from a csv file by 
+  giving its path to `fix` parameter.
+
 # qntmap 0.3.1
 
 ## Major changes
