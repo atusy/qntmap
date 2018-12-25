@@ -73,6 +73,7 @@ Collate:
     'find-XAG.R'
     'find-centers-.R'
     'find-centers-kpp.R'
+    'fix-params.R'
     'group-cluster.R'
     'mean.R'
     'plot-.R'
@@ -91,6 +92,7 @@ Collate:
     'segment.R'
     'summary.R'
     'tidy-epma.R'
+    'tidy-params.R'
     'wrappers.R'
     'zzz.R'
 Roxygen: list(markdown = TRUE)

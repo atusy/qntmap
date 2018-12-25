@@ -45,6 +45,10 @@ quantify <- function (
     ))
   )
 
+  params <- if (is.null(fix)) list() else fread(fix)
+  
+  TF_inherit_params <- check_ABG(params, xmap, cluster) # © 2018 JAMSTEC
+  
   # Tidy compilation of epma data
   epma <- tidy_epma_for_quantify(
       tidy_epma(qnt = qnt, xmap = xmap, cluster = cluster),
@@ -57,17 +61,17 @@ quantify <- function (
 
   xmap <- xmap[qnt$elm$elint[order(qnt$elm$elem)]]
   xmap_nm <- setNames(qnt$elm$elem, qnt$elm$elint)[names(xmap)]
-  rm(qnt)
 
   X <- as.data.frame(cluster$membership)
 
-  params <- if(is.null(fix)) list() else fread(fix)
-
-  AG <- find_AG(epma, setdiff(names(X), unique(epma$phase3)))
-    # returns A and G not a product of A and G
-
-  B <- find_B(epma)
-
+  # Find alpha (A), beta (B), and gamma (G)
+  if(TF_inherit_params) { # © 2018 JAMSTEC
+    AG <- fix_AG(params) # © 2018 JAMSTEC
+    B <- fix_B(params) # © 2018 JAMSTEC
+  } else { # © 2018 JAMSTEC
+    AG <- find_AG(epma, setdiff(names(X), unique(epma$phase3)))
+    B <- find_B(epma)
+  } # © 2018 JAMSTEC
   rm(epma)
 
   XAG <- find_XAG(X, mutate(AG, ag = a * g, ag_se = L2(a * g_se, g * a_se), g = NULL, g_se = NULL))
@@ -77,11 +81,14 @@ quantify <- function (
       xmap = setNames(xmap, xmap_nm), cls = cluster, params = params
     ))
 
-  rm(AG, B)
-  
   dir_qntmap <- paste0(dir_map, '/qntmap')
   dir.create(dir_qntmap, FALSE)
 
+  if(is.null(fix)) # © 2018 JAMSTEC
+    save4qm(tidy_params(AG, B, qnt), nm = file.path(dir_qntmap, "parameters.csv"), saving = saving) # © 2018 JAMSTEC
+
+  rm(AG, B)
+    
   AB %>>% 
     expand_AB(stg) %>>%
     map(map, `*`, X) %>>% #XAB
@@ -100,3 +107,53 @@ quantify <- function (
     `class<-`(c('qntmap', 'list')) %>>%
     save4qm(nm = dir_qntmap, saving = saving)
 }
+
+#' Check alpha, beta, and gamma in params
+#' @noRd
+#' 
+#' @return `TRUE` or `FALSE`
+#' @note © 2018 JAMSTEC
+#' 
+check_ABG <- function (params, xmap, cls) {
+  # FALSE if not fixed
+  if (!is.data.frame(params)) return (FALSE)
+  
+  # FALSE if only fixing product of alpha and beta
+  nm <- names(params)
+  nm_common <- c("element", "phase")
+  nm_wt <- c("wt")
+  nm_AGB <- 
+    c("elint", "alpha", "beta", "gamma", "alpha_se", "beta_se", "gamma_se")
+  
+  # FALSE if parameters are only fixed by wt
+  if ((!all(nm_AGB %in% nm)) & (all(c(nm_common, nm_wt) %in% nm))) 
+    return (FALSE)
+  
+  # FALSE if required columns are missing
+  col_missing <- setdiff(c(nm_AGB, nm_common), names(params))
+  if(length(col_missing) > 0)
+    stop(
+      "Trying to fix parameters, ",
+      "but following columns are missing in the input file",
+      paste(col_missing, collapse = ", ")
+    )
+
+  # Check if all elements are quantified
+  elint_missing <- expand.grid(
+    phase = unique(cls$cluster), 
+    elint = setdiff(names(xmap), .electron),
+    stringsAsFactors = FALSE
+  ) %>>%
+    anti_join(params, by = c("phase", "elint")) %>>%
+    (elint)
+  
+  if(length(elint_missing) > 0L)
+    stop(
+      "Trying to fix parameters, ",
+      "but followings are missing in the column elint from the input file:",
+      paste(elint_missing, collapse = ", ")
+    )
+  
+  return(TRUE)
+}
+
