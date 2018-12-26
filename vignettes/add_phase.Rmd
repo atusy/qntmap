@@ -33,7 +33,7 @@ there are some phases without spot analysis.
 For accurate analysis, I highly recommend careful observation prior to EPMA analysis, 
 so that as less phases as possible being missed.
 
-Please read [basic.html](basic.html) before hand.
+Please read ["Basic usage"](basic.html) before hand.
 
 # Preparation
 
