@@ -83,7 +83,7 @@ al. (2014).
 
 ## Export data
 
-1.  **ASCII conert** mapping data into matrix format, and save the
+1.  **ASCII convert** mapping data into matrix format, and save the
     result in the directory where raw data is stored (e.g., `.map/1`).
 2.  Export whole directory of analysis containing `.map` directory and
     `.qnt` directory

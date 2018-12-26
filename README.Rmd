@@ -78,7 +78,7 @@ Thus, [spot analysis][Spot analysis] must be done prior to [mapping][Mapping].
 
 ## Export data {#Export}
 
-1. **ASCII conert** mapping data into matrix format,
+1. **ASCII convert** mapping data into matrix format,
    and save the result in the directory
    where raw data is stored (e.g., `.map/1`).
 1. Export whole directory of analysis containing 
