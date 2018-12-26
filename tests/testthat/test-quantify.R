@@ -71,7 +71,7 @@ test_that("quantify() doubles result if alpha is doubled by fix parameter", {
   csv <- "params.csv"
   data.table::fwrite(.params, csv)
   .qmap1 <- quantify(xmap, qnt, cluster, saving = FALSE)
-  .qmap2 <- quantify(xmap, qnt, cluster, saving = FALSE, fix = csv)
+  .qmap2 <- quantify(xmap, NULL, cluster, saving = FALSE, fix = csv)
   
   ratios <- unlist(.qmap2[[1]][["wt"]], use.names = FALSE) /
     unlist(.qmap1[[1]][["wt"]], use.names = FALSE)

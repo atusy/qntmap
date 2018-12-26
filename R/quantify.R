@@ -40,8 +40,8 @@ quantify <- function (
   stg <- do.call(
     flag0,
     unclass(expand.grid(
-      x_stg = seq(0, pixel[1] - 1) %/% maps_x + 1,
-      y_stg = seq(0, pixel[2] - 1) %/% maps_y + 1
+      x_stg = seq(0L, pixel[1] - 1L) %/% maps_x + 1L,
+      y_stg = seq(0L, pixel[2] - 1L) %/% maps_y + 1L
     ))
   )
 
@@ -49,8 +49,17 @@ quantify <- function (
   
   TF_inherit_params <- check_ABG(params, xmap, cluster) # © 2018 JAMSTEC
   
-  # Tidy compilation of epma data
-  epma <- tidy_epma_for_quantify(
+  X <- as.data.frame(cluster$membership)
+
+  # Find alpha (A), beta (B), and gamma (G)
+  if (TF_inherit_params) { # © 2018 JAMSTEC
+    AG <- fix_AG(params) # © 2018 JAMSTEC
+    B <- fix_B(params) # © 2018 JAMSTEC
+    nm <- setNames(params$element, params$elint) # © 2018 JAMSTEC
+    nm <- nm[!duplicated(nm)] # © 2018 JAMSTEC
+  } else {
+    # Tidy compilation of epma data
+    epma <- tidy_epma_for_quantify(
       tidy_epma(qnt = qnt, xmap = xmap, cluster = cluster),
       maps_x, maps_y, 
       elements = qnt$elm$elem,
@@ -58,34 +67,24 @@ quantify <- function (
       fine_phase = fine_phase,
       fine_th = fine_th
     )
-
-  xmap <- xmap[qnt$elm$elint[order(qnt$elm$elem)]]
-  xmap_nm <- setNames(qnt$elm$elem, qnt$elm$elint)[names(xmap)]
-
-  X <- as.data.frame(cluster$membership)
-
-  # Find alpha (A), beta (B), and gamma (G)
-  if(TF_inherit_params) { # © 2018 JAMSTEC
-    AG <- fix_AG(params) # © 2018 JAMSTEC
-    B <- fix_B(params) # © 2018 JAMSTEC
-  } else { # © 2018 JAMSTEC
     AG <- find_AG(epma, setdiff(names(X), unique(epma$phase3)))
     B <- find_B(epma)
-  } # © 2018 JAMSTEC
-  rm(epma)
+    rm(epma)
+    nm <- setNames(qnt$elm$elem, qnt$elm$elint)
+  } 
 
+  names(xmap) <- nm[names(xmap)]
+  
   XAG <- find_XAG(X, mutate(AG, ag = a * g, ag_se = L2(a * g_se, g * a_se), g = NULL, g_se = NULL))
-
+  
   AB <- find_AB(AG, B) %>>%
-    join_AB(fix_AB_by_wt(
-      xmap = setNames(xmap, xmap_nm), cls = cluster, params = params
-    ))
+    join_AB(fix_AB_by_wt(xmap = xmap, cls = cluster, params = params))
 
   dir_qntmap <- paste0(dir_map, '/qntmap')
   dir.create(dir_qntmap, FALSE)
 
-  if(is.null(fix)) # © 2018 JAMSTEC
-    save4qm(tidy_params(AG, B, qnt), nm = file.path(dir_qntmap, "parameters.csv"), saving = saving) # © 2018 JAMSTEC
+  if(is.null(fix) && saving) # © 2018 JAMSTEC
+    save4qm(tidy_params(AG, B, qnt), nm = file.path(dir_qntmap, "parameters.csv")) # © 2018 JAMSTEC
 
   rm(AG, B)
     
@@ -95,7 +94,7 @@ quantify <- function (
     map(map_at, 'se', map, square) %>>%
     map(map, reduce_add) %>>%
     map(map_at, 'se', sqrt) %>>%
-    map2(xmap, function (xab, i) map(xab, `*`, i)) %>>%#XABI
+    map2(xmap[names(.)], function (xab, i) map(xab, `*`, i)) %>>%#XABI
     map2(XAG, map2, `-`) %>>% #XABI - XAG
     map(setNames, c('wt', 'se')) %>>%
     map(function (x) map(x, `*`, x$wt > 0)) %>>%
