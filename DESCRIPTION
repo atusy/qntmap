@@ -55,11 +55,13 @@ Imports: curl,
     tibble,
     tidyr,
     utils
-Suggests: pkgdown,
+Suggests: 
+    pkgdown,
     roxygen2,
     testthat,
     here,
-    covr
+    covr,
+    rmarkdown
 URL: https://github.com/atusy/qntmap/
 BugReports: https://github.com/atusy/qntmap/issues
 Collate:
