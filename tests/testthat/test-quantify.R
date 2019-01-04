@@ -56,11 +56,11 @@ test_that("quantify() returns a qntmap class object", {
   for (i in .qmap) expect_named(i, c("wt", "se"))
   for (i in .qmap) expect_type(i, "list")
   for (i in .qmap) for (j in i) expect_s3_class(j, "data.frame")
-  expect_equal(
-    dir(dir_qmap),
+  expect_true(all(
     c("Mg_se.csv", "Mg_wt.csv", "parameters.csv", "qntmap.RDS", "Si_se.csv", 
-      "Si_wt.csv", "Total_se.csv", "Total_wt.csv")
-  )
+      "Si_wt.csv", "Total_se.csv", "Total_wt.csv") %in%
+      dir(dir_qmap)
+  ))
   unlink(dir_qmap, recursive = TRUE)
 })
 
