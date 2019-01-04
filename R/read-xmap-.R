@@ -3,8 +3,8 @@
 #' @param wd directory path containing mapping data (e.g., ./.map/.1)
 #' @param DT dead time in nano seconds (0 nsec in default)
 #' @param renew 
-#'   `TRUE` (default) read all data from original files.
-#'   `FALSE` tries to read `xmap.RDS` exists in `wd`, instead.
+#'   `TRUE` (default) read data from original files.
+#'   `FALSE` tries to read `xmap.RDS` in `wd`.
 #' @param saving 
 #'   `TRUE` (default) or `FALSE` to save the result as `xmap.RDS` file in `wd`.
 #' @param .map,.cnd 
@@ -45,6 +45,28 @@ read_xmap <- function(
   
   files_xmap <- dir(pattern = .map, full.names = TRUE)
   files_cnd <- dir(pattern = .cnd, full.names = TRUE)
+  stop_if_files_xmap_and_cnd_have_different_size(files_xmap, files_cnd)
+  
+  cnd <- lapply(files_cnd, read_xmap_cnd, patterns = patterns_xmap_cnd)
+  elm <- unlist(lapply(cnd, `[[`, 'elm'), use.names = FALSE)
+  dwell <- as.integer(cnd[[1]][['dwell']][1])
+
+  construct_qm_xmap(
+    files_xmap = files_xmap, elm = elm, dwell = dwell, deadtime = DT, dir_map = wd,
+    current = as.numeric(cnd[[1]][['current']][1]),
+    start = as.numeric(cnd[[1]][['start']][1:3]),
+    pixel = as.integer(cnd[[1]][['pixel']][1:2]),
+    step = as.numeric(cnd[[1]][['step']][1:2]),
+    instrument = cnd[[1]][['instrument']][1]
+  ) %>>%
+    save4qm(rds, saving)
+}
+
+#' Stop if lengths of files_xmap and files_cnd are different
+#' @noRd
+stop_if_files_xmap_and_cnd_have_different_size <- function (
+  files_xmap, files_cnd
+) {
   if(length(files_xmap) != length(files_cnd)) {
     cat(
       'file names of mapping data:', files_xmap, '\n',
@@ -55,39 +77,30 @@ read_xmap <- function(
       'Check parameters .map and .cnd'
     )
   }
-  
-  cnd <- lapply(files_cnd, read_xmap_cnd, patterns = patterns_xmap_cnd)
+}
 
-  elm <- unlist(lapply(cnd, `[[`, 'elm'), use.names = FALSE)
-  
-  dwell <- as.integer(cnd[[1]][['dwell']][1])
-
-  ##### load, save, and return map files
-  # load qltmap from RDS file when qltmap_load() has already been done
-  # load qltmap from text images when the RDS file does not exist,
-  # there is something wrong with RDS file, or renew = TRUE
+#' Construct qm_xmap class object
+#' @importFrom purrr map_at
+#' @importFrom stats setNames
+#' @noRd
+construct_qm_xmap <- function(files_xmap, elm, dwell, deadtime, dir_map, ...) {
   files_xmap %>>%
     lapply(fread) %>>%
     setNames(elm) %>>%
     prioritize(.component) %>>%
     map_at( # Dead time corrections except for electron signals (e.g., BSE)
       setdiff(names(.), .electron),
-      function(x) dwell * x / (dwell - DT * 1e-9 * x)
+      function(x) dwell * x / (dwell - deadtime * 1e-9 * x)
     ) %>>%
     lapply(round) %>>%
     lapply(lapply, as.integer) %>>%
     lapply(as.data.frame) %>>%
     structure(
       class = c('qm_xmap', class(.)),
-      deadtime = DT,
-      dir_map = wd,
+      deadtime = deadtime,
       dwell = dwell,
-      current = as.numeric(cnd[[1]][['current']][1]),
-      start = as.numeric(cnd[[1]][['start']][1:3]),
-      pixel = as.integer(cnd[[1]][['pixel']][1:2]),
-      step = as.numeric(cnd[[1]][['step']][1:2]),
-      instrument = cnd[[1]][['instrument']][1],
-      ver = ver
-    ) %>>%
-    save4qm(rds, saving)
+      ...,
+      dir_map = dir_map,
+      ver = ver # Version of qntmap defined internally
+    )
 }

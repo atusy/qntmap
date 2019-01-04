@@ -61,13 +61,13 @@ test_that("phase_list = 'example.csv'", {
 
   qnt <- read_qnt(wd, phase_list = NULL, renew = TRUE, saving = TRUE)
 
-  csv <- "phase_list0.csv"
-  p <- read.csv(csv)
+  p <- read.csv("phase_list0.csv")
   p$phase <- "a"
   p$use <- rep_len(c(TRUE, FALSE), nrow(p))
+  csv <- "example.csv"
   write.csv(p, csv, row.names = FALSE)
 
-  qnt2 <- read_qnt(wd, phase_list = "phase_list0.csv", renew = TRUE, saving = FALSE)
+  qnt2 <- read_qnt(wd, phase_list = csv, renew = TRUE, saving = FALSE)
 
   expect_false(identical(qnt$cnd$phase, qnt2$cnd$phase))
   expect_true(any(is.na(qnt2$cnd$phase)))

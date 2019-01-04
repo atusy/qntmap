@@ -26,14 +26,7 @@ read_qnt <- function(
   on.exit(setwd(cd))
   
   if(is.character(phase_list)) {
-    if(!file.exists(phase_list))
-      stop(
-        phase_list, 
-        "\n not found.",
-        "Specify phase_list parameter by an absolute path or",
-        "a relative path from the current directory: ",
-        cd
-      )
+    stop_if_phase_list_not_found(phase_list)
     phase_list <- normalizePath(phase_list)
   }
   
@@ -51,19 +44,19 @@ read_qnt <- function(
   
   #load .qnt files
   qnt <- c(
-    'bgm',
-    'bgp',
-    'elem',
-    'elint',
-    # 'krat',
-    # 'kraw',
-    'mes',
-    'net',
-    'pkint',
-    'peak',
-    # 'sigma',
-    'stg',
-    'wt'
+    'bgm', # background minus
+    'bgp', # background plus
+    'elem', # element (Oxide: SiO2)
+    'elint', # element (Simple: Si)
+    # 'krat', # k-ratio
+    # 'kraw', # k-raw
+    'mes', # measurement
+    'net', # net intensity
+    'pkint', # peak intensity (may missing)
+    'peak', # peak counts
+    # 'sigma', # standard deviation
+    'stg', # stage
+    'wt' # weight percentage
   ) %>>%
     (setNames(paste0(., '.qnt'), .)) %>>%
     `[`(file.exists(.)) %>>%
@@ -73,30 +66,26 @@ read_qnt <- function(
   
   #extract elemental data
   elm <- data.frame(
-    elem = unlist(qnt$elem[1, -c(1, 2)], use.names = FALSE),
-    elint = unlist(qnt$elint[1, -c(1, 2)], use.names = FALSE),
-    read_qnt_elemw(elemw[file.exists(elemw)][1])
+    elem = unlist(qnt$elem[1L, -c(1L, 2L)], use.names = FALSE),
+    elint = unlist(qnt$elint[1L, -c(1L, 2L)], use.names = FALSE),
+    read_qnt_elemw(elemw[file.exists(elemw)][1L])
   )
   
   rm(elemw)
   
   cnd <- mutate(
-      setNames(
-          qnt$stg[, c(1, 5, 6, 7, 10)],
-          c('id', 'x', 'y', 'z', 'comment')
-        ),
-      beam = qnt$mes$V3,
+      setNames(qnt$stg[, c(1L, 5L:7L, 10L)], c('id', 'x', 'y', 'z', 'comment')),
+      beam = !!qnt$mes$V3,
       phase =
-        if(is.null(phase_list)) {
+        if(is.null(!!phase_list)) {
           str_replace_all(
-            comment,
-            c('[:blank:]{2,}' = ' ', ' $' = '', '^ ' = '')
+            comment, c('[:blank:]{2,}' = ' ', ' $' = '', '^ ' = '')
           )
         } else {
           mutate(
             fread(phase_list),
-            use = `if`(exists('use'), use, TRUE),
-            phase = ifelse(use, phase, NA)
+            use = `if`(exists('use'), use, TRUE), 
+            phase = ifelse(use, phase, NA_character_)
           )[["phase"]]
         }
     )
@@ -105,7 +94,7 @@ read_qnt <- function(
   #bgm, bgp, pkint, bgint [cps/uA]
   cmp <- qnt[names(qnt) %in% c('bgm', 'bgp', 'net', 'pkint', 'wt')] %>>%
     # 1st and 2nd collumns are id and integeer, last column is sum
-    lapply(`[`, seq_along(elm$elem) + 2) %>>% 
+    lapply(`[`, seq_along(elm$elem) + 2L) %>>% 
     lapply(setNames, elm$elem)
 
   if(is.null(phase_list) & (!file.exists('phase_list0.csv')) & saving) {
@@ -126,4 +115,13 @@ read_qnt <- function(
     saving
   )
 
+}
+
+stop_if_phase_list_not_found <- function(phase_list) {
+  if(!file.exists(phase_list))
+    stop(
+      "Not found: ", phase_list, "\n",
+      "Specify phase_list parameter by an absolute path or",
+      "a relative path from the current directory: ", cd
+    )
 }

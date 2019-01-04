@@ -30,20 +30,20 @@ tidy_epma <- function(
   ## mm -> px
   qnt$cnd <- qnt$cnd[!is.na(qnt$cnd$phase), ] %>>%
       mutate(
-        x_px = (round((x - pos$start[1]) * 1e3 / pos$step[1]) + 1) *
-          `if`(inst %in% 'JXA8230', -1, 1),
-        y_px = round((y - pos$start[2]) * 1e3 / pos$step[2]) + 1,
+        x_px = (round((x - pos$start[1L]) * 1e3 / pos$step[1]) + 1L) *
+          `if`(inst %in% 'JXA8230', -1L, 1L),
+        y_px = round((y - pos$start[2L]) * 1e3 / pos$step[2]) + 1L,
         nr0 = `if`(
           inst %in% 'JXA8230',
-          (x_px - 1) * pos$pixel[2] + y_px,
-          (y_px - 1) * pos$pixel[1] + x_px
+          (x_px - 1L) * pos$pixel[2L] + y_px,
+          (y_px - 1L) * pos$pixel[1L] + x_px
         ),
-        nr = ifelse(0 < nr0 & nr0 < prod(pos$pixel), nr0, NA),
+        nr = ifelse(0L < nr0 & nr0 < prod(pos$pixel), nr0, NA_integer_),
         phase2 = str_replace(phase, '_.*', '')
       ) %>>%
       distinct(nr0, .keep_all = TRUE)
   
-  qnt$elm$dwell <- beam[['dwell']] / 1000
+  qnt$elm$dwell <- beam[['dwell']] * 1e-3
   qnt$elm$beam_map <- beam[['beam_map']]
 
   ## Error if
@@ -85,7 +85,7 @@ tidy_epma <- function(
       bgp2 = bgp * bgp_pos,
       bgint = bgm2 + bgp2,
       pkint = `if`(exists('pkint'), pkint, net + bgint  / (bgm_pos + bgp_pos)),
-      pkint = pkint * (pkint > 0)
+      pkint = pkint * (pkint > 0L)
     ) %>>%
     cipois(
       vars = c('pkint', 'bgm', 'bgp', 'mapint'),
@@ -128,11 +128,11 @@ tidy_epma_for_quantify <- function(
 ) {
   mutate(
     epma[epma$elm %in% elements, ],
-    net = net * (net > 0),
+    net = net * (net > 0L),
     phase3 = if (!!distinguished) phase else phase2,
-    x_stg = ((x_px - 1) %/% !!maps_x + 1) * (0 < x_px) * (x_px <= maps_x), 
-    y_stg = ((y_px - 1) %/% !!maps_y + 1) * (0 < y_px) * (y_px <= maps_y),
-    stg = ifelse((x_stg * y_stg) <= 0, NA, flag0(x_stg, y_stg)),
+    x_stg = ((x_px - 1L) %/% !!maps_x + 1L) * (0L < x_px) * (x_px <= maps_x), 
+    y_stg = ((y_px - 1L) %/% !!maps_y + 1L) * (0L < y_px) * (y_px <= maps_y),
+    stg = ifelse((x_stg * y_stg) <= 0L, NA_character_, flag0(x_stg, y_stg)),
     mem = mem * 
       (str_replace(cls, '_.*', '') == phase2) *
       (cls %nin% fine_phase) * 

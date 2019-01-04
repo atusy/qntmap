@@ -13,8 +13,8 @@ read_xmap(wd = ".map/1", DT = 0, renew = FALSE, saving = TRUE,
 
 \item{DT}{dead time in nano seconds (0 nsec in default)}
 
-\item{renew}{\code{TRUE} (default) read all data from original files.
-\code{FALSE} tries to read \code{xmap.RDS} exists in \code{wd}, instead.}
+\item{renew}{\code{TRUE} (default) read data from original files.
+\code{FALSE} tries to read \code{xmap.RDS} in \code{wd}.}
 
 \item{saving}{\code{TRUE} (default) or \code{FALSE} to save the result as \code{xmap.RDS} file in \code{wd}.}
 
