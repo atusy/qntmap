@@ -1,5 +1,5 @@
 #' Read X-ray map data
-#'
+#' 
 #' @param wd directory path containing mapping data (e.g., ./.map/.1)
 #' @param DT dead time in nano seconds (0 nsec in default)
 #' @param renew 
@@ -7,6 +7,10 @@
 #'   `FALSE` tries to read `xmap.RDS` in `wd`.
 #' @param saving 
 #'   `TRUE` (default) or `FALSE` to save the result as `xmap.RDS` file in `wd`.
+#' @param conditions
+#'   A path to a csv file which records file paths and analytical conditions of
+#'   mapping data.
+#'   Specifying `conditions` discards other parameters except `saving`.
 #' @param .map,.cnd 
 #'   Regular expressions to match file names of 
 #'   ASCII converted maps (`.map`) and condition files (`.cnd`)
@@ -15,29 +19,34 @@
 #' @importFrom stats setNames
 #' @export
 #'
-read_xmap <- function(
+read_xmap <- function (
   wd = '.map/1',
   DT = 0,
   renew = FALSE,
   saving = TRUE,
+  conditions = NULL,
   .map = '(data[0-9]+\\.csv)|([1-9][0-9]*_map\\.txt)', 
   .cnd = '(data[0-9]+|[1-9][0-9]*)\\.cnd'
 ) {
+  
+  rds <- "xmap.RDS"
 
+    if (is.character(conditions)) # © 2018 JAMSTEC
+    return (read_xmap_by_conditions(conditions, rds, saving)) # © 2018 JAMSTEC
+  
   cd <- getwd()
   on.exit(setwd(cd))
   wd <- normalizePath(wd)
   setwd(wd)
 
   # Read old file with version check
-  rds <- "xmap.RDS"
   if((!renew) && file.exists(rds)) {
     xmap <- readRDS(rds)
     ver_old <- attr(xmap, 'ver')
     deadtime <- attr(xmap, "deadtime")
     if (!is.null(ver_old)) 
       if (ver == ver_old && deadtime == DT)
-        return(structure(xmap, dir_map = wd))
+        return (structure(xmap, dir_map = wd))
     rm(xmap, ver_old, deadtime)
   }
   
@@ -72,7 +81,7 @@ stop_if_files_xmap_and_cnd_have_different_size <- function (
       'File names of mapping data:', files_xmap, '\n',
       'File names of mapping conditions:', files_cnd
     )
-    stop(
+    stop (
       'Length of files of xmap and cnd are different.' , 
       'Check parameters .map and .cnd'
     )
@@ -97,14 +106,14 @@ stop_if_files_xmap_and_cnd_have_different_size <- function (
 #' @importFrom purrr map_at
 #' @importFrom stats setNames
 #' @noRd
-construct_qm_xmap <- function(files_xmap, elm, dwell, deadtime, dir_map, ...) {
+construct_qm_xmap <- function (files_xmap, elm, dwell, deadtime, dir_map, ...) {
   files_xmap %>>%
     lapply(fread) %>>%
     setNames(elm) %>>%
     prioritize(.component) %>>%
     map_at( # Dead time corrections except for electron signals (e.g., BSE)
       setdiff(names(.), .electron),
-      function(x) dwell * x / (dwell - deadtime * 1e-9 * x)
+      function (x) dwell * x / (dwell - deadtime * 1e-9 * x)
     ) %>>%
     lapply(round) %>>%
     lapply(lapply, as.integer) %>>%
@@ -117,4 +126,26 @@ construct_qm_xmap <- function(files_xmap, elm, dwell, deadtime, dir_map, ...) {
       dir_map = dir_map,
       ver = ver # Version of qntmap defined internally
     )
+}
+
+# © 2018 JAMSTEC
+#' Read X-ray map data based on a `conditions` csv file
+#' @inheritParams read_xmap
+#' @noRd
+#' 
+read_xmap_by_conditions <- function (conditions, rds, saving) {
+  .cnd <- fread(conditions)
+  construct_qm_xmap(
+    files_xmap = .cnd[["File path"]],
+    elm = .cnd[["Element"]],
+    dwell = .cnd[["Dwell [msec]"]][1L],
+    deadtime = .cnd[["dead time [ns]"]][1L],
+    dir_map = normalizePath(dirname(.cnd[["File path"]][1L])),
+    current = .cnd[["Probe current [A]"]][1L],
+    start = unlist(.cnd[1L, c("Start X [mm]", "Start Y [mm]")], use.names = FALSE),
+    pixel = unlist(.cnd[1L, c("Steps X", "Steps Y")], use.names = FALSE),
+    step = rep(.cnd[["Step size [um]"]][1L], 2L),
+    instrument = .cnd[["Instrument"]][1L]
+  ) %>>%
+    save4qm(rds, saving)
 }
