@@ -23,9 +23,7 @@ read_xmap <- function(
   .map = '(data[0-9]+\\.csv)|([1-9][0-9]*_map\\.txt)', 
   .cnd = '(data[0-9]+|[1-9][0-9]*)\\.cnd'
 ) {
-  # when the argument "wd" is assigned, 
-  # `setwd()` to the argument on start and to the current `wd` on exit.
-  
+
   cd <- getwd()
   on.exit(setwd(cd))
   wd <- normalizePath(wd)
@@ -63,14 +61,16 @@ read_xmap <- function(
 }
 
 #' Stop if lengths of files_xmap and files_cnd are different
+#' @param files_xmap File names of mapping data
+#' @param files_cnd File names of mapping conditions
 #' @noRd
 stop_if_files_xmap_and_cnd_have_different_size <- function (
   files_xmap, files_cnd
 ) {
   if(length(files_xmap) != length(files_cnd)) {
     cat(
-      'file names of mapping data:', files_xmap, '\n',
-      'file names of mapping conditions:', files_cnd
+      'File names of mapping data:', files_xmap, '\n',
+      'File names of mapping conditions:', files_cnd
     )
     stop(
       'Length of files of xmap and cnd are different.' , 
@@ -80,6 +80,20 @@ stop_if_files_xmap_and_cnd_have_different_size <- function (
 }
 
 #' Construct qm_xmap class object
+#' 
+#' @param files_xmap File paths of X-ray mapping data
+#' @param elm Names of elements for `files_xmap`
+#' @param dwell A numeric value of a dwell time
+#' @param deadtime A numeric value of a dead time
+#' @param dir_map A directory which contains mapping data
+#' @param ... 
+#'   Attributes for a returning value:
+#'   `current` for probe current,
+#'   `start` for starting x-y coordinates,
+#'   `pixel` for number of pixels along x- and y-axes,
+#'   `step` for step size as an integer,
+#'   `instrument` for name of the instrument.
+#'   
 #' @importFrom purrr map_at
 #' @importFrom stats setNames
 #' @noRd
