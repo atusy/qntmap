@@ -1,3 +1,5 @@
+^Meta$
+^doc$
 ^appveyor\.yml$
 ^codecov\.yml$
 ^\.travis\.yml$

@@ -5,6 +5,7 @@
 \title{Read X-ray map data}
 \usage{
 read_xmap(wd = ".map/1", DT = 0, renew = FALSE, saving = TRUE,
+  conditions = NULL,
   .map = "(data[0-9]+\\\\.csv)|([1-9][0-9]*_map\\\\.txt)",
   .cnd = "(data[0-9]+|[1-9][0-9]*)\\\\.cnd")
 }
@@ -17,6 +18,10 @@ read_xmap(wd = ".map/1", DT = 0, renew = FALSE, saving = TRUE,
 \code{FALSE} tries to read \code{xmap.RDS} in \code{wd}.}
 
 \item{saving}{\code{TRUE} (default) or \code{FALSE} to save the result as \code{xmap.RDS} file in \code{wd}.}
+
+\item{conditions}{A path to a csv file which records file paths and analytical conditions of
+mapping data.
+Specifying \code{conditions} discards other parameters except \code{saving}.}
 
 \item{.map, .cnd}{Regular expressions to match file names of
 ASCII converted maps (\code{.map}) and condition files (\code{.cnd})}

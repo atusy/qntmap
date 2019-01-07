@@ -222,7 +222,7 @@ For example, prepare a csv file, and specify it to `fix` parameter of `quantify(
 ```{r}
 csv <- paste(
     'phase, element, wt',
-    'Qtz,   Si,      100',
+    'Qtz,   SiO2,      100',
     sep = "\n"
   )
 cat(csv)

@@ -176,7 +176,7 @@ qmap <- quantify(xmap = xmap, qnt = qnt, cluster = cluster)
 Just like [X-ray map](#Plot X-ray map).
 
 ```{r}
-plot(qmap, 'Si', interactive = FALSE)
+plot(qmap, 'SiO2', interactive = FALSE)
 ```
 
 ### Summarize quantified map
@@ -201,7 +201,7 @@ $$
 E(MgO_{bulk}) = 
   57.29 \times `r V['Ol']` + 0 \times `r V['Qtz']` = 
   `r 57.29 * V['Ol']` \simeq 
-  `r E['Mg']` \mathrm{,}
+  `r E['MgO']` \mathrm{,}
 $$
 
 and
@@ -210,7 +210,7 @@ $$
 E(SiO2_{bulk}) = 
   42.71 \times `r V['Ol']` + 100 \times `r V['Qtz']` = 
   `r 42.71 * V['Ol'] + 100 * V['Qtz']` \simeq
-  `r E['Si']` \mathrm{,}
+  `r E['SiO2']` \mathrm{,}
 $$
 
 the above summary is adequate.
@@ -225,7 +225,8 @@ A simple usage gives nothing more than `mean` column of `summary()`.
 mean(qmap)
 ```
 
-However, by using mask image, `mean` values of each element are calculated for each mask areas with same colors.
+However, by using mask image, 
+`mean` values of each element are calculated for each mask areas with same colors.
 
 Let's use an image from cluster analysis [above](#run-cls).
 
@@ -233,10 +234,8 @@ Input path to the image to `segment` function.
 
 ```{r img-path, include = FALSE}
 img <- dir(
-  file.path(dir_map, "clustering"), 
-  pattern = "_map.png",
-  full.names = TRUE
-)[[1]]
+    file.path(dir_map, "clustering"), pattern = "_map.png", full.names = TRUE
+  )[[1]]
 i <- segment(img)
 ```
 
@@ -253,13 +252,16 @@ mean(qmap, index = i)
 
 As black (`#000000`) corresponds to olivine cluster,
 and white (`#FFFFFF`) corresponds to quartz cluster,
-the average compositions of each clusters are nearly equal to ideal compositions of olivine and quartz.
+the average compositions of each clusters are nearly equal 
+to ideal compositions of olivine and quartz.
 
-This feature is useful to find average compositions of each minearls, local bulk compositions of domains (layer, symplectite, and so on).
+This feature is useful to find average compositions of each minearls, 
+local bulk compositions of domains (layer, symplectite, and so on).
 
-Note that mask image must be have **same width and height** as mapping data, and should be either `bmp` or `png` format. `jpg` is allowed but not recommended as it is a lossy format.
+Note that mask image must be png image 
+whose **width and height are same as mapping data**.
 
 ```{r include = FALSE}
-unlink('centers0.csv')
+unlink(c('centers0.csv', 'phase_list0.csv'))
 ```
 

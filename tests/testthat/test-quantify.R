@@ -52,13 +52,13 @@ test_that("quantify() returns a qntmap class object", {
   .qmap <- quantify(xmap, qnt, cluster, saving = TRUE)
   dir_qmap <- "minimal/.map/1/qntmap"
   expect_s3_class(.qmap, c("qntmap", "list"))
-  expect_named(.qmap, c("Si", "Mg", "Total"))
+  expect_named(.qmap, c("SiO2", "MgO", "Total"))
   for (i in .qmap) expect_named(i, c("wt", "se"))
   for (i in .qmap) expect_type(i, "list")
   for (i in .qmap) for (j in i) expect_s3_class(j, "data.frame")
   expect_true(all(
-    c("Mg_se.csv", "Mg_wt.csv", "parameters.csv", "qntmap.RDS", "Si_se.csv", 
-      "Si_wt.csv", "Total_se.csv", "Total_wt.csv") %in%
+    c("MgO_se.csv", "MgO_wt.csv", "parameters.csv", "qntmap.RDS", 
+      "SiO2_se.csv", "SiO2_wt.csv", "Total_se.csv", "Total_wt.csv") %in%
       dir(dir_qmap)
   ))
   unlink(dir_qmap, recursive = TRUE)
@@ -107,7 +107,7 @@ test_that("quantify() gives 200 wt% for SiO2 in Qtz by fix parameter", {
   data.table::fwrite(.params, csv)
 
   .mean <- mean(quantify(xmap, qnt, cluster, saving = FALSE, fix = csv), index = cluster$cluster)
-  expect_equal(200, round(.mean$Qtz[.mean$Element == "Si"], -2))
+  expect_equal(200, round(.mean$Qtz[.mean$Element == "SiO2"], -2))
   
   unlink(csv)
 })
