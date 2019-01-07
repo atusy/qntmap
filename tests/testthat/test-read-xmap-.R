@@ -62,6 +62,22 @@ test_that("save = TRUE", {
   expect_identical(xm, xm2)
 })
 
+
+test_that("conditions = hoge", { #© 2018 JAMSTEC
+  prepare()
+  cd <- getwd()
+  xm <- read_xmap(wd, renew = TRUE, saving = FALSE)
+  setwd("minimal")
+  xm2 <- read_xmap(conditions = "conditions_xmap.csv")
+  setwd(cd)
+  attr_xm <- attributes(xm)
+  attr_xm2 <- attributes(xm2)
+  expect_true(setequal(names(attr_xm), names(attr_xm2)))
+  nm <- setdiff(names(attr_xm), "start")
+  expect_equal(attr_xm[nm], attr_xm2[nm])
+  expect_equal(xm[seq_along(xm)], xm2[seq_along(xm2)])
+})
+
 prepare()
 
 
