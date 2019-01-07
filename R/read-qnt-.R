@@ -9,9 +9,15 @@
 #'   `FALSE` tries to read `qnt.RDS` exists in `wd`, instead.
 #' @param saving 
 #'   `TRUE` (default) or `FALSE` to save the result as `qnt.RDS` file in `wd`.
+#' @param conditions
+#'   A path to a csv file which records analytical conditions of elements.
+#'   The csv file must have following columns while others are discarded:
+#'   `Oxide`, `Element`, `Bg+ [mm]`, `Bg- [mm]`, `Peak [sec]`, and `Bg [sec]`.
+#'   `NULL` (default) retrieves analytical conditions from 
+#'   `elem.qnt`, `elint.qnt`, and `.cnd/elemw.cnd` / `Pos_0001/data001.cnd`.
 #'
-#' @importFrom dplyr select one_of mutate
-#' @importFrom stringr str_replace_all str_replace str_detect
+#' @importFrom dplyr mutate
+#' @importFrom stringr str_replace_all
 #' @importFrom data.table fwrite
 #'
 #' @export
@@ -19,7 +25,8 @@ read_qnt <- function(
   wd = dir(pattern = ('(.*_QNT|^\\.qnt)$'), all.files = TRUE)[1],
   phase_list = NULL,
   renew = FALSE,
-  saving = TRUE
+  saving = TRUE,
+  conditions = NULL
 ) {
   
   cd <- getwd()
@@ -30,15 +37,15 @@ read_qnt <- function(
     phase_list <- normalizePath(phase_list)
   }
   
+  if(is.character(conditions)) conditions <- normalizePath(conditions) # © 2018 JAMSTEC
+  
   wd <- normalizePath(wd)
   setwd(wd)
   
   if((!renew) & is.null(phase_list) & file.exists('qnt.RDS')) {
     QNT <- readRDS('qnt.RDS')
     attr(QNT, 'dir_qnt') <- wd
-    message(
-      "Loaded ", file.path(wd, "qnt.RDS"), "\n"
-    )
+    message("Loaded ", file.path(wd, "qnt.RDS"), "\n")
     return(QNT)
   }
   
@@ -65,11 +72,20 @@ read_qnt <- function(
   elemw <- c('.cnd/elemw.cnd', 'Pos_0001/data001.cnd')
   
   #extract elemental data
-  elm <- data.frame(
-    elem = unlist(qnt$elem[1L, -c(1L, 2L)], use.names = FALSE),
-    elint = unlist(qnt$elint[1L, -c(1L, 2L)], use.names = FALSE),
-    read_qnt_elemw(elemw[file.exists(elemw)][1L])
-  )
+  elm <- if (is.null(conditions)) {
+      data.frame(
+        elem = unlist(qnt$elem[1L, -c(1L, 2L)], use.names = FALSE),
+        elint = unlist(qnt$elint[1L, -c(1L, 2L)], use.names = FALSE),
+        read_qnt_elemw(elemw[file.exists(elemw)][1L])
+      )
+    } else {
+      transmute( # © 2018 JAMSTEC
+        fread(conditions), # © 2018 JAMSTEC
+        elem = Oxide, elint = Element, # © 2018 JAMSTEC
+        bgp_pos = `Bg+ [mm]`, bgm_pos = `Bg- [mm]`, # © 2018 JAMSTEC
+        pk_t = `Peak [sec]`, bg_t = `Bg [sec]` # © 2018 JAMSTEC
+      ) # © 2018 JAMSTEC
+    }
   
   rm(elemw)
   
@@ -99,7 +115,7 @@ read_qnt <- function(
 
   if(is.null(phase_list) & (!file.exists('phase_list0.csv')) & saving) {
     fwrite(
-      cbind(cnd[c('id', 'phase')], use =TRUE), 
+      cbind(cnd[c('id', 'phase')], use = TRUE), 
       file.path(cd, 'phase_list0.csv')
     )
     message("phase_list0.csv is created in ", cd)
