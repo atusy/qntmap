@@ -11,6 +11,7 @@ jobs:
   - r: devel
   - os: osx
     r: release
+    brew_packages: libgit2
 r_binary_packages:
   - covr
 warnings_are_errors: false
