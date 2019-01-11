@@ -6,6 +6,10 @@
   and their standard errors when `saving = TRUE`.
 - `quantify()` loads parameters from a csv file by 
   giving its path to `fix` parameter.
+- `read_qnt()` and `read_xmap()` supports to retrieve analytical conditions from
+  manually prepared csv files. This feature is implemented to avoid failures in
+  reading data caused by difference in formats output by different EPMA 
+  instruments.
 
 # qntmap 0.3.1
 

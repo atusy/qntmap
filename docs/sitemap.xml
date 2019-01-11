@@ -70,9 +70,12 @@
     <loc>http://atusy.github.io/qntmap/articles/add_phase.html</loc>
   </url>
   <url>
-    <loc>http://atusy.github.io/qntmap/articles/basic.html</loc>
+    <loc>http://atusy.github.io/qntmap/articles/parameterize.html</loc>
   </url>
   <url>
-    <loc>http://atusy.github.io/qntmap/articles/parameterize.html</loc>
+    <loc>http://atusy.github.io/qntmap/articles/qntmap.html</loc>
+  </url>
+  <url>
+    <loc>http://atusy.github.io/qntmap/articles/read-incomplete-data.html</loc>
   </url>
 </urlset>

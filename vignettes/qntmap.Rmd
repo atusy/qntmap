@@ -1,5 +1,5 @@
 ---
-title: "Basic usage"
+title: "Getting started with QntMap"
 author: "Atsushi YASUMOTO"
 date: "`r Sys.Date()`"
 output: 
@@ -36,11 +36,11 @@ formals(read_xmap)$renew <-
 
 # Intro
 
-This vignette introduce a basic procedure of analysis using `qntmap` package using example data.
+This document introduces a basic procedure of analysis using `qntmap` package with example data.
 
-See https://atusy.github.io/qntmap/#epma-analysis for preparing EPMA data.
+Prepare EPMA data following ["Read me"](https://atusy.github.io/qntmap/#epma-analysis).
 
-See https://doi.org/10.2138/am-2018-6323CCBY for implementations.
+See [doi:am-2018-6323CCBY](https://doi.org/10.2138/am-2018-6323CCBY) for implementations.
 
 # Preparation
 
@@ -50,7 +50,7 @@ See https://doi.org/10.2138/am-2018-6323CCBY for implementations.
 library(qntmap)
 ```
 
-## Move to working directory
+## Go to working directory
 
 ```{r setwd, eval = FALSE}
 wd <- tempdir() # Arbitrary
@@ -58,8 +58,6 @@ setwd(wd)
 ```
 
 ## Copy example data
-
-or any original data.
 
 ```{r copy-files}
 file.copy(
@@ -69,8 +67,8 @@ file.copy(
 )
 ```
 
-`TRUE` indicates files are successfully copied. 
-Check if really files are copied by `dir()`.
+`TRUE` indicates copying is successful. 
+Check copied files by `dir()`.
 
 ```{r file-list}
 dir(file.path(wd, 'minimal'), recursive = TRUE, all.files = TRUE)
@@ -90,15 +88,17 @@ dir_map <- 'minimal/.map/1'
 dir_qnt <- 'minimal/.qnt'
 ```
 
-
 ## Load data
 
 ```{r, message = FALSE}
+# Read X-ray mapping data
 xmap <- read_xmap(dir_map)
+
+# Read spot analysis data
 qnt <- read_qnt(dir_qnt, renew = TRUE)
 ```
 
-This is an artifact example data which contains olivine and quartz within the mapping area.
+The example data contains olivine and quartz in the mapping area.
 The phases are quantified 20 points each.
 
 ```{r, message = FALSE, echo = FALSE, warning = FALSE}
@@ -116,14 +116,14 @@ plot(xmap, 'Si', interactive = FALSE) +
 ```
 
 
-## Plot X-ray map data as heatmap
+## Plot X-ray maps
 
-Plots are by default **interactive** with webui.
-Selection of elements can be done on webui.
+Plots are **interactive** with Web UI.
+Elements can be chosen by mouse actions.
 
 ```{.r}
 plot(xmap)
-# A following example is non-interactive mode run by
+# A following plot is non-interactive mode run by
 # plot(xmap, 'Mg', interactive = FALSE)
 ```
 
@@ -136,22 +136,23 @@ plot(xmap, 'Mg', interactive = FALSE)
 
 ### Initialize cluster centers
 
-Although this step is just a guessing initialization, 
-compare the output values with plots above 
-to see if the centers are well guessed.
+This step guesses initial cluster centers
+(i.e., mean mapping intensities of each phase).
+Check if results are adequate by comparing them with plots.
+If inadequate, consider modifying values
 
-```{r}
+```{r find-centers}
 centers <- find_centers(xmap, qnt)
-centers
+print(centers)
 ```
 
 ### Run cluster analysis {#run-cls}
 
-The result is saved as a binary file and as png format images in `clustering` directory below the directory containing mapping data.
+A result is saved as a binary file and PNG images in `clustering` directory below the directory containing mapping data.
 
 For a quick look, `plot()`{.r} function is also available.
 
-```{r, eval = TRUE, fig.keep = "last"}
+```{r plot-clusters, eval = TRUE, fig.keep = "last"}
 cluster <- cluster_xmap(xmap, centers)
 plot(cluster, interactive = FALSE)
 ```
@@ -159,15 +160,15 @@ plot(cluster, interactive = FALSE)
 
 ### Summarize cluster analysis
 
-`summary` function gives abundance ratios of phases in the map.
+`summary()` function gives abundance ratios of phases in the map.
 
-```{r}
+```{r summarize-cluster}
 summary(cluster)
 ```
 
 ## Quantify
 
-```{r}
+```{r quantify}
 qmap <- quantify(xmap = xmap, qnt = qnt, cluster = cluster)
 ```
 
@@ -175,19 +176,19 @@ qmap <- quantify(xmap = xmap, qnt = qnt, cluster = cluster)
 
 Just like [X-ray map](#Plot X-ray map).
 
-```{r}
+```{r plot-qmap}
 plot(qmap, 'SiO2', interactive = FALSE)
 ```
 
 ### Summarize quantified map
 
-```{r}
+```{r summarize-qmap}
 summary(qmap)
 ```
 
 Note also that this summary does not correct densities of phases.
 
-```{r, include = FALSE}
+```{r calc-expected-values, include = FALSE}
 V <- unclass(table(cluster$cluster))
 V <- V / sum(V)
 E <- mean(qmap)
@@ -198,7 +199,7 @@ According to compositions of olivine (57.29% MgO and 42.71 wt% SiO~2~),
 and of quartz (100% SiO~2~),
 
 $$
-E(MgO_{bulk}) = 
+E(MgO^{bulk}) = 
   57.29 \times `r V['Ol']` + 0 \times `r V['Qtz']` = 
   `r 57.29 * V['Ol']` \simeq 
   `r E['MgO']` \mathrm{,}
@@ -207,7 +208,7 @@ $$
 and
 
 $$
-E(SiO2_{bulk}) = 
+E(SiO^{bulk}_{2}) = 
   42.71 \times `r V['Ol']` + 100 \times `r V['Qtz']` = 
   `r 42.71 * V['Ol'] + 100 * V['Qtz']` \simeq
   `r E['SiO2']` \mathrm{,}
@@ -217,16 +218,15 @@ the above summary is adequate.
 
 ### Summary based on mask images
 
-For another way to summarize the result of quantified map, `mean` function is defined.
+A simple use of `mean()` function returns `mean()` values of each elements.
 
-A simple usage gives nothing more than `mean` column of `summary()`.
-
-```{r}
+```{r mean-qmap}
 mean(qmap)
 ```
 
-However, by using mask image, 
-`mean` values of each element are calculated for each mask areas with same colors.
+Further, by using 
+**PNG format mask image width and height are same as mapping data**, 
+`mean()` values of each element are calculated for each area with same colors in the mask image.
 
 Let's use an image from cluster analysis [above](#run-cls).
 
@@ -243,25 +243,27 @@ i <- segment(img)
 i <- segment(dir("`r img`"))
 ```
 
-
 Then, input the result of `segment()` to `index` parameter of `mean()`.
 
-```{r}
+```{r mean-qmap-with-mask image}
 mean(qmap, index = i)
+# mean(qmap, index = cluster$cluster)
 ```
 
-As black (`#000000`) corresponds to olivine cluster,
-and white (`#FFFFFF`) corresponds to quartz cluster,
-the average compositions of each clusters are nearly equal 
-to ideal compositions of olivine and quartz.
+Note that `index` parameter can be given as a character vector indicating which pixel is which phase.
+Thus, giving `index = cluster$cluster` results more friendly result than the above.
+
+```{r mean-qmap-with-cluster-names}
+mean(qmap, index = cluster$cluster)
+```
+
+The above two `mean()` values are equivalent as black (`#000000`) corresponds to olivine cluster,
+and white (`#FFFFFF`) to quartz cluster.
 
 This feature is useful to find average compositions of each minearls, 
-local bulk compositions of domains (layer, symplectite, and so on).
+local bulk compositions of domains (layer, symplectite), and so on.
 
-Note that mask image must be png image 
-whose **width and height are same as mapping data**.
-
-```{r include = FALSE}
+```{r unlink-files, include = FALSE}
 unlink(c('centers0.csv', 'phase_list0.csv'))
 ```
 

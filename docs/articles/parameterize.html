@@ -44,6 +44,9 @@
   </a>
 </li>
 <li>
+  <a href="../articles/qntmap.html">Get started</a>
+</li>
+<li>
   <a href="../reference/index.html">Reference</a>
 </li>
 <li class="dropdown">
@@ -57,10 +60,10 @@
       <a href="../articles/add_phase.html">Add phases after EPMA analysis</a>
     </li>
     <li>
-      <a href="../articles/basic.html">Basic usage</a>
+      <a href="../articles/parameterize.html">Inherit parameters from previously quantified maps</a>
     </li>
     <li>
-      <a href="../articles/parameterize.html">Inherit parameters from previously quantified maps</a>
+      <a href="../articles/read-incomplete-data.html">Read incomplete data</a>
     </li>
   </ul>
 </li>
@@ -96,7 +99,7 @@
       <h1>Inherit parameters from previously quantified maps</h1>
                         <h4 class="author">YASUMOTO Atsushi</h4>
             
-            <h4 class="date">2019-01-07</h4>
+            <h4 class="date">2019-01-17</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/atusy/qntmap/blob/master/vignettes/parameterize.Rmd"><code>vignettes/parameterize.Rmd</code></a></small>
       <div class="hidden name"><code>parameterize.Rmd</code></div>
@@ -109,7 +112,7 @@
 <div id="introduction" class="section level1">
 <h1 class="hasAnchor">
 <a href="#introduction" class="anchor"></a>Introduction</h1>
-<p>This article introduces a way to quantify X-ray maps without quantitatively analyzed spots by inheriting parameters from a previously quantified X-ray map (See figure below).</p>
+<p>This document introduces a way to quantify X-ray maps without quantitatively analyzed spots by inheriting parameters from a previously quantified X-ray map (See figure below).</p>
 <p><img src="parameterize_files/figure-html/sample-with-two-mapping-areas-1.png" width="576"></p>
 </div>
 <div id="requirements" class="section level1">
@@ -121,7 +124,7 @@
 <li>Referencial quantified maps from a single area.
 <ul>
 <li>The maps must be constructed by <code><a href="../reference/quantify.html">quantify(saving = TRUE)</a></code> under <code>qntmap 0.3.2</code> or later.</li>
-<li>To construct a referencial maps, read <a href="basic.html">“Basic usage”</a>.</li>
+<li>To construct a referencial maps, read <a href="qntmap.html">“Get started”</a>.</li>
 </ul>
 </li>
 <li>X-ray maps to be quantified.
@@ -151,7 +154,7 @@
 <div id="initialize-cluster-centers" class="section level3">
 <h3 class="hasAnchor">
 <a href="#initialize-cluster-centers" class="anchor"></a>Initialize cluster centers</h3>
-<p>Suppose available quantified maps are constructed by following <a href="basic.html">“Basic usage”</a>, <code>centers_initial0.csv</code> is available as well. Read the csv file by following codes.</p>
+<p>Suppose available quantified maps are constructed by following <a href="qntmap.html">“Get started”</a>, <code>centers_initial0.csv</code> is available as well. Read the csv file by following codes.</p>
 <div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb3-1" title="1">centers &lt;-<span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/utils/topics/read.table">read.csv</a></span>(<span class="st">"example/centers_initial0.csv"</span>)</a>
 <a class="sourceLine" id="cb3-2" title="2">centers</a></code></pre></div>
 <table class="table">
@@ -173,7 +176,7 @@
 </tr>
 </tbody>
 </table>
-<p>The above is a example format of initial centers given by sample data introduced in <a href="basic.html">“Basic usage”</a>. Edit the csv file manually if initial centers require modifications, or if there are any phase abscent in new maps to be quantified.</p>
+<p>The above is a example format of initial centers given by sample data introduced in <a href="qntmap.html">“Get started”</a>. Edit the csv file manually if initial centers require modifications, or if there are any phase abscent in new maps to be quantified.</p>
 </div>
 <div id="run-cluster-analysis" class="section level3">
 <h3 class="hasAnchor">

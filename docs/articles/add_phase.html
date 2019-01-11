@@ -44,6 +44,9 @@
   </a>
 </li>
 <li>
+  <a href="../articles/qntmap.html">Get started</a>
+</li>
+<li>
   <a href="../reference/index.html">Reference</a>
 </li>
 <li class="dropdown">
@@ -57,10 +60,10 @@
       <a href="../articles/add_phase.html">Add phases after EPMA analysis</a>
     </li>
     <li>
-      <a href="../articles/basic.html">Basic usage</a>
+      <a href="../articles/parameterize.html">Inherit parameters from previously quantified maps</a>
     </li>
     <li>
-      <a href="../articles/parameterize.html">Inherit parameters from previously quantified maps</a>
+      <a href="../articles/read-incomplete-data.html">Read incomplete data</a>
     </li>
   </ul>
 </li>
@@ -96,7 +99,7 @@
       <h1>Add phases after EPMA analysis</h1>
                         <h4 class="author">YASUMOTO Atsushi</h4>
             
-            <h4 class="date">2019-01-07</h4>
+            <h4 class="date">2019-01-17</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/atusy/qntmap/blob/master/vignettes/add_phase.Rmd"><code>vignettes/add_phase.Rmd</code></a></small>
       <div class="hidden name"><code>add_phase.Rmd</code></div>
@@ -109,13 +112,13 @@
 <div id="intro" class="section level1">
 <h1 class="hasAnchor">
 <a href="#intro" class="anchor"></a>Intro</h1>
-<p>This vignette introduce a way to quantify X-ray map even if, in accident, there are some phases without spot analysis. For accurate analysis, I highly recommend careful observation prior to EPMA analysis, so that as less phases as possible being missed.</p>
-<p>Please read <a href="basic.html">“Basic usage”</a> before hand.</p>
+<p>This document introduces a way to quantify X-ray map even if, in accident, there are some phases without spot analysis. For accurate analysis, I highly recommend careful observation prior to EPMA analysis, so that as less phases as possible being missed.</p>
+<p>Please read <a href="qntmap.html">“Get started”</a> before hand.</p>
 </div>
 <div id="preparation" class="section level1">
 <h1 class="hasAnchor">
 <a href="#preparation" class="anchor"></a>Preparation</h1>
-<p>This section prepares package, files, and modify sample data. An original sample dataset is same as that used in <a href="basic.html">“Basic usage”</a>. However, the dataset will be modified to let a phase be not analyzed by EPMA spot analysis. This is why “<a href="#specify-directories-containing-data">Specify directories containing data</a>” and “<a href="#load-data">Load Data</a>” belongs to “<a href="#preparation">Preparation</a>” despite they belongs to <a href="basic#Analysis">Analysis section of “Basic usage”</a>.</p>
+<p>This section prepares package, files, and modify sample data. An original sample dataset is same as that used in <a href="qntmap.html">“Get started”</a>. However, the dataset will be modified to let a phase be not analyzed by EPMA spot analysis. This is why “<a href="#specify-directories-containing-data">Specify directories containing data</a>” and “<a href="#load-data">Load Data</a>” belongs to “<a href="#preparation">Preparation</a>” despite they belongs to <a href="basic#Analysis">Analysis section of “Basic usage”</a>.</p>
 <div id="load-package" class="section level2">
 <h2 class="hasAnchor">
 <a href="#load-package" class="anchor"></a>Load package</h2>
@@ -171,11 +174,8 @@
 <h2 class="hasAnchor">
 <a href="#modify-data" class="anchor"></a>Modify data</h2>
 <p>Let’s delete quartz from dataset and reload.</p>
-<p>After <code><a href="../reference/read_qnt.html">read_qnt()</a></code> is performed, a file <code>phase_list0.csv</code> is created under <code>dir_qnt</code>. This file consists of 3 columns <code>id</code>, <code>phase</code>, and <code>use</code>.</p>
-<p><strong>Do not</strong> edit <code>id</code>.</p>
-<p><strong>Correct</strong> <code>phase</code> in the analyzed phases are not expected ones, or in case some phase needs be sub-grouped due to large compositional variation. For example, substitute Ol by Ol_Fe and Ol_Mg based on Fe/Mg ratio.</p>
-<p><strong>Correct</strong> <code>use</code> in case there are bad results.</p>
-<p>This time, let <code>use</code> be <code>FALSE</code> if <code>phase</code> is Qtz, and retry <code>read_qnt</code></p>
+<p>After <code><a href="../reference/read_qnt.html">read_qnt()</a></code> is performed, a file <code>phase_list0.csv</code> is created under working directory. This file consists of 3 columns <code>id</code>, <code>phase</code>, and <code>use</code>.</p>
+<p>Edit <strong>only</strong> <code>phase</code> and <code>use</code>. Do not edit <code>id</code>. If certain phases have large compositional variations, fill <code>phase</code> column with different names. (e.g., Ol_Fe and Ol_Mg for Fe-rich olivine and Mg-rich olivine). If certain analysis show bad results, fill <code>use</code> column with <code>FALSE</code>, otherwise <code>TRUE</code>.</p>
 <p>To do it on R, execute codes below. Be sure to specify a path to modified csv file to <code>phase_list</code> parameter of <code>read_qnt</code>. Also, <code>renew</code> parameter of <code>read_qnt</code> must be <code>TRUE</code>.</p>
 <div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb8-1" title="1">phase_list &lt;-<span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/utils/topics/read.table">read.csv</a></span>(<span class="st">'phase_list0.csv'</span>)</a>
 <a class="sourceLine" id="cb8-2" title="2">phase_list<span class="op">$</span>use[phase_list<span class="op">$</span>phase <span class="op">==</span><span class="st"> 'Qtz'</span>] &lt;-<span class="st"> </span><span class="ot">FALSE</span></a>
@@ -186,7 +186,7 @@
 <a class="sourceLine" id="cb9-2" title="2"><span class="co">#&gt; </span></a>
 <a class="sourceLine" id="cb9-3" title="3"><span class="co">#&gt; Ol </span></a>
 <a class="sourceLine" id="cb9-4" title="4"><span class="co">#&gt; 20</span></a></code></pre></div>
-<p><img src="add_phase_files/figure-html/unnamed-chunk-10-1.png" width="672"></p>
+<p><img src="add_phase_files/figure-html/unnamed-chunk-3-1.png" width="672"></p>
 </div>
 </div>
 <div id="analysis" class="section level1">
@@ -209,8 +209,8 @@
 <h3 class="hasAnchor">
 <a href="#compare-the-initial-centroids-with-x-ray-map-plotted-with-heatmap" class="anchor"></a>Compare the initial centroids with X-ray map plotted with heatmap</h3>
 <div class="sourceCode" id="cb11"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb11-1" title="1"><span class="kw"><a href="../reference/plot.html">plot</a></span>(xmap, <span class="st">'Si'</span>, <span class="dt">interactive =</span> <span class="ot">FALSE</span>)</a></code></pre></div>
-<p><img src="add_phase_files/figure-html/unnamed-chunk-12-1.png" width="672"></p>
-<p>In this case, an analysist will notice there is something other than olivine. Let’s mouse over the <strong>interactive map</strong> and one will see one of the coordinates of quartz (e.g., x = 18, y = 28). Keep it in your note.</p>
+<p><img src="add_phase_files/figure-html/unnamed-chunk-5-1.png" width="672"></p>
+<p>In this case, an analysist will notice there is something other than olivine. Let’s mouse over the <strong>interactive map</strong> and one will see one of the coordinates of quartz (e.g., x = 18, y = 28). Keep it on your note.</p>
 </div>
 <div id="add-initial-centers" class="section level3">
 <h3 class="hasAnchor">

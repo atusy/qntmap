@@ -24,7 +24,7 @@ library(qntmap)
 
 # Introduction
 
-This article introduces a way to quantify X-ray maps without quantitatively analyzed spots by 
+This document introduces a way to quantify X-ray maps without quantitatively analyzed spots by 
 inheriting parameters from a previously quantified X-ray map (See figure below).
 
 ```{r sample-with-two-mapping-areas, echo = FALSE, fig.width = 6, fig.height = 3}
@@ -71,7 +71,7 @@ ggplot(spots) +
 - Referencial quantified maps from a single area.
     - The maps must be constructed by `quantify(saving = TRUE)`
       under `qntmap 0.3.2` or later.
-    - To construct a referencial maps, read ["Basic usage"](basic.html).
+    - To construct a referencial maps, read ["Get started"](qntmap.html).
 - X-ray maps to be quantified.
     - The new maps must be analyzed under the same conditions to the reference maps.
     - The new maps must comprise mineral assemblage which is a subset of the reference maps.
@@ -95,7 +95,7 @@ xmap <- read_xmap(".map/2 for example")
 ### Initialize cluster centers
 
 Suppose available quantified maps are constructed by following 
-["Basic usage"](basic.html), `centers_initial0.csv` is available as well.
+["Get started"](qntmap.html), `centers_initial0.csv` is available as well.
 Read the csv file by following codes.
 
 ```{.r}
@@ -111,7 +111,7 @@ kable(find_centers(xmap, qnt, saveas = FALSE))
 ```
 
 The above is a example format of initial centers given by 
-sample data introduced in ["Basic usage"](basic.html).
+sample data introduced in ["Get started"](qntmap.html).
 Edit the csv file manually if initial centers require modifications, or
 if there are any phase abscent in new maps to be quantified.
 

@@ -80,9 +80,23 @@ kable(fread(file.path(extdata, "minimal", "conditions_qnt.csv")), caption = .cap
 ## Mapping data
 
 Mapping data are expected to be saved as
-ASCII converted 
+ASCII converted files (`*.txt` or `*.csv`) and as
+condition files (`*.cnd`) 
+([`r tbl_n("map-files", display = "cite")`](#tbl-map-files)).
+Asterisks are expected to be filled by 
+the format of `#_map` or by `data#` where sharps are integers.
+File names of ASCII converted files and condition files must be paired
+(e.g, `1_map.txt` and `1_map.cnd`).
+In case of irregular file names or missing condition files, 
+prepare a csv file describing element name, file path, instrument, dwell time, 
+probe current, X-Y coordinates of a starting pixel, step size, map size, 
+and dead time ([`r tbl_n("map-meta", display = "cite")`](#tbl-map-meta)).
+Then, following code will read spot analysis data.
 
-
+```.r
+xmap <- read_qnt(conditions = "conditions_xmap.csv")
+# "conditions" argument is a path to a user-prepared csv file.
+```
 
 ```{r tbl-map-files, echo = FALSE}
 .cap = tbl_n(
@@ -109,23 +123,4 @@ kable(fread(file.path(extdata, "files-map.csv")), caption = .cap)
   )
 kable(fread(file.path(extdata, "minimal", "conditions_xmap.csv")), caption = .cap)
 ```
-
-## Read a dataset from X-ray mapping (read_xmap)
-
-
-This article introduces how to work around errors caused by missing f
-`read_qnt("Path to the directory of spot analysis data. e.g., .qnt")`{.r}, and
-`read_xmap("path to the directory of X-ray mapping data. e.g., .map/1")`{.r} are
-designed to 
-works fine to read data sets of quantitative spot analysis and X-ray mapping,
-respectively.
-However, 
-
-
-This vignette introduce a way to quantify X-ray map even if, in accident, 
-there are some phases without spot analysis. 
-For accurate analysis, I highly recommend careful observation prior to EPMA analysis, 
-so that as less phases as possible being missed.
-
-Please read ["Get started"](qntmap.html) before hand.
 
