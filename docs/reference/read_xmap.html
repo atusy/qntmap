@@ -143,6 +143,7 @@
     </div>
 
     <pre class="usage"><span class='fu'>read_xmap</span>(<span class='kw'>wd</span> <span class='kw'>=</span> <span class='st'>".map/1"</span>, <span class='kw'>DT</span> <span class='kw'>=</span> <span class='fl'>0</span>, <span class='kw'>renew</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='kw'>saving</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>,
+  <span class='kw'>conditions</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
   <span class='kw'>.map</span> <span class='kw'>=</span> <span class='st'>"(data[0-9]+\\.csv)|([1-9][0-9]*_map\\.txt)"</span>,
   <span class='kw'>.cnd</span> <span class='kw'>=</span> <span class='st'>"(data[0-9]+|[1-9][0-9]*)\\.cnd"</span>)</pre>
     
@@ -165,6 +166,12 @@
     <tr>
       <th>saving</th>
       <td><p><code>TRUE</code> (default) or <code>FALSE</code> to save the result as <code>xmap.RDS</code> file in <code>wd</code>.</p></td>
+    </tr>
+    <tr>
+      <th>conditions</th>
+      <td><p>A path to a csv file which records file paths and analytical conditions of
+mapping data.
+Specifying <code>conditions</code> discards other parameters except <code>saving</code>.</p></td>
     </tr>
     <tr>
       <th>.map, .cnd</th>

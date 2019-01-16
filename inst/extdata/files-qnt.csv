@@ -1,0 +1,11 @@
+File name,Descriptions
+.cnd/elemw.cnd or Pos_001/data001.qnt,"Metadata including dwell time for peak and background, and relative positions of backgrounds. In some case, `.cnd/elemw.qnt` is incomplete or missing, and needs to be prepared manually (e.g., https://gist.github.com/atusy/f1577b67b8874c9e915941c0725d0e22). JXA-8230 lacks `.cnd/elemw.cnd`, but provides `Pos_001/data/qnt`."
+bgm.qnt  ,Minus-side background intensity
+bgp.qnt  ,Plus-side background intensity
+elem.qnt ,"Element names specified for matrix corrections (e.g., oxide or metal in ZAF)"
+elint.qnt,Element names as is.
+mes.qnt  ,Probe current
+net.qnt  ,Net intensity
+peak.qnt ,"Peak intensity. This file is optional. If missing, peak intensity is calculated from net and background intensities."
+stg.qnt  ,Coordinates and comments
+wt.qnt   ,Mass concentrations [wt%]

@@ -39,7 +39,7 @@ Details below.
 ## EPMA analysis
 
 Conversion is performed by utilizing spot analysis data as internal
-standards. Thus, [spot analysis](#spot-analysis) must be done prior to
+standards. Thus, [spot analysis](#spot-analysis-1) must be done prior to
 [mapping](#mapping).
 
 ### Spot analysis
@@ -88,60 +88,45 @@ al. (2014).
 2.  Export whole directory of analysis containing `.map` directory and
     `.qnt` directory
 
-### File structure
+### Required files
 
-A minimal example. See links for descrptions. `*` is a wild card.
+#### Spot analysis
 
-  - .map/\*/
-      - \*\_map.txt
-      - \*.cnd
-  - .qnt/
-      - [.cnd/elemw.cnd](#elemwcnd)
-      - [bgm.qnt](#bgmqnt-bgpqnt-pkintqnt-netqnt)
-      - [bgp.qnt](#bgmqnt-bgpqnt-pkintqnt-netqnt)
-      - [elem.qnt](#elemqnt-elintqnt)
-      - [elint.qnt](#elemqnt-elintqnt)
-      - [mes.qnt](#mesqnt)
-      - [net.qnt](#bgmqnt-bgpqnt-pkintqnt-netqnt)
-      - [peak.qnt](#peakqnt)
-      - [stg.qnt](#stgqnt)
-      - [wt.qnt](#wtqnt)
+The exported data are stored in a directory named by `.qnt` in most
+environments. If using JXA-8230, a directory’s name is
+`{PROJECT}_{#}_QNT` where `{PROJECT}` is name of a project’s name
+defined by user or “PROJECT” if undefined, and`{#}` is a variable
+integer (e.g.,
+`PROJECT_0001_QNT`).
 
-#### elemw.cnd
+| File name                              | Descriptions                                                                                                                                                                                                                                                                                                                         |
+| :------------------------------------- | :----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| .cnd/elemw.cnd or Pos\_001/data001.qnt | Metadata including dwell time for peak and background, and relative positions of backgrounds. In some case, `.cnd/elemw.qnt` is incomplete or missing, and needs to be prepared manually (e.g., <https://gist.github.com/atusy/f1577b67b8874c9e915941c0725d0e22>). JXA-8230 lacks `.cnd/elemw.cnd`, but provides `Pos_001/data/qnt`. |
+| bgm.qnt                                | Minus-side background intensity                                                                                                                                                                                                                                                                                                      |
+| bgp.qnt                                | Plus-side background intensity                                                                                                                                                                                                                                                                                                       |
+| elem.qnt                               | Element names specified for matrix corrections (e.g., oxide or metal in ZAF)                                                                                                                                                                                                                                                         |
+| elint.qnt                              | Element names as is.                                                                                                                                                                                                                                                                                                                 |
+| mes.qnt                                | Probe current                                                                                                                                                                                                                                                                                                                        |
+| net.qnt                                | Net intensity                                                                                                                                                                                                                                                                                                                        |
+| peak.qnt                               | Peak intensity. This file is optional. If missing, peak intensity is calculated from net and background intensities.                                                                                                                                                                                                                 |
+| stg.qnt                                | Coordinates and comments                                                                                                                                                                                                                                                                                                             |
+| wt.qnt                                 | Mass concentrations \[wt%\]                                                                                                                                                                                                                                                                                                          |
 
-includes dwell time for peak and background, relative positions of
-backgrounds.
+#### Map analysis
 
-In some case, this file is incomplete or missing, and needs to be
-prepared manually (e.g.,
-<https://gist.github.com/atusy/f1577b67b8874c9e915941c0725d0e22>).
+The exported data are stored in a directory `.map/{#}` where `{#}` is a
+variable integer in most environments (e.g., `.map/1`). If using
+JXA-8230, a directory name is `{PROJECT}_{#1}_MAP_{#2}_csv` where
+`{PROJECT}` is name of a project’s name defined by user or “PROJECT” if
+undefined, and`{#1}` and `{#2}` are variable integers (e.g.,
+`PROJECT_0001_MAP_0001_csv`).
 
-#### bgm.qnt, bgp.qnt, pkint.qnt, net.qnt
+| File name   | Descriptions                                                                                           |
+| :---------- | :----------------------------------------------------------------------------------------------------- |
+| \*\_map.txt | ASCII converted mapping data                                                                           |
+| \*.cnd      | Analytical conditions: element name, dwell time, probe current, step size, pixel size, and coordinates |
 
-include background (minus and plus), peak, and net intensities of each
-analysis. In some environemts, `pkint.qnt` is missing, but is
-complemented within QntMap.
-
-#### elem.qnt and elint.qnt
-
-include name of elements data correction (“elem.qnt”; oxide or metal in
-ZAF), counting intensities (“elint.qnt”).
-
-#### mes.qnt
-
-includes probe current of each analysis.
-
-#### peak.qnt
-
-includes positions of peak intensities of each element of each analysis.
-
-#### stg.qnt
-
-includes coordinates and comments of each analysis.
-
-#### wt.qnt
-
-includes mass concentrations of each analysis.
+`*` indicates wild cards.
 
 ## Run QntMap on R
 
@@ -165,7 +150,7 @@ mode](#manual-mode) for full functionality.
 
 ### Manual mode
 
-A work-flow with example dataset is available at
+A work-flow is available with an example dataset at
 <https://atusy.github.io/qntmap/articles/basic.html> .
 
 ``` r

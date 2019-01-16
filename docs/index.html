@@ -126,7 +126,7 @@
 <div id="epma-analysis" class="section level2">
 <h2 class="hasAnchor">
 <a href="#epma-analysis" class="anchor"></a>EPMA analysis</h2>
-<p>Conversion is performed by utilizing spot analysis data as internal standards. Thus, <a href="#spot-analysis">spot analysis</a> must be done prior to <a href="#mapping">mapping</a>.</p>
+<p>Conversion is performed by utilizing spot analysis data as internal standards. Thus, <a href="#spot-analysis-1">spot analysis</a> must be done prior to <a href="#mapping">mapping</a>.</p>
 <div id="spot-analysis" class="section level3">
 <h3 class="hasAnchor">
 <a href="#spot-analysis" class="anchor"></a>Spot analysis</h3>
@@ -224,67 +224,83 @@
 <strong>ASCII convert</strong> mapping data into matrix format, and save the result in the directory where raw data is stored (e.g., <code>.map/1</code>).</li>
 <li>Export whole directory of analysis containing <code>.map</code> directory and <code>.qnt</code> directory</li>
 </ol>
-<div id="file-structure" class="section level3">
+<div id="required-files" class="section level3">
 <h3 class="hasAnchor">
-<a href="#file-structure" class="anchor"></a>File structure</h3>
-<p>A minimal example. See links for descrptions. <code>*</code> is a wild card.</p>
-<ul>
-<li>.map/*/
-<ul>
-<li>*_map.txt</li>
-<li>*.cnd</li>
-</ul>
-</li>
-<li>.qnt/
-<ul>
-<li><a href="#elemwcnd">.cnd/elemw.cnd</a></li>
-<li><a href="#bgmqnt-bgpqnt-pkintqnt-netqnt">bgm.qnt</a></li>
-<li><a href="#bgmqnt-bgpqnt-pkintqnt-netqnt">bgp.qnt</a></li>
-<li><a href="#elemqnt-elintqnt">elem.qnt</a></li>
-<li><a href="#elemqnt-elintqnt">elint.qnt</a></li>
-<li><a href="#mesqnt">mes.qnt</a></li>
-<li><a href="#bgmqnt-bgpqnt-pkintqnt-netqnt">net.qnt</a></li>
-<li><a href="#peakqnt">peak.qnt</a></li>
-<li><a href="#stgqnt">stg.qnt</a></li>
-<li><a href="#wtqnt">wt.qnt</a></li>
-</ul>
-</li>
-</ul>
-<div id="elemw-cnd" class="section level4">
+<a href="#required-files" class="anchor"></a>Required files</h3>
+<div id="spot-analysis-1" class="section level4">
 <h4 class="hasAnchor">
-<a href="#elemw-cnd" class="anchor"></a>elemw.cnd</h4>
-<p>includes dwell time for peak and background, relative positions of backgrounds.</p>
-<p>In some case, this file is incomplete or missing, and needs to be prepared manually (e.g., <a href="https://gist.github.com/atusy/f1577b67b8874c9e915941c0725d0e22" class="uri">https://gist.github.com/atusy/f1577b67b8874c9e915941c0725d0e22</a>).</p>
+<a href="#spot-analysis-1" class="anchor"></a>Spot analysis</h4>
+<p>The exported data are stored in a directory named by <code>.qnt</code> in most environments. If using JXA-8230, a directory’s name is <code>{PROJECT}_{#}_QNT</code> where <code>{PROJECT}</code> is name of a project’s name defined by user or “PROJECT” if undefined, and<code>{#}</code> is a variable integer (e.g., <code>PROJECT_0001_QNT</code>).</p>
+<table class="table table">
+<thead><tr class="header">
+<th align="left">File name</th>
+<th align="left">Descriptions</th>
+</tr></thead>
+<tbody>
+<tr class="odd">
+<td align="left">.cnd/elemw.cnd or Pos_001/data001.qnt</td>
+<td align="left">Metadata including dwell time for peak and background, and relative positions of backgrounds. In some case, <code>.cnd/elemw.qnt</code> is incomplete or missing, and needs to be prepared manually (e.g., <a href="https://gist.github.com/atusy/f1577b67b8874c9e915941c0725d0e22" class="uri">https://gist.github.com/atusy/f1577b67b8874c9e915941c0725d0e22</a>). JXA-8230 lacks <code>.cnd/elemw.cnd</code>, but provides <code>Pos_001/data/qnt</code>.</td>
+</tr>
+<tr class="even">
+<td align="left">bgm.qnt</td>
+<td align="left">Minus-side background intensity</td>
+</tr>
+<tr class="odd">
+<td align="left">bgp.qnt</td>
+<td align="left">Plus-side background intensity</td>
+</tr>
+<tr class="even">
+<td align="left">elem.qnt</td>
+<td align="left">Element names specified for matrix corrections (e.g., oxide or metal in ZAF)</td>
+</tr>
+<tr class="odd">
+<td align="left">elint.qnt</td>
+<td align="left">Element names as is.</td>
+</tr>
+<tr class="even">
+<td align="left">mes.qnt</td>
+<td align="left">Probe current</td>
+</tr>
+<tr class="odd">
+<td align="left">net.qnt</td>
+<td align="left">Net intensity</td>
+</tr>
+<tr class="even">
+<td align="left">peak.qnt</td>
+<td align="left">Peak intensity. This file is optional. If missing, peak intensity is calculated from net and background intensities.</td>
+</tr>
+<tr class="odd">
+<td align="left">stg.qnt</td>
+<td align="left">Coordinates and comments</td>
+</tr>
+<tr class="even">
+<td align="left">wt.qnt</td>
+<td align="left">Mass concentrations [wt%]</td>
+</tr>
+</tbody>
+</table>
 </div>
-<div id="bgm-qnt-bgp-qnt-pkint-qnt-net-qnt" class="section level4">
+<div id="map-analysis" class="section level4">
 <h4 class="hasAnchor">
-<a href="#bgm-qnt-bgp-qnt-pkint-qnt-net-qnt" class="anchor"></a>bgm.qnt, bgp.qnt, pkint.qnt, net.qnt</h4>
-<p>include background (minus and plus), peak, and net intensities of each analysis. In some environemts, <code>pkint.qnt</code> is missing, but is complemented within QntMap.</p>
-</div>
-<div id="elem-qnt-and-elint-qnt" class="section level4">
-<h4 class="hasAnchor">
-<a href="#elem-qnt-and-elint-qnt" class="anchor"></a>elem.qnt and elint.qnt</h4>
-<p>include name of elements data correction (“elem.qnt”; oxide or metal in ZAF), counting intensities (“elint.qnt”).</p>
-</div>
-<div id="mes-qnt" class="section level4">
-<h4 class="hasAnchor">
-<a href="#mes-qnt" class="anchor"></a>mes.qnt</h4>
-<p>includes probe current of each analysis.</p>
-</div>
-<div id="peak-qnt" class="section level4">
-<h4 class="hasAnchor">
-<a href="#peak-qnt" class="anchor"></a>peak.qnt</h4>
-<p>includes positions of peak intensities of each element of each analysis.</p>
-</div>
-<div id="stg-qnt" class="section level4">
-<h4 class="hasAnchor">
-<a href="#stg-qnt" class="anchor"></a>stg.qnt</h4>
-<p>includes coordinates and comments of each analysis.</p>
-</div>
-<div id="wt-qnt" class="section level4">
-<h4 class="hasAnchor">
-<a href="#wt-qnt" class="anchor"></a>wt.qnt</h4>
-<p>includes mass concentrations of each analysis.</p>
+<a href="#map-analysis" class="anchor"></a>Map analysis</h4>
+<p>The exported data are stored in a directory <code>.map/{#}</code> where <code>{#}</code> is a variable integer in most environments (e.g., <code>.map/1</code>). If using JXA-8230, a directory name is <code>{PROJECT}_{#1}_MAP_{#2}_csv</code> where <code>{PROJECT}</code> is name of a project’s name defined by user or “PROJECT” if undefined, and<code>{#1}</code> and <code>{#2}</code> are variable integers (e.g., <code>PROJECT_0001_MAP_0001_csv</code>).</p>
+<table class="table table">
+<thead><tr class="header">
+<th align="left">File name</th>
+<th align="left">Descriptions</th>
+</tr></thead>
+<tbody>
+<tr class="odd">
+<td align="left">*_map.txt</td>
+<td align="left">ASCII converted mapping data</td>
+</tr>
+<tr class="even">
+<td align="left">*.cnd</td>
+<td align="left">Analytical conditions: element name, dwell time, probe current, step size, pixel size, and coordinates</td>
+</tr>
+</tbody>
+</table>
+<p><code>*</code> indicates wild cards.</p>
 </div>
 </div>
 </div>
@@ -304,7 +320,7 @@
 <div id="manual-mode" class="section level3">
 <h3 class="hasAnchor">
 <a href="#manual-mode" class="anchor"></a>Manual mode</h3>
-<p>A work-flow with example dataset is available at <a href="https://atusy.github.io/qntmap/articles/basic.html" class="uri">https://atusy.github.io/qntmap/articles/basic.html</a> .</p>
+<p>A work-flow is available with an example dataset at <a href="https://atusy.github.io/qntmap/articles/basic.html" class="uri">https://atusy.github.io/qntmap/articles/basic.html</a> .</p>
 <div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb3-1" title="1"><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/library">library</a></span>(qntmap)</a>
 <a class="sourceLine" id="cb3-2" title="2"></a>
 <a class="sourceLine" id="cb3-3" title="3"><span class="co"># Required parameters</span></a>
