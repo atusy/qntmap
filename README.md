@@ -7,7 +7,7 @@ status](https://travis-ci.org/atusy/qntmap.svg?branch=master)](https://travis-ci
 status](https://ci.appveyor.com/api/projects/status/github/atusy/qntmap?branch=master&svg=true)](https://ci.appveyor.com/project/atusy/qntmap)
 [![Coverage
 status](https://codecov.io/gh/atusy/qntmap/branch/master/graph/badge.svg)](https://codecov.io/github/atusy/qntmap?branch=master)
-[![license](https://img.shields.io/badge/license-MIT-blue.svg)]()
+[![license](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE-text.html)
 
 # Overview
 
@@ -121,10 +121,10 @@ JXA-8230, a directory name is `{PROJECT}_{#1}_MAP_{#2}_csv` where
 undefined, and`{#1}` and `{#2}` are variable integers (e.g.,
 `PROJECT_0001_MAP_0001_csv`).
 
-| File name   | Descriptions                                                                                           |
-| :---------- | :----------------------------------------------------------------------------------------------------- |
-| \*\_map.txt | ASCII converted mapping data                                                                           |
-| \*.cnd      | Analytical conditions: element name, dwell time, probe current, step size, pixel size, and coordinates |
+| File name                 | Descriptions                                                                                                                                                                       |
+| :------------------------ | :--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| \*\_map.txt or data\*.csv | ASCII converted mapping data (e.g., 1\_map.txt, 2\_map.txt,… or data001.csv, data002.csv, …)                                                                                       |
+| \*.cnd                    | Analytical conditions: element name, dwell time, probe current, step size, pixel size, and coordinates. File names must corresponds to mapping data (e.g, 1\_map.cnd, data001.cnd) |
 
 `*` indicates wild cards.
 

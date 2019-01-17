@@ -1,0 +1,131 @@
+---
+title: "Read incomplete data"
+author: "YASUMOTO Atsushi"
+date: "`r Sys.Date()`"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Add phases after EPMA analysis}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+<!-- © 2018 JAMSTEC -->
+
+```{r setup, include = FALSE}
+wd <- tempdir()
+knitr::opts_chunk$set(
+  root.dir = wd,
+  fig.width = 7,
+  fig.height = 7,
+  collapse = TRUE,
+  comment = "#>"
+)
+library(knitr)
+library(data.table)
+library(captioner)
+tbl_n <- captioner(prefix = "Tab.")
+extdata <- system.file(package = "qntmap", "extdata")
+```
+
+# Intro
+
+This article introduces workarounds for errors from `read_qnt()` and `read_xmap()`
+when files recording analytical conditions are missing or 
+written in incompatible formats depending on instruments
+(i.e., versions of EPMA hardware and software).
+
+## Spot analysis data
+
+Among the required files to read spot analysis data
+([`r tbl_n("qnt-files", display = "cite")`](#tbl-qnt-files)),
+`.cnd/elemw.cnd` and `Pos_001/data001.qnt` can be missing or 
+be written in unexpected format.
+In such case, prepare a csv file describing element names,
+dwell time for peak and background, and relative positions of backgrounds in 
+a given format ([`r tbl_n("qnt-meta", display = "cite")`](#qnt-meta)).
+Then, following code will read spot analysis data.
+
+```.r
+qnt <- read_qnt(".qnt", conditions = "conditions_qnt.csv")
+# First argument is path to the directory containing required files.
+# "conditions" argument is a path to a user-prepared csv file.
+```
+
+```{r tbl-qnt-files, echo = FALSE}
+.cap = tbl_n(
+    name = "qnt-files", 
+    caption = paste0(
+      "[]{#tbl-qnt-files}",
+      "Required files to retrieve spot analysis data"
+    )
+  )
+kable(fread(file.path(extdata, "files-qnt.csv")), caption = .cap)
+```
+
+
+
+```{r tbl-qnt-meta, echo = FALSE}
+.cap = tbl_n(
+    name = "qnt-meta", 
+    caption = paste0(
+      "[]{#qnt-meta}",
+      "An example csv file which records element names, ",
+      "dwell time for peak and background, and relative positions of backgrounds. ",
+      "[Download csv file from here.](https://raw.githubusercontent.com/atusy/qntmap/master/inst/extdata/minimal/conditions_qnt.csv)"
+    )
+  )
+kable(fread(file.path(extdata, "minimal", "conditions_qnt.csv")), caption = .cap)
+```
+
+## Mapping data
+
+Mapping data are expected to be saved as
+ASCII converted 
+
+
+
+```{r tbl-map-files, echo = FALSE}
+.cap = tbl_n(
+    name = "map-files", 
+    caption = paste0(
+      "[]{#tbl-map-files}",
+      "Required files to retrieve mapping data"
+    )
+  )
+kable(fread(file.path(extdata, "files-map.csv")), caption = .cap)
+```
+
+
+
+```{r tbl-map-meta, echo = FALSE}
+.cap = tbl_n(
+    name = "map-meta", 
+    caption = paste0(
+      "[]{#map-meta}",
+      "An example csv file which records element names, ",
+      "dwell time for peak and background, and relative positions of backgrounds. ",
+      "[Download csv file from here.](https://raw.githubusercontent.com/atusy/qntmap/master/inst/extdata/minimal/conditions_xmap.csv)"
+    )
+  )
+kable(fread(file.path(extdata, "minimal", "conditions_xmap.csv")), caption = .cap)
+```
+
+## Read a dataset from X-ray mapping (read_xmap)
+
+
+This article introduces how to work around errors caused by missing f
+`read_qnt("Path to the directory of spot analysis data. e.g., .qnt")`{.r}, and
+`read_xmap("path to the directory of X-ray mapping data. e.g., .map/1")`{.r} are
+designed to 
+works fine to read data sets of quantitative spot analysis and X-ray mapping,
+respectively.
+However, 
+
+
+This vignette introduce a way to quantify X-ray map even if, in accident, 
+there are some phases without spot analysis. 
+For accurate analysis, I highly recommend careful observation prior to EPMA analysis, 
+so that as less phases as possible being missed.
+
+Please read ["Get started"](qntmap.html) before hand.
+

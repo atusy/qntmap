@@ -1,3 +1,3 @@
 File name,Descriptions
-*_map.txt,ASCII converted mapping data
-*.cnd,"Analytical conditions: element name, dwell time, probe current, step size, pixel size, and coordinates"
+*_map.txt or data*.csv,"ASCII converted mapping data (e.g., 1_map.txt, 2_map.txt,... or data001.csv, data002.csv, …)"
+*.cnd,"Analytical conditions: element name, dwell time, probe current, step size, pixel size, and coordinates. File names must corresponds to mapping data (e.g, 1_map.cnd, data001.cnd)"
