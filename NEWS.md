@@ -10,6 +10,8 @@
   manually prepared csv files. This feature is implemented to avoid failures in
   reading data caused by difference in formats output by different EPMA 
   instruments.
+- Hover on `plot()` of mapping data shows coordinates and 
+  a chemical composition of a selected element.
 
 # qntmap 0.3.1
 
@@ -111,7 +113,7 @@
 - `mean` to calculate mean value of quantitative maps.
     - Parameter `index` enables index or mask based calculation of mean.
       See 
-      https://atusy.github.io/qntmap/articles/basic.html#summary-based-on-mask-images 
+      https://atusy.github.io/qntmap/articles/qntmap.html#summary-based-on-mask-images 
       for more detail.
 
 # qntmap 0.2.0
@@ -125,9 +127,14 @@ Check NEWS as 0.2.0 have lots of breaking changes.
   See "Summary of defunct, deprecated, and unexported functions".
 - Unexported `cipois` and `flag0`.
 - Renamed arguments to be shorter and easy-remembering.
-- Reduced arguments which are reused again and again by utiliing `attributes`. For example,
-    - Path to the directory containing X-ray map data is specified by `dir_map` or `wd` in use of `epma_tidy`, `qltmap_cls_centers`, `qltmap_cls_pois`, `qltmap_load`, and so on. However, now is only specified in `read_xmap`. 
-- The above change cause `read_qnt` to save its result (`qnt.RDS`) and semi-product (`phase_list0.csv`) in the directory containing `.qnt` files unlike `qnt_load` saved them under the working directory.
+- Reduced arguments which are reused again and again by utiliing `attributes`. 
+  For example,
+    - Path to the directory containing X-ray map data is specified by `dir_map` 
+      or `wd` in use of `epma_tidy`, `qltmap_cls_centers`, `qltmap_cls_pois`, 
+      `qltmap_load`, and so on. However, now is only specified in `read_xmap`. 
+- The above change cause `read_qnt` to save its result (`qnt.RDS`) and 
+  semi-product (`phase_list0.csv`) in the directory containing `.qnt` files 
+  unlike `qnt_load` saved them under the working directory.
 
 ## Major changes
 
