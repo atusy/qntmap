@@ -6,7 +6,7 @@ output: github_document
 [![Travis build status](https://travis-ci.org/atusy/qntmap.svg?branch=master)](https://travis-ci.org/atusy/qntmap)
 [![AppVeyor build status](https://ci.appveyor.com/api/projects/status/github/atusy/qntmap?branch=master&svg=true)](https://ci.appveyor.com/project/atusy/qntmap)
 [![Coverage status](https://codecov.io/gh/atusy/qntmap/branch/master/graph/badge.svg)](https://codecov.io/github/atusy/qntmap?branch=master)
-[![license](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE-text.html)
+[![license](https://img.shields.io/badge/license-MIT-blue.svg)](https://atusy.github.io/qntmap/LICENSE-text.html)
 
 
 ```{r setup, include=FALSE, eval = TRUE}
@@ -17,9 +17,12 @@ library(data.table)
 
 # Overview
 
-This package generates mass concentration maps and phase distribution maps based on X-ray mapping data and spot analysis data from EPMA.
+This package generates mass concentration maps and phase distribution maps 
+based on X-ray mapping data and spot analysis data from EPMA.
 
-See "[How to]" for a usage and [Yasumoto et al. (2018)](https://doi.org/10.2138/am-2018-6323CCBY) for implementations.
+See "[How to]" for a usage and 
+[Yasumoto et al. (2018)](https://doi.org/10.2138/am-2018-6323CCBY) 
+for implementations.
 
 Current version supports data from JEOL-style EPMA.
 
@@ -52,7 +55,8 @@ Thus, [spot analysis][Spot analysis] must be done prior to [mapping][Mapping].
 - Spots to be analyzed
     - **20 spots per phase** in the area to be mapped (the more is better).
     - It is better but not necessary to quantify grains larger than mapping probe diameter.
-    - Make sure at least **20 spots per element** are analyzing grains larger than mapping probe diameter.
+    - Make sure at least **20 spots per element** are analyzing grains 
+      larger than mapping probe diameter.
 - Identify phases in comment
     - Give same comments on the same phase with the similar compositions.
       - e.g., quartz, plagioclase, garnet-core, garnet-rim, ...
@@ -117,7 +121,7 @@ kable(fread(system.file(package = "qntmap", "extdata", "files-map.csv")))
 
 ## Run QntMap on R
 
-For data processing
+For data processing.
 
 ### Interactive mode
 
@@ -128,7 +132,10 @@ library(qntmap)
 qntmap()
 ```
 
-As a result, phase identification result is saved in "`clustering`" directory and mass concentration data as csv files in "`qntmap`" directory both under the directory contaning mapping data.
+As a result, 
+phase identification result is saved in "`clustering`" directory and 
+mass concentration data as csv files in "`qntmap`" directory 
+both under the directory contaning mapping data.
 
 Note that interactive mode has limited functions.
 Use [manual mode][Manual mode] for full functionality.
@@ -136,9 +143,9 @@ Use [manual mode][Manual mode] for full functionality.
 ### Manual mode
 
 A work-flow is available with an example dataset at
-https://atusy.github.io/qntmap/articles/basic.html .
+https://atusy.github.io/qntmap/articles/qntmap.html .
 
-```{r manual}
+```{r manual, include = FALSE, eval = FALSE}
 library(qntmap)
 
 # Required parameters

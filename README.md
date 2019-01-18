@@ -7,7 +7,7 @@ status](https://travis-ci.org/atusy/qntmap.svg?branch=master)](https://travis-ci
 status](https://ci.appveyor.com/api/projects/status/github/atusy/qntmap?branch=master&svg=true)](https://ci.appveyor.com/project/atusy/qntmap)
 [![Coverage
 status](https://codecov.io/gh/atusy/qntmap/branch/master/graph/badge.svg)](https://codecov.io/github/atusy/qntmap?branch=master)
-[![license](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE-text.html)
+[![license](https://img.shields.io/badge/license-MIT-blue.svg)](https://atusy.github.io/qntmap/LICENSE-text.html)
 
 # Overview
 
@@ -130,7 +130,7 @@ undefined, and`{#1}` and `{#2}` are variable integers (e.g.,
 
 ## Run QntMap on R
 
-For data processing
+For data processing.
 
 ### Interactive mode
 
@@ -151,60 +151,4 @@ mode](#manual-mode) for full functionality.
 ### Manual mode
 
 A work-flow is available with an example dataset at
-<https://atusy.github.io/qntmap/articles/basic.html> .
-
-``` r
-library(qntmap)
-
-# Required parameters
-wd <- '.' # path to the working directory
-dir_map <- '.map/1' # relative/absolute path to the directory containing ascii converted X-ray map files (1_map.txt, 2_map.txt, and so on)"
-dir_qnt <- '.qnt' # relative/absolute path to the directory containing .qnt files (pkint.qnt, net.qnt, and so on)"
-
-
-# Optional parameters
-
-## A character vector to specify phases tend to be smaller than mapping probe diameter
-fine_phase <- NULL 
-
-## A csv file indicating name of the phase of n-th quantitative point analysis.
-## The file path is absolute or relative to `dir_qnt`.
-## If NULL, names are assumed to be specified in comments during EPMA analysis.
-phase_list <- NULL 
-
-# Run analysis
-
-# Set working directory
-setwd(wd)
-
-# Load mapping data
-# Change value of DT (dead time in nanoseconds) depending on EPMA.
-# 1100 ns is a value applied by JEOL JXA-8105.
-xmap <- read_xmap(wd = dir_map, DT = 1100)
-
-# Compile quantitative data
-qnt <- read_qnt(wd = dir_qnt, phase_list = phase_list, renew = TRUE)
-## Check 'phase_list0.csv' under 'dir_qnt' to see if name of phases are provided properly.
-## If not, modify the csv file and specify the path of modified one to `phase_list` in "Optional parameters" section and rerun the above code.
-
-# Determine initial cluster centers
-centers <- find_centers(xmap = xmap, qnt = qnt, fine_phase = fine_phase)
-## Check 'centers0.csv' under the `wd` and modify on demand.
-## If modified, assign content of the modified csv file by running
-## centers <- data.table::fread('path to the modified csv file')
-
-# Phase identification
-# Assign group_cluster = TRUE if you want to integrate same phases subgrouped by suffix after '_' 
-# (e.g., garnet_a and garnet_b are integrated to garnet if TRUE)
-cls <- cluster_xmap(xmap = xmap, centers = centers, group_cluster = FALSE)
-
-# Quantify X-ray maps
-qmap <- quantify(
-  xmap = xmap, qnt = qnt, cluster = cls, fine_phase = fine_phase
-)
-## Resulting files are saved in `qntmap` directory` under `dir_map`.
-
-# Summarize result
-summary(qmap)
-## This shows minimum, lower quantile, median, mean, upper quantile, and maximum values of variables.
-```
+<https://atusy.github.io/qntmap/articles/qntmap.html> .
