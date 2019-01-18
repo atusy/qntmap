@@ -105,19 +105,17 @@ server <- function(data) {
 
       colors <- reactive(`if`(input$pcol, "viridis", "gray"))
       
-      output$hist <- renderPlot(
-        gghist(
-          data[[input$fill]], input[['min']], input[['max']], colors = colors()
-        )
-      )
+      output$hist <- renderPlot(gghist(
+        data[[input$fill]], input[['min']], input[['max']], colors = colors()
+      ))
       
-      output$mouseHelp <- renderPrint({cat(
+      output$mouseHelp <- renderPrint(cat(
         c(
           Zoom = "Zoom by double click selected area. Pan by double click again.",
           Move = "Move by double click within zoomed area.",
           Summarize = "Double click or select area to save data."
         )[input$mouse]
-      )})
+      ))
       
       ranges <- reactiveValues(x = NULL, y = NULL)
 
@@ -148,7 +146,7 @@ server <- function(data) {
         height = reactive(input$height)
       )
       
-      hover <- reactive(pick_hover(data, input$hover))
+      hover <- reactive(pick_hover(data, input$hover, input$fill))
       
       output$tip <- renderUI({
         req(nrow(hover()) == 1)
@@ -203,9 +201,8 @@ server <- function(data) {
 pick_hover <- function (data, hover, z) {
   if(is.null(hover)) return(data.frame())
   h <- round(unlist(hover[c("x", "y")], use.names = FALSE), 0)
-  data[data$x == h[1] & data$y == h[2], ]
+  data[data$x == h[1] & data$y == h[2], c("x", "y", z)]
 }
-
 
 #' @importFrom purrr map_if
 #' @importFrom knitr kable
