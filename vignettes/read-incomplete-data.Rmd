@@ -118,6 +118,8 @@ kable(fread(file.path(extdata, "files-map.csv")), caption = .cap)
       "[]{#map-meta}",
       "An example csv file which records element names, ",
       "dwell time for peak and background, and relative positions of backgrounds. ",
+      "Except for 'Element' and 'File path', only values in a first row is used. ",
+      "The other cells are ignored regardless of their contents. ",
       "[Download csv file from here.](https://raw.githubusercontent.com/atusy/qntmap/master/inst/extdata/minimal/conditions_xmap.csv)"
     )
   )
