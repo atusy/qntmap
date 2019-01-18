@@ -2,7 +2,8 @@ Package: qntmap
 Type: Package
 Title: Enhance quantitative analysis of EPMA map
 Version: 0.3.2
-Authors@R: c(
+Authors@R: 
+    c(
         person(
             given = 'YASUMOTO Atsushi', 
             role = c('aut', 'cph', 'cre'), 
@@ -11,15 +12,13 @@ Authors@R: c(
         ),
         person(
             given = 'YOSHIDA Kenta', 
-            role = c('ctb'),
+            role = 'ctb',
             comment = c(ORCID = "0000-0001-9525-1598")
         ),
-        person(given = 'KUWATANI Tatsu', role = c('ctb')),
+        person(given = 'KUWATANI Tatsu', role = 'ctb'),
         person(
-            given = c(
-                    'Japan Agency for Marine-Earth Science and Technology', 
-                    '(JAMSTEC)'
-                ),
+            given =
+                'Japan Agency for Marine-Earth Science and Technology (JAMSTEC)',
             role = c('cph', 'fnd')
         ),
         person(given = 'JST PRESTO (Grant No. JPMJPR1676)', role = c('fnd'))
@@ -34,7 +33,8 @@ Encoding: UTF-8
 LazyData: true
 RoxygenNote: 6.1.1
 Depends: R(>= 3.1.2)
-Imports: curl,
+Imports: 
+    curl,
     data.table,
     dplyr,
     DT,
@@ -44,24 +44,25 @@ Imports: curl,
     knitr,
     matrixStats,
     pipeR,
-    PoiClaClu,
     png,
+    PoiClaClu,
     purrr,
     rlang,
     scales,
-    stringr,
     shiny,
     shinyWidgets,
+    stringr,
     tibble,
     tidyr,
     utils
-Suggests: 
-    pkgdown,
-    roxygen2,
-    testthat,
-    here,
+Suggests:
+    captioner,
     covr,
-    rmarkdown
+    here,
+    pkgdown,
+    rmarkdown,
+    roxygen2,
+    testthat
 URL: https://github.com/atusy/qntmap/
 BugReports: https://github.com/atusy/qntmap/issues
 Collate:

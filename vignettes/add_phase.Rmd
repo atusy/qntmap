@@ -28,30 +28,30 @@ library(ggplot2)
 
 # Intro
 
-This vignette introduce a way to quantify X-ray map even if, in accident, 
+This document introduces a way to quantify X-ray map even if, in accident, 
 there are some phases without spot analysis. 
 For accurate analysis, I highly recommend careful observation prior to EPMA analysis, 
 so that as less phases as possible being missed.
 
-Please read ["Basic usage"](basic.html) before hand.
+Please read ["Get started"](qntmap.html) before hand.
 
 # Preparation
 
 This section prepares package, files, and modify sample data.
-An original sample dataset is same as that used in ["Basic usage"](basic.html).
+An original sample dataset is same as that used in ["Get started"](qntmap.html).
 However, the dataset will be modified to let a phase be not analyzed by EPMA spot analysis.
 This is why "[Specify directories containing data]" and "[Load Data]" belongs to "[Preparation]" despite
 they belongs to [Analysis section of "Basic usage"](basic#Analysis).
 
 ## Load package
 
-```{r, eval = FALSE}
+```{r load-qntmap, eval = FALSE}
 library(qntmap)
 ```
 
 ## Move to working directory
 
-```{r eval = FALSE}
+```{r setwd, eval = FALSE}
 wd <- tempdir() # Arbitrary
 setwd(wd)
 ```
@@ -60,7 +60,7 @@ setwd(wd)
 
 or any original data.
 
-```{r}
+```{r copy-example-data}
 file.copy(
   from = system.file('extdata', 'minimal', package = 'qntmap'),
   to = wd,
@@ -71,14 +71,14 @@ file.copy(
 `TRUE` indicates files are successfully copied. 
 Check if really files are copied by `dir()`.
 
-```{r}
+```{r check-file-structure}
 dir(file.path(wd, 'minimal'), recursive = TRUE, all.files = TRUE)
 ```
 
 ## Specify directories containing data
 
 
-```{r, include = FALSE}
+```{r specify-paths, include = FALSE}
 dir_map <- file.path(wd, 'minimal/.map/1')
 dir_qnt <- file.path(wd, 'minimal/.qnt')
 ```
@@ -91,7 +91,7 @@ dir_qnt <- 'minimal/.qnt'
 
 ## Load data
 
-```{r, message = FALSE}
+```{r read-data, message = FALSE}
 xmap <- read_xmap(dir_map)
 qnt <- read_qnt(dir_qnt)
 ```
@@ -100,7 +100,7 @@ qnt <- read_qnt(dir_qnt)
 
 In the original dataet, 20 spots are analyzed by EPMA on both olivine and quartz.
 
-```{r}
+```{r summarize-qnt}
 table(qnt$cnd$phase)
 ```
 
@@ -108,18 +108,15 @@ table(qnt$cnd$phase)
 
 Let's delete quartz from dataset and reload.
 
-After `read_qnt()` is performed, a file `phase_list0.csv` is created under `dir_qnt`.
+After `read_qnt()` is performed, 
+a file `phase_list0.csv` is created under working directory.
 This file consists of 3 columns `id`, `phase`, and `use`.
 
-**Do not** edit `id`.
-
-**Correct** `phase` in the analyzed phases are not expected ones, 
-or in case some phase needs be sub-grouped due to large compositional variation.
-For example, substitute Ol by Ol_Fe and Ol_Mg based on Fe/Mg ratio.
-
-**Correct** `use` in case there are bad results.
-
-This time, let `use` be `FALSE` if `phase` is Qtz, and retry `read_qnt`
+Edit **only** `phase` and `use`. Do not edit `id`.
+If certain phases have large compositional variations, fill `phase` column with
+different names.
+(e.g., Ol_Fe and Ol_Mg for Fe-rich olivine and Mg-rich olivine).
+If certain analysis show bad results, fill `use` column with `FALSE`, otherwise `TRUE`.
 
 To do it on R, execute codes below.
 Be sure to specify a path to modified csv file to `phase_list` parameter of `read_qnt`.
@@ -169,7 +166,7 @@ plot(xmap, 'Si', interactive = FALSE)
 
 In this case, an analysist will notice there is something other than olivine.
 Let's mouse over the **interactive map** and one will see one of the coordinates of quartz (e.g., x = 18, y  = 28).
-Keep it in your note.
+Keep it on your note.
 
 ### Add initial centers
 
