@@ -310,7 +310,7 @@
 <div id="run-qntmap-on-r" class="section level2">
 <h2 class="hasAnchor">
 <a href="#run-qntmap-on-r" class="anchor"></a>Run QntMap on R</h2>
-<p>For data processing</p>
+<p>For data processing.</p>
 <div id="interactive-mode" class="section level3">
 <h3 class="hasAnchor">
 <a href="#interactive-mode" class="anchor"></a>Interactive mode</h3>
@@ -323,60 +323,7 @@
 <div id="manual-mode" class="section level3">
 <h3 class="hasAnchor">
 <a href="#manual-mode" class="anchor"></a>Manual mode</h3>
-<p>A work-flow is available with an example dataset at <a href="https://atusy.github.io/qntmap/articles/basic.html" class="uri">https://atusy.github.io/qntmap/articles/basic.html</a> .</p>
-<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb3-1" title="1"><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/library">library</a></span>(qntmap)</a>
-<a class="sourceLine" id="cb3-2" title="2"></a>
-<a class="sourceLine" id="cb3-3" title="3"><span class="co"># Required parameters</span></a>
-<a class="sourceLine" id="cb3-4" title="4">wd &lt;-<span class="st"> '.'</span> <span class="co"># path to the working directory</span></a>
-<a class="sourceLine" id="cb3-5" title="5">dir_map &lt;-<span class="st"> '.map/1'</span> <span class="co"># relative/absolute path to the directory containing ascii converted X-ray map files (1_map.txt, 2_map.txt, and so on)"</span></a>
-<a class="sourceLine" id="cb3-6" title="6">dir_qnt &lt;-<span class="st"> '.qnt'</span> <span class="co"># relative/absolute path to the directory containing .qnt files (pkint.qnt, net.qnt, and so on)"</span></a>
-<a class="sourceLine" id="cb3-7" title="7"></a>
-<a class="sourceLine" id="cb3-8" title="8"></a>
-<a class="sourceLine" id="cb3-9" title="9"><span class="co"># Optional parameters</span></a>
-<a class="sourceLine" id="cb3-10" title="10"></a>
-<a class="sourceLine" id="cb3-11" title="11"><span class="co">## A character vector to specify phases tend to be smaller than mapping probe diameter</span></a>
-<a class="sourceLine" id="cb3-12" title="12">fine_phase &lt;-<span class="st"> </span><span class="ot">NULL</span> </a>
-<a class="sourceLine" id="cb3-13" title="13"></a>
-<a class="sourceLine" id="cb3-14" title="14"><span class="co">## A csv file indicating name of the phase of n-th quantitative point analysis.</span></a>
-<a class="sourceLine" id="cb3-15" title="15"><span class="co">## The file path is absolute or relative to `dir_qnt`.</span></a>
-<a class="sourceLine" id="cb3-16" title="16"><span class="co">## If NULL, names are assumed to be specified in comments during EPMA analysis.</span></a>
-<a class="sourceLine" id="cb3-17" title="17">phase_list &lt;-<span class="st"> </span><span class="ot">NULL</span> </a>
-<a class="sourceLine" id="cb3-18" title="18"></a>
-<a class="sourceLine" id="cb3-19" title="19"><span class="co"># Run analysis</span></a>
-<a class="sourceLine" id="cb3-20" title="20"></a>
-<a class="sourceLine" id="cb3-21" title="21"><span class="co"># Set working directory</span></a>
-<a class="sourceLine" id="cb3-22" title="22"><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/getwd">setwd</a></span>(wd)</a>
-<a class="sourceLine" id="cb3-23" title="23"></a>
-<a class="sourceLine" id="cb3-24" title="24"><span class="co"># Load mapping data</span></a>
-<a class="sourceLine" id="cb3-25" title="25"><span class="co"># Change value of DT (dead time in nanoseconds) depending on EPMA.</span></a>
-<a class="sourceLine" id="cb3-26" title="26"><span class="co"># 1100 ns is a value applied by JEOL JXA-8105.</span></a>
-<a class="sourceLine" id="cb3-27" title="27">xmap &lt;-<span class="st"> </span><span class="kw"><a href="reference/read_xmap.html">read_xmap</a></span>(<span class="dt">wd =</span> dir_map, <span class="dt">DT =</span> <span class="dv">1100</span>)</a>
-<a class="sourceLine" id="cb3-28" title="28"></a>
-<a class="sourceLine" id="cb3-29" title="29"><span class="co"># Compile quantitative data</span></a>
-<a class="sourceLine" id="cb3-30" title="30">qnt &lt;-<span class="st"> </span><span class="kw"><a href="reference/read_qnt.html">read_qnt</a></span>(<span class="dt">wd =</span> dir_qnt, <span class="dt">phase_list =</span> phase_list, <span class="dt">renew =</span> <span class="ot">TRUE</span>)</a>
-<a class="sourceLine" id="cb3-31" title="31"><span class="co">## Check 'phase_list0.csv' under 'dir_qnt' to see if name of phases are provided properly.</span></a>
-<a class="sourceLine" id="cb3-32" title="32"><span class="co">## If not, modify the csv file and specify the path of modified one to `phase_list` in "Optional parameters" section and rerun the above code.</span></a>
-<a class="sourceLine" id="cb3-33" title="33"></a>
-<a class="sourceLine" id="cb3-34" title="34"><span class="co"># Determine initial cluster centers</span></a>
-<a class="sourceLine" id="cb3-35" title="35">centers &lt;-<span class="st"> </span><span class="kw"><a href="reference/find_centers.html">find_centers</a></span>(<span class="dt">xmap =</span> xmap, <span class="dt">qnt =</span> qnt, <span class="dt">fine_phase =</span> fine_phase)</a>
-<a class="sourceLine" id="cb3-36" title="36"><span class="co">## Check 'centers0.csv' under the `wd` and modify on demand.</span></a>
-<a class="sourceLine" id="cb3-37" title="37"><span class="co">## If modified, assign content of the modified csv file by running</span></a>
-<a class="sourceLine" id="cb3-38" title="38"><span class="co">## centers &lt;- data.table::fread('path to the modified csv file')</span></a>
-<a class="sourceLine" id="cb3-39" title="39"></a>
-<a class="sourceLine" id="cb3-40" title="40"><span class="co"># Phase identification</span></a>
-<a class="sourceLine" id="cb3-41" title="41"><span class="co"># Assign group_cluster = TRUE if you want to integrate same phases subgrouped by suffix after '_' </span></a>
-<a class="sourceLine" id="cb3-42" title="42"><span class="co"># (e.g., garnet_a and garnet_b are integrated to garnet if TRUE)</span></a>
-<a class="sourceLine" id="cb3-43" title="43">cls &lt;-<span class="st"> </span><span class="kw"><a href="reference/cluster_xmap.html">cluster_xmap</a></span>(<span class="dt">xmap =</span> xmap, <span class="dt">centers =</span> centers, <span class="dt">group_cluster =</span> <span class="ot">FALSE</span>)</a>
-<a class="sourceLine" id="cb3-44" title="44"></a>
-<a class="sourceLine" id="cb3-45" title="45"><span class="co"># Quantify X-ray maps</span></a>
-<a class="sourceLine" id="cb3-46" title="46">qmap &lt;-<span class="st"> </span><span class="kw"><a href="reference/quantify.html">quantify</a></span>(</a>
-<a class="sourceLine" id="cb3-47" title="47">  <span class="dt">xmap =</span> xmap, <span class="dt">qnt =</span> qnt, <span class="dt">cluster =</span> cls, <span class="dt">fine_phase =</span> fine_phase</a>
-<a class="sourceLine" id="cb3-48" title="48">)</a>
-<a class="sourceLine" id="cb3-49" title="49"><span class="co">## Resulting files are saved in `qntmap` directory` under `dir_map`.</span></a>
-<a class="sourceLine" id="cb3-50" title="50"></a>
-<a class="sourceLine" id="cb3-51" title="51"><span class="co"># Summarize result</span></a>
-<a class="sourceLine" id="cb3-52" title="52"><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/summary">summary</a></span>(qmap)</a>
-<a class="sourceLine" id="cb3-53" title="53"><span class="co">## This shows minimum, lower quantile, median, mean, upper quantile, and maximum values of variables.</span></a></code></pre></div>
+<p>A work-flow is available with an example dataset at <a href="https://atusy.github.io/qntmap/articles/qntmap.html" class="uri">https://atusy.github.io/qntmap/articles/qntmap.html</a> .</p>
 </div>
 </div>
 </div>
@@ -420,7 +367,7 @@
 <li><a href="https://travis-ci.org/atusy/qntmap"><img src="https://travis-ci.org/atusy/qntmap.svg?branch=master" alt="Travis build status"></a></li>
 <li><a href="https://ci.appveyor.com/project/atusy/qntmap"><img src="https://ci.appveyor.com/api/projects/status/github/atusy/qntmap?branch=master&amp;svg=true" alt="AppVeyor build status"></a></li>
 <li><a href="https://codecov.io/github/atusy/qntmap?branch=master"><img src="https://codecov.io/gh/atusy/qntmap/branch/master/graph/badge.svg" alt="Coverage status"></a></li>
-<li><a href="LICENSE-text.html"><img src="https://img.shields.io/badge/license-MIT-blue.svg" alt="license"></a></li>
+<li><a href="https://atusy.github.io/qntmap/LICENSE-text.html"><img src="https://img.shields.io/badge/license-MIT-blue.svg" alt="license"></a></li>
 </ul>
 </div>
 </div>

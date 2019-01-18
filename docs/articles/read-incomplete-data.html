@@ -99,7 +99,7 @@
       <h1>Read incomplete data</h1>
                         <h4 class="author">YASUMOTO Atsushi</h4>
             
-            <h4 class="date">2019-01-17</h4>
+            <h4 class="date">2019-01-18</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/atusy/qntmap/blob/master/vignettes/read-incomplete-data.Rmd"><code>vignettes/read-incomplete-data.Rmd</code></a></small>
       <div class="hidden name"><code>read-incomplete-data.Rmd</code></div>
@@ -203,7 +203,7 @@
 <div id="mapping-data" class="section level2">
 <h2 class="hasAnchor">
 <a href="#mapping-data" class="anchor"></a>Mapping data</h2>
-<p>Mapping data are expected to be saved as ASCII converted files (<code>*.txt</code> or <code>*.csv</code>) and as condition files (<code>*.cnd</code>) (<a href="#tbl-map-files">Tab. 3</a>). Asterisks are expected to be filled by the format of <code>#_map</code> or by <code>data#</code> where sharps are integers. File names of ASCII converted files and condition files must be paired (e.g, <code>1_map.txt</code> and <code>1_map.cnd</code>). In case of irregular file names or missing condition files, prepare a csv file describing element name, file path, instrument, dwell time, probe current, X-Y coordinates of a starting pixel, step size, map size, and dead time (<a href="#tbl-map-meta">Tab. 4</a>).</p>
+<p>Mapping data are expected to be saved as ASCII converted files (<code>*.txt</code> or <code>*.csv</code>) and as condition files (<code>*.cnd</code>) (<a href="#tbl-map-files">Tab. 3</a>). Asterisks are expected to be filled by the format of <code>#_map</code> or by <code>data#</code> where sharps are integers. File names of ASCII converted files and condition files must be paired (e.g, <code>1_map.txt</code> and <code>1_map.cnd</code>). In case of irregular file names or missing condition files, prepare a csv file describing element name, file path, instrument, dwell time, probe current, X-Y coordinates of a starting pixel, step size, map size, and dead time (<a href="#tbl-map-meta">Tab. 4</a>). Then, following code will read spot analysis data.</p>
 <div class="sourceCode" id="cb2"><pre class="sourceCode .r"><code class="sourceCode r"><a class="sourceLine" id="cb2-1" title="1">xmap &lt;-<span class="st"> </span><span class="kw"><a href="../reference/read_qnt.html">read_qnt</a></span>(<span class="dt">conditions =</span> <span class="st">"conditions_xmap.csv"</span>)</a>
 <a class="sourceLine" id="cb2-2" title="2"><span class="co"># "conditions" argument is a path to a user-prepared csv file.</span></a></code></pre></div>
 <table class="table">
@@ -214,12 +214,12 @@
 </tr></thead>
 <tbody>
 <tr class="odd">
-<td align="left">*_map.txt</td>
-<td align="left">ASCII converted mapping data</td>
+<td align="left">*_map.txt or data*.csv</td>
+<td align="left">ASCII converted mapping data (e.g., 1_map.txt, 2_map.txt,… or data001.csv, data002.csv, …)</td>
 </tr>
 <tr class="even">
 <td align="left">*.cnd</td>
-<td align="left">Analytical conditions: element name, dwell time, probe current, step size, pixel size, and coordinates</td>
+<td align="left">Analytical conditions: element name, dwell time, probe current, step size, pixel size, and coordinates. File names must corresponds to mapping data (e.g, 1_map.cnd, data001.cnd)</td>
 </tr>
 </tbody>
 </table>
