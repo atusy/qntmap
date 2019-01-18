@@ -4,7 +4,7 @@ author: "YASUMOTO Atsushi"
 date: "`r Sys.Date()`"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{Add phases after EPMA analysis}
+  %\VignetteIndexEntry{Read incomplete data}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---

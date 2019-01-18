@@ -6,7 +6,7 @@ output:
   rmarkdown::html_vignette:
     df_print: kable
 vignette: >
-  %\VignetteIndexEntry{Basic usage}
+  %\VignetteIndexEntry{Getting started with QntMap}
   %\VignetteEncoding{UTF-8}
   %\VignetteEngine{knitr::rmarkdown}
 ---
