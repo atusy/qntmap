@@ -16,62 +16,62 @@
 #'   selectInput sidebarLayout sidebarPanel splitLayout splitLayout 
 #'   uiOutput
 #' @noRd
-ui <- function(elm, selected = elm[[1]], pcol = TRUE) {fluidPage(
-  sidebarLayout(
-    sidebarPanel(
-      splitLayout(
-        selectInput('fill', 'Element', elm, selected = selected, selectize = FALSE),
-        numericInput('min', 'Min', value = NA_real_),
-        numericInput('max', 'Max', value = NA_real_)#,
-      ),
-      plotOutput('hist'), br(),
-      splitLayout(
-        'Height of graph [px]', numericInput('height', NULL, value = 600)
-      ),
-      checkboxInput('pcol', 'Pseudocolor', value = pcol)
+ui <- function(elm, selected = elm[[1]], pcol = TRUE) {fluidPage(sidebarLayout(
+  
+  sidebarPanel(
+    splitLayout(
+      selectInput('fill', 'Element', elm, selected = selected, selectize = FALSE),
+      numericInput('min', 'Min', value = NA_real_),
+      numericInput('max', 'Max', value = NA_real_)
     ),
-    mainPanel(
-      tags$head(tags$style('
-         #tip {
-          position: absolute;
-          width: auto;
-          z-index: 100;
-         }
-      ')),
-      tags$script('
-        $(document).ready(function(){
-          // id of the plot
-          $("#heatmap").mousemove(function(e){ 
-    
-            // ID of uiOutput
-            $("#tip").show();         
-            $("#tip").css({             
-              top: (e.pageY + 5) + "px",             
-              left: (e.pageX + 5 - $("#heatmap").offset().left) + "px"         
-            });     
-          });     
+    plotOutput('hist'), br(),
+    splitLayout(
+      'Height of graph [px]', numericInput('height', NULL, value = 600L)
+    ),
+    checkboxInput('pcol', 'Pseudocolor', value = pcol)
+  ),
+  
+  mainPanel(
+    tags$head(tags$style('
+       #tip {
+        position: absolute;
+        width: auto;
+        z-index: 100;
+       }
+    ')),
+    tags$script('
+      $(document).ready(function(){
+        // id of the plot
+        $("#heatmap").mousemove(function(e){ 
+  
+          // ID of uiOutput
+          $("#tip").show();
+          $("#tip").css({
+            top: (e.pageY + 5) + "px",
+            left: (e.pageX + 5 - $("#heatmap").offset().left) + "px"
+          });
         });
-      '),
-      radioGroupButtons(
-        inputId = "mouse",
-        label = "Mouse actions",
-        choices = c("Zoom", "Move", "Summarize"),
-        selected = "Zoom",
-        status = "primary"
-      ),
-      htmlOutput("mouseHelp"),
-      plotOutput(
-        "heatmap", 
-        hover = hoverOpts(id = "hover"),
-        dblclick = "click",
-        brush = brushOpts(id = "brush", resetOnNew = TRUE),
-        height = 'auto'
-      ),
-      uiOutput("tip"),
-      dataTableOutput("dt")
-    )
+      });
+    '),
+    radioGroupButtons(
+      inputId = "mouse",
+      label = "Mouse actions",
+      choices = c("Zoom", "Move", "Summarize"),
+      selected = "Zoom",
+      status = "primary"
+    ),
+    htmlOutput("mouseHelp"),
+    plotOutput(
+      "heatmap",
+      hover = hoverOpts(id = "hover"),
+      dblclick = "click",
+      brush = brushOpts(id = "brush", resetOnNew = TRUE),
+      height = 'auto'
+    ),
+    uiOutput("tip"),
+    dataTableOutput("dt")
   )
-)}
+))}
 
 
 
@@ -91,79 +91,79 @@ ui <- function(elm, selected = elm[[1]], pcol = TRUE) {fluidPage(
 #'   renderPlot renderPrint renderUI req 
 #' @noRd
 server <- function(data) {
-    range_x <- range(data$x)
-    range_y <- range(data$y)
+  range_x <- range(data$x)
+  range_y <- range(data$y)
 
-    .env <- new.env()
-    .env$log <- data %>>% 
-      summarize_if(is.numeric, mean) %>>% 
-      mutate(ID = 0L, Area = "Whole") %>>% 
-      select(Area, x, y, everything())
-    .env$id <- 0L
+  .env <- new.env()
+  .env$log <- data %>>% 
+    summarize_if(is.numeric, mean) %>>%
+    mutate(ID = 0L, Area = "Whole") %>>%
+    select(ID, Area, x, y, everything())
+  .env$id <- 0L
+  
+  function(input, output) {
+
+    colors <- reactive(`if`(input$pcol, "viridis", "gray"))
     
-    function(input, output) {
+    output$hist <- renderPlot(gghist(
+      data[[input$fill]], input[['min']], input[['max']], colors = colors()
+    ))
+    
+    output$mouseHelp <- renderPrint(cat(msg$mouseHelp[input$mouse]))
+    
+    ranges <- reactiveValues(x = NULL, y = NULL)
+    
+    observeEvent(input$click, {
+      if (input$mouse == "Zoom")
+        if (!is.null(input$brush)) {
+          ranges$x <- squish(c(input$brush$xmin, input$brush$xmax), range_x)
+          ranges$y <- squish(c(input$brush$ymin, input$brush$ymax), range_y)
+        } else {
+          ranges$x <- ranges$y <- NULL
+        }
+      if (input$mouse == "Move")
+        if(!is.null(ranges$x)) {
+          ranges$x <- ranges$x + input$click$x - mean(ranges$x)
+          ranges$y <- ranges$y + input$click$y - mean(ranges$y)
+        }
+    })
 
-      colors <- reactive(`if`(input$pcol, "viridis", "gray"))
-      
-      output$hist <- renderPlot(gghist(
-        data[[input$fill]], input[['min']], input[['max']], colors = colors()
-      ))
-      
-      output$mouseHelp <- renderPrint(cat(msg$mouseHelp[input$mouse]))
-      
-      ranges <- reactiveValues(x = NULL, y = NULL)
-      
-      observeEvent(input$click, {
-        if (input$mouse == "Zoom")
-          if (!is.null(input$brush)) {
-            ranges$x <- squish(c(input$brush$xmin, input$brush$xmax), range_x)
-            ranges$y <- squish(c(input$brush$ymin, input$brush$ymax), range_y)
-          } else {
-            ranges$x <- ranges$y <- NULL
-          }
-        if (input$mouse == "Move")
-          if(!is.null(ranges$x)) {
-            ranges$x <- ranges$x + input$click$x - mean(ranges$x)
-            ranges$y <- ranges$y + input$click$y - mean(ranges$y)
-          }
-      })
-
-      hm <- reactive({
-        ggheat(
-          data[['x']], data[['y']], data[[input$fill]], nm = input$fill,
-          colors = colors(), range = c(input$min, input$max), coord = NULL
-        )
-      })
-      
-      output$heatmap <- renderPlot(
-        hm() + coord_fixed(xlim = ranges$x, ylim = ranges$y),
-        height = reactive(input$height)
+    hm <- reactive({
+      ggheat(
+        data[['x']], data[['y']], data[[input$fill]], nm = input$fill,
+        colors = colors(), range = c(input$min, input$max), coord = NULL
       )
-      
-      hover <- reactive(pick_hover(data, input$hover, input$fill))
-      
-      output$tip <- renderUI({
-        req(nrow(hover()) == 1L) # Suppress rendering if hovering outside plot
-        htmlOutput(
-          "vals", style = "background-color:#DDDDDDDD; font-family:monospace"
-        )
-      })
-      
-      output$vals <- renderPrint(format_hover(hover()))
-      
-      dt <- reactive({
-        if(input$mouse != "Summarize") 
-          return(format_summary(.env$log))
-        if(!is.null(input$brush))
-          return(summarize_box(data, input$brush, .env))
-        if(!is.null(input$click))
-          return(summarize_click(data, input$click, .env))
-        format_summary(.env$log)
-      })
-      
-      output$dt <- renderDT(dt())
-      
-    }
+    })
+    
+    output$heatmap <- renderPlot(
+      hm() + coord_fixed(xlim = ranges$x, ylim = ranges$y),
+      height = reactive(input$height)
+    )
+    
+    hover <- reactive(pick_hover(data, input$hover, input$fill))
+    
+    output$tip <- renderUI({
+      req(nrow(hover()) == 1L) # Suppress rendering if hovering outside plot
+      htmlOutput(
+        "vals", style = "background-color:#DDDDDDDD; font-family:monospace"
+      )
+    })
+    
+    output$vals <- renderPrint(format_hover(hover()))
+    
+    dt <- reactive({
+      if(input$mouse != "Summarize")
+        return(format_summary(.env$log))
+      if(!is.null(input$brush))
+        return(summarize_box(data, input$brush, .env))
+      if(!is.null(input$click))
+        return(summarize_click(data, input$click, .env))
+      format_summary(.env$log)
+    })
+    
+    output$dt <- renderDT(dt())
+    
+  }
 }
 
 
