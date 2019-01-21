@@ -97,9 +97,9 @@ server <- function(data) {
     .env <- new.env()
     .env$log <- data %>>% 
       summarize_if(is.numeric, mean) %>>% 
-      mutate(ID = 0, Area = "Whole") %>>% 
+      mutate(ID = 0L, Area = "Whole") %>>% 
       select(Area, x, y, everything())
-    .env$id <- 0
+    .env$id <- 0L
     
     function(input, output) {
 
@@ -109,16 +109,10 @@ server <- function(data) {
         data[[input$fill]], input[['min']], input[['max']], colors = colors()
       ))
       
-      output$mouseHelp <- renderPrint(cat(
-        c(
-          Zoom = "Zoom by double click selected area. Pan by double click again.",
-          Move = "Move by double click within zoomed area.",
-          Summarize = "Double click or select area to save data."
-        )[input$mouse]
-      ))
+      output$mouseHelp <- renderPrint(cat(msg$mouseHelp[input$mouse]))
       
       ranges <- reactiveValues(x = NULL, y = NULL)
-
+      
       observeEvent(input$click, {
         if (input$mouse == "Zoom")
           if (!is.null(input$brush)) {
@@ -149,29 +143,21 @@ server <- function(data) {
       hover <- reactive(pick_hover(data, input$hover, input$fill))
       
       output$tip <- renderUI({
-        req(nrow(hover()) == 1)
+        req(nrow(hover()) == 1L) # Suppress rendering if hovering outside plot
         htmlOutput(
           "vals", style = "background-color:#DDDDDDDD; font-family:monospace"
         )
       })
       
-      output$vals <- renderPrint({
-        req(nrow(hover()) == 1)
-        format_hover(hover())
-      })
+      output$vals <- renderPrint(format_hover(hover()))
       
       dt <- reactive({
-        if(is.null(input$brush) & !is.null(input$click) & input$mouse == "Summarize") {
-          summarize_click(data, input$click$x, input$click$y, .env)
-        }
-        if(!is.null(input$brush) & input$mouse == "Summarize") {
-          summarize_box(
-            data, 
-            input$brush$xmin, input$brush$xmax, 
-            input$brush$ymin, input$brush$ymax, 
-            .env
-          )
-        }
+        if(input$mouse != "Summarize") 
+          return(format_summary(.env$log))
+        if(!is.null(input$brush))
+          return(summarize_box(data, input$brush, .env))
+        if(!is.null(input$click))
+          return(summarize_click(data, input$click, .env))
         format_summary(.env$log)
       })
       
@@ -194,14 +180,21 @@ server <- function(data) {
 
 
 
-
+#' @noRd
+msg <- list(
+  mouseHelp = c(
+    Zoom = "Zoom by double click selected area. Pan by double click again.",
+    Move = "Move by double click within zoomed area.",
+    Summarize = "Double click or select area to save data."
+  )
+)
 
 
 #' @noRd
 pick_hover <- function (data, hover, z) {
   if(is.null(hover)) return(data.frame())
-  h <- round(unlist(hover[c("x", "y")], use.names = FALSE), 0)
-  data[data$x == h[1] & data$y == h[2], c("x", "y", z)]
+  h <- round(unlist(hover[c("x", "y")], use.names = FALSE), 0L)
+  data[data$x == h[1L] & data$y == h[2L], c("x", "y", z)]
 }
 
 #' @importFrom purrr map_if
@@ -211,7 +204,7 @@ format_hover <- function (h) {
   kable(
     cbind(
       paste0(names(h), ": "),
-      unlist(map_if(h, is.double, ~ format(round(.x, 2), nsmall = 2)), use.names = FALSE)
+      unlist(map_if(h, is.double, ~ format(round(.x, 2L), nsmall = 2L)), use.names = FALSE)
     ),
     format="html", col.names = NULL, align = c("r", "r")
   )
@@ -219,31 +212,29 @@ format_hover <- function (h) {
 
 #' @importFrom dplyr bind_rows everything mutate select summarize_if
 #' @noRd
-summarize_box <- function (data, xmin, xmax, ymin, ymax, .env) {
-  .env$id <- .env$id + 1
+summarize_box <- function (data, box, .env, .format = format_summary) {
+  .env$id <- .env$id + 1L
   .env$log <- data[
-      xmin <= data$x & data$x <= xmax & 
-        ymin <= data$y & data$y <= ymax, 
+      box$xmin <= data$x & data$x <= box$xmax & 
+      box$ymin <= data$y & data$y <= box$ymax, 
     ] %>>% 
     summarize_if(is.numeric, mean) %>>% 
-    cbind(ID = .env$id) %>>% 
-    mutate(Area = "Box") %>>% 
-    select(ID, Area, x, y, everything()) %>>% 
+    mutate(ID = !!.env$id, Area = "Box") %>>%
+    select(ID, Area, x, y, everything()) %>>%
     bind_rows(.env$log)
-  invisible()
+  .format(.env$log)
 }
 
 
 #' @importFrom dplyr bind_rows everything mutate select
 #' @noRd
-summarize_click <- function (data, x, y, .env) {
-  .env$id <- .env$id + 1
-  .env$log <- data[data$x == round(x) & data$y == round(y), ] %>>% 
-    cbind(ID = .env$id) %>>% 
-    mutate(Area = "Click") %>>% 
+summarize_click <- function (data, click, .env, .format = format_summary) {
+  .env$id <- .env$id + 1L
+  .env$log <- data[data$x == round(click$x) & data$y == round(click$y), ] %>>% 
+    mutate(ID = !!.env$id, Area = "Click") %>>% 
     select(ID, Area, x, y, everything()) %>>% 
     bind_rows(.env$log)
-  invisible()
+  .format(.env$log)
 }
 
 #' @importFrom DT datatable formatRound
@@ -266,10 +257,9 @@ format_summary <- function (summary) {
 
 #' @importFrom shiny shinyApp
 #' @noRd
-plot_shiny <- function (x, y = setdiff(names(x), c('x', 'y'))[1], pcol = TRUE, ...) {
+plot_shiny <- function (x, y = setdiff(names(x), c('x', 'y'))[1L], pcol = TRUE, ...) {
   shinyApp(
     ui = ui(elm = setdiff(names(x), c("x", "y")), selected = y, pcol = TRUE),
     server = server(data = x)
   )  
 }
-
