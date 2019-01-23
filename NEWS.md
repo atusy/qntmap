@@ -24,7 +24,7 @@
     - `qnt_load`
     - `qntmap_cls_pois`
     - `qntmap_quantify`
-- Support for searching online documents: https://atusy.github.io/qntmap
+- Support for searching online documents: https://qntmap.atusy.net
     
 ## Minor changes
 
@@ -108,12 +108,12 @@
 - Functions to add phases manually 
   in case user finds some phases not quantified after EPMA analysis. 
   See 
-  https://atusy.github.io/qntmap/articles/add_phase.html 
+  https://qntmap.atusy.net/articles/add_phase.html 
   for more detail.
 - `mean` to calculate mean value of quantitative maps.
     - Parameter `index` enables index or mask based calculation of mean.
       See 
-      https://atusy.github.io/qntmap/articles/qntmap.html#summary-based-on-mask-images 
+      https://qntmap.atusy.net/articles/qntmap.html#summary-based-on-mask-images 
       for more detail.
 
 # qntmap 0.2.0

@@ -32,3 +32,4 @@ rsconnect/
 .Rprofile
 *.sync-conflict*
 ..Rcheck
+.Rproj.user

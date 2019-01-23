@@ -1,7 +1,7 @@
 #' Enhance quantitative analysis of EPMA maps with QntMap
 #' 
 #' QntMap enables conversion of EPMA X-ray maps to mass concetration maps.
-#' See website for more information <https://atusy.github.io/qntmap>.
+#' See website for more information <https://qntmap.atusy.net>.
 #' 
 #' @name qntmap-package
 #' @docType package

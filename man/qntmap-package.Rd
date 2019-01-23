@@ -6,7 +6,7 @@
 \title{Enhance quantitative analysis of EPMA maps with QntMap}
 \description{
 QntMap enables conversion of EPMA X-ray maps to mass concetration maps.
-See website for more information \url{https://atusy.github.io/qntmap}.
+See website for more information \url{https://qntmap.atusy.net}.
 }
 \references{
 Yasumoto, A., Yoshida, K., Kuwatani, T., Nakamura, D., Svojtka, M., &

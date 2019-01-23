@@ -2,21 +2,21 @@
   "index_name": "qntmap",
   "start_urls": [
     {
-      "url": "http://atusy.github.io/qntmap/index.html",
+      "url": "https://qntmap.atusy.net//index.html",
       "selectors_key": "homepage",
       "tags": [
         "homepage"
       ]
     },
     {
-      "url": "http://atusy.github.io/qntmap/reference",
+      "url": "https://qntmap.atusy.net//reference",
       "selectors_key": "reference",
       "tags": [
         "reference"
       ]
     },
     {
-      "url": "http://atusy.github.io/qntmap/articles",
+      "url": "https://qntmap.atusy.net//articles",
       "selectors_key": "articles",
       "tags": [
         "articles"
@@ -30,7 +30,7 @@
     "/articles/index.html"
   ],
   "sitemap_urls": [
-    "http://atusy.github.io/qntmap/sitemap.xml"
+    "https://qntmap.atusy.net//sitemap.xml"
   ],
   "selectors": {
     "homepage": {

@@ -7,7 +7,7 @@ status](https://travis-ci.org/atusy/qntmap.svg?branch=master)](https://travis-ci
 status](https://ci.appveyor.com/api/projects/status/github/atusy/qntmap?branch=master&svg=true)](https://ci.appveyor.com/project/atusy/qntmap)
 [![Coverage
 status](https://codecov.io/gh/atusy/qntmap/branch/master/graph/badge.svg)](https://codecov.io/github/atusy/qntmap?branch=master)
-[![license](https://img.shields.io/badge/license-MIT-blue.svg)](https://atusy.github.io/qntmap/LICENSE-text.html)
+[![license](https://img.shields.io/badge/license-MIT-blue.svg)](https://qntmap.atusy.net/LICENSE-text.html)
 
 # Overview
 
@@ -151,4 +151,4 @@ mode](#manual-mode) for full functionality.
 ### Manual mode
 
 A work-flow is available with an example dataset at
-<https://atusy.github.io/qntmap/articles/qntmap.html> .
+<https://qntmap.atusy.net/articles/qntmap.html> .

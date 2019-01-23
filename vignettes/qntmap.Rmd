@@ -38,7 +38,7 @@ formals(read_xmap)$renew <-
 
 This document introduces a basic procedure of analysis using `qntmap` package with example data.
 
-Prepare EPMA data following ["Read me"](https://atusy.github.io/qntmap/#epma-analysis).
+Prepare EPMA data following ["Read me"](https://qntmap.atusy.net/qntmap/#epma-analysis).
 
 See [doi:am-2018-6323CCBY](https://doi.org/10.2138/am-2018-6323CCBY) for implementations.
 
