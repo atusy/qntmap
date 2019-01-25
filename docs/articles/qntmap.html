@@ -106,7 +106,7 @@
       <h1>Getting started with QntMap</h1>
                         <h4 class="author">Atsushi YASUMOTO</h4>
             
-            <h4 class="date">2019-01-24</h4>
+            <h4 class="date">2019-01-25</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/atusy/qntmap/blob/master/vignettes/qntmap.Rmd"><code>vignettes/qntmap.Rmd</code></a></small>
       <div class="hidden name"><code>qntmap.Rmd</code></div>
@@ -267,7 +267,7 @@ E(SiO^{bulk}_{2}) =
 <p>Further, by using <strong>PNG format mask image width and height are same as mapping data</strong>, <code><a href="../reference/mean.html">mean()</a></code> values of each element are calculated for each area with same colors in the mask image.</p>
 <p>Let’s use an image from cluster analysis <a href="#run-cls">above</a>.</p>
 <p>Input path to the image to <code>segment</code> function.</p>
-<div class="sourceCode" id="cb15"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb15-1" title="1">i &lt;-<span class="st"> </span><span class="kw"><a href="../reference/segment.html">segment</a></span>(<span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/list.files">dir</a></span>(<span class="st">"/tmp/RtmpVk0bcd/minimal/.map/1/clustering/190124_0738_pois_k2_SiMg_map.png"</span>))</a></code></pre></div>
+<div class="sourceCode" id="cb15"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb15-1" title="1">i &lt;-<span class="st"> </span><span class="kw"><a href="../reference/segment.html">segment</a></span>(<span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/list.files">dir</a></span>(<span class="st">"/tmp/RtmpAJGGco/minimal/.map/1/clustering/190125_1439_pois_k2_SiMg_map.png"</span>))</a></code></pre></div>
 <p>Then, input the result of <code><a href="../reference/segment.html">segment()</a></code> to <code>index</code> parameter of <code><a href="../reference/mean.html">mean()</a></code>.</p>
 <div class="sourceCode" id="cb16"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb16-1" title="1"><span class="kw"><a href="../reference/mean.html">mean</a></span>(qmap, <span class="dt">index =</span> i)</a>
 <a class="sourceLine" id="cb16-2" title="2"><span class="co">#&gt;   Element  #000000  #FFFFFF</span></a>

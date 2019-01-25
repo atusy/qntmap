@@ -1,81 +1,81 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
-    <loc>https://qntmap.atusy.net//index.html</loc>
+    <loc>https://qntmap.atusy.net/index.html</loc>
   </url>
   <url>
-    <loc>https://qntmap.atusy.net//reference/add_centers.html</loc>
+    <loc>https://qntmap.atusy.net/reference/add_centers.html</loc>
   </url>
   <url>
-    <loc>https://qntmap.atusy.net//reference/cluster.html</loc>
+    <loc>https://qntmap.atusy.net/reference/cluster.html</loc>
   </url>
   <url>
-    <loc>https://qntmap.atusy.net//reference/cluster_xmap.html</loc>
+    <loc>https://qntmap.atusy.net/reference/cluster_xmap.html</loc>
   </url>
   <url>
-    <loc>https://qntmap.atusy.net//reference/defunct.html</loc>
+    <loc>https://qntmap.atusy.net/reference/defunct.html</loc>
   </url>
   <url>
-    <loc>https://qntmap.atusy.net//reference/find_centers.html</loc>
+    <loc>https://qntmap.atusy.net/reference/find_centers.html</loc>
   </url>
   <url>
-    <loc>https://qntmap.atusy.net//reference/find_centers_kpp.html</loc>
+    <loc>https://qntmap.atusy.net/reference/find_centers_kpp.html</loc>
   </url>
   <url>
-    <loc>https://qntmap.atusy.net//reference/group_cluster.html</loc>
+    <loc>https://qntmap.atusy.net/reference/group_cluster.html</loc>
   </url>
   <url>
-    <loc>https://qntmap.atusy.net//reference/mean.html</loc>
+    <loc>https://qntmap.atusy.net/reference/mean.html</loc>
   </url>
   <url>
-    <loc>https://qntmap.atusy.net//reference/pick.html</loc>
+    <loc>https://qntmap.atusy.net/reference/pick.html</loc>
   </url>
   <url>
-    <loc>https://qntmap.atusy.net//reference/plot.html</loc>
+    <loc>https://qntmap.atusy.net/reference/plot.html</loc>
   </url>
   <url>
-    <loc>https://qntmap.atusy.net//reference/print.qntmap.html</loc>
+    <loc>https://qntmap.atusy.net/reference/print.qntmap.html</loc>
   </url>
   <url>
-    <loc>https://qntmap.atusy.net//reference/qntmap-package.html</loc>
+    <loc>https://qntmap.atusy.net/reference/qntmap-package.html</loc>
   </url>
   <url>
-    <loc>https://qntmap.atusy.net//reference/qntmap.html</loc>
+    <loc>https://qntmap.atusy.net/reference/qntmap.html</loc>
   </url>
   <url>
-    <loc>https://qntmap.atusy.net//reference/quantify.html</loc>
+    <loc>https://qntmap.atusy.net/reference/quantify.html</loc>
   </url>
   <url>
-    <loc>https://qntmap.atusy.net//reference/read_cnd.html</loc>
+    <loc>https://qntmap.atusy.net/reference/read_cnd.html</loc>
   </url>
   <url>
-    <loc>https://qntmap.atusy.net//reference/read_qnt.html</loc>
+    <loc>https://qntmap.atusy.net/reference/read_qnt.html</loc>
   </url>
   <url>
-    <loc>https://qntmap.atusy.net//reference/read_xmap.html</loc>
+    <loc>https://qntmap.atusy.net/reference/read_xmap.html</loc>
   </url>
   <url>
-    <loc>https://qntmap.atusy.net//reference/save4qm.html</loc>
+    <loc>https://qntmap.atusy.net/reference/save4qm.html</loc>
   </url>
   <url>
-    <loc>https://qntmap.atusy.net//reference/segment.html</loc>
+    <loc>https://qntmap.atusy.net/reference/segment.html</loc>
   </url>
   <url>
-    <loc>https://qntmap.atusy.net//reference/summary_methods.html</loc>
+    <loc>https://qntmap.atusy.net/reference/summary_methods.html</loc>
   </url>
   <url>
-    <loc>https://qntmap.atusy.net//reference/tidy_epma.html</loc>
+    <loc>https://qntmap.atusy.net/reference/tidy_epma.html</loc>
   </url>
   <url>
-    <loc>https://qntmap.atusy.net//articles/add_phase.html</loc>
+    <loc>https://qntmap.atusy.net/articles/add_phase.html</loc>
   </url>
   <url>
-    <loc>https://qntmap.atusy.net//articles/parameterize.html</loc>
+    <loc>https://qntmap.atusy.net/articles/parameterize.html</loc>
   </url>
   <url>
-    <loc>https://qntmap.atusy.net//articles/qntmap.html</loc>
+    <loc>https://qntmap.atusy.net/articles/qntmap.html</loc>
   </url>
   <url>
-    <loc>https://qntmap.atusy.net//articles/read-incomplete-data.html</loc>
+    <loc>https://qntmap.atusy.net/articles/read-incomplete-data.html</loc>
   </url>
 </urlset>

@@ -2,21 +2,21 @@
   "index_name": "qntmap",
   "start_urls": [
     {
-      "url": "https://qntmap.atusy.net//index.html",
+      "url": "https://qntmap.atusy.net/index.html",
       "selectors_key": "homepage",
       "tags": [
         "homepage"
       ]
     },
     {
-      "url": "https://qntmap.atusy.net//reference",
+      "url": "https://qntmap.atusy.net/reference",
       "selectors_key": "reference",
       "tags": [
         "reference"
       ]
     },
     {
-      "url": "https://qntmap.atusy.net//articles",
+      "url": "https://qntmap.atusy.net/articles",
       "selectors_key": "articles",
       "tags": [
         "articles"
@@ -30,7 +30,7 @@
     "/articles/index.html"
   ],
   "sitemap_urls": [
-    "https://qntmap.atusy.net//sitemap.xml"
+    "https://qntmap.atusy.net/sitemap.xml"
   ],
   "selectors": {
     "homepage": {
