@@ -31,7 +31,7 @@ read_xmap <- function (
   
   rds <- "xmap.RDS"
 
-    if (is.character(conditions)) # © 2018 JAMSTEC
+  if (is.character(conditions)) # © 2018 JAMSTEC
     return (read_xmap_by_conditions(conditions, rds, saving)) # © 2018 JAMSTEC
   
   cd <- getwd()
@@ -42,17 +42,14 @@ read_xmap <- function (
   # Read old file with version check
   if((!renew) && file.exists(rds)) {
     xmap <- readRDS(rds)
-    ver_old <- attr(xmap, 'ver')
-    deadtime <- attr(xmap, "deadtime")
-    if (!is.null(ver_old)) 
-      if (ver == ver_old && deadtime == DT)
-        return (structure(xmap, dir_map = wd))
-    rm(xmap, ver_old, deadtime)
+    if (identical(list(ver = ver, deadtime = DT), attributes(xmap)[c("ver", "deadtime")]))
+      return (structure(xmap, dir_map = wd))
+    rm(xmap)
   }
   
   files_xmap <- dir(pattern = .map, full.names = TRUE)
   files_cnd <- dir(pattern = .cnd, full.names = TRUE)
-  stop_if_files_xmap_and_cnd_have_different_size(files_xmap, files_cnd)
+  stop_if_inequal_xmap_and_cnd(files_xmap, files_cnd)
   
   cnd <- lapply(files_cnd, read_xmap_cnd, patterns = patterns_xmap_cnd)
   elm <- unlist(lapply(cnd, `[[`, 'elm'), use.names = FALSE)
@@ -73,7 +70,7 @@ read_xmap <- function (
 #' @param files_xmap File names of mapping data
 #' @param files_cnd File names of mapping conditions
 #' @noRd
-stop_if_files_xmap_and_cnd_have_different_size <- function (
+stop_if_inequal_xmap_and_cnd <- function (
   files_xmap, files_cnd
 ) {
   if(length(files_xmap) != length(files_cnd)) {

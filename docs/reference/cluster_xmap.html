@@ -79,7 +79,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">qntmap</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.3.2</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.3.2.9999</span>
       </span>
     </div>
 
@@ -157,7 +157,7 @@
     </div>
 
     <pre class="usage"><span class='fu'>cluster_xmap</span>(<span class='no'>xmap</span>, <span class='no'>centers</span>, <span class='kw'>elements</span> <span class='kw'>=</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/sets'>intersect</a></span>(<span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/names'>names</a></span>(<span class='no'>xmap</span>),
-  <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/colnames'>colnames</a></span>(<span class='no'>centers</span>)), <span class='kw'>saving</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='kw'>group_cluster</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>)</pre>
+  <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/colnames'>colnames</a></span>(<span class='no'>centers</span>)), <span class='kw'>saving</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='kw'>group_cluster</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='no'>...</span>)</pre>
     
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -189,6 +189,55 @@ See <code><a href='find_centers.html'>find_centers()</a></code>.</p></td>
       <td><p><code>FALSE</code> (default) or <code>TRUE</code> to integrate same phase subgrouped using suffix.
 For example,
 clusters named "Pl_NaRich" and "Pl_NaPoor" are integrated to "Pl" cluster .</p></td>
+    </tr>
+    <tr>
+      <th>...</th>
+      <td><p>Arguments passed on to <code><a href='https://www.rdocumentation.org/packages/PoiClaClu/topics/Classify'>PoiClaClu::Classify</a></code></p><dl class='dl-horizontal'>
+  <dt>xte</dt><dd><p>A m-by-p data matrix: m test observations and p features. The classifier
+fit on the training data set x will be tested on this data set. If NULL,
+then testing will be performed on the training set.</p></dd>
+  <dt>rho</dt><dd><p>Tuning parameter controlling the amount of soft thresholding performed,
+i.e. the level of sparsity, i.e. number of nonzero features in
+classifier. Rho=0 means that there is no soft-thresolding, i.e. all
+features used in classifier. Larger rho means that fewer features will
+be used.</p></dd>
+  <dt>beta</dt><dd><p>A smoothing term. A Gamma(beta,beta) prior is used to fit the
+    Poisson model.
+    Recommendation is to just leave it at 1, the default value.</p></dd>
+  <dt>rhos</dt><dd><p>A vector of tuning parameters that control the amount of soft thresholding
+performed. If "rhos" is provided then a number of
+models will be fit (one for each element of "rhos"), and a number of
+predicted class labels will be output (one for each element of "rhos").</p></dd>
+  <dt>type</dt><dd><p>How should the observations be normalized within the
+    Poisson model, i.e. how should the size factors be estimated?
+    Options are "quantile" or "deseq" (more robust) or "mle" (less
+    robust).
+
+    In greater detail: "quantile" is quantile normalization approach
+    of Bullard et al 2010 BMC Bioinformatics, "deseq"  is median of the
+    ratio of an observation to a pseudoreference obtained by taking the
+    geometric mean, described in Anders and Huber 2010 Genome Biology and
+    implemented in Bioconductor package "DESeq", and "mle" is the sum of
+    counts for each sample; this is the maximum likelihood estimate
+    under a simple Poisson model.</p></dd>
+  <dt>prior</dt><dd><p>Vector of length equal to the number of classes, representing prior
+    probabilities
+    for each class. If NULL then uniform priors are used (i.e. each
+    class is equally likely).</p></dd>
+  <dt>transform</dt><dd><p>Should data matrices x and xte first be power transformed so that it more
+        closely fits
+        the Poisson model? TRUE or FALSE. Power transformation is
+        especially
+        useful if the data are overdispersed relative to the Poisson
+        model.</p></dd>
+  <dt>alpha</dt><dd><p>If transform=TRUE, this determines the power to which the data
+        matrices x and xte are transformed.
+        If alpha=NULL then the transformation that
+        makes the Poisson model best fit the data matrix x is
+        computed. (Note that alpha is computed based on x, not based on
+        xte). Or a value of
+        alpha, 0&lt;alpha&lt;=1, can be entered by the user.</p></dd>
+</dl></td>
     </tr>
     </table>
     

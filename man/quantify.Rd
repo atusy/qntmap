@@ -6,7 +6,7 @@
 \usage{
 quantify(xmap, qnt, cluster, maps_x = attr(xmap, "pixel")[1],
   maps_y = attr(xmap, "pixel")[2], fine_phase = NULL, fine_th = 0.9,
-  fix = NULL, saving = TRUE)
+  fix = NULL, se = FALSE, saving = TRUE)
 }
 \arguments{
 \item{xmap}{\code{qm_xmap} class object returned by \code{\link[=read_xmap]{read_xmap()}}.}
@@ -27,9 +27,13 @@ See \href{#multi-phase-pixels}{"Multi-phase pixels"} section for details.}
 \item{fix}{A path to the file specifying chemical compositions of
 some elements in some phases (default: \code{NULL}).}
 
+\item{se}{\code{FALSE} in default.
+\code{TRUE} calculates standard errors, but require large memories.}
+
 \item{saving}{\code{TRUE} (default) saves the results into \code{qntmap} directory under
 the directory \code{xmap} is read from. \code{FALSE} does not save.`}
 }
 \description{
-Quantify X-ray maps
+\code{quantify} calculates mass concentrations \link{wt\%}.
+\code{quantify2()} further calculates standard errors, but is soft deprecated.
 }

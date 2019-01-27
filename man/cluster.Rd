@@ -4,7 +4,7 @@
 \alias{cluster}
 \title{Poisson distribution based custering based on \code{\link[PoiClaClu:Classify]{PoiClaClu::Classify()}}}
 \usage{
-cluster(x, centers, xte = NULL, ...)
+cluster(x, centers, xte = x, ...)
 }
 \arguments{
 \item{x}{

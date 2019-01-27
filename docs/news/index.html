@@ -76,7 +76,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">qntmap</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.3.2</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.3.2.9999</span>
       </span>
     </div>
 
@@ -149,14 +149,19 @@
     <div id="qntmap-0-3-2-9999" class="section level1">
 <h1 class="page-header">
 <a href="#qntmap-0-3-2-9999" class="anchor"></a>qntmap 0.3.2.9999</h1>
+<div id="new-features" class="section level2">
+<h2 class="hasAnchor">
+<a href="#new-features" class="anchor"></a>New features</h2>
 <ul>
+<li>
+<code><a href="../reference/quantify.html">quantify()</a></code> no more calculates standard errors by default. This is to save time and memory usage. Set <code>se = TRUE</code> to calculate the errors.</li>
 <li>
 <p><code><a href="../reference/quantify.html">quantify()</a></code> and <code><a href="../reference/tidy_epma.html">tidy_epma()</a></code> supports maps and spots analyzing inequal elements.</p>
 <table>
 <thead><tr class="header">
 <th align="left">Example</th>
-<th align="left">Maps</th>
-<th align="left">Spots</th>
+<th align="left">Mapped elements</th>
+<th align="left">Spot elements</th>
 </tr></thead>
 <tbody>
 <tr class="odd">
@@ -178,7 +183,20 @@
 </tbody>
 </table>
 </li>
+<li>
+<code><a href="../reference/cluster_xmap.html">cluster_xmap()</a></code> has dot-dot-dot argument to pass arguments to <code><a href="https://www.rdocumentation.org/packages/PoiClaClu/topics/Classify">PoiClaClu::Classify()</a></code>. This feature helps
+<ul>
+<li>train with limited data to save time</li>
+<li>separate data into train and test for cross validations</li>
+<li>and so on.</li>
 </ul>
+</li>
+</ul>
+</div>
+<div id="bug-fix" class="section level2">
+<h2 class="hasAnchor">
+<a href="#bug-fix" class="anchor"></a>Bug fix</h2>
+</div>
 </div>
     <div id="qntmap-0-3-2" class="section level1">
 <h1 class="page-header">
@@ -293,9 +311,9 @@
 <div id="major-changes-3" class="section level2">
 <h2 class="hasAnchor">
 <a href="#major-changes-3" class="anchor"></a>Major changes</h2>
-<div id="new-features" class="section level3">
+<div id="new-features-1" class="section level3">
 <h3 class="hasAnchor">
-<a href="#new-features" class="anchor"></a>New features</h3>
+<a href="#new-features-1" class="anchor"></a>New features</h3>
 <ul>
 <li>
 <code><a href="../reference/read_xmap.html">read_xmap()</a></code>
@@ -346,9 +364,9 @@
     <div id="qntmap-0-2-1" class="section level1">
 <h1 class="page-header">
 <a href="#qntmap-0-2-1" class="anchor"></a>qntmap 0.2.1</h1>
-<div id="new-features-1" class="section level2">
+<div id="new-features-2" class="section level2">
 <h2 class="hasAnchor">
-<a href="#new-features-1" class="anchor"></a>New features</h2>
+<a href="#new-features-2" class="anchor"></a>New features</h2>
 <ul>
 <li>Visualize X-ray maps and quantitative maps using a <code>plot</code> function.
 <ul>

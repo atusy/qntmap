@@ -12,7 +12,7 @@ find_AG <- function(
 ) {
   AG <- lm_AG(epma, elm, phase3)
   AG_mean <- lm_AG(epma, elm)
-  kept <- is.finite(AG[["a"]] *AG[["a_se"]])
+  kept <- is.finite(AG[["a"]] * AG[["a_se"]])
   as.data.frame(bind_rows(
     AG[kept, ],
     left_join(

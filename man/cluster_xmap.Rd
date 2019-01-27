@@ -5,7 +5,7 @@
 \title{Cluster mapping data into mineral species}
 \usage{
 cluster_xmap(xmap, centers, elements = intersect(names(xmap),
-  colnames(centers)), saving = TRUE, group_cluster = FALSE)
+  colnames(centers)), saving = TRUE, group_cluster = FALSE, ...)
 }
 \arguments{
 \item{xmap}{A \code{qm_xmap} class object returned by \code{\link[=read_xmap]{read_xmap()}}}
@@ -25,6 +25,71 @@ See \code{\link[=find_centers]{find_centers()}}.}
 \item{group_cluster}{\code{FALSE} (default) or \code{TRUE} to integrate same phase subgrouped using suffix.
 For example,
 clusters named "Pl_NaRich" and "Pl_NaPoor" are integrated to "Pl" cluster .}
+
+\item{...}{Arguments passed on to \code{PoiClaClu::Classify}
+\describe{
+  \item{xte}{
+A m-by-p data matrix: m test observations and p features. The classifier
+fit on the training data set x will be tested on this data set. If NULL,
+then testing will be performed on the training set.
+}
+  \item{rho}{
+Tuning parameter controlling the amount of soft thresholding performed,
+i.e. the level of sparsity, i.e. number of nonzero features in
+classifier. Rho=0 means that there is no soft-thresolding, i.e. all
+features used in classifier. Larger rho means that fewer features will
+be used.
+}
+  \item{beta}{
+    A smoothing term. A Gamma(beta,beta) prior is used to fit the
+    Poisson model.
+    Recommendation is to just leave it at 1, the default value.
+}
+  \item{rhos}{
+A vector of tuning parameters that control the amount of soft thresholding
+performed. If "rhos" is provided then a number of
+models will be fit (one for each element of "rhos"), and a number of
+predicted class labels will be output (one for each element of "rhos").
+}
+  \item{type}{
+    How should the observations be normalized within the
+    Poisson model, i.e. how should the size factors be estimated?
+    Options are "quantile" or "deseq" (more robust) or "mle" (less
+    robust).
+
+    In greater detail: "quantile" is quantile normalization approach
+    of Bullard et al 2010 BMC Bioinformatics, "deseq"  is median of the
+    ratio of an observation to a pseudoreference obtained by taking the
+    geometric mean, described in Anders and Huber 2010 Genome Biology and
+    implemented in Bioconductor package "DESeq", and "mle" is the sum of
+    counts for each sample; this is the maximum likelihood estimate
+    under a simple Poisson model.
+                   
+}
+  \item{prior}{
+    Vector of length equal to the number of classes, representing prior
+    probabilities
+    for each class. If NULL then uniform priors are used (i.e. each
+    class is equally likely).
+  }
+  \item{transform}{
+        Should data matrices x and xte first be power transformed so that it more
+        closely fits
+        the Poisson model? TRUE or FALSE. Power transformation is
+        especially
+        useful if the data are overdispersed relative to the Poisson
+        model.
+      }
+  \item{alpha}{
+        If transform=TRUE, this determines the power to which the data
+        matrices x and xte are transformed.
+        If alpha=NULL then the transformation that
+        makes the Poisson model best fit the data matrix x is
+        computed. (Note that alpha is computed based on x, not based on
+        xte). Or a value of
+        alpha, 0<alpha<=1, can be entered by the user.
+ }
+}}
 }
 \description{
 Cluster mapping data into mineral species

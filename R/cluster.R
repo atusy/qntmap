@@ -14,13 +14,13 @@
 #' @importFrom PoiClaClu Classify
 #' @importFrom matrixStats colSums2
 #' @export
-cluster <- function(x, centers, xte = NULL, ...) {
+cluster <- function(x, centers, xte = x, ...) {
   x_trans <- t(x)
   y <- centers %>>%
     apply(1L, function(y) colSums2(square(x_trans - y))) %>>%
     apply(1L, which.min)
   rm(x_trans)
-  Classify(x, y, `if`(is.null(xte), x, xte), ...)
+  Classify(x, y, xte, ...)
 }
 
 
@@ -39,8 +39,9 @@ cluster <- function(x, centers, xte = NULL, ...) {
 #'   `FALSE` (default) or `TRUE` to integrate same phase subgrouped using suffix.
 #'   For example, 
 #'   clusters named "Pl_NaRich" and "Pl_NaPoor" are integrated to "Pl" cluster .
+#' @inheritDotParams PoiClaClu::Classify -x -y
 #'
-#' @importFrom dplyr group_by ungroup
+#' @importFrom dplyr group_by mutate mutate_if summarize ungroup
 #' @importFrom tidyr gather spread
 #' @importFrom matrixStats rowMaxs rowSums2
 #'
@@ -50,7 +51,8 @@ cluster_xmap <- function(
   centers,
   elements = intersect(names(xmap), colnames(centers)),
   saving = TRUE,
-  group_cluster = FALSE
+  group_cluster = FALSE,
+  ...
 ) {
   dir_map <- attr(xmap, 'dir_map')
   centers$phase <- as.character(centers$phase)
@@ -61,19 +63,24 @@ cluster_xmap <- function(
   rm(xmap)
 
   # Classify by PoiClaClu 
-  result <- cluster(x, centers = centers[, elements])[c('ytehat', 'discriminant')]
+  result <- cluster(
+      x, centers = centers[, elements], ...
+    )[c('ytehat', 'discriminant', "xte")]
 
   # give phase names to result$ytehat
   names(result$ytehat) <- result$cluster <- centers$phase[result$ytehat]
   
   # Find representative values of each clusters (~ centers)
-  result$center <- as.data.frame(lapply(x, as.double)) %>>%
+  result$center <- as.data.frame(result$xte) %>>%
+    mutate_if(is.integer, as.double) %>>%
     mutate(phase = result$cluster) %>>%
     gather(elm, val, -phase) %>>%
     group_by(phase, elm) %>>%
     summarise(val = median(val)) %>>%
     ungroup %>>%
     spread(elm, val)
+  
+  result$xte <- NULL
 
   # estimate membership of each clusters
   result$membership <- result$discriminant %>>%

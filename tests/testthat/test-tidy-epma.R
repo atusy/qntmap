@@ -4,7 +4,7 @@ if(interactive()) setwd(here("tests/testthat"))
 
 xmap <- read_xmap("minimal/.map/1", saving = FALSE)
 qnt <- read_qnt("minimal/.qnt", saving = FALSE)
-cls <- cluster_xmap(xmap, find_centers(xmap, qnt), saving = FALSE)
+cls <- cluster_xmap(xmap, find_centers(xmap, qnt, saveas = FALSE), saving = FALSE)
 
 test_that("cluster = NULL", {
   epma <- tidy_epma(qnt, xmap)

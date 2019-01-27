@@ -81,6 +81,7 @@ test_that("phase_list = 'example.csv'", {
   expect_false(identical(qnt$cnd$phase, qnt2$cnd$phase))
   expect_true(any(is.na(qnt2$cnd$phase)))
   expect_true(all(qnt2$cnd$phase %in% c("a", NA)))
+  unlink(csv)
 })
 
 test_that("phase_list = 'does-not-exist'", {
@@ -119,6 +120,7 @@ test_that("params = hoge.csv", { # © 2018 JAMSTEC
   
   expect_equal(qnt$elm, qnt2$elm)
   
+  unlink(csv)
 })
 
 

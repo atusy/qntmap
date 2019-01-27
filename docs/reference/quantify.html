@@ -38,7 +38,8 @@
 
 <meta property="og:title" content="Quantify X-ray maps — quantify" />
 
-<meta property="og:description" content="Quantify X-ray maps" />
+<meta property="og:description" content="quantify calculates mass concentrations wt%.
+quantify2() further calculates standard errors, but is soft deprecated." />
 <meta name="twitter:card" content="summary" />
 
 
@@ -79,7 +80,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">qntmap</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.3.2</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.3.2.9999</span>
       </span>
     </div>
 
@@ -152,13 +153,14 @@
 
     <div class="ref-description">
     
-    <p>Quantify X-ray maps</p>
+    <p><code>quantify</code> calculates mass concentrations wt%.
+<code>quantify2()</code> further calculates standard errors, but is soft deprecated.</p>
     
     </div>
 
     <pre class="usage"><span class='fu'>quantify</span>(<span class='no'>xmap</span>, <span class='no'>qnt</span>, <span class='no'>cluster</span>, <span class='kw'>maps_x</span> <span class='kw'>=</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/attr'>attr</a></span>(<span class='no'>xmap</span>, <span class='st'>"pixel"</span>)[<span class='fl'>1</span>],
   <span class='kw'>maps_y</span> <span class='kw'>=</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/attr'>attr</a></span>(<span class='no'>xmap</span>, <span class='st'>"pixel"</span>)[<span class='fl'>2</span>], <span class='kw'>fine_phase</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>fine_th</span> <span class='kw'>=</span> <span class='fl'>0.9</span>,
-  <span class='kw'>fix</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>saving</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)</pre>
+  <span class='kw'>fix</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>se</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='kw'>saving</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)</pre>
     
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -194,6 +196,11 @@ See <a href='#multi-phase-pixels'>"Multi-phase pixels"</a> section for details.<
       <th>fix</th>
       <td><p>A path to the file specifying chemical compositions of
 some elements in some phases (default: <code>NULL</code>).</p></td>
+    </tr>
+    <tr>
+      <th>se</th>
+      <td><p><code>FALSE</code> in default.
+<code>TRUE</code> calculates standard errors, but require large memories.</p></td>
     </tr>
     <tr>
       <th>saving</th>

@@ -1,12 +1,25 @@
 # qntmap 0.3.2.9999
 
+## New features
+
+- `quantify()` no more calculates standard errors by default.
+  This is to save time and memory usage.
+  Set `se = TRUE` to calculate the errors.
 - `quantify()` and `tidy_epma()` supports maps and spots analyzing inequal elements.
     
-    |Example|Maps           |Spots            |
-    |:------|:--------------|:----------------|
-    |A      |Si, **Ti**, Mg | Si, Mg          |
-    |B      |Si, Mg         | Si, **Ti**, Mg  |
-    |C      |Si, **Ti**, Mg | Si, Mg, **Ca**  |
+    | Example | Mapped elements | Spot elements   |
+    |:-------:|:----------------|:----------------|
+    | A       | Si, **Ti**, Mg  | Si, Mg          |
+    | B       | Si, Mg          | Si, **Ti**, Mg  |
+    | C       | Si, **Ti**, Mg  | Si, Mg, **Ca**  |
+    
+- `cluster_xmap()` has dot-dot-dot argument to pass arguments to `PoiClaClu::Classify()`.
+  This feature helps
+    - train with limited data to save time
+    - separate data into train and test for cross validations
+    - and so on.
+
+## Bug fix
 
 # qntmap 0.3.2
 
