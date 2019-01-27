@@ -71,8 +71,7 @@ cluster_xmap <- function(
   names(result$ytehat) <- result$cluster <- centers$phase[result$ytehat]
   
   # Find representative values of each clusters (~ centers)
-  result$center <- as.data.frame(result$xte) %>>%
-    mutate_if(is.integer, as.double) %>>%
+  result$center <- as.data.frame(lapply(result$xte, as.double)) %>>%
     mutate(phase = result$cluster) %>>%
     gather(elm, val, -phase) %>>%
     group_by(phase, elm) %>>%
