@@ -1,3 +1,13 @@
+# qntmap 0.3.2.9999
+
+- `quantify()` and `tidy_epma()` supports maps and spots analyzing inequal elements.
+    
+    |Example|Maps           |Spots            |
+    |:------|:--------------|:----------------|
+    |A      |Si, **Ti**, Mg | Si, Mg          |
+    |B      |Si, Mg         | Si, **Ti**, Mg  |
+    |C      |Si, **Ti**, Mg | Si, Mg, **Ca**  |
+
 # qntmap 0.3.2
 
 ## Major changes

@@ -60,7 +60,8 @@ quantify <- function (
   } else {
     # Tidy compilation of epma data
     epma <- tidy_epma_for_quantify(
-      tidy_epma(qnt = qnt, xmap = xmap, cluster = cluster),
+      tidy_epma(qnt = qnt, xmap = xmap, cluster = cluster) %>>%
+        filter(elint %in% names(!! xmap)),
       maps_x, maps_y, 
       elements = qnt$elm$elem,
       distinguished = any(grepl('_', colnames(cluster$membership))),

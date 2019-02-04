@@ -53,6 +53,7 @@ tidy_epma <- function(
   qnt$cmp <- xmap[qnt$elm$elint] %>>%
     setNames(qnt$elm$elem) %>>%
     lapply(unlist, use.names = FALSE) %>>%
+    lapply(function(x) `if`(is.null(x), NA_integer_, x)) %>>%
     as.data.frame %>>%
     `[`(qnt$cnd$nr, ) %>>%
     list %>>%

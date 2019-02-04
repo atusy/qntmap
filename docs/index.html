@@ -10,6 +10,7 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha256-U5ZEeKfGNOja007MMD3YBI0A3OSZOQbeG6z2f2Y0hu8=" crossorigin="anonymous"></script><!-- Font Awesome icons --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" integrity="sha256-eZrrJcwDc/3uDhsdt61sL2oOBY362qM3lon1gyExkL0=" crossorigin="anonymous">
 <!-- clipboard.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.4/clipboard.min.js" integrity="sha256-FiZwavyI2V6+EXO1U+xzLG3IKldpiTFf3153ea9zikQ=" crossorigin="anonymous"></script><!-- sticky kit --><script src="https://cdnjs.cloudflare.com/ajax/libs/sticky-kit/1.1.3/sticky-kit.min.js" integrity="sha256-c4Rlo1ZozqTPE2RLuvbusY3+SU1pQaJC0TjuhygMipw=" crossorigin="anonymous"></script><!-- pkgdown --><link href="pkgdown.css" rel="stylesheet">
 <script src="pkgdown.js"></script><!-- docsearch --><script src="docsearch.js"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/docsearch.js/2.6.1/docsearch.min.css" integrity="sha256-QOSRU/ra9ActyXkIBbiIB144aDBdtvXBcNc3OTNuX/Q=" crossorigin="anonymous">
+<link href="docsearch.css" rel="stylesheet">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/mark.js/8.11.1/jquery.mark.min.js" integrity="sha256-4HLtjeVgH0eIB3aZ9mLYF6E8oU5chNdjU6p6rrXpl9U=" crossorigin="anonymous"></script><meta property="og:title" content="Enhance quantitative analysis of EPMA map">
 <meta property="og:description" content="A main function of this packages is 
     to produce chemical mass concentration map based on 
@@ -39,7 +40,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="index.html">qntmap</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.3.2</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.3.2.9999</span>
       </span>
     </div>
 
@@ -111,14 +112,14 @@
 <div id="overview" class="section level1">
 
 <p>This package generates mass concentration maps and phase distribution maps based on X-ray mapping data and spot analysis data from EPMA.</p>
-<p>See “<a href="#how-to">How to</a>” for a usage and <a href="https://doi.org/10.2138/am-2018-6323CCBY">Yasumoto et al. (2018)</a> for implementations.</p>
+<p>See “<a href="#how-to">How to</a>” for a usage and <a href="https://doi.org/10.2138/am-2018-6323CCBY">Yasumoto et al. (2018)</a> for implementations.</p>
 <p>Current version supports data from JEOL-style EPMA.</p>
 </div>
 <div id="installation" class="section level1">
 <h1 class="hasAnchor">
 <a href="#installation" class="anchor"></a>Installation</h1>
 <p>Copy &amp; paste a following command to R.</p>
-<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb1-1" title="1"><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/source">source</a></span>(<span class="st">"https://install-github.me/atusy/qntmap"</span>)</a></code></pre></div>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/source">source</a></span>(<span class="st">"https://install-github.me/atusy/qntmap"</span>)</code></pre></div>
 </div>
 <div id="how-to" class="section level1">
 <h1 class="hasAnchor">
@@ -156,11 +157,8 @@
 </li>
 <li>Identify phases in comment
 <ul>
-<li>Give same comments on the same phase with the similar compositions.
-<ul>
+<li>Give same comments on the same phase with the similar compositions.</li>
 <li>e.g., quartz, plagioclase, garnet-core, garnet-rim, …</li>
-</ul>
-</li>
 <li>An alternative is to use external file later.</li>
 </ul>
 </li>
@@ -174,8 +172,8 @@
 <ul>
 <li>Acceralating voltage must be same as that in spot analysis.</li>
 <li>Probe diameter should be larger than that in spot analysis.</li>
-<li>Probe current is recommended to be 100 nA following Lanari et al. (2014).</li>
-<li>Dwell time is recommended to be 0.1 - 0.3 sec following Lanari et al. (2014).</li>
+<li>Probe current is recommended to be 100 nA following Lanari et al. (2014).</li>
+<li>Dwell time is recommended to be 0.1 - 0.3 sec following Lanari et al. (2014).</li>
 </ul>
 </li>
 </ul>
@@ -300,12 +298,12 @@
 </tr></thead>
 <tbody>
 <tr class="odd">
-<td align="left">*_map.txt</td>
-<td align="left">ASCII converted mapping data</td>
+<td align="left">*_map.txt or data*.csv</td>
+<td align="left">ASCII converted mapping data (e.g., 1_map.txt, 2_map.txt,… or data001.csv, data002.csv, …)</td>
 </tr>
 <tr class="even">
 <td align="left">*.cnd</td>
-<td align="left">Analytical conditions: element name, dwell time, probe current, step size, pixel size, and coordinates</td>
+<td align="left">Analytical conditions: element name, dwell time, probe current, step size, pixel size, and coordinates. File names must corresponds to mapping data (e.g, 1_map.cnd, data001.cnd)</td>
 </tr>
 </tbody>
 </table>
@@ -321,8 +319,8 @@
 <h3 class="hasAnchor">
 <a href="#interactive-mode" class="anchor"></a>Interactive mode</h3>
 <p>Follow instructions shown by running the following code.</p>
-<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb2-1" title="1"><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/library">library</a></span>(qntmap)</a>
-<a class="sourceLine" id="cb2-2" title="2"><span class="kw"><a href="reference/qntmap.html">qntmap</a></span>()</a></code></pre></div>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/library">library</a></span>(qntmap)
+<span class="kw"><a href="reference/qntmap.html">qntmap</a></span>()</code></pre></div>
 <p>As a result, phase identification result is saved in “<code>clustering</code>” directory and mass concentration data as csv files in “<code>qntmap</code>” directory both under the directory contaning mapping data.</p>
 <p>Note that interactive mode has limited functions. Use <a href="#manual-mode">manual mode</a> for full functionality.</p>
 </div>

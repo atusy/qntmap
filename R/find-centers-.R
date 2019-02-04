@@ -80,7 +80,7 @@ find_centers <- function(
     mutate( # Let weights in OLS be 0 for phases specified by `fine_phase``
       w = if(is.null(fine_phase)) 1 else as.integer(phase %nin% fine_phase)
     ) %>>%
-    group_by(elint) %>>%# Peform OLS and estimate 99% prediction interval
+    group_by(elint) %>>% # Peform OLS and estimate 99% prediction interval
     mutate(
       .tmp = is.finite(map),
       map_est =
