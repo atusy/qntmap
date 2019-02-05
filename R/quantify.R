@@ -1,5 +1,8 @@
 #' Quantify X-ray maps
 #'
+#' `quantify` calculates mass concentrations [wt%]. 
+#' `quantify2()` further calculates standard errors, but is soft deprecated.
+#'
 #' @param xmap `qm_xmap` class object returned by [`read_xmap()`].
 #' @param qnt `qm_qnt` class object returned by [`read_qnt()`].
 #' @param cluster `qm_cluster` class object returned by [`cluster_xmap()`].
@@ -11,10 +14,14 @@
 #' @param fix
 #'   A path to the file specifying chemical compositions of 
 #'   some elements in some phases (default: `NULL`).
+#' @param se 
+#'   `FALSE` in default. 
+#'   `TRUE` calculates standard errors, but require large memories.
 #' @param saving 
 #'   `TRUE` (default) saves the results into `qntmap` directory under 
 #'   the directory `xmap` is read from. `FALSE` does not save.`
 #'
+#' @importFrom dplyr mutate rename select
 #' @importFrom purrr map map_at map2
 #' @importFrom stats setNames
 #'
@@ -28,6 +35,7 @@ quantify <- function (
   fine_phase = NULL,
   fine_th = 0.9,
   fix = NULL,
+  se = FALSE,
   saving = TRUE
 ) {
 
@@ -52,11 +60,11 @@ quantify <- function (
   X <- as.data.frame(cluster$membership)
 
   # Find alpha (A), beta (B), and gamma (G)
-  if (TF_inherit_params) { # © 2018 JAMSTEC
-    AG <- fix_AG(params) # © 2018 JAMSTEC
-    B <- fix_B(params) # © 2018 JAMSTEC
-    nm <- setNames(params$element, params$elint) # © 2018 JAMSTEC
-    nm <- nm[!duplicated(nm)] # © 2018 JAMSTEC
+  if (TF_inherit_params) {                              # © 2018 JAMSTEC
+    AG <- fix_AG(params)                                # © 2018 JAMSTEC
+    B <- fix_B(params)                                  # © 2018 JAMSTEC
+    nm <- setNames(params$element, params$elint)        # © 2018 JAMSTEC
+    nm <- nm[!duplicated(nm)]                           # © 2018 JAMSTEC
   } else {
     # Tidy compilation of epma data
     epma <- tidy_epma_for_quantify(
@@ -68,17 +76,25 @@ quantify <- function (
       fine_phase = fine_phase,
       fine_th = fine_th
     )
-    AG <- find_AG(epma, setdiff(names(X), unique(epma$phase3)))
-    B <- find_B(epma)
+    AG <- find_AG(epma, setdiff(names(X), unique(epma$phase3))) # Future work: supress calc se
+    B <- find_B(epma)                                           # Future work: supress calc se
     rm(epma)
     nm <- setNames(qnt$elm$elem, qnt$elm$elint)
   } 
 
   names(xmap) <- nm[names(xmap)]
   
-  XAG <- find_XAG(X, mutate(AG, ag = a * g, ag_se = L2(a * g_se, g * a_se), g = NULL, g_se = NULL))
+  XAG <- find_XAG(
+    X, 
+    AG %>>% 
+      mutate(
+        ag = a * g, ag_se = `if`(!! se, L2(a * g_se, g * a_se), NA_real_), 
+        g = NULL, g_se = NULL
+      ), 
+    se = se
+  )
   
-  AB <- find_AB(AG, B) %>>%
+  AB <- find_AB(AG, B, se = se) %>>%
     join_AB(fix_AB_by_wt(xmap = xmap, cls = cluster, params = params))
 
   dir_qntmap <- paste0(dir_map, '/qntmap')
@@ -90,18 +106,20 @@ quantify <- function (
   rm(AG, B)
     
   AB %>>% 
+    rename(se = ab_se) %>>%
+    select(setdiff(names(.), "se"[!(!!(se))])) %>>%
     expand_AB(stg) %>>%
-    map(map, `*`, X) %>>% #XAB
+    map(map, `*`, X) %>>% # XAB
     map(map_at, 'se', map, square) %>>%
     map(map, reduce_add) %>>%
     map(map_at, 'se', sqrt) %>>%
-    map2(xmap[names(.)], function (xab, i) map(xab, `*`, i)) %>>%#XABI
-    map2(XAG, map2, `-`) %>>% #XABI - XAG
-    map(setNames, c('wt', 'se')) %>>%
+    map2(xmap[names(.)], function (xab, i) map(xab, `*`, i)) %>>% # XABI
+    map2(XAG, map2, `-`) %>>% # XABI - XAG
+    map(setNames, c('wt', 'se'[se])) %>>%
     map(function (x) map(x, `*`, x$wt > 0)) %>>%
-    c(list(Total = list(
-      wt = as.data.frame(reduce_add(map(., 'wt'))),
-      se = as.data.frame(sqrt(reduce_add(map(map(., 'se'), square))))
+    c(list(Total = c(
+      list(wt = as.data.frame(reduce_add(map(., 'wt')))),
+      if(se) list(se = as.data.frame(sqrt(reduce_add(map(map(., 'se'), square)))))
     ))) %>>%
     prioritize(.component) %>>%
     `class<-`(c('qntmap', 'list')) %>>%

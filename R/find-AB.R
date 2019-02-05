@@ -23,7 +23,7 @@
 #' # 2  Mg  11    Qtz 0.01008873 4.055329e-08
 #' # 3  Si  11     Ol 0.01010103 3.816024e-08
 #' # 4  Si  11    Qtz 0.01008730 3.810836e-08
-find_AB <- function(AG, B) {
+find_AB <- function(AG, B, se = TRUE) {
   mutate(
     right_join(AG[, c("elm", "phase3", "a", "a_se")], B, by = "elm"),
     ab = a * b,
