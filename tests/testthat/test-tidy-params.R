@@ -1,4 +1,4 @@
-context("fix-params.R")
+context("tidy_params()")
 
 if(interactive()) setwd(here::here("tests/testthat"))
 
@@ -14,18 +14,13 @@ epma <- tidy_epma_for_quantify(
 
 AG <- find_AG(epma)
 B <- find_B(epma)
-params <- tidy_params(AG, B, qnt)
 
-test_that("Reconstruct AG from tidy parameters", {
-  fixed <- fix_AG(params)
-  nm <- intersect(names(AG), names(fixed))
-  expect_equal(AG[nm], fixed[nm])
+test_that("Structure of a returned value by tidy_params()", {
+  params <- tidy_params(AG = AG, B = B, qnt = qnt)
+  expect_s3_class(params, "data.frame")
+  expect_named(params, c("oxide", "element", "phase", "alpha", "beta", "gamma", "wt"))
+  expect_equal(
+    unname(sapply(params, class)), 
+    c("character", "character", "character", "numeric", "numeric", "numeric", "numeric")
+  )
 })
-
-test_that("Reconstruct B from tidy parameters", {
-  fixed <- fix_B(params)
-  nm <- intersect(names(B), names(fixed))
-  expect_equal(B[nm], fixed[nm])
-})
-
-if(interactive()) setwd(here::here())

@@ -51,15 +51,15 @@ NULL
 #' @importFrom tidyr gather spread
 #' 
 #' @export
-mean.qntmap <- function(x, index = 'Whole area', ...) {
+mean.qntmap <- function (x, index = 'Whole area', ...) {
     x %>>%
     lapply(`[[`, 'wt') %>>%
     lapply(unlist, use.names = FALSE) %>>%
-    (~ if(length(index) %nin% c(1, length(.[[1]]))) {
-      stop(
-        'length of index must be 1 ',
-        'or same as number of pixels of qntmap:', 
-        length(.[[1]]))
+    (~ if (length(index) %nin% c(1, length(.[[1]]))) {
+      stop (
+        'length of index must be 1 or same as number of pixels of qntmap:', 
+        length(.[[1]])
+      )
     }) %>>%
     c(.index = list(index)) %>>%
     as.data.frame() %>>%

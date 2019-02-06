@@ -23,7 +23,7 @@ test_that("check_ABG() returns FALSE", {
   expect_false(check_ABG(list()))
   
   # when parameters are fixed only by wt
-  expect_false(check_ABG(data.frame(element = "a", phase = "a", wt = 0)))
+  expect_false(check_ABG(data.frame(oxide = "a", phase = "a", wt = 0)))
 })
 
 test_that("check_ABG() returns error", {
@@ -31,7 +31,7 @@ test_that("check_ABG() returns error", {
   expect_error(check_ABG(data.frame()))
   
   # when params is a data frame without required rows
-  expect_error(check_ABG(params, xmap = alist(Mg = , Si =, Ti =), cls = cls))
+  expect_error(check_ABG(params, xmap = alist(Mg = , Si =, Ti =), cls = cluster))
   expect_error(check_ABG(params, xmap = xmap, cls = list(cluster = c("A"))))
 })
 
@@ -97,12 +97,6 @@ test_that("csv given to fix parameter does nothing if all values in column are N
   csv <- "params.csv"
   data.table::fwrite(.params, csv)
   
-  # se = TRUE
-  expect_identical(
-    quantify(xmap, qnt, cluster, se = TRUE, saving = FALSE), 
-    quantify(xmap, qnt, cluster, se = TRUE, saving = FALSE, fix = csv)
-  )
-  
   # se = FALSE
   expect_identical(
     quantify(xmap, qnt, cluster, se = FALSE, saving = FALSE), 
@@ -116,7 +110,7 @@ test_that("csv given to fix parameter does nothing if all values in column are N
 test_that("quantify() gives 200 wt% for SiO2 in Qtz by fix parameter", {
   .params <- params
   .params$wt <- NA_real_
-  .params$wt[.params$phase == "Qtz" & .params$elint == "Si"] <- 200
+  .params$wt[.params$phase == "Qtz" & .params$element == "Si"] <- 200
   csv <- "params.csv"
   data.table::fwrite(.params, csv)
 

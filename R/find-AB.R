@@ -25,9 +25,9 @@
 #' # 4  Si  11    Qtz 0.01008730 3.810836e-08
 find_AB <- function(AG, B, se = TRUE) {
   mutate(
-    right_join(AG[, c("elm", "phase3", "a", "a_se")], B, by = "elm"),
+    right_join(AG[, c("elm", "phase3", "a", "a_se"[se])], B, by = "elm"),
     ab = a * b,
-    ab_se = L2(a * b_se, b * a_se),
+    ab_se = if(!! se) L2(a * b_se, b * a_se) else NA_real_,
     a = NULL, a_se = NULL, b = NULL, b_se = NULL
   )
 }
@@ -83,7 +83,7 @@ expand_AB <- function(AB, stg) {
 #' @param xmap `qm_xmap` class object returned by [`read_xmap()`]
 #' @param cls `qm_cluster` class object returned by [`cluster_xmap()`]
 #' @param csv 
-#'   A file path to the csv file with columns `phase`, `element` and `wt`.
+#'   A file path to the csv file with columns `phase`, `oxide` and `wt`.
 #'   
 #' @importFrom matrixStats rowMaxs weightedMedian
 #' @importFrom dplyr 
@@ -91,19 +91,19 @@ expand_AB <- function(AB, stg) {
 #' @importFrom tidyr gather
 fix_AB_by_wt <- function(xmap, cls, params) {
   if(!any(is.finite(params$wt))) return(NULL)
-  params <- params[is.finite(params$wt), c("phase", "element", "wt")]
-  xmap[(unique(params$element))] %>>%
+  params <- params[is.finite(params$wt), c("phase", "oxide", "wt")]
+  xmap[(unique(params$oxide))] %>>%
     lapply(unlist, use.names = FALSE) %>>%
     c(list(phase = cls$cluster, w = rowMaxs(cls$membership))) %>>%
     as.data.frame(stringsAsFactors = FALSE) %>>%
     filter(phase %in% (!!params$phase)) %>>%
-    gather(element, mapint, -phase, -w) %>>%
-    group_by(phase, element) %>>%
+    gather(oxide, mapint, -phase, -w) %>>%
+    group_by(phase, oxide) %>>%
     summarize(mapint = weightedMedian(mapint, w)) %>>%
     ungroup %>>%
-    right_join(params, by = c("phase", "element")) %>>%
+    right_join(params, by = c("phase", "oxide")) %>>%
     mutate(ab = wt / mapint, mapint = NULL, wt = NULL) %>>%
-    rename(elm = element, phase3 = phase)
+    rename(elm = oxide, phase3 = phase)
 }
 
 #' Join results of find_AB and fix_AB_by_wt

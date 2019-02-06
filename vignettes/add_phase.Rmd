@@ -218,7 +218,7 @@ For example, prepare a csv file, and specify it to `fix` parameter of `quantify(
 
 ```{r}
 csv <- paste(
-    'phase, element, wt',
+    'phase, oxide, wt',
     'Qtz,   SiO2,      100',
     sep = "\n"
   )
