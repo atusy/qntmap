@@ -38,7 +38,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">qntmap</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.3.2</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.3.2.9999</span>
       </span>
     </div>
 
@@ -106,7 +106,7 @@
       <h1>Getting started with QntMap</h1>
                         <h4 class="author">Atsushi YASUMOTO</h4>
             
-            <h4 class="date">2019-01-25</h4>
+            <h4 class="date">2019-02-06</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/atusy/qntmap/blob/master/vignettes/qntmap.Rmd"><code>vignettes/qntmap.Rmd</code></a></small>
       <div class="hidden name"><code>qntmap.Rmd</code></div>
@@ -129,31 +129,31 @@
 <div id="load-package" class="section level2">
 <h2 class="hasAnchor">
 <a href="#load-package" class="anchor"></a>Load package</h2>
-<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb1-1" title="1"><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/library">library</a></span>(qntmap)</a></code></pre></div>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/library">library</a></span>(qntmap)</code></pre></div>
 </div>
 <div id="go-to-working-directory" class="section level2">
 <h2 class="hasAnchor">
 <a href="#go-to-working-directory" class="anchor"></a>Go to working directory</h2>
-<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb2-1" title="1">wd &lt;-<span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/tempfile">tempdir</a></span>() <span class="co"># Arbitrary</span></a>
-<a class="sourceLine" id="cb2-2" title="2"><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/getwd">setwd</a></span>(wd)</a></code></pre></div>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">wd &lt;-<span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/tempfile">tempdir</a></span>() <span class="co"># Arbitrary</span>
+<span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/getwd">setwd</a></span>(wd)</code></pre></div>
 </div>
 <div id="copy-example-data" class="section level2">
 <h2 class="hasAnchor">
 <a href="#copy-example-data" class="anchor"></a>Copy example data</h2>
-<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb3-1" title="1"><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/files">file.copy</a></span>(</a>
-<a class="sourceLine" id="cb3-2" title="2">  <span class="dt">from =</span> <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/system.file">system.file</a></span>(<span class="st">'extdata'</span>, <span class="st">'minimal'</span>, <span class="dt">package =</span> <span class="st">'qntmap'</span>),</a>
-<a class="sourceLine" id="cb3-3" title="3">  <span class="dt">to =</span> wd,</a>
-<a class="sourceLine" id="cb3-4" title="4">  <span class="dt">recursive =</span> <span class="ot">TRUE</span></a>
-<a class="sourceLine" id="cb3-5" title="5">)</a>
-<a class="sourceLine" id="cb3-6" title="6"><span class="co">#&gt; [1] TRUE</span></a></code></pre></div>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/files">file.copy</a></span>(
+  <span class="dt">from =</span> <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/system.file">system.file</a></span>(<span class="st">'extdata'</span>, <span class="st">'minimal'</span>, <span class="dt">package =</span> <span class="st">'qntmap'</span>),
+  <span class="dt">to =</span> wd,
+  <span class="dt">recursive =</span> <span class="ot">TRUE</span>
+)
+<span class="co">#&gt; [1] TRUE</span></code></pre></div>
 <p><code>TRUE</code> indicates copying is successful. Check copied files by <code><a href="https://www.rdocumentation.org/packages/base/topics/list.files">dir()</a></code>.</p>
-<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb4-1" title="1"><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/list.files">dir</a></span>(<span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/file.path">file.path</a></span>(wd, <span class="st">'minimal'</span>), <span class="dt">recursive =</span> <span class="ot">TRUE</span>, <span class="dt">all.files =</span> <span class="ot">TRUE</span>)</a>
-<a class="sourceLine" id="cb4-2" title="2"><span class="co">#&gt;  [1] ".map/1/0.cnd"        ".map/1/1_map.txt"    ".map/1/1.cnd"       </span></a>
-<a class="sourceLine" id="cb4-3" title="3"><span class="co">#&gt;  [4] ".map/1/2_map.txt"    ".map/1/2.cnd"        ".qnt/.cnd/elemw.cnd"</span></a>
-<a class="sourceLine" id="cb4-4" title="4"><span class="co">#&gt;  [7] ".qnt/bgm.qnt"        ".qnt/bgp.qnt"        ".qnt/elem.qnt"      </span></a>
-<a class="sourceLine" id="cb4-5" title="5"><span class="co">#&gt; [10] ".qnt/elint.qnt"      ".qnt/mes.qnt"        ".qnt/net.qnt"       </span></a>
-<a class="sourceLine" id="cb4-6" title="6"><span class="co">#&gt; [13] ".qnt/pkint.qnt"      ".qnt/stg.qnt"        ".qnt/wt.qnt"        </span></a>
-<a class="sourceLine" id="cb4-7" title="7"><span class="co">#&gt; [16] "conditions_qnt.csv"  "conditions_xmap.csv" "README.md"</span></a></code></pre></div>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/list.files">dir</a></span>(<span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/file.path">file.path</a></span>(wd, <span class="st">'minimal'</span>), <span class="dt">recursive =</span> <span class="ot">TRUE</span>, <span class="dt">all.files =</span> <span class="ot">TRUE</span>)
+<span class="co">#&gt;  [1] ".map/1/0.cnd"        ".map/1/1_map.txt"    ".map/1/1.cnd"       </span>
+<span class="co">#&gt;  [4] ".map/1/2_map.txt"    ".map/1/2.cnd"        ".qnt/.cnd/elemw.cnd"</span>
+<span class="co">#&gt;  [7] ".qnt/bgm.qnt"        ".qnt/bgp.qnt"        ".qnt/elem.qnt"      </span>
+<span class="co">#&gt; [10] ".qnt/elint.qnt"      ".qnt/mes.qnt"        ".qnt/net.qnt"       </span>
+<span class="co">#&gt; [13] ".qnt/pkint.qnt"      ".qnt/stg.qnt"        ".qnt/wt.qnt"        </span>
+<span class="co">#&gt; [16] "conditions_qnt.csv"  "conditions_xmap.csv" "README.md"</span></code></pre></div>
 </div>
 </div>
 <div id="analysis" class="section level1">
@@ -162,17 +162,17 @@
 <div id="specify-directories-containing-data" class="section level2">
 <h2 class="hasAnchor">
 <a href="#specify-directories-containing-data" class="anchor"></a>Specify directories containing data</h2>
-<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb5-1" title="1">dir_map &lt;-<span class="st"> 'minimal/.map/1'</span></a>
-<a class="sourceLine" id="cb5-2" title="2">dir_qnt &lt;-<span class="st"> 'minimal/.qnt'</span></a></code></pre></div>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">dir_map &lt;-<span class="st"> 'minimal/.map/1'</span>
+dir_qnt &lt;-<span class="st"> 'minimal/.qnt'</span></code></pre></div>
 </div>
 <div id="load-data" class="section level2">
 <h2 class="hasAnchor">
 <a href="#load-data" class="anchor"></a>Load data</h2>
-<div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb6-1" title="1"><span class="co"># Read X-ray mapping data</span></a>
-<a class="sourceLine" id="cb6-2" title="2">xmap &lt;-<span class="st"> </span><span class="kw"><a href="../reference/read_xmap.html">read_xmap</a></span>(dir_map)</a>
-<a class="sourceLine" id="cb6-3" title="3"></a>
-<a class="sourceLine" id="cb6-4" title="4"><span class="co"># Read spot analysis data</span></a>
-<a class="sourceLine" id="cb6-5" title="5">qnt &lt;-<span class="st"> </span><span class="kw"><a href="../reference/read_qnt.html">read_qnt</a></span>(dir_qnt, <span class="dt">renew =</span> <span class="ot">TRUE</span>)</a></code></pre></div>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># Read X-ray mapping data</span>
+xmap &lt;-<span class="st"> </span><span class="kw"><a href="../reference/read_xmap.html">read_xmap</a></span>(dir_map)
+
+<span class="co"># Read spot analysis data</span>
+qnt &lt;-<span class="st"> </span><span class="kw"><a href="../reference/read_qnt.html">read_qnt</a></span>(dir_qnt, <span class="dt">renew =</span> <span class="ot">TRUE</span>)</code></pre></div>
 <p>The example data contains olivine and quartz in the mapping area. The phases are quantified 20 points each.</p>
 <p><img src="qntmap_files/figure-html/unnamed-chunk-2-1.png" width="672"></p>
 </div>
@@ -180,9 +180,9 @@
 <h2 class="hasAnchor">
 <a href="#plot-x-ray-maps" class="anchor"></a>Plot X-ray maps</h2>
 <p>Plots are <strong>interactive</strong> with Web UI. Elements can be chosen by mouse actions.</p>
-<div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb7-1" title="1"><span class="kw"><a href="../reference/plot.html">plot</a></span>(xmap)</a>
-<a class="sourceLine" id="cb7-2" title="2"><span class="co"># A following plot is non-interactive mode run by</span></a>
-<a class="sourceLine" id="cb7-3" title="3"><span class="co"># plot(xmap, 'Mg', interactive = FALSE)</span></a></code></pre></div>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw"><a href="../reference/plot.html">plot</a></span>(xmap)
+<span class="co"># A following plot is non-interactive mode run by</span>
+<span class="co"># plot(xmap, 'Mg', interactive = FALSE)</span></code></pre></div>
 <p><img src="qntmap_files/figure-html/unnamed-chunk-3-1.png" width="672"></p>
 </div>
 <div id="cluster-analysis" class="section level2">
@@ -192,52 +192,52 @@
 <h3 class="hasAnchor">
 <a href="#initialize-cluster-centers" class="anchor"></a>Initialize cluster centers</h3>
 <p>This step guesses initial cluster centers (i.e., mean mapping intensities of each phase). Check if results are adequate by comparing them with plots. If inadequate, consider modifying values</p>
-<div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb8-1" title="1">centers &lt;-<span class="st"> </span><span class="kw"><a href="../reference/find_centers.html">find_centers</a></span>(xmap, qnt)</a>
-<a class="sourceLine" id="cb8-2" title="2"><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/print">print</a></span>(centers)</a>
-<a class="sourceLine" id="cb8-3" title="3"><span class="co">#&gt; # A tibble: 2 x 3</span></a>
-<a class="sourceLine" id="cb8-4" title="4"><span class="co">#&gt;   phase     Si    Mg</span></a>
-<a class="sourceLine" id="cb8-5" title="5"><span class="co">#&gt;   &lt;chr&gt;  &lt;dbl&gt; &lt;dbl&gt;</span></a>
-<a class="sourceLine" id="cb8-6" title="6"><span class="co">#&gt; 1 Ol     4246. 5726.</span></a>
-<a class="sourceLine" id="cb8-7" title="7"><span class="co">#&gt; 2 Qtz   10016.    0</span></a></code></pre></div>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">centers &lt;-<span class="st"> </span><span class="kw"><a href="../reference/find_centers.html">find_centers</a></span>(xmap, qnt)
+<span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/print">print</a></span>(centers)
+<span class="co">#&gt; # A tibble: 2 x 3</span>
+<span class="co">#&gt;   phase     Si    Mg</span>
+<span class="co">#&gt;   &lt;chr&gt;  &lt;dbl&gt; &lt;dbl&gt;</span>
+<span class="co">#&gt; 1 Ol     4246. 5726.</span>
+<span class="co">#&gt; 2 Qtz   10016.    0</span></code></pre></div>
 </div>
 <div id="run-cls" class="section level3">
 <h3 class="hasAnchor">
 <a href="#run-cls" class="anchor"></a>Run cluster analysis</h3>
 <p>A result is saved as a binary file and PNG images in <code>clustering</code> directory below the directory containing mapping data.</p>
 <p>For a quick look, <code class="sourceCode r"><span class="kw">plot</span>()</code> function is also available.</p>
-<div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb9-1" title="1">cluster &lt;-<span class="st"> </span><span class="kw"><a href="../reference/cluster_xmap.html">cluster_xmap</a></span>(xmap, centers)</a>
-<a class="sourceLine" id="cb9-2" title="2"><span class="kw"><a href="../reference/plot.html">plot</a></span>(cluster, <span class="dt">interactive =</span> <span class="ot">FALSE</span>)</a></code></pre></div>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">cluster &lt;-<span class="st"> </span><span class="kw"><a href="../reference/cluster_xmap.html">cluster_xmap</a></span>(xmap, centers)
+<span class="kw"><a href="../reference/plot.html">plot</a></span>(cluster, <span class="dt">interactive =</span> <span class="ot">FALSE</span>)</code></pre></div>
 <p><img src="qntmap_files/figure-html/plot-clusters-1.png" width="672"></p>
 </div>
 <div id="summarize-cluster-analysis" class="section level3">
 <h3 class="hasAnchor">
 <a href="#summarize-cluster-analysis" class="anchor"></a>Summarize cluster analysis</h3>
 <p><code><a href="https://www.rdocumentation.org/packages/base/topics/summary">summary()</a></code> function gives abundance ratios of phases in the map.</p>
-<div class="sourceCode" id="cb10"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb10-1" title="1"><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/summary">summary</a></span>(cluster)</a>
-<a class="sourceLine" id="cb10-2" title="2"><span class="co">#&gt; [1] 0.90005667 0.09994333</span></a></code></pre></div>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/summary">summary</a></span>(cluster)
+<span class="co">#&gt; [1] 0.90005667 0.09994333</span></code></pre></div>
 </div>
 </div>
 <div id="quantify" class="section level2">
 <h2 class="hasAnchor">
 <a href="#quantify" class="anchor"></a>Quantify</h2>
-<div class="sourceCode" id="cb11"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb11-1" title="1">qmap &lt;-<span class="st"> </span><span class="kw"><a href="../reference/quantify.html">quantify</a></span>(<span class="dt">xmap =</span> xmap, <span class="dt">qnt =</span> qnt, <span class="dt">cluster =</span> cluster)</a></code></pre></div>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">qmap &lt;-<span class="st"> </span><span class="kw"><a href="../reference/quantify.html">quantify</a></span>(<span class="dt">xmap =</span> xmap, <span class="dt">qnt =</span> qnt, <span class="dt">cluster =</span> cluster)</code></pre></div>
 <div id="plot-quantified-map" class="section level3">
 <h3 class="hasAnchor">
 <a href="#plot-quantified-map" class="anchor"></a>Plot quantified map</h3>
 <p>Just like <a href="#Plot%20X-ray%20map">X-ray map</a>.</p>
-<div class="sourceCode" id="cb12"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb12-1" title="1"><span class="kw"><a href="../reference/plot.html">plot</a></span>(qmap, <span class="st">'SiO2'</span>, <span class="dt">interactive =</span> <span class="ot">FALSE</span>)</a></code></pre></div>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw"><a href="../reference/plot.html">plot</a></span>(qmap, <span class="st">'SiO2'</span>, <span class="dt">interactive =</span> <span class="ot">FALSE</span>)</code></pre></div>
 <p><img src="qntmap_files/figure-html/plot-qmap-1.png" width="672"></p>
 </div>
 <div id="summarize-quantified-map" class="section level3">
 <h3 class="hasAnchor">
 <a href="#summarize-quantified-map" class="anchor"></a>Summarize quantified map</h3>
-<div class="sourceCode" id="cb13"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb13-1" title="1"><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/summary">summary</a></span>(qmap)</a>
-<a class="sourceLine" id="cb13-2" title="2"><span class="co">#&gt;   Element  Min. 1st Qu. Median  Mean 3rd Qu.   Max.</span></a>
-<a class="sourceLine" id="cb13-3" title="3"><span class="co">#&gt; 1    SiO2 40.39   42.32  42.80 48.43   43.35 102.81</span></a>
-<a class="sourceLine" id="cb13-4" title="4"><span class="co">#&gt; 2     MgO  0.00   56.46  57.10 51.49   57.68  59.87</span></a>
-<a class="sourceLine" id="cb13-5" title="5"><span class="co">#&gt; 3   Total 96.28   99.23  99.94 99.92  100.61 104.20</span></a>
-<a class="sourceLine" id="cb13-6" title="6"><span class="co">#&gt; </span></a>
-<a class="sourceLine" id="cb13-7" title="7"><span class="co">#&gt; Note that Total is not sum each column</span></a></code></pre></div>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/summary">summary</a></span>(qmap)
+<span class="co">#&gt;   Element  Min. 1st Qu. Median  Mean 3rd Qu.   Max.</span>
+<span class="co">#&gt; 1    SiO2 40.39   42.32  42.80 48.43   43.35 102.81</span>
+<span class="co">#&gt; 2     MgO  0.00   56.46  57.10 51.49   57.68  59.87</span>
+<span class="co">#&gt; 3   Total 96.28   99.23  99.94 99.92  100.61 104.20</span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt; Note that Total is not sum each column</span></code></pre></div>
 <p>Note also that this summary does not correct densities of phases.</p>
 <p>According to compositions of olivine (57.29% MgO and 42.71 wt% SiO<sub>2</sub>), and of quartz (100% SiO<sub>2</sub>),</p>
 <p><span class="math display">\[
@@ -259,28 +259,28 @@ E(SiO^{bulk}_{2}) =
 <h3 class="hasAnchor">
 <a href="#summary-based-on-mask-images" class="anchor"></a>Summary based on mask images</h3>
 <p>A simple use of <code><a href="../reference/mean.html">mean()</a></code> function returns <code><a href="../reference/mean.html">mean()</a></code> values of each elements.</p>
-<div class="sourceCode" id="cb14"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb14-1" title="1"><span class="kw"><a href="../reference/mean.html">mean</a></span>(qmap)</a>
-<a class="sourceLine" id="cb14-2" title="2"><span class="co">#&gt;   Element Whole area</span></a>
-<a class="sourceLine" id="cb14-3" title="3"><span class="co">#&gt; 1    SiO2   48.43476</span></a>
-<a class="sourceLine" id="cb14-4" title="4"><span class="co">#&gt; 2     MgO   51.48943</span></a>
-<a class="sourceLine" id="cb14-5" title="5"><span class="co">#&gt; 3   Total   99.92420</span></a></code></pre></div>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw"><a href="../reference/mean.html">mean</a></span>(qmap)
+<span class="co">#&gt;   Element Whole area</span>
+<span class="co">#&gt; 1    SiO2   48.43476</span>
+<span class="co">#&gt; 2     MgO   51.48943</span>
+<span class="co">#&gt; 3   Total   99.92420</span></code></pre></div>
 <p>Further, by using <strong>PNG format mask image width and height are same as mapping data</strong>, <code><a href="../reference/mean.html">mean()</a></code> values of each element are calculated for each area with same colors in the mask image.</p>
 <p>Let’s use an image from cluster analysis <a href="#run-cls">above</a>.</p>
 <p>Input path to the image to <code>segment</code> function.</p>
-<div class="sourceCode" id="cb15"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb15-1" title="1">i &lt;-<span class="st"> </span><span class="kw"><a href="../reference/segment.html">segment</a></span>(<span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/list.files">dir</a></span>(<span class="st">"/tmp/RtmpAJGGco/minimal/.map/1/clustering/190125_1439_pois_k2_SiMg_map.png"</span>))</a></code></pre></div>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">i &lt;-<span class="st"> </span><span class="kw"><a href="../reference/segment.html">segment</a></span>(<span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/list.files">dir</a></span>(<span class="st">"/tmp/RtmpJeE8mY/minimal/.map/1/clustering/190206_0915_pois_k2_SiMg_map.png"</span>))</code></pre></div>
 <p>Then, input the result of <code><a href="../reference/segment.html">segment()</a></code> to <code>index</code> parameter of <code><a href="../reference/mean.html">mean()</a></code>.</p>
-<div class="sourceCode" id="cb16"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb16-1" title="1"><span class="kw"><a href="../reference/mean.html">mean</a></span>(qmap, <span class="dt">index =</span> i)</a>
-<a class="sourceLine" id="cb16-2" title="2"><span class="co">#&gt;   Element  #000000  #FFFFFF</span></a>
-<a class="sourceLine" id="cb16-3" title="3"><span class="co">#&gt; 1    SiO2 42.71445 99.91755</span></a>
-<a class="sourceLine" id="cb16-4" title="4"><span class="co">#&gt; 2     MgO 57.21048  0.00000</span></a>
-<a class="sourceLine" id="cb16-5" title="5"><span class="co">#&gt; 3   Total 99.92493 99.91755</span></a>
-<a class="sourceLine" id="cb16-6" title="6"><span class="co"># mean(qmap, index = cluster$cluster)</span></a></code></pre></div>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw"><a href="../reference/mean.html">mean</a></span>(qmap, <span class="dt">index =</span> i)
+<span class="co">#&gt;   Element  #000000  #FFFFFF</span>
+<span class="co">#&gt; 1    SiO2 42.71445 99.91755</span>
+<span class="co">#&gt; 2     MgO 57.21048  0.00000</span>
+<span class="co">#&gt; 3   Total 99.92493 99.91755</span>
+<span class="co"># mean(qmap, index = cluster$cluster)</span></code></pre></div>
 <p>Note that <code>index</code> parameter can be given as a character vector indicating which pixel is which phase. Thus, giving <code>index = cluster$cluster</code> results more friendly result than the above.</p>
-<div class="sourceCode" id="cb17"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb17-1" title="1"><span class="kw"><a href="../reference/mean.html">mean</a></span>(qmap, <span class="dt">index =</span> cluster<span class="op">$</span>cluster)</a>
-<a class="sourceLine" id="cb17-2" title="2"><span class="co">#&gt;   Element       Ol      Qtz</span></a>
-<a class="sourceLine" id="cb17-3" title="3"><span class="co">#&gt; 1    SiO2 42.71445 99.91755</span></a>
-<a class="sourceLine" id="cb17-4" title="4"><span class="co">#&gt; 2     MgO 57.21048  0.00000</span></a>
-<a class="sourceLine" id="cb17-5" title="5"><span class="co">#&gt; 3   Total 99.92493 99.91755</span></a></code></pre></div>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw"><a href="../reference/mean.html">mean</a></span>(qmap, <span class="dt">index =</span> cluster<span class="op">$</span>cluster)
+<span class="co">#&gt;   Element       Ol      Qtz</span>
+<span class="co">#&gt; 1    SiO2 42.71445 99.91755</span>
+<span class="co">#&gt; 2     MgO 57.21048  0.00000</span>
+<span class="co">#&gt; 3   Total 99.92493 99.91755</span></code></pre></div>
 <p>The above two <code><a href="../reference/mean.html">mean()</a></code> values are equivalent as black (<code>#000000</code>) corresponds to olivine cluster, and white (<code>#FFFFFF</code>) to quartz cluster.</p>
 <p>This feature is useful to find average compositions of each minearls, local bulk compositions of domains (layer, symplectite), and so on.</p>
 </div>

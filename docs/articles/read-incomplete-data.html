@@ -38,7 +38,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">qntmap</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.3.2</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.3.2.9999</span>
       </span>
     </div>
 
@@ -106,7 +106,7 @@
       <h1>Read incomplete data</h1>
                         <h4 class="author">YASUMOTO Atsushi</h4>
             
-            <h4 class="date">2019-01-25</h4>
+            <h4 class="date">2019-02-06</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/atusy/qntmap/blob/master/vignettes/read-incomplete-data.Rmd"><code>vignettes/read-incomplete-data.Rmd</code></a></small>
       <div class="hidden name"><code>read-incomplete-data.Rmd</code></div>
@@ -124,9 +124,9 @@
 <h2 class="hasAnchor">
 <a href="#spot-analysis-data" class="anchor"></a>Spot analysis data</h2>
 <p>Among the required files to read spot analysis data (<a href="#tbl-qnt-files">Tab. 1</a>), <code>.cnd/elemw.cnd</code> and <code>Pos_001/data001.qnt</code> can be missing or be written in unexpected format. In such case, prepare a csv file describing element names, dwell time for peak and background, and relative positions of backgrounds in a given format (<a href="#qnt-meta">Tab. 2</a>). Then, following code will read spot analysis data.</p>
-<div class="sourceCode" id="cb1"><pre class="sourceCode .r"><code class="sourceCode r"><a class="sourceLine" id="cb1-1" title="1">qnt &lt;-<span class="st"> </span><span class="kw"><a href="../reference/read_qnt.html">read_qnt</a></span>(<span class="st">".qnt"</span>, <span class="dt">conditions =</span> <span class="st">"conditions_qnt.csv"</span>)</a>
-<a class="sourceLine" id="cb1-2" title="2"><span class="co"># First argument is path to the directory containing required files.</span></a>
-<a class="sourceLine" id="cb1-3" title="3"><span class="co"># "conditions" argument is a path to a user-prepared csv file.</span></a></code></pre></div>
+<div class="sourceCode"><pre class="sourceCode .r"><code class="sourceCode r">qnt &lt;-<span class="st"> </span><span class="kw"><a href="../reference/read_qnt.html">read_qnt</a></span>(<span class="st">".qnt"</span>, <span class="dt">conditions =</span> <span class="st">"conditions_qnt.csv"</span>)
+<span class="co"># First argument is path to the directory containing required files.</span>
+<span class="co"># "conditions" argument is a path to a user-prepared csv file.</span></code></pre></div>
 <table class="table">
 <caption>Tab. 1: <span id="tbl-qnt-files"></span>Required files to retrieve spot analysis data</caption>
 <thead><tr class="header">
@@ -211,8 +211,8 @@
 <h2 class="hasAnchor">
 <a href="#mapping-data" class="anchor"></a>Mapping data</h2>
 <p>Mapping data are expected to be saved as ASCII converted files (<code>*.txt</code> or <code>*.csv</code>) and as condition files (<code>*.cnd</code>) (<a href="#tbl-map-files">Tab. 3</a>). Asterisks are expected to be filled by the format of <code>#_map</code> or by <code>data#</code> where sharps are integers. File names of ASCII converted files and condition files must be paired (e.g, <code>1_map.txt</code> and <code>1_map.cnd</code>). In case of irregular file names or missing condition files, prepare a csv file describing element name, file path, instrument, dwell time, probe current, X-Y coordinates of a starting pixel, step size, map size, and dead time (<a href="#tbl-map-meta">Tab. 4</a>). Then, following code will read spot analysis data.</p>
-<div class="sourceCode" id="cb2"><pre class="sourceCode .r"><code class="sourceCode r"><a class="sourceLine" id="cb2-1" title="1">xmap &lt;-<span class="st"> </span><span class="kw"><a href="../reference/read_qnt.html">read_qnt</a></span>(<span class="dt">conditions =</span> <span class="st">"conditions_xmap.csv"</span>)</a>
-<a class="sourceLine" id="cb2-2" title="2"><span class="co"># "conditions" argument is a path to a user-prepared csv file.</span></a></code></pre></div>
+<div class="sourceCode"><pre class="sourceCode .r"><code class="sourceCode r">xmap &lt;-<span class="st"> </span><span class="kw"><a href="../reference/read_qnt.html">read_qnt</a></span>(<span class="dt">conditions =</span> <span class="st">"conditions_xmap.csv"</span>)
+<span class="co"># "conditions" argument is a path to a user-prepared csv file.</span></code></pre></div>
 <table class="table">
 <caption>Tab. 3: <span id="tbl-map-files"></span>Required files to retrieve mapping data</caption>
 <thead><tr class="header">
@@ -221,12 +221,12 @@
 </tr></thead>
 <tbody>
 <tr class="odd">
-<td align="left">*_map.txt</td>
-<td align="left">ASCII converted mapping data</td>
+<td align="left">*_map.txt or data*.csv</td>
+<td align="left">ASCII converted mapping data (e.g., 1_map.txt, 2_map.txt,… or data001.csv, data002.csv, …)</td>
 </tr>
 <tr class="even">
 <td align="left">*.cnd</td>
-<td align="left">Analytical conditions: element name, dwell time, probe current, step size, pixel size, and coordinates</td>
+<td align="left">Analytical conditions: element name, dwell time, probe current, step size, pixel size, and coordinates. File names must corresponds to mapping data (e.g, 1_map.cnd, data001.cnd)</td>
 </tr>
 </tbody>
 </table>

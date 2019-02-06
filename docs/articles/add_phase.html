@@ -38,7 +38,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">qntmap</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.3.2</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.3.2.9999</span>
       </span>
     </div>
 
@@ -106,7 +106,7 @@
       <h1>Add phases after EPMA analysis</h1>
                         <h4 class="author">YASUMOTO Atsushi</h4>
             
-            <h4 class="date">2019-01-25</h4>
+            <h4 class="date">2019-02-06</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/atusy/qntmap/blob/master/vignettes/add_phase.Rmd"><code>vignettes/add_phase.Rmd</code></a></small>
       <div class="hidden name"><code>add_phase.Rmd</code></div>
@@ -129,53 +129,53 @@
 <div id="load-package" class="section level2">
 <h2 class="hasAnchor">
 <a href="#load-package" class="anchor"></a>Load package</h2>
-<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb1-1" title="1"><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/library">library</a></span>(qntmap)</a></code></pre></div>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/library">library</a></span>(qntmap)</code></pre></div>
 </div>
 <div id="move-to-working-directory" class="section level2">
 <h2 class="hasAnchor">
 <a href="#move-to-working-directory" class="anchor"></a>Move to working directory</h2>
-<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb2-1" title="1">wd &lt;-<span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/tempfile">tempdir</a></span>() <span class="co"># Arbitrary</span></a>
-<a class="sourceLine" id="cb2-2" title="2"><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/getwd">setwd</a></span>(wd)</a></code></pre></div>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">wd &lt;-<span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/tempfile">tempdir</a></span>() <span class="co"># Arbitrary</span>
+<span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/getwd">setwd</a></span>(wd)</code></pre></div>
 </div>
 <div id="copy-example-data" class="section level2">
 <h2 class="hasAnchor">
 <a href="#copy-example-data" class="anchor"></a>Copy example data</h2>
 <p>or any original data.</p>
-<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb3-1" title="1"><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/files">file.copy</a></span>(</a>
-<a class="sourceLine" id="cb3-2" title="2">  <span class="dt">from =</span> <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/system.file">system.file</a></span>(<span class="st">'extdata'</span>, <span class="st">'minimal'</span>, <span class="dt">package =</span> <span class="st">'qntmap'</span>),</a>
-<a class="sourceLine" id="cb3-3" title="3">  <span class="dt">to =</span> wd,</a>
-<a class="sourceLine" id="cb3-4" title="4">  <span class="dt">recursive =</span> <span class="ot">TRUE</span></a>
-<a class="sourceLine" id="cb3-5" title="5">)</a>
-<a class="sourceLine" id="cb3-6" title="6"><span class="co">#&gt; [1] TRUE</span></a></code></pre></div>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/files">file.copy</a></span>(
+  <span class="dt">from =</span> <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/system.file">system.file</a></span>(<span class="st">'extdata'</span>, <span class="st">'minimal'</span>, <span class="dt">package =</span> <span class="st">'qntmap'</span>),
+  <span class="dt">to =</span> wd,
+  <span class="dt">recursive =</span> <span class="ot">TRUE</span>
+)
+<span class="co">#&gt; [1] TRUE</span></code></pre></div>
 <p><code>TRUE</code> indicates files are successfully copied. Check if really files are copied by <code><a href="https://www.rdocumentation.org/packages/base/topics/list.files">dir()</a></code>.</p>
-<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb4-1" title="1"><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/list.files">dir</a></span>(<span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/file.path">file.path</a></span>(wd, <span class="st">'minimal'</span>), <span class="dt">recursive =</span> <span class="ot">TRUE</span>, <span class="dt">all.files =</span> <span class="ot">TRUE</span>)</a>
-<a class="sourceLine" id="cb4-2" title="2"><span class="co">#&gt;  [1] ".map/1/0.cnd"        ".map/1/1_map.txt"    ".map/1/1.cnd"       </span></a>
-<a class="sourceLine" id="cb4-3" title="3"><span class="co">#&gt;  [4] ".map/1/2_map.txt"    ".map/1/2.cnd"        ".qnt/.cnd/elemw.cnd"</span></a>
-<a class="sourceLine" id="cb4-4" title="4"><span class="co">#&gt;  [7] ".qnt/bgm.qnt"        ".qnt/bgp.qnt"        ".qnt/elem.qnt"      </span></a>
-<a class="sourceLine" id="cb4-5" title="5"><span class="co">#&gt; [10] ".qnt/elint.qnt"      ".qnt/mes.qnt"        ".qnt/net.qnt"       </span></a>
-<a class="sourceLine" id="cb4-6" title="6"><span class="co">#&gt; [13] ".qnt/pkint.qnt"      ".qnt/stg.qnt"        ".qnt/wt.qnt"        </span></a>
-<a class="sourceLine" id="cb4-7" title="7"><span class="co">#&gt; [16] "conditions_qnt.csv"  "conditions_xmap.csv" "README.md"</span></a></code></pre></div>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/list.files">dir</a></span>(<span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/file.path">file.path</a></span>(wd, <span class="st">'minimal'</span>), <span class="dt">recursive =</span> <span class="ot">TRUE</span>, <span class="dt">all.files =</span> <span class="ot">TRUE</span>)
+<span class="co">#&gt;  [1] ".map/1/0.cnd"        ".map/1/1_map.txt"    ".map/1/1.cnd"       </span>
+<span class="co">#&gt;  [4] ".map/1/2_map.txt"    ".map/1/2.cnd"        ".qnt/.cnd/elemw.cnd"</span>
+<span class="co">#&gt;  [7] ".qnt/bgm.qnt"        ".qnt/bgp.qnt"        ".qnt/elem.qnt"      </span>
+<span class="co">#&gt; [10] ".qnt/elint.qnt"      ".qnt/mes.qnt"        ".qnt/net.qnt"       </span>
+<span class="co">#&gt; [13] ".qnt/pkint.qnt"      ".qnt/stg.qnt"        ".qnt/wt.qnt"        </span>
+<span class="co">#&gt; [16] "conditions_qnt.csv"  "conditions_xmap.csv" "README.md"</span></code></pre></div>
 </div>
 <div id="specify-directories-containing-data" class="section level2">
 <h2 class="hasAnchor">
 <a href="#specify-directories-containing-data" class="anchor"></a>Specify directories containing data</h2>
-<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb5-1" title="1">dir_map &lt;-<span class="st"> 'minimal/.map/1'</span></a>
-<a class="sourceLine" id="cb5-2" title="2">dir_qnt &lt;-<span class="st"> 'minimal/.qnt'</span></a></code></pre></div>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">dir_map &lt;-<span class="st"> 'minimal/.map/1'</span>
+dir_qnt &lt;-<span class="st"> 'minimal/.qnt'</span></code></pre></div>
 </div>
 <div id="load-data" class="section level2">
 <h2 class="hasAnchor">
 <a href="#load-data" class="anchor"></a>Load data</h2>
-<div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb6-1" title="1">xmap &lt;-<span class="st"> </span><span class="kw"><a href="../reference/read_xmap.html">read_xmap</a></span>(dir_map)</a>
-<a class="sourceLine" id="cb6-2" title="2">qnt &lt;-<span class="st"> </span><span class="kw"><a href="../reference/read_qnt.html">read_qnt</a></span>(dir_qnt)</a></code></pre></div>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">xmap &lt;-<span class="st"> </span><span class="kw"><a href="../reference/read_xmap.html">read_xmap</a></span>(dir_map)
+qnt &lt;-<span class="st"> </span><span class="kw"><a href="../reference/read_qnt.html">read_qnt</a></span>(dir_qnt)</code></pre></div>
 </div>
 <div id="check-quantified-data" class="section level2">
 <h2 class="hasAnchor">
 <a href="#check-quantified-data" class="anchor"></a>Check quantified data</h2>
 <p>In the original dataet, 20 spots are analyzed by EPMA on both olivine and quartz.</p>
-<div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb7-1" title="1"><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/table">table</a></span>(qnt<span class="op">$</span>cnd<span class="op">$</span>phase)</a>
-<a class="sourceLine" id="cb7-2" title="2"><span class="co">#&gt; </span></a>
-<a class="sourceLine" id="cb7-3" title="3"><span class="co">#&gt;  Ol Qtz </span></a>
-<a class="sourceLine" id="cb7-4" title="4"><span class="co">#&gt;  20  20</span></a></code></pre></div>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/table">table</a></span>(qnt<span class="op">$</span>cnd<span class="op">$</span>phase)
+<span class="co">#&gt; </span>
+<span class="co">#&gt;  Ol Qtz </span>
+<span class="co">#&gt;  20  20</span></code></pre></div>
 </div>
 <div id="modify-data" class="section level2">
 <h2 class="hasAnchor">
@@ -184,15 +184,15 @@
 <p>After <code><a href="../reference/read_qnt.html">read_qnt()</a></code> is performed, a file <code>phase_list0.csv</code> is created under working directory. This file consists of 3 columns <code>id</code>, <code>phase</code>, and <code>use</code>.</p>
 <p>Edit <strong>only</strong> <code>phase</code> and <code>use</code>. Do not edit <code>id</code>. If certain phases have large compositional variations, fill <code>phase</code> column with different names. (e.g., Ol_Fe and Ol_Mg for Fe-rich olivine and Mg-rich olivine). If certain analysis show bad results, fill <code>use</code> column with <code>FALSE</code>, otherwise <code>TRUE</code>.</p>
 <p>To do it on R, execute codes below. Be sure to specify a path to modified csv file to <code>phase_list</code> parameter of <code>read_qnt</code>. Also, <code>renew</code> parameter of <code>read_qnt</code> must be <code>TRUE</code>.</p>
-<div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb8-1" title="1">phase_list &lt;-<span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/utils/topics/read.table">read.csv</a></span>(<span class="st">'phase_list0.csv'</span>)</a>
-<a class="sourceLine" id="cb8-2" title="2">phase_list<span class="op">$</span>use[phase_list<span class="op">$</span>phase <span class="op">==</span><span class="st"> 'Qtz'</span>] &lt;-<span class="st"> </span><span class="ot">FALSE</span></a>
-<a class="sourceLine" id="cb8-3" title="3"><span class="kw"><a href="https://www.rdocumentation.org/packages/utils/topics/write.table">write.csv</a></span>(phase_list, <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/file.path">file.path</a></span>(dir_qnt, <span class="st">'phase_list_no_qtz.csv'</span>))</a>
-<a class="sourceLine" id="cb8-4" title="4">qnt &lt;-<span class="st"> </span><span class="kw"><a href="../reference/read_qnt.html">read_qnt</a></span>(dir_qnt, <span class="dt">phase_list =</span> <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/file.path">file.path</a></span>(dir_qnt, <span class="st">'phase_list_no_qtz.csv'</span>), <span class="dt">renew =</span> <span class="ot">TRUE</span>)</a></code></pre></div>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">phase_list &lt;-<span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/utils/topics/read.table">read.csv</a></span>(<span class="st">'phase_list0.csv'</span>)
+phase_list<span class="op">$</span>use[phase_list<span class="op">$</span>phase <span class="op">==</span><span class="st"> 'Qtz'</span>] &lt;-<span class="st"> </span><span class="ot">FALSE</span>
+<span class="kw"><a href="https://www.rdocumentation.org/packages/utils/topics/write.table">write.csv</a></span>(phase_list, <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/file.path">file.path</a></span>(dir_qnt, <span class="st">'phase_list_no_qtz.csv'</span>))
+qnt &lt;-<span class="st"> </span><span class="kw"><a href="../reference/read_qnt.html">read_qnt</a></span>(dir_qnt, <span class="dt">phase_list =</span> <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/file.path">file.path</a></span>(dir_qnt, <span class="st">'phase_list_no_qtz.csv'</span>), <span class="dt">renew =</span> <span class="ot">TRUE</span>)</code></pre></div>
 <p>After editing, only olivine is said to be quantified.</p>
-<div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb9-1" title="1"><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/table">table</a></span>(qnt<span class="op">$</span>cnd<span class="op">$</span>phase)</a>
-<a class="sourceLine" id="cb9-2" title="2"><span class="co">#&gt; </span></a>
-<a class="sourceLine" id="cb9-3" title="3"><span class="co">#&gt; Ol </span></a>
-<a class="sourceLine" id="cb9-4" title="4"><span class="co">#&gt; 20</span></a></code></pre></div>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/table">table</a></span>(qnt<span class="op">$</span>cnd<span class="op">$</span>phase)
+<span class="co">#&gt; </span>
+<span class="co">#&gt; Ol </span>
+<span class="co">#&gt; 20</span></code></pre></div>
 <p><img src="add_phase_files/figure-html/unnamed-chunk-3-1.png" width="672"></p>
 </div>
 </div>
@@ -205,17 +205,17 @@
 <div id="initialize-cluster-centers" class="section level3">
 <h3 class="hasAnchor">
 <a href="#initialize-cluster-centers" class="anchor"></a>Initialize cluster centers</h3>
-<div class="sourceCode" id="cb10"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb10-1" title="1">centers &lt;-<span class="st"> </span><span class="kw"><a href="../reference/find_centers.html">find_centers</a></span>(xmap, qnt)</a>
-<a class="sourceLine" id="cb10-2" title="2">centers</a>
-<a class="sourceLine" id="cb10-3" title="3"><span class="co">#&gt; # A tibble: 1 x 3</span></a>
-<a class="sourceLine" id="cb10-4" title="4"><span class="co">#&gt;   phase    Si    Mg</span></a>
-<a class="sourceLine" id="cb10-5" title="5"><span class="co">#&gt;   &lt;chr&gt; &lt;dbl&gt; &lt;dbl&gt;</span></a>
-<a class="sourceLine" id="cb10-6" title="6"><span class="co">#&gt; 1 Ol    4246. 5726.</span></a></code></pre></div>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">centers &lt;-<span class="st"> </span><span class="kw"><a href="../reference/find_centers.html">find_centers</a></span>(xmap, qnt)
+centers
+<span class="co">#&gt; # A tibble: 1 x 3</span>
+<span class="co">#&gt;   phase    Si    Mg</span>
+<span class="co">#&gt;   &lt;chr&gt; &lt;dbl&gt; &lt;dbl&gt;</span>
+<span class="co">#&gt; 1 Ol    4246. 5726.</span></code></pre></div>
 </div>
 <div id="compare-the-initial-centroids-with-x-ray-map-plotted-with-heatmap" class="section level3">
 <h3 class="hasAnchor">
 <a href="#compare-the-initial-centroids-with-x-ray-map-plotted-with-heatmap" class="anchor"></a>Compare the initial centroids with X-ray map plotted with heatmap</h3>
-<div class="sourceCode" id="cb11"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb11-1" title="1"><span class="kw"><a href="../reference/plot.html">plot</a></span>(xmap, <span class="st">'Si'</span>, <span class="dt">interactive =</span> <span class="ot">FALSE</span>)</a></code></pre></div>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw"><a href="../reference/plot.html">plot</a></span>(xmap, <span class="st">'Si'</span>, <span class="dt">interactive =</span> <span class="ot">FALSE</span>)</code></pre></div>
 <p><img src="add_phase_files/figure-html/unnamed-chunk-5-1.png" width="672"></p>
 <p>In this case, an analysist will notice there is something other than olivine. Let’s mouse over the <strong>interactive map</strong> and one will see one of the coordinates of quartz (e.g., x = 18, y = 28). Keep it on your note.</p>
 </div>
@@ -226,14 +226,14 @@
 <h4 class="hasAnchor">
 <a href="#on-r" class="anchor"></a>on R</h4>
 <p>Add initial centers by using <code>add_centers</code>.</p>
-<div class="sourceCode" id="cb12"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb12-1" title="1">centers &lt;-<span class="st"> </span><span class="kw"><a href="../reference/add_centers.html">add_centers</a></span>(<span class="dt">centers =</span> centers, <span class="dt">xmap =</span> xmap, <span class="dt">x =</span> <span class="dv">18</span>, <span class="dt">y =</span> <span class="dv">28</span>, <span class="dt">p =</span> <span class="st">'Qtz'</span>)</a></code></pre></div>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">centers &lt;-<span class="st"> </span><span class="kw"><a href="../reference/add_centers.html">add_centers</a></span>(<span class="dt">centers =</span> centers, <span class="dt">xmap =</span> xmap, <span class="dt">x =</span> <span class="dv">18</span>, <span class="dt">y =</span> <span class="dv">28</span>, <span class="dt">p =</span> <span class="st">'Qtz'</span>)</code></pre></div>
 <p>Then, Qtz is properly added to <code>centers</code>.</p>
-<div class="sourceCode" id="cb13"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb13-1" title="1"><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/print">print</a></span>(centers)</a>
-<a class="sourceLine" id="cb13-2" title="2"><span class="co">#&gt; # A tibble: 2 x 3</span></a>
-<a class="sourceLine" id="cb13-3" title="3"><span class="co">#&gt;   phase     Si    Mg</span></a>
-<a class="sourceLine" id="cb13-4" title="4"><span class="co">#&gt; * &lt;chr&gt;  &lt;dbl&gt; &lt;dbl&gt;</span></a>
-<a class="sourceLine" id="cb13-5" title="5"><span class="co">#&gt; 1 Ol     4246. 5726.</span></a>
-<a class="sourceLine" id="cb13-6" title="6"><span class="co">#&gt; 2 Qtz   10126     0</span></a></code></pre></div>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/print">print</a></span>(centers)
+<span class="co">#&gt; # A tibble: 2 x 3</span>
+<span class="co">#&gt;   phase     Si    Mg</span>
+<span class="co">#&gt; * &lt;chr&gt;  &lt;dbl&gt; &lt;dbl&gt;</span>
+<span class="co">#&gt; 1 Ol     4246. 5726.</span>
+<span class="co">#&gt; 2 Qtz   10126     0</span></code></pre></div>
 </div>
 <div id="on-spreadsheet-program-r" class="section level4">
 <h4 class="hasAnchor">
@@ -251,38 +251,38 @@
 <h3 class="hasAnchor">
 <a href="#cluster-and-quantify" class="anchor"></a>Cluster and quantify</h3>
 <p>As Qtz is not quantified during spot analysis, calibration curves for Qtz is substituted by results of regression analysis without considering different phases. Try “<a href="#quasi-calibrations">Quasi-calibrations</a>” in case phases not quantified have known and constant chemical compositions.</p>
-<div class="sourceCode" id="cb14"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb14-1" title="1">cluster &lt;-<span class="st"> </span><span class="kw"><a href="../reference/cluster_xmap.html">cluster_xmap</a></span>(xmap, centers)</a>
-<a class="sourceLine" id="cb14-2" title="2">qmap &lt;-<span class="st"> </span><span class="kw"><a href="../reference/quantify.html">quantify</a></span>(xmap, qnt, cluster)</a></code></pre></div>
-<div class="sourceCode" id="cb15"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb15-1" title="1"><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/summary">summary</a></span>(cluster)</a>
-<a class="sourceLine" id="cb15-2" title="2"><span class="co">#&gt; [1] 0.90005667 0.09994333</span></a>
-<a class="sourceLine" id="cb15-3" title="3"><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/summary">summary</a></span>(qmap)</a>
-<a class="sourceLine" id="cb15-4" title="4"><span class="co">#&gt;   Element  Min. 1st Qu. Median   Mean 3rd Qu.   Max.</span></a>
-<a class="sourceLine" id="cb15-5" title="5"><span class="co">#&gt; 1    SiO2 40.54   42.49  42.97  48.69   43.52 103.91</span></a>
-<a class="sourceLine" id="cb15-6" title="6"><span class="co">#&gt; 2     MgO  0.00   56.46  57.10  51.49   57.68  59.87</span></a>
-<a class="sourceLine" id="cb15-7" title="7"><span class="co">#&gt; 3   Total 96.43   99.46 100.18 100.18  100.88 104.37</span></a>
-<a class="sourceLine" id="cb15-8" title="8"><span class="co">#&gt; </span></a>
-<a class="sourceLine" id="cb15-9" title="9"><span class="co">#&gt; Note that Total is not sum each column</span></a></code></pre></div>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">cluster &lt;-<span class="st"> </span><span class="kw"><a href="../reference/cluster_xmap.html">cluster_xmap</a></span>(xmap, centers)
+qmap &lt;-<span class="st"> </span><span class="kw"><a href="../reference/quantify.html">quantify</a></span>(xmap, qnt, cluster)</code></pre></div>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/summary">summary</a></span>(cluster)
+<span class="co">#&gt; [1] 0.90005667 0.09994333</span>
+<span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/summary">summary</a></span>(qmap)
+<span class="co">#&gt;   Element  Min. 1st Qu. Median   Mean 3rd Qu.   Max.</span>
+<span class="co">#&gt; 1    SiO2 40.54   42.49  42.97  48.69   43.52 103.91</span>
+<span class="co">#&gt; 2     MgO  0.00   56.46  57.10  51.49   57.68  59.87</span>
+<span class="co">#&gt; 3   Total 96.43   99.46 100.18 100.18  100.88 104.37</span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt; Note that Total is not sum each column</span></code></pre></div>
 <div id="quasi-calibrations" class="section level4">
 <h4 class="hasAnchor">
 <a href="#quasi-calibrations" class="anchor"></a>Quasi-calibrations</h4>
 <p>In case phases without spot analysis have known chemical compositions, their calibration curves can be calculated by specifying their chemical compositions in csv format.</p>
 <p>For example, prepare a csv file, and specify it to <code>fix</code> parameter of <code><a href="../reference/quantify.html">quantify()</a></code>.</p>
-<div class="sourceCode" id="cb16"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb16-1" title="1">csv &lt;-<span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/paste">paste</a></span>(</a>
-<a class="sourceLine" id="cb16-2" title="2">    <span class="st">'phase, element, wt'</span>,</a>
-<a class="sourceLine" id="cb16-3" title="3">    <span class="st">'Qtz,   SiO2,      100'</span>,</a>
-<a class="sourceLine" id="cb16-4" title="4">    <span class="dt">sep =</span> <span class="st">"</span><span class="ch">\n</span><span class="st">"</span></a>
-<a class="sourceLine" id="cb16-5" title="5">  )</a>
-<a class="sourceLine" id="cb16-6" title="6"><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/cat">cat</a></span>(csv)</a>
-<a class="sourceLine" id="cb16-7" title="7"><span class="co">#&gt; phase, element, wt</span></a>
-<a class="sourceLine" id="cb16-8" title="8"><span class="co">#&gt; Qtz,   SiO2,      100</span></a></code></pre></div>
-<div class="sourceCode" id="cb17"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb17-1" title="1">qmap2 &lt;-<span class="st"> </span><span class="kw"><a href="../reference/quantify.html">quantify</a></span>(xmap, qnt, cluster, <span class="dt">fix =</span> csv)</a>
-<a class="sourceLine" id="cb17-2" title="2"><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/summary">summary</a></span>(qmap2)</a>
-<a class="sourceLine" id="cb17-3" title="3"><span class="co">#&gt;   Element  Min. 1st Qu. Median   Mean 3rd Qu.   Max.</span></a>
-<a class="sourceLine" id="cb17-4" title="4"><span class="co">#&gt; 1    SiO2 40.54   42.49  42.97  48.54   43.52 102.41</span></a>
-<a class="sourceLine" id="cb17-5" title="5"><span class="co">#&gt; 2     MgO  0.00   56.46  57.10  51.49   57.68  59.87</span></a>
-<a class="sourceLine" id="cb17-6" title="6"><span class="co">#&gt; 3   Total 96.43   99.34 100.04 100.03  100.73 104.37</span></a>
-<a class="sourceLine" id="cb17-7" title="7"><span class="co">#&gt; </span></a>
-<a class="sourceLine" id="cb17-8" title="8"><span class="co">#&gt; Note that Total is not sum each column</span></a></code></pre></div>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">csv &lt;-<span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/paste">paste</a></span>(
+    <span class="st">'phase, oxide, wt'</span>,
+    <span class="st">'Qtz,   SiO2,      100'</span>,
+    <span class="dt">sep =</span> <span class="st">"</span><span class="ch">\n</span><span class="st">"</span>
+  )
+<span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/cat">cat</a></span>(csv)
+<span class="co">#&gt; phase, oxide, wt</span>
+<span class="co">#&gt; Qtz,   SiO2,      100</span></code></pre></div>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">qmap2 &lt;-<span class="st"> </span><span class="kw"><a href="../reference/quantify.html">quantify</a></span>(xmap, qnt, cluster, <span class="dt">fix =</span> csv)
+<span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/summary">summary</a></span>(qmap2)
+<span class="co">#&gt;   Element  Min. 1st Qu. Median   Mean 3rd Qu.   Max.</span>
+<span class="co">#&gt; 1    SiO2 40.54   42.49  42.97  48.54   43.52 102.41</span>
+<span class="co">#&gt; 2     MgO  0.00   56.46  57.10  51.49   57.68  59.87</span>
+<span class="co">#&gt; 3   Total 96.43   99.34 100.04 100.03  100.73 104.37</span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt; Note that Total is not sum each column</span></code></pre></div>
 <p>Of course, <code>csv</code> parameter can be a path to a csv file, unlike the above example, which gave csv data the <code>csv</code> parameter.</p>
 </div>
 </div>

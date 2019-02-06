@@ -28,6 +28,8 @@
 
 ## Bug fix
 
+- Calculation of standard errors for compositions of pixels were wrong.
+
 # qntmap 0.3.2
 
 ## Major changes

@@ -27,7 +27,7 @@ See \href{#multi-phase-pixels}{"Multi-phase pixels"} section for details.}
 \item{fix}{A path to the file specifying chemical compositions of
 some elements in some phases (default: \code{NULL}).}
 
-\item{se}{\code{FALSE} in default.
+\item{se}{\code{FALSE} in default, and is forced when \code{fix} is specified.
 \code{TRUE} calculates standard errors, but require large memories.}
 
 \item{saving}{\code{TRUE} (default) saves the results into \code{qntmap} directory under

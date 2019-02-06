@@ -149,33 +149,46 @@
     <div id="qntmap-0-3-2-9999" class="section level1">
 <h1 class="page-header">
 <a href="#qntmap-0-3-2-9999" class="anchor"></a>qntmap 0.3.2.9999</h1>
+<div id="breaking-changes" class="section level2">
+<h2 class="hasAnchor">
+<a href="#breaking-changes" class="anchor"></a>Breaking changes</h2>
+<ul>
+<li>
+<code><a href="../reference/quantify.html">quantify()</a></code> no more calculates standard errors by default. This is to save time and memory usage. Set <code>se = TRUE</code> to calculate the errors.</li>
+<li>Format of “params.csv” created by <code><a href="../reference/quantify.html">quantify()</a></code> is changed.
+<ul>
+<li>Column “elem” is renamed to “oxide”</li>
+<li>Column “elint” is renamed to “element”</li>
+<li>Columns “*_se" are removed.</li>
+</ul>
+</li>
+</ul>
+</div>
 <div id="new-features" class="section level2">
 <h2 class="hasAnchor">
 <a href="#new-features" class="anchor"></a>New features</h2>
 <ul>
 <li>
-<code><a href="../reference/quantify.html">quantify()</a></code> no more calculates standard errors by default. This is to save time and memory usage. Set <code>se = TRUE</code> to calculate the errors.</li>
-<li>
 <p><code><a href="../reference/quantify.html">quantify()</a></code> and <code><a href="../reference/tidy_epma.html">tidy_epma()</a></code> supports maps and spots analyzing inequal elements.</p>
 <table>
 <thead><tr class="header">
-<th align="left">Example</th>
+<th align="center">Example</th>
 <th align="left">Mapped elements</th>
 <th align="left">Spot elements</th>
 </tr></thead>
 <tbody>
 <tr class="odd">
-<td align="left">A</td>
+<td align="center">A</td>
 <td align="left">Si, <strong>Ti</strong>, Mg</td>
 <td align="left">Si, Mg</td>
 </tr>
 <tr class="even">
-<td align="left">B</td>
+<td align="center">B</td>
 <td align="left">Si, Mg</td>
 <td align="left">Si, <strong>Ti</strong>, Mg</td>
 </tr>
 <tr class="odd">
-<td align="left">C</td>
+<td align="center">C</td>
 <td align="left">Si, <strong>Ti</strong>, Mg</td>
 <td align="left">Si, Mg, <strong>Ca</strong>
 </td>
@@ -196,6 +209,9 @@
 <div id="bug-fix" class="section level2">
 <h2 class="hasAnchor">
 <a href="#bug-fix" class="anchor"></a>Bug fix</h2>
+<ul>
+<li>Calculation of standard errors for compositions of pixels were wrong.</li>
+</ul>
 </div>
 </div>
     <div id="qntmap-0-3-2" class="section level1">
@@ -387,9 +403,9 @@
 <h1 class="page-header">
 <a href="#qntmap-0-2-0" class="anchor"></a>qntmap 0.2.0</h1>
 <p>Check NEWS as 0.2.0 have lots of breaking changes.</p>
-<div id="breaking-changes" class="section level2">
+<div id="breaking-changes-1" class="section level2">
 <h2 class="hasAnchor">
-<a href="#breaking-changes" class="anchor"></a>Breaking changes</h2>
+<a href="#breaking-changes-1" class="anchor"></a>Breaking changes</h2>
 <ul>
 <li>Renamed functions to follow <code>verb_hoge</code> style. This leads some functions to be deprecated or defunct. See “Summary of defunct, deprecated, and unexported functions”.</li>
 <li>Unexported <code>cipois</code> and <code>flag0</code>.</li>
