@@ -15,7 +15,7 @@
 #'   A path to the file specifying chemical compositions of 
 #'   some elements in some phases (default: `NULL`).
 #' @param se 
-#'   `FALSE` in default. 
+#'   `FALSE` in default, and is forced when `fix` is specified.
 #'   `TRUE` calculates standard errors, but require large memories.
 #' @param saving 
 #'   `TRUE` (default) saves the results into `qntmap` directory under 
@@ -53,8 +53,8 @@ quantify <- function (
     ))
   )
 
-  params <- if (is.null(fix)) list() else fread(fix)
-  
+  se <- if(is.null(fix)) se else FALSE                  # © 2018 JAMSTEC
+  params <- if (is.null(fix)) list() else fread(fix)    # © 2018 JAMSTEC
   TF_inherit_params <- check_ABG(params, xmap, cluster) # © 2018 JAMSTEC
   
   X <- as.data.frame(cluster$membership)
@@ -63,7 +63,7 @@ quantify <- function (
   if (TF_inherit_params) {                              # © 2018 JAMSTEC
     AG <- fix_AG(params)                                # © 2018 JAMSTEC
     B <- fix_B(params)                                  # © 2018 JAMSTEC
-    nm <- setNames(params$element, params$elint)        # © 2018 JAMSTEC
+    nm <- setNames(params$oxide, params$element)        # © 2018 JAMSTEC
     nm <- nm[!duplicated(nm)]                           # © 2018 JAMSTEC
   } else {
     # Tidy compilation of epma data
@@ -138,10 +138,9 @@ check_ABG <- function (params, xmap, cls) {
   
   # FALSE if only fixing product of alpha and beta
   nm <- names(params)
-  nm_common <- c("element", "phase")
+  nm_common <- c("oxide", "phase")
   nm_wt <- c("wt")
-  nm_AGB <- 
-    c("elint", "alpha", "beta", "gamma", "alpha_se", "beta_se", "gamma_se")
+  nm_AGB <- c("element", "alpha", "beta", "gamma")
   
   # FALSE if parameters are only fixed by wt
   if ((!all(nm_AGB %in% nm)) & (all(c(nm_common, nm_wt) %in% nm))) 
@@ -151,25 +150,26 @@ check_ABG <- function (params, xmap, cls) {
   col_missing <- setdiff(c(nm_AGB, nm_common), names(params))
   if(length(col_missing) > 0)
     stop(
-      "Trying to fix parameters, ",
-      "but following columns are missing in the input file",
+      "Tried to fix parameters, ",
+      "but there are missing columns in the input file: ",
       paste(col_missing, collapse = ", ")
     )
 
   # Check if all elements are quantified
-  elint_missing <- expand.grid(
+  element_missing <- expand.grid(
     phase = unique(cls$cluster), 
-    elint = setdiff(names(xmap), .electron),
+    element = setdiff(names(xmap), .electron),
     stringsAsFactors = FALSE
   ) %>>%
-    anti_join(params, by = c("phase", "elint")) %>>%
-    (elint)
+    anti_join(params, by = c("phase", "element")) %>>%
+    (element) %>>%
+    unique
   
-  if(length(elint_missing) > 0L)
+  if(length(element_missing) > 0L)
     stop(
-      "Trying to fix parameters, ",
-      "but followings are missing in the column elint from the input file:",
-      paste(elint_missing, collapse = ", ")
+      "Tried to fix parameters, ",
+      "but there are missing elements in the input file: ",
+      paste(element_missing, collapse = ", ")
     )
   
   return(TRUE)

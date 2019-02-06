@@ -1,10 +1,17 @@
 # qntmap 0.3.2.9999
 
-## New features
+## Breaking changes
 
 - `quantify()` no more calculates standard errors by default.
   This is to save time and memory usage.
   Set `se = TRUE` to calculate the errors.
+- Format of "params.csv" created by `quantify()` is changed.
+    - Column "elem" is renamed to "oxide"
+    - Column "elint" is renamed to "element"
+    - Columns "*_se" are removed.
+
+## New features
+
 - `quantify()` and `tidy_epma()` supports maps and spots analyzing inequal elements.
     
     | Example | Mapped elements | Spot elements   |
