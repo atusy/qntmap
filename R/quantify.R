@@ -1,8 +1,5 @@
 #' Quantify X-ray maps
 #'
-#' `quantify` calculates mass concentrations [wt%]. 
-#' `quantify2()` further calculates standard errors, but is soft deprecated.
-#'
 #' @param xmap `qm_xmap` class object returned by [`read_xmap()`].
 #' @param qnt `qm_qnt` class object returned by [`read_qnt()`].
 #' @param cluster `qm_cluster` class object returned by [`cluster_xmap()`].

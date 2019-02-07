@@ -34,6 +34,5 @@ some elements in some phases (default: \code{NULL}).}
 the directory \code{xmap} is read from. \code{FALSE} does not save.`}
 }
 \description{
-\code{quantify} calculates mass concentrations \link{wt\%}.
-\code{quantify2()} further calculates standard errors, but is soft deprecated.
+Quantify X-ray maps
 }
