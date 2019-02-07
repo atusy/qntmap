@@ -53,3 +53,16 @@ lm_B <- function(epma, ...) {
     fit = NULL, k = NULL
   )
 }
+
+# © 2018 JAMSTEC
+#' Fix parameters: alpha, beta, and gamma
+#' @noRd
+#' @param params tidy parameters
+#' 
+#' @importFrom dplyr transmute
+fix_B <- function (params) {
+  if(!is.null(params$stage))
+    stop("Cannot inherit parameters from a file containing stage column.")
+  
+  distinct(transmute(params, elm = oxide, stg = "11", b = beta))
+}

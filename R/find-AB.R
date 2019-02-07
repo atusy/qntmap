@@ -75,8 +75,7 @@ expand_AB <- function(AB, stg) {
     map(map, select, -stg)
 }
 
-
-
+# © 2018 JAMSTEC
 #' Fix parameters alpha, beta, and gamma based on given chemical compositions.
 #' @noRd
 #' 
@@ -106,6 +105,7 @@ fix_AB_by_wt <- function(xmap, cls, params) {
     rename(elm = oxide, phase3 = phase)
 }
 
+# © 2018 JAMSTEC
 #' Join results of find_AB and fix_AB_by_wt
 #' @noRd
 #' @param AB returned by find_AB

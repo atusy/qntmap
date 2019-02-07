@@ -51,3 +51,13 @@ lm_AG <- function(epma, ...) {
     fit = NULL
   )
 }
+
+# © 2018 JAMSTEC
+#' Fix parameters: alpha, beta, and gamma
+#' @noRd
+#' @param params tidy parameters
+#' 
+#' @importFrom dplyr transmute
+fix_AG <- function (params) {
+  transmute(params, elm = oxide, phase3 = phase, a = alpha, g = gamma)
+}
