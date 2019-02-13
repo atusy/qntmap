@@ -16,7 +16,7 @@ params <- tidy_params(find_AG(epma), find_B(epma), qnt)
 
 
 
-"check_ABG()"
+context("quantify.R - check_ABG()") # © 2018 JAMSTEC
 
 test_that("check_ABG() returns FALSE", {
   # when params = list()
@@ -68,7 +68,7 @@ test_that("quantify() returns a qntmap class object", {
 
 "quantify(se = FALSE)"
 
-test_that("quantify() doubles result if alpha is doubled by fix parameter", {
+test_that("quantify() doubles result if alpha is doubled by fix parameter", { # © 2018 JAMSTEC
   .k <- 2L
   .params <- params
   .params$alpha <- params$alpha * .k
@@ -88,7 +88,7 @@ test_that("quantify() doubles result if alpha is doubled by fix parameter", {
 
 
 
-test_that("csv given to fix parameter does nothing if all values in column are NA", {
+test_that("csv given to fix parameter does nothing if all values in column are NA", { # © 2018 JAMSTEC
   .params <- params
   .params[
     c("elint", "alpha", "beta", "gamma", "alpha_se", "beta_se", "gamma_se")
