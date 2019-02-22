@@ -1,4 +1,4 @@
-# qntmap 0.3.2.9999
+# qntmap 0.3.3
 
 ## Breaking changes
 

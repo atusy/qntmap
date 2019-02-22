@@ -40,7 +40,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="index.html">qntmap</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.3.2.9999</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.3.3</span>
       </span>
     </div>
 
@@ -119,7 +119,7 @@
 <h1 class="hasAnchor">
 <a href="#installation" class="anchor"></a>Installation</h1>
 <p>Copy &amp; paste a following command to R.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/source">source</a></span>(<span class="st">"https://install-github.me/atusy/qntmap"</span>)</code></pre></div>
+<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb1-1" data-line-number="1"><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/source">source</a></span>(<span class="st">"https://install-github.me/atusy/qntmap"</span>)</a></code></pre></div>
 </div>
 <div id="how-to" class="section level1">
 <h1 class="hasAnchor">
@@ -157,8 +157,11 @@
 </li>
 <li>Identify phases in comment
 <ul>
-<li>Give same comments on the same phase with the similar compositions.</li>
+<li>Give same comments on the same phase with the similar compositions.
+<ul>
 <li>e.g., quartz, plagioclase, garnet-core, garnet-rim, …</li>
+</ul>
+</li>
 <li>An alternative is to use external file later.</li>
 </ul>
 </li>
@@ -319,8 +322,8 @@
 <h3 class="hasAnchor">
 <a href="#interactive-mode" class="anchor"></a>Interactive mode</h3>
 <p>Follow instructions shown by running the following code.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/library">library</a></span>(qntmap)
-<span class="kw"><a href="reference/qntmap.html">qntmap</a></span>()</code></pre></div>
+<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb2-1" data-line-number="1"><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/library">library</a></span>(qntmap)</a>
+<a class="sourceLine" id="cb2-2" data-line-number="2"><span class="kw"><a href="reference/qntmap.html">qntmap</a></span>()</a></code></pre></div>
 <p>As a result, phase identification result is saved in “<code>clustering</code>” directory and mass concentration data as csv files in “<code>qntmap</code>” directory both under the directory contaning mapping data.</p>
 <p>Note that interactive mode has limited functions. Use <a href="#manual-mode">manual mode</a> for full functionality.</p>
 </div>
