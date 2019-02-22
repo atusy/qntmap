@@ -1,5 +1,5 @@
 ---
-title: "Getting started with QntMap"
+title: "Basic procedure of analysis with qntmap"
 author: "Atsushi YASUMOTO"
 date: "`r Sys.Date()`"
 output: 
@@ -34,13 +34,9 @@ formals(read_xmap)$renew <-
   TRUE
 ```
 
-# Intro
+# Prerequisite
 
-This document introduces a basic procedure of analysis using `qntmap` package with example data.
-
-Prepare EPMA data following ["Read me"](https://qntmap.atusy.net/qntmap/#epma-analysis).
-
-See [doi:am-2018-6323CCBY](https://doi.org/10.2138/am-2018-6323CCBY) for implementations.
+Install `qntmap` package on [R](https://www.r-project.org/) and prepare EPMA data following ["Read me"](../index.html#epma-analysis).
 
 # Preparation
 
