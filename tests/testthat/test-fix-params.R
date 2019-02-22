@@ -1,3 +1,4 @@
+# © 2018 JAMSTEC
 context("fix-params.R")
 
 if(interactive()) setwd(here::here("tests/testthat"))
