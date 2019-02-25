@@ -7,6 +7,12 @@
 ## Major changes
 
 - Drastically improved performance of `plot()`
+- Clustering results will be saved as an RDS file, 
+  a dot-by-dot `png` image without legend, and 
+  a ggplot2 plot with legend saved as `svg`.
+    - The size of ggplot2 plot is set to A4 (297 mm * 420 mm), 
+      either horizontal or vertical which fits best to the plot.
+    - The legend used to be saved as a pie chart.
 
 # qntmap 0.3.3
 

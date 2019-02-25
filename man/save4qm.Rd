@@ -6,7 +6,7 @@
 \alias{save4qm.data.frame}
 \alias{save4qm.qm_cluster}
 \alias{save4qm.qntmap}
-\title{S3 generics to save returned values from functions in QntMap package.}
+\title{Save objects created by qntmap package.}
 \usage{
 save4qm(x, nm = "", saving = TRUE, ...)
 
@@ -19,43 +19,40 @@ save4qm(x, nm = "", saving = TRUE, ...)
 \method{save4qm}{qntmap}(x, nm, saving, ...)
 }
 \arguments{
-\item{x}{object to save}
+\item{x}{An object to save.}
 
-\item{nm}{name of object to save}
+\item{nm}{A name of object to be saved as.}
 
-\item{saving}{\code{TRUE} or \code{FALSE} to save result file(s).}
+\item{saving}{\code{TRUE} (default) or \code{FALSE} to save.}
 
-\item{...}{other arguments passed to class methods}
+\item{...}{Other arguments passed to class methods}
 }
 \value{
 \code{invisible(x)}
 }
 \description{
-S3 generics to save returned values from functions in QntMap package.
+Save objects created by qntmap package.
 }
 \section{\code{save4qm.default}}{
 
-A default method.
-This is a wrapper of \code{saveRDS} together with invisible return of \code{x}.
+A default method saves an object as a binary RDS file.
 }
 
 \section{\code{save4qm.data.frame}}{
 
-A method for \code{data.frame} class.
-This is a wrapper of \code{data.table::fwrite}
-together with invisible return of \code{x}.
+A data frame object is saved as a csv.
 }
 
 \section{\code{save4qm.qm_cluster}}{
 
-A method for \code{qm_cluster} class returned by
-\code{\link[=cluster_xmap]{cluster_xmap()}} or \code{\link[=group_cluster]{group_cluster()}}.
-Object is saved as RDS file and png file.
-The latter shows distribution of phases among a mapped area.
+A value returned by \code{\link[=cluster_xmap]{cluster_xmap()}} or \code{\link[=group_cluster]{group_cluster()}} is
+saved as binary RDS file, dot-by-dot png file, and as svg file with a legend.
+The png and svg files show distribution of phases among a mapped area.
 }
 
 \section{\code{save4qm.qntmap}}{
 
-A method for \code{qntmap} class returned by \code{qntmap()} or \code{quantify()}
+A value returned by \code{qntmap()} or \code{quantify()} is saved as
+a binary RDS file, and csv files.
 }
 

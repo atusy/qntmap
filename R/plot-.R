@@ -37,9 +37,12 @@ NULL
 #' 
 #' @export
 plot.qm_raster <- function(
-  x, y = setdiff(names(x), c('x', 'y'))[1], z = x[[y]],
+  x, 
+  y = setdiff(names(x), c('x', 'y'))[1], 
+  z = x[[y]],
   colors = c("viridis", "gray", "discrete"),
-  interactive = TRUE, ...
+  interactive = TRUE, 
+  ...
 ) {
   if (any(c('x', 'y') %nin% names(x))) 
     stop ('Column x or y not found')
