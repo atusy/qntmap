@@ -7,6 +7,10 @@
 ## Major changes
 
 - Drastically improved performance of `plot()`
+- Clustering results will be saved as an RDS file, 
+  a dot-by-dot `png` image without legend, and 
+  a ggplot2 plot with legend saved as `svg`.
+    - The legend used to be saved as a pie chart.
 
 # qntmap 0.3.3
 

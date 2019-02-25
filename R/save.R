@@ -39,8 +39,7 @@ save4qm.data.frame <- function(x, nm, saving, ...) {
 #' Object is saved as RDS file and png file.
 #' The latter shows distribution of phases among a mapped area.
 #' @importFrom png writePNG
-#' @importFrom grDevices dev.copy dev.off png
-#' @importFrom graphics pie
+#' @importFrom ggplot2 ggsave labs
 save4qm.qm_cluster <- function(x, nm, saving, ...) {
   #setting for output
   dir_out <- paste0(x$dir_map, '/clustering')
@@ -51,27 +50,23 @@ save4qm.qm_cluster <- function(x, nm, saving, ...) {
       paste(x$elements, collapse ='')
     )
 
+  .cls <- as.factor(x$cluster)
+  .img <- as_img(lookup$discrete(.cls), x$dims[1], x$dims[2])
+  
   #save modal map
-  writePNG(
-    image = array(
-      mycolors(n = k, dec = TRUE)[x$ytehat, ] / 255,
-      dim = c(x$dims, 3)
-    ),
-    target = paste0(nm, "_map.png")
-  )
+  writePNG(image = .img, target = paste0(nm, "_map.png"))
 
   #save result of classification
   saveRDS(x, paste0(nm, "_result.RDS"))
 
   #save legend
-  pie(
-    rep(1, k), 
-    labels = paste(1:k, colnames(x$membership), sep='.'), 
-    col = mycolors(n = k)
+  A4 <- c(210, 297)[order(x$dims)] # 1st = H and 2nd = W in millimeters
+  ggsave(
+    paste0(nm, "_legend.svg"), 
+    gg_img(.img, zlim = levels(.cls)) + labs(y = "Rows", x = "Columns"),
+    height = A4[[1]], width = A4[[2]], units = "mm"
   )
-  dev.copy(png, paste0(nm, "_legend.png"))
-  dev.off()
-  
+
   invisible(x)
 }
 
