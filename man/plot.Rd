@@ -9,19 +9,22 @@
 \title{Plot methods for \code{qntmap} package}
 \usage{
 \method{plot}{qm_raster}(x, y = setdiff(names(x), c("x", "y"))[1],
-  colors = c("viridis", "gray"), interactive = TRUE, ...)
+  z = x[[y]], colors = c("viridis", "gray", "discrete"),
+  interactive = TRUE, ...)
 
 \method{plot}{qm_xmap}(x, y = setdiff(names(x), c("x", "y"))[1], ...)
 
 \method{plot}{qntmap}(x, y = setdiff(names(x), c("x", "y"))[1], ...)
 
-\method{plot}{qm_cluster}(x, y = NULL, ...)
+\method{plot}{qm_cluster}(x, y = NULL, colors = "discrete", ...)
 }
 \arguments{
 \item{x}{A \code{qm_xmap} or \code{qntmap} class objects returned by
 \code{\link[=read_xmap]{read_xmap()}}, \code{\link[=quantify]{quantify()}}, or \code{\link[=qntmap]{qntmap()}}.}
 
 \item{y}{A string specifying a component of \code{x} to determine colors to fill the map.}
+
+\item{z}{A z-value for heatmap.}
 
 \item{colors}{A color pallete to use. Either "viridis" (default) or "gray".}
 
@@ -37,7 +40,7 @@ Mapping data (\code{qm_xmap} and \code{qm_qntmap} classes) are visualized by hea
 }
 \examples{
 # qm_raster class object
-d <- data.frame(x = sample.int(5), y = sample.int(5), fill = runif(5))
+d <- data.frame(expand.grid(x=1:5,y=1:5), fill = runif(5))
 class(d) <- c('qm_raster', class(d))
 plot(d, 'fill', interactive = FALSE)
 

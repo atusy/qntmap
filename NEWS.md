@@ -1,3 +1,9 @@
+# qntmap 0.3.4
+
+## Major changes
+
+- Drastically improved performance of `plot()`
+
 # qntmap 0.3.3
 
 ## Breaking changes

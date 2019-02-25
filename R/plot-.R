@@ -13,6 +13,8 @@
 #'   [read_xmap()], [quantify()], or [qntmap()].
 #' @param y
 #'   A string specifying a component of `x` to determine colors to fill the map.
+#' @param z
+#'   A z-value for heatmap.
 #' @param colors
 #'   A color pallete to use. Either "viridis" (default) or "gray".
 #' @param interactive
@@ -29,21 +31,28 @@ NULL
 #' @rdname plot
 #' @examples
 #' # qm_raster class object
-#' d <- data.frame(x = sample.int(5), y = sample.int(5), fill = runif(5))
+#' d <- data.frame(expand.grid(x=1:5,y=1:5), fill = runif(5))
 #' class(d) <- c('qm_raster', class(d))
 #' plot(d, 'fill', interactive = FALSE)
 #' 
 #' @export
 plot.qm_raster <- function(
-  x, y = setdiff(names(x), c('x', 'y'))[1], 
-  colors = c("viridis", "gray"),
+  x, y = setdiff(names(x), c('x', 'y'))[1], z = x[[y]],
+  colors = c("viridis", "gray", "discrete"),
   interactive = TRUE, ...
 ) {
   if (any(c('x', 'y') %nin% names(x))) 
     stop ('Column x or y not found')
   if (interactive) 
     return (plot_shiny(x, y, pcol = colors == "viridis", ...))
-  ggheat(x = x[["x"]], y = x[["y"]], z = x[[y]], y)
+  z_is_num <- is.numeric(z)
+  zlim <- `if`(z_is_num, range(z), levels(z))
+  colors <- match.arg(colors)
+  gg_img(
+    as_img(lookup[[colors]](z), max(x$y), max(x$x)), 
+    zlim = zlim, colors = colors,
+    ...
+  )
 }
 
 #' @rdname plot
@@ -98,11 +107,11 @@ plot.qntmap <- function(
 #' @importFrom dplyr mutate select
 #' @importFrom stats setNames
 #' @export
-plot.qm_cluster <- function(x, y = NULL, ...) {
+plot.qm_cluster <- function(x, y = NULL, colors =  "discrete", ...) {
   lapply(x$dims, seq) %>>%
     setNames(c("y", "x")) %>>%
     expand.grid %>>%
-    mutate(Phase = !!x$cluster) %>>%
+    mutate(Phase = as.factor(!!x$cluster)) %>>%
     select(x, y, Phase) %>>%
-    plot.qm_raster(y = "Phase", ...)
+    plot.qm_raster(y = "Phase", colors = "discrete", ...)
 } 

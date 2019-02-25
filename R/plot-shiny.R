@@ -104,7 +104,8 @@ server <- function(data) {
   
   function(input, output) {
 
-    colors <- reactive(`if`(input$pcol, "viridis", "gray"))
+    z_is_num <- reactive(is.numeric(data[[input$fill]]))
+    colors <- reactive(`if`(z_is_num(), `if`(input$pcol, "viridis", "gray"), "discrete"))
     
     output$hist <- renderPlot(gghist(
       data[[input$fill]], input[['min']], input[['max']], colors = colors()
@@ -132,12 +133,20 @@ server <- function(data) {
         }
     })
     
-    zlim <- reactive(ifelse(
-        is.na(c(input$min, input$max)), 
-        range(data[[input$fill]]), 
-        c(input$min, input$max)
+    zlim <- reactive(`if`(
+        z_is_num(),
+        ifelse(
+          is.na(c(input$min, input$max)), 
+          range(data[[input$fill]]), 
+          c(input$min, input$max)
+        ),
+        levels(data[[input$fill]])
       ))
-    scaled <- reactive(rescale(squish(data[[input$fill]], zlim())))
+    scaled <- reactive(`if`(
+        z_is_num(),
+        rescale(squish(data[[input$fill]], zlim())),
+        data[[input$fill]]
+      )) # as.numeric to allow factors
     img <- reactive(as_img(lookup[[colors()]](scaled()), range_y[2], range_x[2]))
 
     output$heatmap <- renderPlot(
