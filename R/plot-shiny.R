@@ -85,12 +85,13 @@ ui <- function(elm, selected = elm[[1]], pcol = TRUE) {fluidPage(sidebarLayout(
 
 #' @importFrom DT renderDT
 #' @importFrom dplyr everything mutate select summarize_if
-#' @importFrom scales squish
+#' @importFrom scales squish rescale
 #' @importFrom shiny 
 #'   htmlOutput reactive reactiveValues observeEvent 
 #'   renderPlot renderPrint renderUI req 
 #' @noRd
 server <- function(data) {
+  .margin <- c(-.5, .5)
   range_x <- range(data$x)
   range_y <- range(data$y)
 
@@ -111,7 +112,7 @@ server <- function(data) {
     
     output$mouseHelp <- renderPrint(cat(msg$mouseHelp[input$mouse]))
     
-    ranges <- reactiveValues(x = NULL, y = NULL)
+    ranges <- reactiveValues(x = range_x, y = range_y)
     
     observeEvent(input$click, {
       if (input$mouse == "Zoom")
@@ -119,24 +120,32 @@ server <- function(data) {
           ranges$x <- squish(c(input$brush$xmin, input$brush$xmax), range_x)
           ranges$y <- squish(c(input$brush$ymin, input$brush$ymax), range_y)
         } else {
-          ranges$x <- ranges$y <- NULL
+          ranges$x <- range_x
+          ranges$y <- range_y
         }
       if (input$mouse == "Move")
         if(!is.null(ranges$x)) {
-          ranges$x <- ranges$x + input$click$x - mean(ranges$x)
-          ranges$y <- ranges$y + input$click$y - mean(ranges$y)
+          temp <- range_x + c(1, -1) * (ranges$x[2] - ranges$x[1]) / 2
+          ranges$x <- ranges$x + squish(input$click$x, temp) - mean(ranges$x)
+          temp <- range_y + c(1, -1) * (ranges$y[2] - ranges$y[1]) / 2
+          ranges$y <- ranges$y + squish(input$click$y, temp) - mean(ranges$y)
         }
     })
-
-    hm <- reactive({
-      ggheat(
-        data[['x']], data[['y']], data[[input$fill]], nm = input$fill,
-        colors = colors(), range = c(input$min, input$max), coord = NULL
-      )
-    })
     
+    zlim <- reactive(ifelse(
+        is.na(c(input$min, input$max)), 
+        range(data[[input$fill]]), 
+        c(input$min, input$max)
+      ))
+    scaled <- reactive(rescale(squish(data[[input$fill]], zlim())))
+    img <- reactive(as_img(lookup[[colors()]](scaled()), range_y[2], range_x[2]))
+
     output$heatmap <- renderPlot(
-      hm() + coord_fixed(xlim = ranges$x, ylim = ranges$y),
+      gg_img(
+        img()[ranges$y[1]:ranges$y[2], ranges$x[1]:ranges$x[2], ], 
+        xlim = ranges$x + .margin, ylim = ranges$y + .margin,
+        zlim = zlim(), zname = input$fill, colors = colors()
+      ),
       height = reactive(input$height)
     )
     

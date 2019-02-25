@@ -23,7 +23,7 @@ gghist <- function (x, .min = NA_real_, .max = NA_real_, colors) {
     x <- x[.min <= x & x <= .max]
     list(
       geom_histogram(aes(x, fill = stat(x)), bins = nclass.FD(x)),
-      ggfill[[match.arg(colors)]]
+      scale_fill[[match.arg(colors)]]()
     )
   } else {
     list(
@@ -80,7 +80,7 @@ ggheat <- function (
     scale_y_reverse() +
     if (is.numeric(z)) {
       list(
-        ggfill[[match.arg(colors)]],
+        scale_fill[[match.arg(colors)]](),
         guides(fill = guide_colorbar(barheight = unit(1, "npc") - unit(4, "line")))
       )
     } else {
@@ -92,9 +92,71 @@ ggheat <- function (
 
 #' @noRd
 #' @importFrom ggplot2 scale_fill_viridis_c scale_fill_gradient
-ggfill <- list(
-    viridis = scale_fill_viridis_c(),
-    gray = scale_fill_gradient(low = "black", high = "white")
+scale_fill <- list(
+  gray = scale_fill_gradient,
+  viridis = scale_fill_viridis_c
+)
+
+formals(ggheat)$colors <- formals(gghist)$colors <- names(scale_fill)
+
+
+
+
+#' Color palette
+#' @importFrom scales
+#'   viridis_pal
+#'   gradient_n_pal
+#' @noRd
+palette <- lapply(list(
+    viridis = viridis_pal(
+        alpha = 1, begin = 0, end = 1, direction = 1, option = "D"
+      )(6)
+  ), gradient_n_pal)
+
+#' Look up colors based on palette
+#' @param x A numeric value ranging 0 to 1
+#' @noRd
+lookup <- list(
+    gray = identity,
+    viridis = function(x) t(col2rgb(palette$viridis(x))) / 255
   )
 
-formals(ggheat)$colors <- formals(gghist)$colors <- names(ggfill)
+#' Convert to array
+#' @param color A value returned by `lookup()`
+#' @param row Number of rows
+#' @param col Number of columns
+#' @noRd
+as_img <- function(color, row, col) array(color, dim = c(row, col, 3L))
+
+#' Choice of scales for filling
+#' @noRd
+scale_fill <- list(
+  gray = scale_fill_gradient, # low and high are fixed later
+  viridis = scale_fill_viridis_c
+)
+formals(scale_fill$gray)[c("low", "high")] <- list("black", "white")
+
+#' Raster image with ggplot2::annotation_raster
+#' @param img A value returned by `as_img`
+#' @param xlim,ylim,zlim Limits of x, y, and z
+#' @param zname Name of z (title of scale_fill)
+#' @param pal palette
+#' @noRd
+gg_img <- function(
+    img, 
+    xlim = c(0, NCOL(img) - 1) + 0.5, 
+    ylim = c(0, NROW(img) - 1) + 0.5, 
+    zlim = c(0, 1), 
+    zname = NULL, 
+    colors = c("viridis", "gray")
+  ) {
+  ggplot(data.frame(x = 0, y = 0, fill = zlim), aes(x, y, fill = fill)) +
+    geom_tile(size = 0) +
+    coord_fixed(xlim = xlim, ylim = ylim, expand = FALSE) +
+    annotation_raster(
+      img, xmin = xlim[1], xmax = xlim[2], ymin = -ylim[2], ymax = -ylim[1]
+    ) +
+    scale_y_reverse() +
+    scale_fill[[match.arg(colors)]](zname) +
+    `if`(is.numeric(zlim), guides(fill = guide_colorbar(barheight = unit(1, "npc") - unit(4, "line"))))
+}
