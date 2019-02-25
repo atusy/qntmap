@@ -51,38 +51,10 @@ flag0 <- function(...) {
   ) # do.call
 }
 
-#' color LUT
-#' @param palette 
-#'   A palette to be used as LUT: pcol (pseudocolor) or gray.
-#' @param n 
-#'   A number of required colors. 
-#'   A large `n` may return duplicates.
-#' @param dec 
-#'   `FALSE` (default) outputs a character vector in `#ffffff` format. 
-#'   `TRUE` outputs matrix with columns are R, G, and B, 
-#'   whose values are in decimals.
-#' @importFrom grDevices col2rgb
-#' @noRd
-mycolors <- function(palette = c('pcol', 'gray'), n = NULL, dec = FALSE) {
-  LUT <- colors[[match.arg(palette)]]
-  
-  output <- `if`(
-    is.null(n),
-    LUT, # all colors
-    LUT[seq(1L, length(LUT), length.out = n)] # n colors allowing duplicates
-  )
-  
-  # dec = TRUE returns a matrix like R=0,...; G=255,...; B=129,....
-  if(dec) return(`colnames<-`(t(col2rgb(output)), c('R', 'G', 'B')))
-
-  # dec = FALSE returns a vector like #000000, #000001,...
-  output
-}
-
 #' Square
 #' @param x input
 #' @noRd
-square <- function(x) x ^ 2L
+square <- function(x) x * x
 
 #' L2 norm
 #' @param x,y numeric
