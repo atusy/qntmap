@@ -61,6 +61,7 @@ Suggests:
     pkgdown,
     rmarkdown,
     roxygen2,
+    svglite,
     testthat
 URL: https://github.com/atusy/qntmap/
 BugReports: https://github.com/atusy/qntmap/issues
