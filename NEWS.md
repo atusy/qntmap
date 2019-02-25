@@ -1,5 +1,9 @@
 # qntmap 0.3.4
 
+## New features
+
+- `cluster_xmap` suports `...` argument, which is passed to `PoiClaClu::Classify`.
+
 ## Major changes
 
 - Drastically improved performance of `plot()`
