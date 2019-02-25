@@ -2,7 +2,11 @@
 
 ## New features
 
-- `cluster_xmap` suports `...` argument, which is passed to `PoiClaClu::Classify`.
+- `cluster_xmap()` passes `...` to `PoiClaClu::Classify()`, enabling
+    - training with selected data
+    - testing with selected data
+    - fine tuning on parameters
+    - and so on.
 
 ## Major changes
 
@@ -36,12 +40,6 @@
     | B       | Si, Mg          | Si, **Ti**, Mg  |
     | C       | Si, **Ti**, Mg  | Si, Mg, **Ca**  |
     
-- `cluster_xmap()` has dot-dot-dot argument to pass arguments to `PoiClaClu::Classify()`.
-  This feature helps
-    - train with limited data to save time
-    - separate data into train and test for cross validations
-    - and so on.
-
 ## Bug fix
 
 - Calculation of standard errors for compositions of pixels were wrong.
