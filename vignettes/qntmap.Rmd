@@ -1,12 +1,12 @@
 ---
-title: "Basic procedure of analysis with qntmap"
+title: "Get started with qntmap"
 author: "Atsushi YASUMOTO"
 date: "`r Sys.Date()`"
 output: 
   rmarkdown::html_vignette:
     df_print: kable
 vignette: >
-  %\VignetteIndexEntry{Getting started with QntMap}
+  %\VignetteIndexEntry{Get started with qntmap}
   %\VignetteEncoding{UTF-8}
   %\VignetteEngine{knitr::rmarkdown}
 ---
@@ -17,8 +17,8 @@ vignette: >
 wd <- tempdir()
 knitr::opts_chunk$set(
   root.dir = wd,
-  fig.width = 7,
-  fig.height = 7,
+  fig.width = 5,
+  fig.height = 5,
   collapse = TRUE,
   comment = "#>"
 )
@@ -101,8 +101,7 @@ The phases are quantified 20 points each.
 epma <- tidy_epma(qnt, xmap) %>>%
   filter(elm == elm[[1]]) %>>%
   select(x_px, y_px, phase)
-plot(xmap, 'Si', interactive = FALSE) +
-  scale_fill_gradient(low = 'black', high = 'white') +
+plot(xmap, 'Si', interactive = FALSE, colors = "gray") +
   geom_point(
     aes(y_px, x_px, colour = phase), data = epma, inherit.aes = FALSE
   ) +
@@ -195,7 +194,7 @@ According to compositions of olivine (57.29% MgO and 42.71 wt% SiO~2~),
 and of quartz (100% SiO~2~),
 
 $$
-E(MgO^{bulk}) = 
+E(MgO^{\mathrm{bulk}}) = 
   57.29 \times `r V['Ol']` + 0 \times `r V['Qtz']` = 
   `r 57.29 * V['Ol']` \simeq 
   `r E['MgO']` \mathrm{,}
@@ -204,13 +203,13 @@ $$
 and
 
 $$
-E(SiO^{bulk}_{2}) = 
+E(SiO^{\mathrm{bulk}}_{2}) = 
   42.71 \times `r V['Ol']` + 100 \times `r V['Qtz']` = 
   `r 42.71 * V['Ol'] + 100 * V['Qtz']` \simeq
   `r E['SiO2']` \mathrm{,}
 $$
 
-the above summary is adequate.
+which are concordant to the above summary.
 
 ### Summary based on mask images
 
@@ -243,11 +242,10 @@ Then, input the result of `segment()` to `index` parameter of `mean()`.
 
 ```{r mean-qmap-with-mask image}
 mean(qmap, index = i)
-# mean(qmap, index = cluster$cluster)
 ```
 
-Note that `index` parameter can be given as a character vector indicating which pixel is which phase.
-Thus, giving `index = cluster$cluster` results more friendly result than the above.
+Alternatively, `index` parameter can be given as a character vector such as name of phases (i.e. .
+Thus, giving `index = cluster$cluster` returns a prettier result than the above.
 
 ```{r mean-qmap-with-cluster-names}
 mean(qmap, index = cluster$cluster)

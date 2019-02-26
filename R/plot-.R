@@ -4,24 +4,26 @@
 #' 
 #' @title Plot methods for `qntmap` package
 #' @description
-#'   S3 methods to plot object with original classes in `qntmap` package. 
-#'   See [`graphics::plot()`] for general use of `plot`. 
-#'   Mapping data (`qm_xmap` and `qm_qntmap` classes) are visualized by heat maps. 
+#'  S3 methods to plot object with original classes in `qntmap` package. 
+#'  See [`graphics::plot()`] for general use of `plot`. 
+#'  Mapping data (`qm_xmap` and `qm_qntmap` classes) are visualized by heat maps. 
 #' 
 #' @param x 
-#'   A `qm_xmap` or `qntmap` class objects returned by 
-#'   [read_xmap()], [quantify()], or [qntmap()].
+#'  A `qm_xmap` or `qntmap` class objects returned by 
+#'  [read_xmap()], [quantify()], or [qntmap()].
 #' @param y
-#'   A string specifying a component of `x` to determine colors to fill the map.
+#'  A string specifying a component of `x` to determine colors to fill the map.
 #' @param z
-#'   A z-value for heatmap.
+#'  A z-value for heatmap.
+#' @param zname
+#'  A name of z-value for legend. If not specified `y` will be used.
 #' @param colors
-#'   A color pallete to use. Either "viridis" (default) or "gray".
+#'  A color pallete to use. Either "viridis" (default) or "gray".
 #' @param interactive
-#'   `TRUE` (default) produces plots with shiny WebUI, and 
-#'   `FALSE` produces plots with [`ggplot2::ggplot()`].
+#'  `TRUE` (default) produces plots with shiny WebUI, and 
+#'  `FALSE` produces plots with [`ggplot2::ggplot()`].
 #' @param ... 
-#'   Ignored
+#'  Ignored
 #' 
 #' @seealso [`graphics::plot()`]
 #' 
@@ -40,6 +42,7 @@ plot.qm_raster <- function(
   x, 
   y = setdiff(names(x), c('x', 'y'))[1], 
   z = x[[y]],
+  zname = y,
   colors = c("viridis", "gray", "discrete"),
   interactive = TRUE, 
   ...
@@ -48,12 +51,16 @@ plot.qm_raster <- function(
     stop ('Column x or y not found')
   if (interactive) 
     return (plot_shiny(x, y, pcol = colors == "viridis", ...))
-  z_is_num <- is.numeric(z)
-  zlim <- `if`(z_is_num, range(z), levels(z))
+  if(is.numeric(z)) {
+    zlim <- range(z)
+    z <- rescale(z)
+  } else {
+    zlim <- levels(z)
+  }
   colors <- match.arg(colors)
   gg_img(
     as_img(lookup[[colors]](z), max(x$y), max(x$x)), 
-    zlim = zlim, colors = colors,
+    zlim = zlim, zname = zname, colors = colors,
     ...
   )
 }
@@ -101,8 +108,8 @@ plot.qntmap <- function(
 #' @examples
 #' # qm_cluster class object
 #' cls <- list(
-#'   cluster = letters[sample.int(3, 9, replace = TRUE)], 
-#'   dims = c(3, 3)
+#'  cluster = letters[sample.int(3, 9, replace = TRUE)], 
+#'  dims = c(3, 3)
 #' )
 #' class(cls) <- "qm_cluster"
 #' plot(cls, interactive = FALSE)
@@ -116,5 +123,5 @@ plot.qm_cluster <- function(x, y = NULL, colors =  "discrete", ...) {
     expand.grid %>>%
     mutate(Phase = as.factor(!!x$cluster)) %>>%
     select(x, y, Phase) %>>%
-    plot.qm_raster(y = "Phase", colors = "discrete", ...)
+    plot.qm_raster(y = "Phase", colors = "discrete", zname = NULL, ...)
 } 
