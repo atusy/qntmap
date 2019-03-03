@@ -139,6 +139,7 @@ table(qnt$cnd$phase)
 epma <- tidy_epma(qnt, xmap) %>>%
   filter(elm == elm[[1]]) %>>%
   select(x_px, y_px, phase)
+
 plot(xmap, 'Si', interactive = FALSE, colors = "gray") +
   geom_point(
     aes(y_px, x_px, colour = phase),

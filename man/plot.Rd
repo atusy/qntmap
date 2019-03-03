@@ -9,8 +9,8 @@
 \title{Plot methods for \code{qntmap} package}
 \usage{
 \method{plot}{qm_raster}(x, y = setdiff(names(x), c("x", "y"))[1],
-  z = x[[y]], zname = y, colors = c("viridis", "gray", "discrete"),
-  interactive = TRUE, ...)
+  z = x[[y]], zname = y, zlim = range(z), colors = c("viridis",
+  "gray", "discrete"), interactive = TRUE, ...)
 
 \method{plot}{qm_xmap}(x, y = setdiff(names(x), c("x", "y"))[1], ...)
 
@@ -27,6 +27,8 @@
 \item{z}{A z-value for heatmap.}
 
 \item{zname}{A name of z-value for legend. If not specified \code{y} will be used.}
+
+\item{zlim}{A range of z.}
 
 \item{colors}{A color pallete to use. Either "viridis" (default) or "gray".}
 
@@ -58,8 +60,8 @@ plot(qm, interactive = FALSE)
 
 # qm_cluster class object
 cls <- list(
- cluster = letters[sample.int(3, 9, replace = TRUE)], 
- dims = c(3, 3)
+  cluster = letters[sample.int(3, 9, replace = TRUE)], 
+  dims = c(3, 3)
 )
 class(cls) <- "qm_cluster"
 plot(cls, interactive = FALSE)

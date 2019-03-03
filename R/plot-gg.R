@@ -1,94 +1,121 @@
-#' @importFrom ggplot2
-#'   ggplot
-#'   aes
+#' @importFrom ggplot2 ggplot aes
 NULL
 
 #' Draw a histgram for numeric vector based on Scott's choice
-#' @noRd
+#' @name gghist
+#' @param x An atomic vector
 #' 
-#' @importFrom grDevices nclass.FD
+#' @importFrom graphics hist
 #' @importFrom ggplot2 
 #'   coord_cartesian
 #'   element_blank 
 #'   element_rect
-#'   geom_bar
-#'   geom_histogram 
+#'   geom_col
 #'   theme
 #'   theme_classic 
 #'   scale_fill_manual
-gghist <- function (x, .min = NA_real_, .max = NA_real_, colors) {
-  layers <- if(is.numeric(x)) {
-    if(!is.finite(.min)) .min <- min(x)
-    if(!is.finite(.max)) .max <- max(x)
-    x <- x[.min <= x & x <= .max]
-    list(
-      geom_histogram(aes(x, fill = stat(x)), bins = nclass.FD(x)),
-      scale_fill[[match.arg(colors)]]()
-    )
-  } else {
-    list(
-      geom_bar(aes(x, y = stat(count / sum(count)), fill = x), color = "black"),
-      scale_fill_manual(
-        values = rgb(lookup$discrete(as.factor(levels(as.factor(x)))))
-      )
-    )
-  }
+#' @noRd
+gghist <- function(x, ...) {UseMethod("gghist")}
 
-  bg <- element_rect(fill = '#f5f5f5', color = '#f5f5f5')
-  ggplot(data.frame(x = x)) +
-    coord_cartesian(expand = FALSE) +
-    theme_classic() +
-    theme(
-      plot.background = bg,
-      panel.background = bg,
-      legend.position = 'none', 
-      axis.title = element_blank()
-    ) +
-    layers
+#' @rdname gghist
+#' @param .min,.max 
+#'   A minimum and a maximum values (default: `NA_real`). 
+#'   `NA_real_` will be replaced by minimum and maximum values of x.
+#'   Values outlying x will be squished.
+#' @param colors 
+#'   "viridis" or "gray"
+#' @noRd
+gghist.numeric <- function(x, .min = NA_real_, .max = NA_real_, colors) {
+  range_x <- range(x, na.rm = TRUE)
+  if(!is.finite(.min) || .min < range_x[1]) .min <- range_x[1]
+  if(!is.finite(.max) || .max > range_x[2]) .max <- range_x[2]
+  
+  x[.min <= x & x <= .max] %>>%
+    hist(breaks = "FD", plot = FALSE) %>>%
+    `[`(c("mids", "counts")) %>>%
+    c(list(width = .$mids[2] - .$mids[1])) %>>%
+    as.data.frame() %>>%
+    bind_rows(
+      data.frame(mids = c(.min, .max), counts = 0, width = 1)
+    ) %>>% 
+    ggplot(aes(mids, counts, width = width, fill = mids)) +
+    geom_col(show.legend = FALSE, position = "identity") +
+    scale_fill[[match.arg(colors)]]() +
+    gghist_theme
 }
 
+#' @rdname gghist
+#' @noRd
+gghist.character <- function(x, ...) {gghist.factor(as.factor(x), ...)} 
+
+#' @rdname gghist
+#' @importFrom ggplot2 geom_bar scale_fill_manual
+#' @noRd
+gghist.factor <- function(x, ...) {
+  ggplot(data.frame(x = x)) +
+    geom_bar(aes(x, y = stat(count / sum(count)), fill = x), color = "black") +
+    scale_fill_manual(values = rgb(lookup$discrete(levels(x)))) +
+    gghist_theme
+}
+
+#' gghist: background color
+#' @noRd
+gghist_bg <- element_rect(fill = '#f5f5f5', color = '#f5f5f5')
+
+#' gghist: theme
+#' @noRd
+gghist_theme <- list(
+  coord_cartesian(expand = FALSE),
+  theme_classic(),
+  theme(
+    plot.background = gghist_bg,
+    panel.background = gghist_bg,
+    legend.position = 'none', 
+    axis.title = element_blank()
+  )
+)
 
 #' Color palette
-#' @importFrom scales
-#'   viridis_pal
-#'   gradient_n_pal
-#' @importFrom grDevices
-#'   colorRamp
+#' @importFrom scales gradient_n_pal viridis_pal
+#' @importFrom grDevices colorRamp col2rgb
 #' @noRd
 palette <- list(
-    viridis = gradient_n_pal(viridis_pal(
-        alpha = 1, begin = 0, end = 1, direction = 1, option = "D"
-      )(6)),
-    discrete = colorRamp(
-        c("#000000", 
-          "#0000FF", "#00FFFF", 
-          "#00FF00", "#FFFF00", 
-          "#FF0000", "#FF00FF",
-          "#EEEEEE"
-        ),
-        space = "rgb"
-      )
+  # A rgb matrix
+  viridis = t(col2rgb(unique(gradient_n_pal(viridis_pal(
+    alpha = 1, begin = 0, end = 1, direction = 1, option = "D"
+  )(6))(seq(0, 1, 1e-4))))) / 255,
+  # A function returning rgb matrix according to 0--1 input
+  discrete = colorRamp(
+    c("#000000", 
+      "#0000FF", "#00FFFF", 
+      "#00FF00", "#FFFF00", 
+      "#FF0000", "#FF00FF",
+      "#EEEEEE"
+    ),
+    space = "rgb"
   )
+)
 
 #' Look up colors based on palette
-#' @param x A numeric value ranging 0 to 1
-#' @importFrom grDevices col2rgb
+#' @param x An atomic vector
 #' @importFrom scales rescale
 #' @noRd
 lookup <- list(
-    gray = identity,
-    viridis = function(x) t(col2rgb(palette$viridis(x))) / 255,
-    discrete = function(x) {
-      palette$discrete(rescale(as.integer(x))) / 255
-    }
-  )
+  viridis  = function(x, to, ...) palette$viridis[rescale(x, to = to, ...), ],
+  gray     = rescale,
+  discrete = function(x, ...) {
+    x <- as.factor(x)
+    (palette$discrete(rescale(seq_along(levels(x)))) / 255)[as.integer(x), ]
+  }
+)
+formals(lookup$viridis)$to <- c(1, nrow(palette$viridis))
 
 #' Convert to array
-#' @param color A value returned by `lookup()`
+#' @param x A value returned by `lookup()`
 #' @param row Number of rows
 #' @param col Number of columns
 #' @noRd
-as_img <- function(color, row, col) array(color, dim = c(row, col, 3L))
+as_img <- function(x, row, col) {array(x, dim = c(row, col, 3L))}
 
 #' Choice of scales for filling
 #' @importFrom ggplot2
@@ -97,17 +124,17 @@ as_img <- function(color, row, col) array(color, dim = c(row, col, 3L))
 #'   scale_fill_manual
 #' @noRd
 scale_fill <- list(
-  gray = scale_fill_gradient, # low and high are fixed later
+  gray = function(...) scale_fill_gradient(..., low = "black", high = "white"), 
   viridis = scale_fill_viridis_c,
   discrete = scale_fill_manual
 )
-formals(scale_fill$gray)[c("low", "high")] <- list("black", "white")
 
 #' Raster image with ggplot2::annotation_raster
 #' @param img A value returned by `as_img`
 #' @param xlim,ylim,zlim Limits of x, y, and z
 #' @param zname Name of z (title of scale_fill)
 #' @param colors A palette of colros to use. If manual, specify `values` in `...`
+#' @param barheight Barheight for continuous scale
 #' @param ... Other arguments passed to `scale_fill_*`
 #' @importFrom ggplot2
 #'   annotation_raster
@@ -126,29 +153,26 @@ gg_img <- function(
     zlim = c(0, 1), 
     zname = NULL, 
     colors = c("viridis", "gray", "discrete"),
+    barheight = unit(1, "npc") - unit(4, "line"),
     ...
   ) {
-  colors <- `if`(is.numeric(zlim), match.arg(colors), "discrete")
+  is_z_num <- is.numeric(zlim)
+  colors <- `if`(is_z_num, match.arg(colors), "discrete")
   ggplot(data.frame(x = 0, y = 0, fill = zlim), aes(x, y, fill = fill)) +
-    geom_tile(size = 0) +
+    geom_tile(width = 0, height = 0) + # Invisible tile for legend
     coord_fixed(xlim = xlim, ylim = ylim, expand = FALSE) +
     annotation_raster(
       img, xmin = xlim[1], xmax = xlim[2], ymin = -ylim[2], ymax = -ylim[1]
     ) +
     scale_y_reverse() +
     `if`(
-      is.numeric(zlim), 
+      is_z_num, 
       list(
         scale_fill[[colors]](zname, ...),
-        guides(fill = guide_colorbar(
-          barheight = unit(1, "npc") - unit(4, "line")
-        ))
+        guides(fill = guide_colorbar(barheight = barheight))
       ),
-      scale_fill[[colors]](
-        name = NULL,
-        values = rgb(lookup$discrete(as.factor(zlim))), ...
-      )
+      scale_fill[[colors]](name = NULL, values = rgb(lookup$discrete(zlim)), ...)
     )
 }
 
-formals(gg_img)$colors <- formals(gghist)$colors <- names(scale_fill)
+formals(gg_img)$colors <- formals(gghist.numeric)$colors <- names(scale_fill)

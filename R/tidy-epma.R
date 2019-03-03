@@ -7,6 +7,7 @@
 #' @importFrom dplyr distinct left_join mutate mutate_at rename transmute
 #' @importFrom matrixStats rowMaxs
 #' @importFrom purrr map2
+#' @importFrom rlang !!
 #' @importFrom stats setNames
 #' @importFrom stringr str_c str_replace_all str_replace str_detect
 #'
@@ -121,6 +122,7 @@ tidy_epma <- function(
 
 #' Only used interanlly by quantify
 #' @importFrom dplyr mutate
+#' @importFrom rlang !!
 #' @importFrom stringr str_replace
 #' @noRd
 tidy_epma_for_quantify <- function(

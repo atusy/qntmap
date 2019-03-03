@@ -51,7 +51,6 @@ Imports:
     shiny,
     shinyWidgets,
     stringr,
-    tibble,
     tidyr,
     utils
 Suggests:

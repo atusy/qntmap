@@ -17,6 +17,8 @@
 #'  A z-value for heatmap.
 #' @param zname
 #'  A name of z-value for legend. If not specified `y` will be used.
+#' @param zlim
+#'  A range of z.
 #' @param colors
 #'  A color pallete to use. Either "viridis" (default) or "gray".
 #' @param interactive
@@ -43,24 +45,24 @@ plot.qm_raster <- function(
   y = setdiff(names(x), c('x', 'y'))[1], 
   z = x[[y]],
   zname = y,
+  zlim = range(z),
   colors = c("viridis", "gray", "discrete"),
   interactive = TRUE, 
   ...
 ) {
-  if (any(c('x', 'y') %nin% names(x))) 
-    stop ('Column x or y not found')
-  if (interactive) 
-    return (plot_shiny(x, y, pcol = colors == "viridis", ...))
-  if(is.numeric(z)) {
-    zlim <- range(z)
-    z <- rescale(z)
-  } else {
-    zlim <- levels(z)
+  if (any(c('x', 'y') %nin% names(x))) stop ('Column x or y not found')
+  
+  if (interactive) return (plot_shiny(x, y, pcol = colors == "viridis", ...))
+  
+  if (is.numeric(z)) {
+    zlim <- squish(zlim, range(z))
+    z <- squish(z, range = zlim)
   }
+  
   colors <- match.arg(colors)
   gg_img(
-    as_img(lookup[[colors]](z), max(x$y), max(x$x)), 
-    zlim = zlim, zname = zname, colors = colors,
+    as_img(lookup[[colors]](z, from = zlim), max(x$y), max(x$x)), 
+    zlim = zlim, zname = zname, colors = colors, 
     ...
   )
 }
@@ -77,10 +79,7 @@ plot.qm_raster <- function(
 plot.qm_xmap <- function(x, y = setdiff(names(x), c('x', 'y'))[1], ...) {
   plot.qm_raster(
     bind_cols(
-      expand.grid(
-        y = seq(1, nrow(x[[1]])),
-        x = seq(1, ncol(x[[1]]))
-      )[c("x", "y")],
+      expand.grid(y = seq(NROW(x[[1]])), x = seq(NCOL(x[[1]])))[c("x", "y")],
       lapply(x, unlist, use.names = FALSE)
     ),
     y = y, ...
@@ -95,12 +94,8 @@ plot.qm_xmap <- function(x, y = setdiff(names(x), c('x', 'y'))[1], ...) {
 #' plot(qm, interactive = FALSE)
 #' 
 #' @export
-plot.qntmap <- function(
-  x, y = setdiff(names(x), c('x', 'y'))[1], ...
-) {
-  plot.qm_xmap(
-    lapply(lapply(x, `[[`, 'wt'), round, 2), y = y, ...
-  )
+plot.qntmap <- function(x, y = setdiff(names(x), c('x', 'y'))[1], ...) {
+  plot.qm_xmap(lapply(lapply(x, `[[`, 'wt'), round, 2), y = y, ...)
 }
 
 # © 2018 YASUMOTO Atsushi
@@ -108,13 +103,14 @@ plot.qntmap <- function(
 #' @examples
 #' # qm_cluster class object
 #' cls <- list(
-#'  cluster = letters[sample.int(3, 9, replace = TRUE)], 
-#'  dims = c(3, 3)
+#'   cluster = letters[sample.int(3, 9, replace = TRUE)], 
+#'   dims = c(3, 3)
 #' )
 #' class(cls) <- "qm_cluster"
 #' plot(cls, interactive = FALSE)
 #' 
 #' @importFrom dplyr mutate select
+#' @importFrom rlang !!
 #' @importFrom stats setNames
 #' @export
 plot.qm_cluster <- function(x, y = NULL, colors =  "discrete", ...) {
@@ -123,5 +119,5 @@ plot.qm_cluster <- function(x, y = NULL, colors =  "discrete", ...) {
     expand.grid %>>%
     mutate(Phase = as.factor(!!x$cluster)) %>>%
     select(x, y, Phase) %>>%
-    plot.qm_raster(y = "Phase", colors = "discrete", zname = NULL, ...)
+    plot.qm_raster(y = "Phase", colors = "discrete", zname = NULL, zlim = levels(.$Phase), ...)
 } 

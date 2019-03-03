@@ -1,6 +1,7 @@
 #' Find AB
 #' @noRd
 #' @importFrom dplyr mutate right_join 
+#' @importFrom rlang !!
 #' @param AG AG
 #' @param B B
 #' @examples 
@@ -87,6 +88,7 @@ expand_AB <- function(AB, stg) {
 #' @importFrom matrixStats rowMaxs weightedMedian
 #' @importFrom dplyr 
 #'   filter group_by mutate right_join summarize
+#' @importFrom rlang !!
 #' @importFrom tidyr gather
 fix_AB_by_wt <- function(xmap, cls, params) {
   if(!any(is.finite(params$wt))) return(NULL)

@@ -20,6 +20,7 @@
 #'
 #' @importFrom dplyr mutate rename select
 #' @importFrom purrr map map_at map2
+#' @importFrom rlang !!
 #' @importFrom stats setNames
 #'
 #' @export

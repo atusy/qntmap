@@ -17,6 +17,7 @@
 #'   `elem.qnt`, `elint.qnt`, and `.cnd/elemw.cnd` / `Pos_0001/data001.cnd`.
 #'
 #' @importFrom dplyr mutate
+#' @importFrom rlang !!
 #' @importFrom stringr str_replace_all
 #' @importFrom data.table fwrite
 #'

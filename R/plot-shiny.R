@@ -32,6 +32,7 @@ ui <- function(elm, selected = elm[[1]], pcol = TRUE) {fluidPage(sidebarLayout(
   ),
   
   mainPanel(
+    # shiny::verbatimTextOutput("debug"),
     tags$head(tags$style('
        #tip {
         position: absolute;
@@ -85,7 +86,7 @@ ui <- function(elm, selected = elm[[1]], pcol = TRUE) {fluidPage(sidebarLayout(
 
 #' @importFrom DT renderDT
 #' @importFrom dplyr everything mutate select summarize_if
-#' @importFrom scales squish rescale
+#' @importFrom scales squish
 #' @importFrom shiny 
 #'   htmlOutput reactive reactiveValues observeEvent 
 #'   renderPlot renderPrint renderUI req 
@@ -133,22 +134,30 @@ server <- function(data) {
         }
     })
     
-    zlim <- reactive(`if`(
-        z_is_num(),
-        ifelse(
-          is.na(c(input$min, input$max)), 
-          range(data[[input$fill]]), 
-          c(input$min, input$max)
-        ),
-        levels(data[[input$fill]])
+    # Reacts to input$min, input$max, inputfill
+    zlim <- reactive(if(z_is_num()) {
+      zrange <- range(data[[input$fill]])
+      c(
+        `if`(is.na(input$min) || input$min < zrange[1], zrange[1], input$min),
+        `if`(is.na(input$max) || input$max > zrange[2], zrange[2], input$max)
+      )
+    } else {
+      levels(data[[input$fill]])
+    })
+    
+    # Reacts to zlim(), input$fill
+    squished <- reactive(
+        `if`(z_is_num(), squish(data[[input$fill]], zlim()), data[[input$fill]])
+      )
+    
+    # Reacts to colors(), squished()
+    # suqished() reacts to zlim()
+    img <- reactive(as_img(
+        lookup[[colors()]](squished(), from = zlim()), range_y[2], range_x[2]
       ))
-    scaled <- reactive(`if`(
-        z_is_num(),
-        rescale(squish(data[[input$fill]], zlim())),
-        data[[input$fill]]
-      )) # as.numeric to allow factors
-    img <- reactive(as_img(lookup[[colors()]](scaled()), range_y[2], range_x[2]))
-
+    
+    # React to colors(), img(), ranges$y, rangex$x
+    # img() reacts to zlim()
     output$heatmap <- renderPlot(
       gg_img(
         img()[ranges$y[1]:ranges$y[2], ranges$x[1]:ranges$x[2], ], 
@@ -181,6 +190,7 @@ server <- function(data) {
     
     output$dt <- renderDT(dt())
     
+    # output$debug <- shiny::renderText(zlim())
   }
 }
 
@@ -229,6 +239,7 @@ format_hover <- function (h) {
 }
 
 #' @importFrom dplyr bind_rows everything mutate select summarize_if
+#' @importFrom rlang !!
 #' @noRd
 summarize_box <- function (data, box, .env, .format = format_summary) {
   .env$id <- .env$id + 1L
@@ -245,6 +256,7 @@ summarize_box <- function (data, box, .env, .format = format_summary) {
 
 
 #' @importFrom dplyr bind_rows everything mutate select
+#' @importFrom rlang !!
 #' @noRd
 summarize_click <- function (data, click, .env, .format = format_summary) {
   .env$id <- .env$id + 1L
