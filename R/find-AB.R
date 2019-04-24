@@ -40,7 +40,6 @@ find_AB <- function(AG, B, se = TRUE) {
 #' 
 #' @importFrom tidyr gather spread
 #' @importFrom dplyr right_join select
-#' @importFrom purrr map
 #' @note
 #' > AB
 #' elm stg phase3         ab        ab_se
@@ -67,13 +66,18 @@ find_AB <- function(AG, B, se = TRUE) {
 #'   .. ..$ Ol : num [1:2] 3.82e-08 3.82e-08
 #' .. ..$ Qtz: num [1:2] 3.81e-08 3.81e-08
 expand_AB <- function(AB, stg) {
+  .stg <- data.frame(stg = stg)
   gather(AB, .var, .val, -elm, -stg, -phase3) %>>% 
     spread(phase3, .val) %>>% 
     split(.$elm) %>>% 
-    map(function(x) split(x, x$.var)) %>>% 
-    map(map, select, -elm, -.var) %>>% 
-    map(map, right_join, data.frame(stg = stg), by = "stg") %>>% 
-    map(map, select, -stg)
+    lapply(function(x) lapply(split(x, x$.var), join_by_stg, .stg))
+}
+
+join_by_stg <- function(x, stg) {
+  x %>>%
+    select(-elm, -.var) %>>%
+    right_join(stg, by = "stg") %>>%
+    select(-stg)
 }
 
 # © 2018 JAMSTEC

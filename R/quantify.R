@@ -107,17 +107,20 @@ quantify <- function (
     rename(se = ab_se) %>>%
     select(setdiff(names(.), "se"[!(!!(se))])) %>>%
     expand_AB(stg) %>>%
-    map(map, `*`, X) %>>% # XAB
-    map(map_at, 'se', map, square) %>>%
-    map(map, reduce_add) %>>%
-    map(map_at, 'se', sqrt) %>>%
-    map2(xmap[names(.)], function (xab, i) map(xab, `*`, i)) %>>% # XABI
+    lapply(function(x) { # XAB and its err
+      x %>>%
+        lapply(`*`, X) %>>%
+        map_at('se', lapply, square) %>>%
+        lapply(reduce_add) %>>%
+        map_at('se', sqrt)
+    }) %>>% 
+    map2(xmap[names(.)], function (xab, i) lapply(xab, `*`, i)) %>>% # XABI
     map2(XAG, map2, `-`) %>>% # XABI - XAG
-    map(setNames, c('wt', 'se'[se])) %>>%
-    map(function (x) map(x, `*`, x$wt > 0)) %>>%
+    lapply(setNames, c('wt', 'se'[se])) %>>%
+    lapply(function (x) lapply(x, `*`, x$wt > 0)) %>>%
     c(list(Total = c(
-      list(wt = as.data.frame(reduce_add(map(., 'wt')))),
-      if(se) list(se = as.data.frame(sqrt(reduce_add(map(map(., 'se'), square)))))
+      list(wt = as.data.frame(reduce_add(lapply(., `[[`, 'wt')))),
+      if(se) list(se = as.data.frame(sqrt(reduce_add(lapply(lapply(., `[[`, 'se'), square)))))
     ))) %>>%
     prioritize(.component) %>>%
     `class<-`(c('qntmap', 'list')) %>>%

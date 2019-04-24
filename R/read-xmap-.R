@@ -7,6 +7,7 @@
 #'   `FALSE` tries to read `xmap.RDS` in `wd`.
 #' @param saving 
 #'   `TRUE` (default) or `FALSE` to save the result as `xmap.RDS` file in `wd`.
+#'   When `conditions` is specified, `saving = FALSE` is forced.
 #' @param conditions
 #'   A path to a csv file which records file paths and analytical conditions of
 #'   mapping data.
@@ -31,8 +32,8 @@ read_xmap <- function (
   
   rds <- "xmap.RDS"
 
-  if (is.character(conditions)) # © 2018 JAMSTEC
-    return (read_xmap_by_conditions(conditions, rds, saving)) # © 2018 JAMSTEC
+  if(is.character(conditions)) # © 2018 JAMSTEC
+    return(read_xmap_by_conditions(conditions, rds, saving = FALSE)) # © 2018 JAMSTEC
   
   cd <- getwd()
   on.exit(setwd(cd))
@@ -42,8 +43,8 @@ read_xmap <- function (
   # Read old file with version check
   if((!renew) && file.exists(rds)) {
     xmap <- readRDS(rds)
-    if (identical(list(ver = ver, deadtime = DT), attributes(xmap)[c("ver", "deadtime")]))
-      return (structure(xmap, dir_map = wd))
+    if(identical(list(ver = ver, deadtime = DT), attributes(xmap)[c("ver", "deadtime")]))
+      return(structure(xmap, dir_map = wd))
     rm(xmap)
   }
   
@@ -52,16 +53,18 @@ read_xmap <- function (
   stop_if_inequal_xmap_and_cnd(files_xmap, files_cnd)
   
   cnd <- lapply(files_cnd, read_xmap_cnd, patterns = patterns_xmap_cnd)
-  elm <- unlist(lapply(cnd, `[[`, 'elm'), use.names = FALSE)
-  dwell <- as.integer(cnd[[1]][['dwell']][1])
 
   construct_qm_xmap(
-    files_xmap = files_xmap, elm = elm, dwell = dwell, deadtime = DT, dir_map = wd,
-    current = as.numeric(cnd[[1]][['current']][1]),
-    start = as.numeric(cnd[[1]][['start']][1:3]),
-    pixel = as.integer(cnd[[1]][['pixel']][1:2]),
-    step = as.numeric(cnd[[1]][['step']][1:2]),
-    instrument = cnd[[1]][['instrument']][1]
+    files_xmap = files_xmap, 
+    deadtime   = DT, 
+    dir_map    = wd,
+    elm        = unlist(lapply(cnd, `[[`, 'elm'), use.names = FALSE),
+    dwell      = as.integer(cnd[[1]][['dwell']][1]),
+    current    = as.numeric(cnd[[1]][['current']][1]),
+    start      = as.numeric(cnd[[1]][['start']][1:3]),
+    pixel      = as.integer(cnd[[1]][['pixel']][1:2]),
+    step       = as.numeric(cnd[[1]][['step']][1:2]),
+    instrument =            cnd[[1]][['instrument']][1]
   ) %>>%
     save4qm(rds, saving)
 }
@@ -108,13 +111,7 @@ construct_qm_xmap <- function (files_xmap, elm, dwell, deadtime, dir_map, ...) {
     lapply(fread) %>>%
     setNames(elm) %>>%
     prioritize(.component) %>>%
-    map_at( # Dead time corrections except for electron signals (e.g., BSE)
-      setdiff(names(.), .electron),
-      function (x) dwell * x / (dwell - deadtime * 1e-9 * x)
-    ) %>>%
-    lapply(round) %>>%
-    lapply(lapply, as.integer) %>>%
-    lapply(as.data.frame) %>>%
+    correct_deadtime(deadtime = deadtime) %>>%
     structure(
       class = c('qm_xmap', class(.)),
       deadtime = deadtime,
@@ -123,6 +120,15 @@ construct_qm_xmap <- function (files_xmap, elm, dwell, deadtime, dir_map, ...) {
       dir_map = dir_map,
       ver = ver # Version of qntmap defined internally
     )
+}
+
+correct_deadtime <- function(x, deadtime = 0L) {
+  # Dead time corrections except for electron signals (e.g., BSE)
+  if(deadtime == 0L) return(x)
+  map_at(
+    setdiff(names(x), .electron),
+    function(x) as.integer(round(dwell * x / (dwell - deadtime * 1e-9 * x)))
+  )
 }
 
 # © 2018 JAMSTEC
@@ -134,14 +140,14 @@ read_xmap_by_conditions <- function (conditions, rds, saving) {
   .cnd <- fread(conditions)
   construct_qm_xmap(
     files_xmap = .cnd[["File path"]],
-    elm = .cnd[["Element"]],
-    dwell = .cnd[["Dwell [msec]"]][1L],
-    deadtime = .cnd[["dead time [ns]"]][1L],
-    dir_map = normalizePath(dirname(.cnd[["File path"]][1L])),
-    current = .cnd[["Probe current [A]"]][1L],
-    start = unlist(.cnd[1L, c("Start X [mm]", "Start Y [mm]")], use.names = FALSE),
-    pixel = unlist(.cnd[1L, c("Steps X", "Steps Y")], use.names = FALSE),
-    step = rep(.cnd[["Step size [um]"]][1L], 2L),
+    elm        = .cnd[["Element"]],
+    dwell      = .cnd[["Dwell [msec]"]][1L],
+    deadtime   = .cnd[["dead time [ns]"]][1L],
+    dir_map    = normalizePath(dirname(.cnd[["File path"]][1L])),
+    current    = .cnd[["Probe current [A]"]][1L],
+    start      = unlist(.cnd[1L, c("Start X [mm]", "Start Y [mm]")], use.names = FALSE),
+    pixel      = unlist(.cnd[1L, c("Steps X", "Steps Y")], use.names = FALSE),
+    step       = rep(.cnd[["Step size [um]"]][1L], 2L),
     instrument = .cnd[["Instrument"]][1L]
   ) %>>%
     save4qm(rds, saving)

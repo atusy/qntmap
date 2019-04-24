@@ -1,6 +1,6 @@
-# small functions which are not exported
+# Small internal functions
 
-#' confidence interval of observed data from poisson process
+#' Confidence interval of observed data from poisson process
 #'
 #' @param x 
 #'   A data frame with variables following Poisson process
@@ -12,7 +12,7 @@
 #'   A confidence level for the returned confidence interval.
 #'
 #' @importFrom dplyr bind_cols
-#' @importFrom purrr map map2
+#' @importFrom purrr map2
 #' @importFrom stats qgamma setNames
 #' @noRd
 cipois <- function(x, vars = names(x), offset = 1L, conf.level = 0.95) {
@@ -20,15 +20,18 @@ cipois <- function(x, vars = names(x), offset = 1L, conf.level = 0.95) {
   high <- 1L - low
 
   x[vars] %>>%
-    map2(offset, `*`) %>>%
-    map(round) %>>%
-    map(
-      function(x) data.frame(L = qgamma(low, x), H = qgamma(high, x + 1L))
-    ) %>>%
-    map2(offset, `/`) %>>%
-    map(setNames, c('L', 'H')) %>>%
+    map2(offset, cipois_, low = low, high = high) %>>%
     unlist(recursive = FALSE) %>>%
     bind_cols(x)
+}
+
+#' Returns confidece interval of count data
+#' @inheritParams cipois
+#' @param low,high percentiles
+#' @noRd
+cipois_ <- function(x, offset = 1L, low = 0.025, high = 0.975) {
+  x <- round(x * offset)
+  data.frame(L = qgamma(low, x), H = qgamma(high, x + 1L)) / offset
 }
 
 #' return integer as character flagged with 0

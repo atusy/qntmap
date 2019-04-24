@@ -1,32 +1,30 @@
-#' @name summary_methods
-#' @title summary methods
-#' @param object object to be summarized
-#' @param ... other arguments to control summary results
+#' @name summary
+#' @inherit base::summary
 NULL
 
-#' @rdname summary_methods
+#' @rdname summary
 #' @aliases summary.qm_cluster
 #' @section summary.qm_cluster: Returns abundance ratios of clusters.
 #' @importFrom matrixStats colSums2
 #' @export
+#' @inheritParams summary
 summary.qm_cluster <- function(object, ...) {
   object$membership %>>%
     colSums2 %>>%
     `/`(sum(.))
 }
 
+#' @rdname summary
+#' @aliases summary.qntmap
 #' @section summary.qntmap: summary qntmap class data.
 #' @importFrom dplyr bind_rows
+#' @inheritParams round
 #' @export
-summary.qntmap <- function(object, ...) {
+summary.qntmap <- function(object, digits = 2L, ...) {
   on.exit(message('\n', 'Note that Total is not sum each column'))
   object %>>%
-    lapply(`[[`, 'wt') %>>%
-    lapply(unlist) %>>%
-    lapply(summary) %>>%
-    lapply(round, 2L) %>>%
-    lapply(as.list) %>>%
+    lapply(function(x) as.list(round(summary(unlist(x[['wt']])), digits))) %>>%
     bind_rows(.id = 'Element') %>>%
-    as.data.frame() %>>%
-    print()
+    as.data.frame %>>%
+    print
 }

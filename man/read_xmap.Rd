@@ -17,7 +17,8 @@ read_xmap(wd = ".map/1", DT = 0, renew = FALSE, saving = TRUE,
 \item{renew}{\code{TRUE} (default) read data from original files.
 \code{FALSE} tries to read \code{xmap.RDS} in \code{wd}.}
 
-\item{saving}{\code{TRUE} (default) or \code{FALSE} to save the result as \code{xmap.RDS} file in \code{wd}.}
+\item{saving}{\code{TRUE} (default) or \code{FALSE} to save the result as \code{xmap.RDS} file in \code{wd}.
+When \code{conditions} is specified, \code{saving = FALSE} is forced.}
 
 \item{conditions}{A path to a csv file which records file paths and analytical conditions of
 mapping data.

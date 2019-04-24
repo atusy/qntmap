@@ -59,6 +59,7 @@
 #' @importFrom dplyr 
 #'   bind_cols bind_rows filter group_by mutate summarise ungroup
 #' @importFrom matrixStats colSums2
+#' @importFrom purrr map2 pmap
 #' @importFrom stats lsfit qnbinom median
 #' @importFrom tidyr spread
 #'
@@ -98,16 +99,12 @@ find_centers <- function(
     select(elint, map, map_est, within_pi, n_within_pi, phase, id, nr) %>>%
     bind_rows( 
       if(!all(quantified)) {
-          . %>>%
-            filter(elint == elint[1]) %>>%
-            select(-elint, -map, -map_est) %>>%
-            bind_cols(
-              lapply(xmap_df[!quantified], `[`, .$nr)
-            ) %>>%
-            gather(
-              elint, map, -within_pi, -n_within_pi, -phase, -id, -nr
-            ) %>>%
-            mutate(map_est = map)
+        . %>>%
+          filter(elint == elint[1]) %>>%
+          select(-elint, -map, -map_est) %>>%
+          bind_cols(lapply(xmap_df[!quantified], `[`, .$nr)) %>>%
+          gather(elint, map, -within_pi, -n_within_pi, -phase, -id, -nr) %>>%
+          mutate(map_est = map)
       }
     ) %>>%
     group_by(phase) %>>%
@@ -130,10 +127,7 @@ find_centers <- function(
           pmap(x[miss, -1], c),
           `-`
         ) %>>%
-        map(square) %>>%
-        map(colSums2, na.rm = TRUE) %>>%
-        map(which.min) %>>%
-        map(function(i) xmap_df[i, ]) %>>%
+        lapply(function(x) xmap_df[which.min(colSums2(square(x), na.rm = TRUE)), ]) %>>%
         bind_rows %>>%
         `[`(names(x[-1])) %>>%
         map2(x[miss, -1], function(y, x) ifelse(is.na(x), y, x)) %>>%

@@ -41,12 +41,14 @@ read_cnd.map_cnd <- function(x, pattern = NULL, ...) {
       sep = '%', fill = 'right', convert = TRUE
     ) %>>%
     split(.$id) %>>%
-    lapply(select, -id) %>>%
-    lapply(lapply, type.convert, as.is = TRUE) %>>%
-    lapply(lapply, unname) %>>%
-    lapply(as.data.frame) %>>%
-    lapply(arrange, no) %>>%
-    lapply(select, -no) %>>%
+    lapply(function(x) {
+      x %>>%
+        select(-id) %>>%
+        lapply(function(x) unname(type.convert(x, as.is = TRUE))) %>>%
+        as.data.frame %>>%
+        arrange(no) %>>%
+        select(-no)
+    }) %>>%
     `class<-`('map_cnd')
 }
 

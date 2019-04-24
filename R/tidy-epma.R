@@ -59,8 +59,8 @@ tidy_epma <- function(
     `[`(qnt$cnd$nr, ) %>>%
     list %>>%
     setNames('map') %>>%
-    c(map(qnt$cmp, `[`, qnt$cnd$id, )) %>>%
-    map(mutate, id = qnt$cnd$id) %>>%
+    c(lapply(qnt$cmp, `[`, qnt$cnd$id, )) %>>%
+    lapply(mutate, id = qnt$cnd$id) %>>%
     bind_rows(.id = '.var') %>>%
     gather(elm, .val, -.var, -id) %>>%
     spread(.var, .val)

@@ -34,7 +34,7 @@ read_qnt <- function(
   on.exit(setwd(cd))
   
   if(is.character(phase_list)) {
-    stop_if_phase_list_not_found(phase_list)
+    stop_if_phase_list_not_found(phase_list, cd)
     phase_list <- normalizePath(phase_list)
   }
   
@@ -134,7 +134,7 @@ read_qnt <- function(
 
 }
 
-stop_if_phase_list_not_found <- function(phase_list) {
+stop_if_phase_list_not_found <- function(phase_list, cd) {
   if(!file.exists(phase_list))
     stop(
       "Not found: ", phase_list, "\n",
