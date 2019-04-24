@@ -22,9 +22,8 @@ Make index to segment mapping area.
 The obtained index is further utilized in \code{\link[=mean.qntmap]{mean.qntmap()}}.
 }
 \examples{
-x <- system.file("img", "Rlogo.png", package="png")
+x <- system.file("img", "Rlogo.png", package = "png")
 head(segment(x))
-
 }
 \seealso{
 \code{\link[=mean.qntmap]{mean.qntmap()}}

@@ -4,32 +4,34 @@ NULL
 #' Draw a histgram for numeric vector based on Scott's choice
 #' @name gghist
 #' @param x An atomic vector
-#' 
+#'
 #' @importFrom graphics hist
-#' @importFrom ggplot2 
+#' @importFrom ggplot2
 #'   coord_cartesian
-#'   element_blank 
+#'   element_blank
 #'   element_rect
 #'   geom_col
 #'   theme
-#'   theme_classic 
+#'   theme_classic
 #'   scale_fill_manual
 #' @noRd
-gghist <- function(x, ...) {UseMethod("gghist")}
+gghist <- function(x, ...) {
+  UseMethod("gghist")
+}
 
 #' @rdname gghist
-#' @param .min,.max 
-#'   A minimum and a maximum values (default: `NA_real`). 
+#' @param .min,.max
+#'   A minimum and a maximum values (default: `NA_real`).
 #'   `NA_real_` will be replaced by minimum and maximum values of x.
 #'   Values outlying x will be squished.
-#' @param colors 
+#' @param colors
 #'   "viridis" or "gray"
 #' @noRd
 gghist.numeric <- function(x, .min = NA_real_, .max = NA_real_, colors) {
   range_x <- range(x, na.rm = TRUE)
-  if(!is.finite(.min) || .min < range_x[1]) .min <- range_x[1]
-  if(!is.finite(.max) || .max > range_x[2]) .max <- range_x[2]
-  
+  if (!is.finite(.min) || .min < range_x[1]) .min <- range_x[1]
+  if (!is.finite(.max) || .max > range_x[2]) .max <- range_x[2]
+
   x[.min <= x & x <= .max] %>>%
     hist(breaks = "FD", plot = FALSE) %>>%
     `[`(c("mids", "counts")) %>>%
@@ -37,7 +39,7 @@ gghist.numeric <- function(x, .min = NA_real_, .max = NA_real_, colors) {
     as.data.frame() %>>%
     bind_rows(
       data.frame(mids = c(.min, .max), counts = 0, width = 1)
-    ) %>>% 
+    ) %>>%
     ggplot(aes(mids, counts, width = width, fill = mids)) +
     geom_col(show.legend = FALSE, position = "identity") +
     scale_fill[[match.arg(colors)]]() +
@@ -46,7 +48,9 @@ gghist.numeric <- function(x, .min = NA_real_, .max = NA_real_, colors) {
 
 #' @rdname gghist
 #' @noRd
-gghist.character <- function(x, ...) {gghist.factor(as.factor(x), ...)} 
+gghist.character <- function(x, ...) {
+  gghist.factor(as.factor(x), ...)
+}
 
 #' @rdname gghist
 #' @importFrom ggplot2 geom_bar scale_fill_manual
@@ -60,7 +64,7 @@ gghist.factor <- function(x, ...) {
 
 #' gghist: background color
 #' @noRd
-gghist_bg <- element_rect(fill = '#f5f5f5', color = '#f5f5f5')
+gghist_bg <- element_rect(fill = "#f5f5f5", color = "#f5f5f5")
 
 #' gghist: theme
 #' @noRd
@@ -70,7 +74,7 @@ gghist_theme <- list(
   theme(
     plot.background = gghist_bg,
     panel.background = gghist_bg,
-    legend.position = 'none', 
+    legend.position = "none",
     axis.title = element_blank()
   )
 )
@@ -86,9 +90,9 @@ palette <- list(
   )(6))(seq(0, 1, 1e-4))))) / 255,
   # A function returning rgb matrix according to 0--1 input
   discrete = colorRamp(
-    c("#000000", 
-      "#0000FF", "#00FFFF", 
-      "#00FF00", "#FFFF00", 
+    c("#000000",
+      "#0000FF", "#00FFFF",
+      "#00FF00", "#FFFF00",
       "#FF0000", "#FF00FF",
       "#EEEEEE"
     ),
@@ -115,7 +119,9 @@ formals(lookup$viridis)$to <- c(1, nrow(palette$viridis))
 #' @param row Number of rows
 #' @param col Number of columns
 #' @noRd
-as_img <- function(x, row, col) {array(x, dim = c(row, col, 3L))}
+as_img <- function(x, row, col) {
+  array(x, dim = c(row, col, 3L))
+}
 
 #' Choice of scales for filling
 #' @importFrom ggplot2
@@ -124,7 +130,7 @@ as_img <- function(x, row, col) {array(x, dim = c(row, col, 3L))}
 #'   scale_fill_manual
 #' @noRd
 scale_fill <- list(
-  gray = function(...) scale_fill_gradient(..., low = "black", high = "white"), 
+  gray = function(...) scale_fill_gradient(..., low = "black", high = "white"),
   viridis = scale_fill_viridis_c,
   discrete = scale_fill_manual
 )
@@ -147,15 +153,15 @@ scale_fill <- list(
 #'   unit
 #' @noRd
 gg_img <- function(
-    img, 
-    xlim = c(0, NCOL(img)) + 0.5, 
-    ylim = c(0, NROW(img)) + 0.5, 
-    zlim = c(0, 1), 
-    zname = NULL, 
-    colors = c("viridis", "gray", "discrete"),
-    barheight = unit(1, "npc") - unit(4, "line"),
-    ...
-  ) {
+                   img,
+                   xlim = c(0, NCOL(img)) + 0.5,
+                   ylim = c(0, NROW(img)) + 0.5,
+                   zlim = c(0, 1),
+                   zname = NULL,
+                   colors = c("viridis", "gray", "discrete"),
+                   barheight = unit(1, "npc") - unit(4, "line"),
+                   ...
+) {
   is_z_num <- is.numeric(zlim)
   colors <- `if`(is_z_num, match.arg(colors), "discrete")
   ggplot(data.frame(x = 0, y = 0, fill = zlim), aes(x, y, fill = fill)) +
@@ -166,7 +172,7 @@ gg_img <- function(
     ) +
     scale_y_reverse() +
     `if`(
-      is_z_num, 
+      is_z_num,
       list(
         scale_fill[[colors]](zname, ...),
         guides(fill = guide_colorbar(barheight = barheight))

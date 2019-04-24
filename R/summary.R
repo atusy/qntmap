@@ -21,10 +21,10 @@ summary.qm_cluster <- function(object, ...) {
 #' @inheritParams round
 #' @export
 summary.qntmap <- function(object, digits = 2L, ...) {
-  on.exit(message('\n', 'Note that Total is not sum each column'))
+  on.exit(message("\n", "Note that Total is not sum each column"))
   object %>>%
-    lapply(function(x) as.list(round(summary(unlist(x[['wt']])), digits))) %>>%
-    bind_rows(.id = 'Element') %>>%
+    lapply(function(x) as.list(round(summary(unlist(x[["wt"]])), digits))) %>>%
+    bind_rows(.id = "Element") %>>%
     as.data.frame %>>%
     print
 }

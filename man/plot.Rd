@@ -44,28 +44,24 @@ Mapping data (\code{qm_xmap} and \code{qm_qntmap} classes) are visualized by hea
 }
 \examples{
 # qm_raster class object
-d <- data.frame(expand.grid(x=1:5,y=1:5), fill = runif(5))
-class(d) <- c('qm_raster', class(d))
-plot(d, 'fill', interactive = FALSE)
-
+d <- data.frame(expand.grid(x = 1:5, y = 1:5), fill = runif(5))
+class(d) <- c("qm_raster", class(d))
+plot(d, "fill", interactive = FALSE)
 # qm_xmap class object
 xm <- list(A = as.data.frame(matrix(runif(25), 5)))
-class(xm) <- c('qm_xmap', 'list')
+class(xm) <- c("qm_xmap", "list")
 plot(xm, interactive = FALSE)
-
 # qntmap class object
 qm <- list(A = list(wt = as.data.frame(matrix(runif(25), 5))))
-class(qm) <- c( 'qntmap', 'list')
+class(qm) <- c("qntmap", "list")
 plot(qm, interactive = FALSE)
-
 # qm_cluster class object
 cls <- list(
-  cluster = letters[sample.int(3, 9, replace = TRUE)], 
+  cluster = letters[sample.int(3, 9, replace = TRUE)],
   dims = c(3, 3)
 )
 class(cls) <- "qm_cluster"
 plot(cls, interactive = FALSE)
-
 }
 \seealso{
 \code{\link[graphics:plot]{graphics::plot()}}

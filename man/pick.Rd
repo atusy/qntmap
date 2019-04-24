@@ -38,16 +38,16 @@ xm <- list(
   Si = as.data.frame(matrix(1:4, 2)),
   Ti = as.data.frame(matrix(5:8, 2))
 )
-class(xm) <- c('qm_xmap', 'list')
+class(xm) <- c("qm_xmap", "list")
 
 ## following codes return same results
 pick(xm, x = 1:2, y = 1:2)
-pick(xm, x = 1:2, y = 1:2, phase = c('P1', 'P2'))
-pick(xm, i = data.frame(x = 1:2, y = 1:2, phase = c('P1', 'P2')))
+pick(xm, x = 1:2, y = 1:2, phase = c("P1", "P2"))
+pick(xm, i = data.frame(x = 1:2, y = 1:2, phase = c("P1", "P2")))
 
 ## The last code is especially useful in case data frame is saved as a file such as csv.
 \dontrun{
-pick(xm, i = read.csv('pick_centers.csv'))
+pick(xm, i = read.csv("pick_centers.csv"))
 }
 }
 \seealso{

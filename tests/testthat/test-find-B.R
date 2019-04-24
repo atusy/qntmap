@@ -1,6 +1,6 @@
 context("test-find-B.R")
 
-if(interactive()) setwd(here::here("tests/testthat"))
+if (interactive()) setwd(here::here("tests/testthat"))
 
 xmap <- read_xmap("minimal/.map/1", saving = FALSE)
 qnt <- read_qnt("minimal/.qnt", saving = FALSE)
@@ -54,11 +54,11 @@ test_that("find_B(): In case map should be divided into smaller maps (e.g., guid
   )
   nm <- setdiff(names(B), "stg")
   B_11 <- B[B$stg == "11", nm]
-  B_11 <- B_11[order(B_11$elm),]
+  B_11 <- B_11[order(B_11$elm), ]
   B_dummy <- B[B$stg == "dummy", nm]
-  B_dummy <- B_dummy[order(B_dummy$elm),]
+  B_dummy <- B_dummy[order(B_dummy$elm), ]
   rownames(B_11) <- rownames(B_dummy) <- NULL
   expect_identical(B_11, B_dummy)
 })
 
-if(interactive()) setwd(here::here())
+if (interactive()) setwd(here::here())

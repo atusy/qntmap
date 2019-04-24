@@ -1,10 +1,10 @@
 #' Poisson distribution based custering based on [`PoiClaClu::Classify()`]
-#' 
-#' @param centers c-by-p matrix returned by [`find_centers()`] or by manually; 
-#'   c clusters and p features. 
-#'   Used to guess initial centers (or centroids) of clusters. 
-#'   A value returned by , typically [`data.frame`] or [`matrix`], 
-#'   indicating initial guess centers (or centroids) or clusters. 
+#'
+#' @param centers c-by-p matrix returned by [`find_centers()`] or by manually;
+#'   c clusters and p features.
+#'   Used to guess initial centers (or centroids) of clusters.
+#'   A value returned by , typically [`data.frame`] or [`matrix`],
+#'   indicating initial guess centers (or centroids) or clusters.
 #'   See [`find_centers()`].
 #' @inheritParams PoiClaClu::Classify
 #' @inheritDotParams PoiClaClu::Classify -x -y -xte
@@ -28,16 +28,16 @@ cluster <- function(x, centers, xte = x, ...) {
 #' Cluster mapping data into mineral species
 #'
 #' @inheritParams cluster
-#' @param xmap 
+#' @param xmap
 #'   A `qm_xmap` class object returned by [`read_xmap()`]
-#' @param elements 
-#'   A character vector to chose elements to be utilized in cluster analysis. 
+#' @param elements
+#'   A character vector to chose elements to be utilized in cluster analysis.
 #'   `NULL` (default) selects as much elements as possible.
-#' @param saving 
+#' @param saving
 #'   `TRUE` or `FALSE` to save result.
-#' @param group_cluster 
+#' @param group_cluster
 #'   `FALSE` (default) or `TRUE` to integrate same phase subgrouped using suffix.
-#'   For example, 
+#'   For example,
 #'   clusters named "Pl_NaRich" and "Pl_NaPoor" are integrated to "Pl" cluster .
 #' @inheritDotParams PoiClaClu::Classify -x -y
 #'
@@ -47,14 +47,14 @@ cluster <- function(x, centers, xte = x, ...) {
 #'
 #' @export
 cluster_xmap <- function(
-  xmap,
-  centers,
-  elements = intersect(names(xmap), colnames(centers)),
-  saving = TRUE,
-  group_cluster = FALSE,
-  ...
+                         xmap,
+                         centers,
+                         elements = intersect(names(xmap), colnames(centers)),
+                         saving = TRUE,
+                         group_cluster = FALSE,
+                         ...
 ) {
-  dir_map <- attr(xmap, 'dir_map')
+  dir_map <- attr(xmap, "dir_map")
   centers$phase <- as.character(centers$phase)
   dims <- dim(xmap[[1]])
 
@@ -62,14 +62,14 @@ cluster_xmap <- function(
 
   rm(xmap)
 
-  # Classify by PoiClaClu 
+  # Classify by PoiClaClu
   result <- cluster(
-      x, centers = centers[, elements], ...
-    )[c('ytehat', 'discriminant', "xte")]
+    x, centers = centers[, elements], ...
+  )[c("ytehat", "discriminant", "xte")]
 
   # give phase names to result$ytehat
   names(result$ytehat) <- result$cluster <- centers$phase[result$ytehat]
-  
+
   # Find representative values of each clusters (~ centers)
   result$center <- as.data.frame(result$xte) %>>%
     mutate_if(is.integer, as.double) %>>%
@@ -79,7 +79,7 @@ cluster_xmap <- function(
     summarise(val = median(val)) %>>%
     ungroup %>>%
     spread(elm, val)
-  
+
   result$xte <- NULL
 
   # estimate membership of each clusters
@@ -90,10 +90,10 @@ cluster_xmap <- function(
 
   result$discriminant <- NULL
 
-  if(nrow(centers) == ncol(result$membership)) {
+  if (nrow(centers) == ncol(result$membership)) {
     colnames(result$membership) <- centers$phase
   } else {
-    if(ncol(result$membership) == 1L) {
+    if (ncol(result$membership) == 1L) {
       colnames(result$membership) <- result$cluster[1L]
     } else {
       TF <- !duplicated(result$cluster)
@@ -103,26 +103,26 @@ cluster_xmap <- function(
     }
     missings <- setdiff(centers$phase, colnames(result$membership))
     result$membership <- cbind(
-        result$membership,
-        matrix(
-          0L,
-          nrow = nrow(result$membership),
-          ncol = length(missings),
-          dimnames = list(NULL, missings)
-        )
-      )[, centers$phase]
+      result$membership,
+      matrix(
+        0L,
+        nrow = nrow(result$membership),
+        ncol = length(missings),
+        dimnames = list(NULL, missings)
+      )
+    )[, centers$phase]
     rm(missings)
   }
-  
+
   # additional informations
-  class(result) <- c('qm_cluster', 'list')
+  class(result) <- c("qm_cluster", "list")
   result$date <- format(Sys.time(), "%y%m%d_%H%M")
   result$dims <- dims
   result$elements <- elements
   result$dir_map <- dir_map
 
-  if(group_cluster && any(grepl('_', colnames(result$membership))))
-      return(group_cluster(result, saving = saving))
+  if (group_cluster && any(grepl("_", colnames(result$membership))))
+    return(group_cluster(result, saving = saving))
 
-  save4qm(result, 'pois', saving)
+  save4qm(result, "pois", saving)
 }

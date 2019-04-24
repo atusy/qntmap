@@ -1,6 +1,6 @@
 context("tidy_params()")
 
-if(interactive()) setwd(here::here("tests/testthat"))
+if (interactive()) setwd(here::here("tests/testthat"))
 
 xmap <- read_xmap("minimal/.map/1", saving = FALSE)
 qnt <- read_qnt("minimal/.qnt", saving = FALSE)
@@ -20,7 +20,7 @@ test_that("Structure of a returned value by tidy_params()", {
   expect_s3_class(params, "data.frame")
   expect_named(params, c("oxide", "element", "phase", "alpha", "beta", "gamma", "wt"))
   expect_equal(
-    unname(sapply(params, class)), 
+    unname(sapply(params, class)),
     c("character", "character", "character", "numeric", "numeric", "numeric", "numeric")
   )
 })

@@ -1,7 +1,7 @@
 # © 2018 JAMSTEC
 context("fix-params.R")
 
-if(interactive()) setwd(here::here("tests/testthat"))
+if (interactive()) setwd(here::here("tests/testthat"))
 
 xmap <- read_xmap("minimal/.map/1", saving = FALSE)
 qnt <- read_qnt("minimal/.qnt", saving = FALSE)
@@ -29,4 +29,4 @@ test_that("Reconstruct B from tidy parameters", {
   expect_equal(B[nm], fixed[nm])
 })
 
-if(interactive()) setwd(here::here())
+if (interactive()) setwd(here::here())

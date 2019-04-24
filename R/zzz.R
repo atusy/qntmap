@@ -2,13 +2,13 @@
 
 #' Confidence interval of observed data from poisson process
 #'
-#' @param x 
+#' @param x
 #'   A data frame with variables following Poisson process
-#' @param vars 
+#' @param vars
 #'   A character vector to specify columns of x following Poisson process.
-#' @param offset 
+#' @param offset
 #'   A vector, a list, or a data frame indicating rate of poisson process data.
-#' @param conf.level 
+#' @param conf.level
 #'   A confidence level for the returned confidence interval.
 #'
 #' @importFrom dplyr bind_cols
@@ -40,14 +40,14 @@ cipois_ <- function(x, offset = 1L, low = 0.025, high = 0.975) {
 #' @noRd
 flag0 <- function(...) {
   do.call(
-    'paste0',
+    "paste0",
     lapply(
       unname(list(...)),
-      function (x) {
+      function(x) {
         formatC(
           x,
-          width = floor(log10(max(x, na.rm = TRUE))) + 1L, 
-          flag = '0'
+          width = floor(log10(max(x, na.rm = TRUE))) + 1L,
+          flag = "0"
         ) # formatC
       } # function
     ) # lapply
@@ -85,7 +85,7 @@ reduce_add <- function(x) Reduce(`+`, x)
 
 #' Prioritize certain components of x, and order the others alphabetically
 #' @param x A named object
-#' @param prior 
+#' @param prior
 #'   A character vector specifying the name of `x` which needs be prioritized.
 #' @noRd
 prioritize <- function(x, prior) {
@@ -96,4 +96,4 @@ prioritize <- function(x, prior) {
 #' Version of QntMap
 #' @importFrom utils packageVersion
 #' @noRd
-ver <- getExportedValue('utils', 'packageVersion')('qntmap')
+ver <- getExportedValue("utils", "packageVersion")("qntmap")

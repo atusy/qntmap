@@ -40,11 +40,10 @@ If not manually supplied \code{phase} is supplied by \code{c('P1', 'P2', ...)}.}
 Add centroids manually by picking X-ray counts of selected pixels in X-ray maps.
 }
 \examples{
-centers <- data.frame(phase = 'a', A = 1, B = 1)
+centers <- data.frame(phase = "a", A = 1, B = 1)
 xmap <- list(A = data.frame(1:2), B = data.frame(1:2))
-class(xmap) <- c('qm_xmap', 'list')
+class(xmap) <- c("qm_xmap", "list")
 add_centers(centers, xmap, x = 1, y = 2, saveas = FALSE)
-
 }
 \seealso{
 \code{\link[=pick]{pick()}}, \code{\link[=find_centers]{find_centers()}}

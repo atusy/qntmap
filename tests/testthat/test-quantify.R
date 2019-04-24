@@ -1,6 +1,6 @@
 context("quantify.R")
 
-if(interactive()) setwd(here::here("tests/testthat"))
+if (interactive()) setwd(here::here("tests/testthat"))
 
 xmap <- read_xmap("minimal/.map/1", saving = FALSE)
 qnt <- read_qnt("minimal/.qnt", saving = FALSE)
@@ -21,7 +21,7 @@ context("quantify.R - check_ABG()") # © 2018 JAMSTEC
 test_that("check_ABG() returns FALSE", {
   # when params = list()
   expect_false(check_ABG(list()))
-  
+
   # when parameters are fixed only by wt
   expect_false(check_ABG(data.frame(oxide = "a", phase = "a", wt = 0)))
 })
@@ -29,9 +29,9 @@ test_that("check_ABG() returns FALSE", {
 test_that("check_ABG() returns error", {
   # when params is a data frame without required columns
   expect_error(check_ABG(data.frame()))
-  
+
   # when params is a data frame without required rows
-  expect_error(check_ABG(params, xmap = alist(Mg = , Si =, Ti =), cls = cluster))
+  expect_error(check_ABG(params, xmap = alist(Mg = , Si = , Ti = ), cls = cluster))
   expect_error(check_ABG(params, xmap = xmap, cls = list(cluster = c("A"))))
 })
 
@@ -40,7 +40,7 @@ test_that("check_ABG() returns TRUE", {
   expect_true(check_ABG(params, xmap = xmap, cls = cluster))
 
   # even if xmap contains SE/CP/TP
-  for(i in .electron)
+  for (i in .electron)
     expect_true(check_ABG(params, xmap = c(xmap, setNames(i, i)), cls = cluster))
 })
 
@@ -57,7 +57,7 @@ test_that("quantify() returns a qntmap class object", {
   for (i in .qmap) expect_type(i, "list")
   for (i in .qmap) for (j in i) expect_s3_class(j, "data.frame")
   expect_true(all(
-    c("MgO_se.csv", "MgO_wt.csv", "parameters.csv", "qntmap.RDS", 
+    c("MgO_se.csv", "MgO_wt.csv", "parameters.csv", "qntmap.RDS",
       "SiO2_se.csv", "SiO2_wt.csv", "Total_se.csv", "Total_wt.csv") %in%
       dir(dir_qmap)
   ))
@@ -76,12 +76,12 @@ test_that("quantify() doubles result if alpha is doubled by fix parameter", { # 
   data.table::fwrite(.params, csv)
   .qmap1 <- quantify(xmap, qnt, cluster, se = FALSE,  saving = FALSE)
   .qmap2 <- quantify(xmap, NULL, cluster, se = FALSE,  saving = FALSE, fix = csv)
-  
+
   ratios <- unlist(.qmap2[[1]][["wt"]], use.names = FALSE) /
     unlist(.qmap1[[1]][["wt"]], use.names = FALSE)
-  
+
   expect_true(all(sapply(ratios, all.equal, 2)))
-  
+
   unlink(csv)
 })
 
@@ -92,17 +92,17 @@ test_that("csv given to fix parameter does nothing if all values in column are N
   .params <- params
   .params[
     c("elint", "alpha", "beta", "gamma", "alpha_se", "beta_se", "gamma_se")
-    ] <- NULL
+  ] <- NULL
   .params$wt <- NA_real_
   csv <- "params.csv"
   data.table::fwrite(.params, csv)
-  
+
   # se = FALSE
   expect_identical(
-    quantify(xmap, qnt, cluster, se = FALSE, saving = FALSE), 
+    quantify(xmap, qnt, cluster, se = FALSE, saving = FALSE),
     quantify(xmap, qnt, cluster, se = FALSE, saving = FALSE, fix = csv)
   )
-  
+
   unlink(csv)
 
 })
@@ -116,8 +116,8 @@ test_that("quantify() gives 200 wt% for SiO2 in Qtz by fix parameter", {
 
   .mean <- mean(quantify(xmap, qnt, cluster, se = FALSE, saving = FALSE, fix = csv), index = cluster$cluster)
   expect_equal(200, round(.mean$Qtz[.mean$Element == "SiO2"], -2))
-  
+
   unlink(csv)
 })
 
-if(interactive()) here::here()
+if (interactive()) here::here()

@@ -29,27 +29,26 @@ and second to last columns lists \code{mean} values of each elements by index.
 # Calculate mean for qntmap class object
 
 ## mapping data corresponds of 100 x 2 pixels
-## element A in the left half of the map yields 
+## element A in the left half of the map yields
 ## average 50 wt\% with standard deviation = 1.
-## and in the right half of the map yields 
+## and in the right half of the map yields
 ## average 50 wt\% with standard deviation = 1.
 qm <- list(
   A = list(wt = data.frame(rnorm(100, 50), rnorm(100, 20)))
 )
-class(qm) <- c('qntmap', 'list')
+class(qm) <- c("qntmap", "list")
 
-## If index is not specified, 
+## If index is not specified,
 ## mean value is calculated from whole area,
 ## which in this case gives a value around 35.
 mean(qm)
 
-## If index is given, 
+## If index is given,
 ## mean is calculated from the pixels sharing the same index.
 ## For example, pixels in the left-half of the map is labelled by 'L',
 ## and the other side by 'R'.
 ## In such a case, mean of A is around 50 fo 'L' and 30 for 'R'
-mean(qm, index = rep(c('L', 'R'), each = 100))
-
+mean(qm, index = rep(c("L", "R"), each = 100))
 }
 \seealso{
 \code{\link[base:mean]{base::mean()}}, \code{\link[=segment]{segment()}}, \code{\link[=quantify]{quantify()}}, \code{\link[=qntmap]{qntmap()}}

@@ -1,6 +1,6 @@
 context("test-find-AG.R")
 
-if(interactive()) setwd(here::here("tests/testthat"))
+if (interactive()) setwd(here::here("tests/testthat"))
 
 xmap <- read_xmap("minimal/.map/1", saving = FALSE)
 qnt <- read_qnt("minimal/.qnt", saving = FALSE)
@@ -44,4 +44,4 @@ test_that("expand_AB() returns AB for each pixels depending on stg", {
   expect_identical(AB_expanded, ans)
 })
 
-if(interactive()) setwd(here::here())
+if (interactive()) setwd(here::here())

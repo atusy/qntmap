@@ -1,14 +1,14 @@
 #' find AG
 #' @noRd
 #' @param epma A tidy epma data output by [`tidy_epma()`]
-#' @param not_quantified 
-#'   A character vector specifying phases who weren't analyzed 
+#' @param not_quantified
+#'   A character vector specifying phases who weren't analyzed
 #'   during point analysis # JAMSTEC
 #' @importFrom dplyr bind_rows left_join mutate
 #' @importFrom tidyr unnest
 find_AG <- function(
-  epma, 
-  not_quantified = character(0) # © 2018 JAMSTEC
+                    epma,
+                    not_quantified = character(0) # © 2018 JAMSTEC
 ) {
   AG <- lm_AG(epma, elm, phase3)
   AG_mean <- lm_AG(epma, elm)
@@ -16,11 +16,11 @@ find_AG <- function(
   as.data.frame(bind_rows(
     AG[kept, ],
     left_join(
-      AG[!kept, c("elm", "phase3", "g", "g_se")], 
-      AG_mean[, c("elm", "a", "a_se")], 
+      AG[!kept, c("elm", "phase3", "g", "g_se")],
+      AG_mean[, c("elm", "a", "a_se")],
       by = "elm"
     ),
-    if(length(not_quantified) > 0)
+    if (length(not_quantified) > 0)
       unnest(mutate(AG_mean, phase3 = not_quantified))
   ))
 }
@@ -35,7 +35,7 @@ find_AG <- function(
 lm_AG <- function(epma, ...) {
   mutate(
     ungroup(summarize(
-      group_by(epma, ...), 
+      group_by(epma, ...),
       fit = list(lm(wt ~ 0 + net)),
       g = mean(bgint),
       g_se = sd(bgint) / (length(bgint) - 1)
@@ -56,8 +56,8 @@ lm_AG <- function(epma, ...) {
 #' Fix parameters: alpha, beta, and gamma
 #' @noRd
 #' @param params tidy parameters
-#' 
+#'
 #' @importFrom dplyr transmute
-fix_AG <- function (params) {
+fix_AG <- function(params) {
   transmute(params, elm = oxide, phase3 = phase, a = alpha, g = gamma)
 }

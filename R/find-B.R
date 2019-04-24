@@ -14,22 +14,22 @@ find_B <- function(epma) {
     B[kept, ],
     left_join(B[!kept, c("elm", "stg")], lm_B(epma, elm), by = "elm")
   )
-  
+
   as.data.frame(B)
 }
 
 #' Find beta (B) for small pieces of maps
 #' @noRd
-#' 
+#'
 #' @note
-#' In case all weights are equal to `0`, 
+#' In case all weights are equal to `0`,
 #' `lm` class object returns NA for `coef()` and `vcov()`
-#' 
+#'
 #' `x <- 1:5; y <- rnorm(5) + x; w <- numeric(5); fit <- lm(y~0+x,weights=w); coef(fit); vcov(lm(y~0+x,weights=w))`
-#' 
+#'
 #' For `coef()` and `vcov()`, `complete = FALSE` is used
 #' for backward-compatibility (<R 3.4.x or before)
-#' 
+#'
 #' @param epma `tidy_epma``
 #' @param ... Grouping variables in NSE.
 #' @importFrom dplyr group_by mutate summarize ungroup
@@ -38,7 +38,7 @@ find_B <- function(epma) {
 lm_B <- function(epma, ...) {
   mutate(
     ungroup(summarize(
-      group_by(epma, ...), 
+      group_by(epma, ...),
       fit = list(lm(pkint ~ 0 + mapint, weights = mem)),
       k = dwell[1] * beam_map[1] * 1e+6
     )),
@@ -58,11 +58,11 @@ lm_B <- function(epma, ...) {
 #' Fix parameters: alpha, beta, and gamma
 #' @noRd
 #' @param params tidy parameters
-#' 
+#'
 #' @importFrom dplyr transmute
-fix_B <- function (params) {
-  if(!is.null(params$stage))
+fix_B <- function(params) {
+  if (!is.null(params$stage))
     stop("Cannot inherit parameters from a file containing stage column.")
-  
+
   distinct(transmute(params, elm = oxide, stg = "11", b = beta))
 }
