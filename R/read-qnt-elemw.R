@@ -11,10 +11,10 @@ read_qnt_elemw.default <- function(x, recursive = TRUE, ...) {
 #' @noRd
 read_qnt_elemw.map_cnd <- function(x, ...) {
   data.frame(
-    bgp_pos = x[["XM_ELEM_WDS_BACK_PLUS"]][[1]],
-    bgm_pos = x[["XM_ELEM_WDS_BACK_MINUS"]][[1]],
-    pk_t = x[["XM_ELEM_WDS_QNT_PEAK_TIME"]][[1]],
-    bg_t = x[["XM_ELEM_WDS_QNT_BACK_TIME"]][[1]]
+    bgp_pos = x[["XM_ELEM_WDS_BACK_PLUS"]][[1L]],
+    bgm_pos = x[["XM_ELEM_WDS_BACK_MINUS"]][[1L]],
+    pk_t = x[["XM_ELEM_WDS_QNT_PEAK_TIME"]][[1L]],
+    bg_t = x[["XM_ELEM_WDS_QNT_BACK_TIME"]][[1L]]
   )
 }
 
@@ -34,8 +34,8 @@ read_qnt_elemw.0_cnd <- function(
                                    pk_t = "(Peak|Pk)( Meas\\.)? (Time|t)",
                                    bg_t = "(Back|BG)( Meas\\.)? (Time|t)"
                                  ),
-                                 n = c(14, 15, 17, 18),
-                                 each = 21
+                                 n = c(14L, 15L, 17L, 18L),
+                                 each = 21L
 ) {
   # read cnd files and transform to numeric
   val <- str_replace(x, "[:blank:].*", "")
@@ -45,7 +45,7 @@ read_qnt_elemw.0_cnd <- function(
 
   if (
     any(unlist(matched, use.names = FALSE)) &&
-      length(unique(lapply(matched, sum))) == 1
+      length(unique(lapply(matched, sum))) == 1L
   ) return(
       as.data.frame(lapply(matched, function(i) as.numeric(val[i])))
     )

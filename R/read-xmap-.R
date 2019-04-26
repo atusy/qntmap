@@ -59,12 +59,12 @@ read_xmap <- function(
     deadtime   = DT,
     dir_map    = wd,
     elm        = unlist(lapply(cnd, `[[`, "elm"), use.names = FALSE),
-    dwell      = as.integer(cnd[[1]][["dwell"]][1]),
-    current    = as.numeric(cnd[[1]][["current"]][1]),
-    start      = as.numeric(cnd[[1]][["start"]][1:3]),
-    pixel      = as.integer(cnd[[1]][["pixel"]][1:2]),
-    step       = as.numeric(cnd[[1]][["step"]][1:2]),
-    instrument =            cnd[[1]][["instrument"]][1]
+    dwell      = as.integer(cnd[[1L]][["dwell"]][1L]),
+    current    = as.numeric(cnd[[1L]][["current"]][1L]),
+    start      = as.numeric(cnd[[1L]][["start"]][1:3]),
+    pixel      = as.integer(cnd[[1L]][["pixel"]][1:2]),
+    step       = as.numeric(cnd[[1L]][["step"]][1:2]),
+    instrument =            cnd[[1L]][["instrument"]][1L]
   ) %>>%
     save4qm(rds, saving)
 }

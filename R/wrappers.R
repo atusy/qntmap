@@ -10,7 +10,7 @@ formals(data.frame)$stringsAsFactors <- FALSE
 #' @noRd
 as.data.frame <- getExportedValue("base", "as.data.frame")
 formals(as.data.frame) <-
-  append(formals(as.data.frame), list(stringsAsFacotrs = FALSE), 3)
+  append(formals(as.data.frame), list(stringsAsFacotrs = FALSE), 3L)
 
 #' A wrapper of [`data.table::fread()`] returning `data.frame` not `data.table`.
 #' @importFrom data.table fread

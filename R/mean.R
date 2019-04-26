@@ -53,10 +53,10 @@ NULL
 mean.qntmap <- function(x, index = "Whole area", ...) {
   x %>>%
     lapply(function(x) unlist(x[["wt"]], use.names = FALSE)) %>>%
-    (~ if (length(index) %nin% c(1, length(.[[1]]))) {
+    (~ if (length(index) %nin% c(1L, length(.[[1L]]))) {
       stop (
         "length of index must be 1 or same as number of pixels of qntmap:",
-        length(.[[1]])
+        length(.[[1L]])
       )
     }) %>>%
     c(.index = list(index)) %>>%

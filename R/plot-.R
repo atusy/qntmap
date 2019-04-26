@@ -41,7 +41,7 @@ NULL
 #' @export
 plot.qm_raster <- function(
                            x,
-                           y = setdiff(names(x), c("x", "y"))[1],
+                           y = setdiff(names(x), c("x", "y"))[1L],
                            z = x[[y]],
                            zname = y,
                            zlim = range(z),
@@ -74,10 +74,10 @@ plot.qm_raster <- function(
 #' plot(xm, interactive = FALSE)
 #' @importFrom dplyr bind_cols
 #' @export
-plot.qm_xmap <- function(x, y = setdiff(names(x), c("x", "y"))[1], ...) {
+plot.qm_xmap <- function(x, y = setdiff(names(x), c("x", "y"))[1L], ...) {
   plot.qm_raster(
     bind_cols(
-      expand.grid(y = seq(NROW(x[[1]])), x = seq(NCOL(x[[1]])))[c("x", "y")],
+      expand.grid(y = seq(NROW(x[[1L]])), x = seq(NCOL(x[[1L]])))[c("x", "y")],
       lapply(x, unlist, use.names = FALSE)
     ),
     y = y, ...
@@ -91,8 +91,8 @@ plot.qm_xmap <- function(x, y = setdiff(names(x), c("x", "y"))[1], ...) {
 #' class(qm) <- c("qntmap", "list")
 #' plot(qm, interactive = FALSE)
 #' @export
-plot.qntmap <- function(x, y = setdiff(names(x), c("x", "y"))[1], ...) {
-  plot.qm_xmap(lapply(lapply(x, `[[`, "wt"), round, 2), y = y, ...)
+plot.qntmap <- function(x, y = setdiff(names(x), c("x", "y"))[1L], ...) {
+  plot.qm_xmap(lapply(lapply(x, `[[`, "wt"), round, 2L), y = y, ...)
 }
 
 # © 2018 YASUMOTO Atsushi

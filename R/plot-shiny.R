@@ -16,7 +16,7 @@
 #'   selectInput sidebarLayout sidebarPanel splitLayout splitLayout
 #'   uiOutput
 #' @noRd
-ui <- function(elm, selected = elm[[1]], pcol = TRUE) {
+ui <- function(elm, selected = elm[[1L]], pcol = TRUE) {
   fluidPage(sidebarLayout(
 
     sidebarPanel(

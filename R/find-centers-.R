@@ -100,7 +100,7 @@ find_centers <- function(
     bind_rows(
       if (!all(quantified)) {
         . %>>%
-          filter(elint == elint[1]) %>>%
+          filter(elint == elint[1L]) %>>%
           select(-elint, -map, -map_est) %>>%
           bind_cols(lapply(xmap_df[!quantified], `[`, .$nr)) %>>%
           gather(elint, map, -within_pi, -n_within_pi, -phase, -id, -nr) %>>%
@@ -129,8 +129,8 @@ find_centers <- function(
         ) %>>%
         lapply(function(x) xmap_df[which.min(colSums2(square(x), na.rm = TRUE)), ]) %>>%
         bind_rows %>>%
-        `[`(names(x[-1])) %>>%
-        map2(x[miss, -1], function(y, x) ifelse(is.na(x), y, x)) %>>%
+        `[`(names(x[-1L])) %>>%
+        map2(x[miss, -1L], function(y, x) ifelse(is.na(x), y, x)) %>>%
         bind_cols
       x
     })() %>>%

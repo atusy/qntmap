@@ -56,7 +56,7 @@ cluster_xmap <- function(
 ) {
   dir_map <- attr(xmap, "dir_map")
   centers$phase <- as.character(centers$phase)
-  dims <- dim(xmap[[1]])
+  dims <- dim(xmap[[1L]])
 
   x <- as.data.frame(lapply(xmap[elements], unlist, use.names = FALSE))
 

@@ -69,7 +69,7 @@ read_cnd.0_cnd <- function(x, pattern = NULL, n = NULL, ...) {
   detection_n <- lengths(detection)
 
   # error if any pattern matched more than 1 phrase
-  if (any(too_many <- detection_n > 1)) {
+  if (any(too_many <- detection_n > 1L)) {
     stop(
       'Some of the regular expression patterns matched more than 1 lines in "',
       path,
@@ -85,7 +85,7 @@ read_cnd.0_cnd <- function(x, pattern = NULL, n = NULL, ...) {
   }
 
   # warn if any pattern did not match any phrase
-  if (any(mismatch <- detection_n == 0)) {
+  if (any(mismatch <- detection_n == 0L)) {
     warning(
       'Some of the regular expression patterns matched 0 phrases in "',
       path, '".\n',

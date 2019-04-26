@@ -13,7 +13,7 @@ print.qntmap <- function(x, summarizing = TRUE, ...) {
   if (!summarizing) return(x)
   cat(
     "Summary of",
-    paste(dim(x[[1]][[1]]), collapse = " * "),
+    paste(dim(x[[c(1L, 1L)]]), collapse = " * "),
     " mass concentration map\n",
     sep = " "
   )

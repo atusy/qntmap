@@ -25,7 +25,7 @@ patterns_xmap_cnd <-
       instrument = "XM_ANALYSIS_INSTRUMENT"
     )
   ) %>>%
-  (~ if (length(unique(lapply(., names))) != 1) stop("check list")) %>>%
+  (~ if (length(unique(lapply(., names))) != 1L) stop("check list")) %>>%
   pmap(c, use.names = FALSE) %>>%
   lapply(paste, collapse = "|") %>>%
   unlist
@@ -40,7 +40,7 @@ patterns_xmap_cnd <-
 #' @noRd
 read_xmap_cnd <- function(x, patterns = patterns_xmap_cnd) {
   y <- readLines(x)
-  if (length(patterns) == 0) return(y)
+  if (length(patterns) == 0L) return(y)
   y <- strsplit(
     str_replace_all(
       str_subset(y, collapse_patterns(patterns)),
@@ -48,10 +48,10 @@ read_xmap_cnd <- function(x, patterns = patterns_xmap_cnd) {
     ),
     " "
   )
-  y <- y[(lengths(y) > 1)]
+  y <- y[(lengths(y) > 1L)]
   names(y) <-
     names(patterns)[map_int(y, function(.p) which(str_detect(patterns, .p[1])))]
-  lapply(y, `[`, -1)
+  lapply(y, `[`, -1L)
 }
 
 collapse_patterns <- function(x) {

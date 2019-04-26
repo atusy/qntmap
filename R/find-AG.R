@@ -8,7 +8,7 @@
 #' @importFrom tidyr unnest
 find_AG <- function(
                     epma,
-                    not_quantified = character(0) # © 2018 JAMSTEC
+                    not_quantified = character(0L) # © 2018 JAMSTEC
 ) {
   AG <- lm_AG(epma, elm, phase3)
   AG_mean <- lm_AG(epma, elm)
@@ -20,7 +20,7 @@ find_AG <- function(
       AG_mean[, c("elm", "a", "a_se")],
       by = "elm"
     ),
-    if (length(not_quantified) > 0)
+    if (length(not_quantified) > 0L)
       unnest(mutate(AG_mean, phase3 = not_quantified))
   ))
 }
@@ -38,11 +38,11 @@ lm_AG <- function(epma, ...) {
       group_by(epma, ...),
       fit = list(lm(wt ~ 0 + net)),
       g = mean(bgint),
-      g_se = sd(bgint) / (length(bgint) - 1)
+      g_se = sd(bgint) / (length(bgint) - 1L)
     )),
     a = map(fit, coef, complete = FALSE),
     a_se = map(fit, vcov, complete = FALSE),
-    len_eq_1 = lengths(a) == 1 & lengths(a_se) == 1,
+    len_eq_1 = (lengths(a) * lengths(a_se)) == 1L, # faster than x == 1L & y == 1L
     a = unlist(ifelse(len_eq_1, a, NA_real_), use.names = FALSE),
     a_se = unlist(ifelse(len_eq_1, a_se, NA_real_), use.names = FALSE),
     len_eq_1 = NULL,

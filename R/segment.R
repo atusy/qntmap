@@ -15,7 +15,7 @@
 #'
 #' @export
 segment <- function(x, ...) {
-  if (!is.character(x) | length(x) != 1)
+  if (!is.character(x) | length(x) != 1L)
     stop("x must be a path to the image file")
   UseMethod("segment")
 }
@@ -33,7 +33,7 @@ segment <- function(x, ...) {
 #' @export
 segment.character <- function(x, ...) {
   readPNG(x) %>>%
-    apply(3, list) %>>%
+    apply(3L, list) %>>%
     setNames(names(formals(rgb))[seq_along(.)]) %>>%
     pmap(rgb) %>>%
     unlist(use.names = FALSE)

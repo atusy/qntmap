@@ -28,8 +28,8 @@ quantify <- function(
                      xmap,
                      qnt,
                      cluster,
-                     maps_x = attr(xmap, "pixel")[1],
-                     maps_y = attr(xmap, "pixel")[2],
+                     maps_x = attr(xmap, "pixel")[1L],
+                     maps_y = attr(xmap, "pixel")[2L],
                      fine_phase = NULL,
                      fine_th = 0.9,
                      fix = NULL,
@@ -47,8 +47,8 @@ quantify <- function(
   stg <- do.call(
     flag0,
     unclass(expand.grid(
-      x_stg = seq(0L, pixel[1] - 1L) %/% maps_x + 1L,
-      y_stg = seq(0L, pixel[2] - 1L) %/% maps_y + 1L
+      x_stg = seq(0L, pixel[1L] - 1L) %/% maps_x + 1L,
+      y_stg = seq(0L, pixel[2L] - 1L) %/% maps_y + 1L
     ))
   )
 
@@ -117,10 +117,10 @@ quantify <- function(
     }) %>>%
     map2(xmap[names(.)], function(xab, i) lapply(xab, `*`, i)) %>>% # XABI
     map2(XAG, function(xabi, xag) c( # XABI - XAG
-      wt = list(xabi[[1]] - xag[[1]]), 
-      se = if (se) list(L2(xabi[[2]], xag[[2]]))
+      wt = list(xabi[[1L]] - xag[[1L]]), 
+      se = if (se) list(L2(xabi[[2L]], xag[[2L]]))
     )) %>>% 
-    lapply(map_at, 'wt', function(x) x * (x > 0)) %>>%
+    lapply(map_at, 'wt', as_positive) %>>%
     c(list(Total = c(
       list(wt = as.data.frame(reduce_add(lapply(., `[[`, "wt")))),
       if (se) list(se = as.data.frame(sqrt(reduce_add(lapply(lapply(., `[[`, "se"), square)))))
@@ -153,7 +153,7 @@ check_ABG <- function(params, xmap, cls) {
 
   # FALSE if required columns are missing
   col_missing <- setdiff(c(nm_AGB, nm_common), names(params))
-  if (length(col_missing) > 0)
+  if (length(col_missing) > 0L)
     stop(
       "Tried to fix parameters, ",
       "but there are missing columns in the input file: ",

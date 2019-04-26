@@ -68,10 +68,7 @@ L2 <- function(x, y) sqrt(square(x) + square(y))
 #' @param x,y numeric
 #' @param x2,y2 errors of x and y
 #' @noRd
-propagate_add <- function(x, x2, y, y2) {
-  L2(x2 - x, y2 - y)
-}
-
+propagate_add <- function(x, x2, y, y2) L2(x2 - x, y2 - y)
 
 #' Reduce add
 #' @param x input
@@ -97,3 +94,7 @@ prioritize <- function(x, prior) {
 #' @importFrom utils packageVersion
 #' @noRd
 ver <- getExportedValue("utils", "packageVersion")("qntmap")
+
+#' Convert numeric to positive values
+#' @noRd
+as_positive <- function(x) x * (x > 0)

@@ -47,8 +47,8 @@ qntmap <- function() {
     )
   )
   cat("\n")
-  if (selection == 1) phase_list <- NULL
-  if (selection == 2) {
+  if (selection == 1L) phase_list <- NULL
+  if (selection == 2L) {
     cat("Choose an external csv file\n")
     phase_list <- file.choose()
     cat("Chosen", phase_list, "\n\n")

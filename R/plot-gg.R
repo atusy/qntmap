@@ -35,10 +35,10 @@ gghist.numeric <- function(x, .min = NA_real_, .max = NA_real_, colors) {
   x[.min <= x & x <= .max] %>>%
     hist(breaks = "FD", plot = FALSE) %>>%
     `[`(c("mids", "counts")) %>>%
-    c(list(width = .$mids[2] - .$mids[1])) %>>%
+    c(list(width = .$mids[2L] - .$mids[1L])) %>>%
     as.data.frame() %>>%
     bind_rows(
-      data.frame(mids = c(.min, .max), counts = 0, width = 1)
+      data.frame(mids = c(.min, .max), counts = 0L, width = 1L)
     ) %>>%
     ggplot(aes(mids, counts, width = width, fill = mids)) +
     geom_col(show.legend = FALSE, position = "identity") +
@@ -109,10 +109,10 @@ lookup <- list(
   gray     = rescale,
   discrete = function(x, ...) {
     x <- as.factor(x)
-    (palette$discrete(rescale(seq_along(levels(x)))) / 255)[as.integer(x), ]
+    (palette$discrete(rescale(seq_along(levels(x)))) / 255L)[as.integer(x), ]
   }
 )
-formals(lookup$viridis)$to <- c(1, nrow(palette$viridis))
+formals(lookup$viridis)$to <- c(1L, nrow(palette$viridis))
 
 #' Convert to array
 #' @param x A value returned by `lookup()`
@@ -168,7 +168,7 @@ gg_img <- function(
     geom_tile(width = 0, height = 0) + # Invisible tile for legend
     coord_fixed(xlim = xlim, ylim = ylim, expand = FALSE) +
     annotation_raster(
-      img, xmin = xlim[1], xmax = xlim[2], ymin = -ylim[2], ymax = -ylim[1]
+      img, xmin = xlim[1L], xmax = xlim[2L], ymin = -ylim[2L], ymax = -ylim[1L]
     ) +
     scale_y_reverse() +
     `if`(

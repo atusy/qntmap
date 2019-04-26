@@ -48,7 +48,7 @@ save4qm.qm_cluster <- function(x, nm, saving, ...) {
   )
 
   .cls <- as.factor(x$cluster)
-  .img <- as_img(lookup$discrete(.cls), x$dims[1], x$dims[2])
+  .img <- as_img(lookup$discrete(.cls), x$dims[1L], x$dims[2L])
 
   # Save as binary
   saveRDS(x, paste0(nm, "_result.RDS"))
@@ -61,7 +61,7 @@ save4qm.qm_cluster <- function(x, nm, saving, ...) {
   ggsave(
     paste0(nm, "_legend.svg"),
     gg_img(.img, zlim = levels(.cls)) + labs(y = "Rows", x = "Columns"),
-    height = A4[[1]], width = A4[[2]], units = "mm"
+    height = A4[[1L]], width = A4[[2L]], units = "mm"
   )
 
   invisible(x)
