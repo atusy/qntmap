@@ -116,9 +116,11 @@ quantify <- function(
         map_at("se", sqrt)
     }) %>>%
     map2(xmap[names(.)], function(xab, i) lapply(xab, `*`, i)) %>>% # XABI
-    map2(XAG, map2, `-`) %>>% # XABI - XAG
-    lapply(setNames, c("wt", "se"[se])) %>>%
-    lapply(function(x) lapply(x, `*`, x$wt > 0)) %>>%
+    map2(XAG, function(xabi, xag) c( # XABI - XAG
+      wt = list(xabi[[1]] - xag[[1]]), 
+      se = if (se) list(L2(xabi[[2]], xag[[2]]))
+    )) %>>% 
+    lapply(map_at, 'wt', function(x) x * (x > 0)) %>>%
     c(list(Total = c(
       list(wt = as.data.frame(reduce_add(lapply(., `[[`, "wt")))),
       if (se) list(se = as.data.frame(sqrt(reduce_add(lapply(lapply(., `[[`, "se"), square)))))
@@ -132,6 +134,7 @@ quantify <- function(
 #' @noRd
 #'
 #' @return `TRUE` or `FALSE`
+#' @importFrom dplyr anti_join
 #' @note © 2018 JAMSTEC
 #'
 check_ABG <- function(params, xmap, cls) {
