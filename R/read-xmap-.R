@@ -126,6 +126,7 @@ correct_deadtime <- function(x, deadtime = 0L) {
   # Dead time corrections except for electron signals (e.g., BSE)
   if (deadtime == 0L) return(x)
   map_at(
+    x,
     setdiff(names(x), .electron),
     function(x) as.integer(round(dwell * x / (dwell - deadtime * 1e-9 * x)))
   )
