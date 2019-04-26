@@ -59,7 +59,7 @@ read_xmap <- function(
     deadtime   = DT,
     dir_map    = wd,
     elm        = unlist(lapply(cnd, `[[`, "elm"), use.names = FALSE),
-    dwell      = as.integer(cnd[[1L]][["dwell"]][1L]),
+    dwell      = as.numeric(cnd[[1L]][["dwell"]][1L]),
     current    = as.numeric(cnd[[1L]][["current"]][1L]),
     start      = as.numeric(cnd[[1L]][["start"]][1:3]),
     pixel      = as.integer(cnd[[1L]][["pixel"]][1:2]),
@@ -111,7 +111,7 @@ construct_qm_xmap <- function(files_xmap, elm, dwell, deadtime, dir_map, ...) {
     lapply(fread) %>>%
     setNames(elm) %>>%
     prioritize(.component) %>>%
-    correct_deadtime(deadtime = deadtime) %>>%
+    correct_deadtime(deadtime = deadtime, dwell = dwell) %>>%
     structure(
       class = c("qm_xmap", class(.)),
       deadtime = deadtime,
@@ -122,13 +122,13 @@ construct_qm_xmap <- function(files_xmap, elm, dwell, deadtime, dir_map, ...) {
     )
 }
 
-correct_deadtime <- function(x, deadtime = 0L) {
+correct_deadtime <- function(x, deadtime = 0L, dwell) {
   # Dead time corrections except for electron signals (e.g., BSE)
   if (deadtime == 0L) return(x)
   map_at(
     x,
     setdiff(names(x), .electron),
-    function(x) as.integer(round(dwell * x / (dwell - deadtime * 1e-9 * x)))
+    function(x) round(x / (1 - deadtime / dwell * 1e-6 * x))
   )
 }
 
