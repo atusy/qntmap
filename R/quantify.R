@@ -126,7 +126,11 @@ quantify <- function(
       if (se) list(se = as.data.frame(sqrt(reduce_add(lapply(lapply(., `[[`, "se"), square)))))
     ))) %>>%
     prioritize(.component) %>>%
-    `class<-`(c("qntmap", "list")) %>>%
+    structure(
+      pixel = attributes(xmap)$pixel,
+      step  = attributes(xmap)$step,
+      class = c("qntmap", "list")
+    ) %>>%
     save4qm(nm = dir_qntmap, saving = saving)
 }
 

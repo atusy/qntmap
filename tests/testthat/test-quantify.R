@@ -61,6 +61,13 @@ test_that("quantify() returns a qntmap class object", {
       "SiO2_se.csv", "SiO2_wt.csv", "Total_se.csv", "Total_wt.csv") %in%
       dir(dir_qmap)
   ))
+  
+  # Partially inhertis attributes from qm_xmap object
+  attrs <- c('pixel', 'step')
+  expect_identical(
+    attributes(.qmap)[attrs], 
+    attributes(xmap)[attrs]
+  )
   unlink(dir_qmap, recursive = TRUE)
 })
 

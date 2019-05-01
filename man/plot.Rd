@@ -8,13 +8,13 @@
 \alias{plot.qm_cluster}
 \title{Plot methods for \code{qntmap} package}
 \usage{
-\method{plot}{qm_raster}(x, y = setdiff(names(x), c("x", "y"))[1],
+\method{plot}{qm_raster}(x, y = setdiff(names(x), c("x", "y"))[1L],
   z = x[[y]], zname = y, zlim = range(z), colors = c("viridis",
   "gray", "discrete"), interactive = TRUE, ...)
 
-\method{plot}{qm_xmap}(x, y = setdiff(names(x), c("x", "y"))[1], ...)
+\method{plot}{qm_xmap}(x, y = setdiff(names(x), c("x", "y"))[1L], ...)
 
-\method{plot}{qntmap}(x, y = setdiff(names(x), c("x", "y"))[1], ...)
+\method{plot}{qntmap}(x, y = setdiff(names(x), c("x", "y"))[1L], ...)
 
 \method{plot}{qm_cluster}(x, y = NULL, colors = "discrete", ...)
 }

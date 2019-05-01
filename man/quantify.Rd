@@ -4,8 +4,8 @@
 \alias{quantify}
 \title{Quantify X-ray maps}
 \usage{
-quantify(xmap, qnt, cluster, maps_x = attr(xmap, "pixel")[1],
-  maps_y = attr(xmap, "pixel")[2], fine_phase = NULL, fine_th = 0.9,
+quantify(xmap, qnt, cluster, maps_x = attr(xmap, "pixel")[1L],
+  maps_y = attr(xmap, "pixel")[2L], fine_phase = NULL, fine_th = 0.9,
   fix = NULL, se = FALSE, saving = TRUE)
 }
 \arguments{
