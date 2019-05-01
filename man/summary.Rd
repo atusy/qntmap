@@ -54,11 +54,11 @@ For \code{\link{factor}}s, the frequency of the first \code{maxsum - 1}
     \code{\link{lm}} and \code{\link{glm}}.
 }
 \section{summary.qm_cluster}{
- Returns abundance ratios of clusters.
+ Summarize abundance ratios of clusters.
 }
 
 \section{summary.qntmap}{
- summary qntmap class data.
+ Summarize qntmap class data.
 }
 
 \examples{
