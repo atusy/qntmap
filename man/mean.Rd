@@ -5,7 +5,8 @@
 \alias{mean.qntmap}
 \title{Arithmetric mean for \code{qntmap} package}
 \usage{
-\method{mean}{qntmap}(x, index = "Whole area", ...)
+\method{mean}{qntmap}(x, index = "Whole area", cluster = NULL,
+  density = NULL, ...)
 }
 \arguments{
 \item{x}{A \code{qntmap} class object returned by \code{\link[=quantify]{quantify()}} or \code{\link[=qntmap]{qntmap()}}.}
@@ -13,7 +14,13 @@
 \item{index}{A vector of length `1`` or length equal to number of pixels in map.
 An index can be created using mask image through \code{\link[=segment]{segment()}}.}
 
-\item{...}{Other arguments passed to \code{\link[base:mean.default]{base::mean.default()}}}
+\item{cluster}{A result of \code{cluster_xmap()} (i.e., \code{qm_cluster} class object).
+\code{cluster} is required when specifying \code{density}.}
+
+\item{density}{A named numeric vector specifying density of all the phases in \code{x}.
+(e.g., \code{c(Qtz = 2.6, Ab = 2.6)}).}
+
+\item{...}{Ignored}
 }
 \description{
 S3 methods for the arithmetric mean.
