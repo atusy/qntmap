@@ -40,9 +40,10 @@ gghist.numeric <- function(x, .min = NA_real_, .max = NA_real_, colors) {
     bind_rows(
       data.frame(mids = c(.min, .max), counts = 0L, width = 1L)
     ) %>>%
-    ggplot(aes(mids, counts, width = width, fill = mids)) +
+    ggplot(aes(mids, counts, width = width, fill = mids, color = mids)) +
     geom_col(show.legend = FALSE, position = "identity") +
     scale_fill[[match.arg(colors)]]() +
+    scale_color[[match.arg(colors)]]() +
     gghist_theme
 }
 
@@ -133,6 +134,18 @@ scale_fill <- list(
   gray = function(...) scale_fill_gradient(..., low = "black", high = "white"),
   viridis = scale_fill_viridis_c,
   discrete = scale_fill_manual
+)
+
+#' Choice of scales for coloring
+#' @importFrom ggplot2
+#'   scale_color_gradient
+#'   scale_color_viridis_c
+#'   scale_color_manual
+#' @noRd
+scale_color <- list(
+  gray = function(...) scale_color_gradient(..., low = "black", high = "white"),
+  viridis = scale_color_viridis_c,
+  discrete = scale_color_manual
 )
 
 #' Raster image with ggplot2::annotation_raster
