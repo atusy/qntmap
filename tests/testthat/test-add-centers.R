@@ -1,5 +1,4 @@
 # © 2018 JAMSTEC
-library(testthat)
 
 context("test-add-ceters.R")
 
