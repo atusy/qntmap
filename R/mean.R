@@ -11,8 +11,12 @@
 #' @param index
 #'   A vector of length `1`` or length equal to number of pixels in map.
 #'   An index can be created using mask image through [segment()].
-#' @param ...
-#'   Other arguments passed to [base::mean.default()]
+#' @param density
+#'   A named numeric vector specifying density of all the phases in `x`.
+#'   (e.g., `c(Qtz = 2.6, Ab = 2.6)`).
+#' @param cluster
+#'   A result of `cluster_xmap()` (i.e., `qm_cluster` class object).
+#'   `cluster` is required when specifying `density`.
 #'
 #' @section mean.qntmap:
 #'   A returning value is a [`data.frame`] whose first column lists elements,
@@ -51,23 +55,36 @@ NULL
 #' @importFrom tidyr gather spread
 #'
 #' @export
-mean.qntmap <- function(x, index = "Whole area", ...) {
+mean.qntmap <- function(x, index = "Whole area", cluster = NULL, density = NULL) {
+  # Provide densities
+  density <- if (is.null(cluster)) {
+      1 
+    } else if (!all(cluster$cluster %in% names(density))) {
+      stop("`density` must be a named vector to specify density of all the phases")
+    } else {
+      density[cluster$cluster]
+    }
+  
   x %>>%
     lapply(function(x) unlist(x[["wt"]], use.names = FALSE)) %>>%
     (~ if (length(index) %nin% c(1L, length(.[[1L]]))) {
-      stop (
+      stop(
         "length of index must be 1 or same as number of pixels of qntmap:",
         length(.[[1L]])
       )
     }) %>>%
-    c(.index = list(index)) %>>%
     as.data.frame() %>>%
-    gather(Element, val, -.index, factor_key = TRUE) %>>%
+    mutate(.index = !!index, .density = !!density) %>>%
+    gather(Element, val, -.index, -.density, factor_key = TRUE) %>>%
+    mutate(val = val * .density) %>>%
     group_by(Element, .index) %>>%
-    summarize(val = mean.default(val, ...)) %>>%
+    summarize(val = sum(val), .density = sum(.density)) %>>%
+    ungroup() %>>%
+    mutate(val = val / .density, .density = NULL) %>>%
     spread(.index, val) %>>%
     as.data.frame()
 }
+
 
 
 #' Calculate means for horizontal and vertical directions
