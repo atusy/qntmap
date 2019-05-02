@@ -1,4 +1,5 @@
 # © 2018 JAMSTEC
+
 #' @name mean
 #' @title Arithmetric mean for `qntmap` package
 #' @description
@@ -66,4 +67,55 @@ mean.qntmap <- function(x, index = "Whole area", ...) {
     summarize(val = mean.default(val, ...)) %>>%
     spread(.index, val) %>>%
     as.data.frame()
+}
+
+
+#' Calculate means for horizontal and vertical directions
+#'
+#' Calculate means for horizontal and vertical directions for mapping data.
+#' 
+#' @param x 
+#'   Mapping data (currently restricted to an object of class "qntmap").
+#' @param step 
+#'   A step size as a numeric value (i.e., length of pixel's sides).
+#'   Specify when `x` is produced by `qntmap` before 0.3.4.
+#' @export
+hmean <- function(x) UseMethod("hmean")
+
+hmean.data.frame <- function(x) Reduce(`+`, x) / ncol(x)
+
+#' @export
+hmean.qntmap <- function(x, step = attr(x, "step")[1L]) {
+  x %>>%
+    lapply(function(x) hmean.data.frame(x$wt)) %>>%
+    post_hmean(step = step, new_class = "qm_hmean")
+}
+
+#' @rdname hmean
+#' @export
+vmean <- function(x) UseMethod("vmean") 
+
+vmean.data.frame <- function(x) vapply(x, sum, 0) / nrow(x)
+
+#' @export
+vmean.qntmap <- function() {
+  x %>>%
+    lapply(function(x) vmean.data.frame(x$wt)) %>>%
+    post_vmean(step = step, new_class = "qm_vmean")
+}
+formals(vmean.qntmap) <- formals(hmean.qntmap)
+
+#' @noRd
+#' @param x An object of class qm_hmean or qm_vmean
+#' @param step A step size of mapping data
+#' @param new_class An additional class, if any.
+#' @param ... Arbitary attributes for a returning value.
+#' 
+#' @importFrom dplyr mutate row_number
+post_hmean <- post_vmean <- function(x, step, new_class = NULL, ...) {
+  x %>>%
+    as.data.frame %>>%
+    mutate(px = row_number() - 1L, um = px * !!step) %>>%
+    prioritize(c('px', 'um')) %>>%
+    structure(class = c(new_class, class(.)), step = step, ...)
 }
