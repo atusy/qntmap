@@ -17,6 +17,8 @@
 #' @param cluster
 #'   A result of `cluster_xmap()` (i.e., `qm_cluster` class object).
 #'   `cluster` is required when specifying `density`.
+#' @param ...
+#'   Ignored
 #'
 #' @section mean.qntmap:
 #'   A returning value is a [`data.frame`] whose first column lists elements,
@@ -55,7 +57,7 @@ NULL
 #' @importFrom tidyr gather spread
 #'
 #' @export
-mean.qntmap <- function(x, index = "Whole area", cluster = NULL, density = NULL) {
+mean.qntmap <- function(x, index = "Whole area", cluster = NULL, density = NULL, ...) {
   # Provide densities
   density <- if (is.null(cluster)) {
       1 
@@ -96,31 +98,39 @@ mean.qntmap <- function(x, index = "Whole area", cluster = NULL, density = NULL)
 #' @param step 
 #'   A step size as a numeric value (i.e., length of pixel's sides).
 #'   Specify when `x` is produced by `qntmap` before 0.3.4.
+#' @param ...
+#'   Arguments passed to `mean.qntmap()` 
+#'   if x is a `qntmap` class object returned by `quantify()` or `qntmap()`.
+#'   Otherwise ignored.
+#' @seealso mean.qntmap
+#' 
 #' @export
-hmean <- function(x) UseMethod("hmean")
-
-hmean.data.frame <- function(x) Reduce(`+`, x) / ncol(x)
+hmean <- function(x, step = attr(x, "step")[1L], ...) UseMethod("hmean")
 
 #' @export
-hmean.qntmap <- function(x, step = attr(x, "step")[1L]) {
+hmean.qntmap <- function() {
   x %>>%
-    lapply(function(x) hmean.data.frame(x$wt)) %>>%
-    post_hmean(step = step, new_class = "qm_hmean")
+    mean.qntmap(
+      index = rep(seq(0L, nrow(x[[1]]$wt) - 1L), ncol(x[[1]]$wt)), ...
+    ) %>>%
+    as_hmean(step = step, new_class = "qm_hmean")
 }
+formals(hmean.qntmap) <- formals(hmean)
 
 #' @rdname hmean
 #' @export
-vmean <- function(x) UseMethod("vmean") 
-
-vmean.data.frame <- function(x) vapply(x, sum, 0) / nrow(x)
+vmean <- function() UseMethod("vmean") 
+formals(vmean) <- formals(hmean)
 
 #' @export
 vmean.qntmap <- function() {
   x %>>%
-    lapply(function(x) vmean.data.frame(x$wt)) %>>%
-    post_vmean(step = step, new_class = "qm_vmean")
+    mean.qntmap(
+      index = rep(seq(0L, ncol(x[[1]]$wt) - 1L), each = nrow(x[[1]]$wt)), ...
+    ) %>>%
+    as_vmean(step = step, new_class = "qm_vmean")
 }
-formals(vmean.qntmap) <- formals(hmean.qntmap)
+formals(vmean.qntmap) <- formals(hmean)
 
 #' @noRd
 #' @param x An object of class qm_hmean or qm_vmean
@@ -129,9 +139,10 @@ formals(vmean.qntmap) <- formals(hmean.qntmap)
 #' @param ... Arbitary attributes for a returning value.
 #' 
 #' @importFrom dplyr mutate row_number
-post_hmean <- post_vmean <- function(x, step, new_class = NULL, ...) {
+as_hmean <- as_vmean <- function(x, step, new_class = NULL, ...) {
   x %>>%
-    as.data.frame %>>%
+    gather(px, wt, -Element) %>>%
+    spread(Element, wt) %>>%
     mutate(px = row_number() - 1L, um = px * !!step) %>>%
     prioritize(c('px', 'um')) %>>%
     structure(class = c(new_class, class(.)), step = step, ...)
