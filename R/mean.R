@@ -89,6 +89,24 @@ mean.qntmap <- function(x, index = "Whole area", cluster = NULL, density = NULL,
 
 
 
+
+#' @noRd
+#' @param x An object of class qm_hmean or qm_vmean
+#' @param step A step size of mapping data
+#' @param new_class An additional class, if any.
+#' @param ... Arbitary attributes for a returning value.
+#' 
+#' @importFrom dplyr mutate
+#' @importFrom tidyr gather spread
+as_hmean <- as_vmean <- function(x, step, new_class = NULL, ...) {
+  x %>>%
+    gather(px, wt, -Element) %>>%
+    spread(Element, wt) %>>%
+    mutate(px = as.integer(px), um = px * !!step) %>>%
+    prioritize(c('px', 'um')) %>>%
+    structure(class = c(new_class, class(.)), step = step, ...)
+}
+
 #' Calculate means for horizontal and vertical directions
 #'
 #' Calculate means for horizontal and vertical directions for mapping data.
@@ -107,11 +125,12 @@ mean.qntmap <- function(x, index = "Whole area", cluster = NULL, density = NULL,
 #' @export
 hmean <- function(x, step = attr(x, "step")[1L], ...) UseMethod("hmean")
 
+#' @rdname hmean
 #' @export
 hmean.qntmap <- function() {
   x %>>%
     mean.qntmap(
-      index = rep(seq(0L, nrow(x[[1]]$wt) - 1L), ncol(x[[1]]$wt)), ...
+      index = rep(seq(nrow(x[[1]]$wt)) - 1L, ncol(x[[1]]$wt)), ...
     ) %>>%
     as_hmean(step = step, new_class = "qm_hmean")
 }
@@ -122,28 +141,14 @@ formals(hmean.qntmap) <- formals(hmean)
 vmean <- function() UseMethod("vmean") 
 formals(vmean) <- formals(hmean)
 
+#' @rdname hmean
 #' @export
 vmean.qntmap <- function() {
   x %>>%
     mean.qntmap(
-      index = rep(seq(0L, ncol(x[[1]]$wt) - 1L), each = nrow(x[[1]]$wt)), ...
+      index = rep(seq(ncol(x[[1]]$wt)) - 1L, each = nrow(x[[1]]$wt)), ...
     ) %>>%
     as_vmean(step = step, new_class = "qm_vmean")
 }
 formals(vmean.qntmap) <- formals(hmean)
 
-#' @noRd
-#' @param x An object of class qm_hmean or qm_vmean
-#' @param step A step size of mapping data
-#' @param new_class An additional class, if any.
-#' @param ... Arbitary attributes for a returning value.
-#' 
-#' @importFrom dplyr mutate row_number
-as_hmean <- as_vmean <- function(x, step, new_class = NULL, ...) {
-  x %>>%
-    gather(px, wt, -Element) %>>%
-    spread(Element, wt) %>>%
-    mutate(px = row_number() - 1L, um = px * !!step) %>>%
-    prioritize(c('px', 'um')) %>>%
-    structure(class = c(new_class, class(.)), step = step, ...)
-}

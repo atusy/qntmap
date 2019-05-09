@@ -2,12 +2,18 @@
 % Please edit documentation in R/mean.R
 \name{hmean}
 \alias{hmean}
+\alias{hmean.qntmap}
 \alias{vmean}
+\alias{vmean.qntmap}
 \title{Calculate means for horizontal and vertical directions}
 \usage{
 hmean(x, step = attr(x, "step")[1L], ...)
 
+\method{hmean}{qntmap}(x, step = attr(x, "step")[1L], ...)
+
 vmean(x, step = attr(x, "step")[1L], ...)
+
+\method{vmean}{qntmap}(x, step = attr(x, "step")[1L], ...)
 }
 \arguments{
 \item{x}{Mapping data (currently restricted to an object of class "qntmap").}
