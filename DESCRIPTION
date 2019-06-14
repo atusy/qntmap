@@ -5,7 +5,7 @@ Version: 0.3.4
 Authors@R: 
     c(
         person(
-            given = 'Atsushi', family = 'Yasumoto'
+            given = 'Atsushi', family = 'Yasumoto',
             role = c('aut', 'cph', 'cre'), 
             email = 'atusy.7+qntmap@gmail.com',
             comment = c(ORCID = "0000-0002-8335-495X")
