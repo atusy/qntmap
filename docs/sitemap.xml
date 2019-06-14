@@ -25,6 +25,9 @@
     <loc>https://qntmap.atusy.net/reference/group_cluster.html</loc>
   </url>
   <url>
+    <loc>https://qntmap.atusy.net/reference/hmean.html</loc>
+  </url>
+  <url>
     <loc>https://qntmap.atusy.net/reference/mean.html</loc>
   </url>
   <url>
@@ -61,7 +64,7 @@
     <loc>https://qntmap.atusy.net/reference/segment.html</loc>
   </url>
   <url>
-    <loc>https://qntmap.atusy.net/reference/summary_methods.html</loc>
+    <loc>https://qntmap.atusy.net/reference/summary.html</loc>
   </url>
   <url>
     <loc>https://qntmap.atusy.net/reference/tidy_epma.html</loc>

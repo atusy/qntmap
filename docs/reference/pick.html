@@ -79,7 +79,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">qntmap</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.3.2.9999</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.3.4</span>
       </span>
     </div>
 
@@ -207,19 +207,19 @@ If not manually supplied <code>phase</code> is supplied by <code><a href='https:
   <span class='kw'>Si</span> <span class='kw'>=</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/as.data.frame'>as.data.frame</a></span>(<span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/matrix'>matrix</a></span>(<span class='fl'>1</span>:<span class='fl'>4</span>, <span class='fl'>2</span>)),
   <span class='kw'>Ti</span> <span class='kw'>=</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/as.data.frame'>as.data.frame</a></span>(<span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/matrix'>matrix</a></span>(<span class='fl'>5</span>:<span class='fl'>8</span>, <span class='fl'>2</span>))
 )
-<span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/class'>class</a></span>(<span class='no'>xm</span>) <span class='kw'>&lt;-</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/c'>c</a></span>(<span class='st'>'qm_xmap'</span>, <span class='st'>'list'</span>)
+<span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/class'>class</a></span>(<span class='no'>xm</span>) <span class='kw'>&lt;-</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/c'>c</a></span>(<span class='st'>"qm_xmap"</span>, <span class='st'>"list"</span>)
 
 <span class='co'>## following codes return same results</span>
 <span class='fu'>pick</span>(<span class='no'>xm</span>, <span class='kw'>x</span> <span class='kw'>=</span> <span class='fl'>1</span>:<span class='fl'>2</span>, <span class='kw'>y</span> <span class='kw'>=</span> <span class='fl'>1</span>:<span class='fl'>2</span>)</div><div class='output co'>#&gt;   phase Si Ti
 #&gt; 1    P1  1  5
-#&gt; 2    P2  4  8</div><div class='input'><span class='fu'>pick</span>(<span class='no'>xm</span>, <span class='kw'>x</span> <span class='kw'>=</span> <span class='fl'>1</span>:<span class='fl'>2</span>, <span class='kw'>y</span> <span class='kw'>=</span> <span class='fl'>1</span>:<span class='fl'>2</span>, <span class='kw'>phase</span> <span class='kw'>=</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/c'>c</a></span>(<span class='st'>'P1'</span>, <span class='st'>'P2'</span>))</div><div class='output co'>#&gt;   phase Si Ti
+#&gt; 2    P2  4  8</div><div class='input'><span class='fu'>pick</span>(<span class='no'>xm</span>, <span class='kw'>x</span> <span class='kw'>=</span> <span class='fl'>1</span>:<span class='fl'>2</span>, <span class='kw'>y</span> <span class='kw'>=</span> <span class='fl'>1</span>:<span class='fl'>2</span>, <span class='kw'>phase</span> <span class='kw'>=</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/c'>c</a></span>(<span class='st'>"P1"</span>, <span class='st'>"P2"</span>))</div><div class='output co'>#&gt;   phase Si Ti
 #&gt; 1    P1  1  5
-#&gt; 2    P2  4  8</div><div class='input'><span class='fu'>pick</span>(<span class='no'>xm</span>, <span class='kw'>i</span> <span class='kw'>=</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/data.frame'>data.frame</a></span>(<span class='kw'>x</span> <span class='kw'>=</span> <span class='fl'>1</span>:<span class='fl'>2</span>, <span class='kw'>y</span> <span class='kw'>=</span> <span class='fl'>1</span>:<span class='fl'>2</span>, <span class='kw'>phase</span> <span class='kw'>=</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/c'>c</a></span>(<span class='st'>'P1'</span>, <span class='st'>'P2'</span>)))</div><div class='output co'>#&gt;   phase Si Ti
+#&gt; 2    P2  4  8</div><div class='input'><span class='fu'>pick</span>(<span class='no'>xm</span>, <span class='kw'>i</span> <span class='kw'>=</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/data.frame'>data.frame</a></span>(<span class='kw'>x</span> <span class='kw'>=</span> <span class='fl'>1</span>:<span class='fl'>2</span>, <span class='kw'>y</span> <span class='kw'>=</span> <span class='fl'>1</span>:<span class='fl'>2</span>, <span class='kw'>phase</span> <span class='kw'>=</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/c'>c</a></span>(<span class='st'>"P1"</span>, <span class='st'>"P2"</span>)))</div><div class='output co'>#&gt;   phase Si Ti
 #&gt; 1    P1  1  5
 #&gt; 2    P2  4  8</div><div class='input'>
 ## The last code is especially useful in case data frame is saved as a file such as csv.
 </div><span class='co'># NOT RUN {</span>
-<span class='fu'>pick</span>(<span class='no'>xm</span>, <span class='kw'>i</span> <span class='kw'>=</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/utils/topics/read.table'>read.csv</a></span>(<span class='st'>'pick_centers.csv'</span>))
+<span class='fu'>pick</span>(<span class='no'>xm</span>, <span class='kw'>i</span> <span class='kw'>=</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/utils/topics/read.table'>read.csv</a></span>(<span class='st'>"pick_centers.csv"</span>))
 <span class='co'># }</span></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">

@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Read X-ray map data — read_xmap • qntmap</title>
+<title>Calculate means for horizontal and vertical directions — hmean • qntmap</title>
 
 <!-- jquery -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
@@ -36,9 +36,9 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/mark.js/8.11.1/jquery.mark.min.js" integrity="sha256-4HLtjeVgH0eIB3aZ9mLYF6E8oU5chNdjU6p6rrXpl9U=" crossorigin="anonymous"></script>
 
 
-<meta property="og:title" content="Read X-ray map data — read_xmap" />
+<meta property="og:title" content="Calculate means for horizontal and vertical directions — hmean" />
 
-<meta property="og:description" content="Read X-ray map data" />
+<meta property="og:description" content="Calculate means for horizontal and vertical directions for mapping data." />
 <meta name="twitter:card" content="summary" />
 
 
@@ -145,55 +145,50 @@
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Read X-ray map data</h1>
-    <small class="dont-index">Source: <a href='https://github.com/atusy/qntmap/blob/master/R/read-xmap-.R'><code>R/read-xmap-.R</code></a></small>
-    <div class="hidden name"><code>read_xmap.Rd</code></div>
+    <h1>Calculate means for horizontal and vertical directions</h1>
+    <small class="dont-index">Source: <a href='https://github.com/atusy/qntmap/blob/master/R/mean.R'><code>R/mean.R</code></a></small>
+    <div class="hidden name"><code>hmean.Rd</code></div>
     </div>
 
     <div class="ref-description">
     
-    <p>Read X-ray map data</p>
+    <p>Calculate means for horizontal and vertical directions for mapping data.</p>
     
     </div>
 
-    <pre class="usage"><span class='fu'>read_xmap</span>(<span class='kw'>wd</span> <span class='kw'>=</span> <span class='st'>".map/1"</span>, <span class='kw'>DT</span> <span class='kw'>=</span> <span class='fl'>0</span>, <span class='kw'>renew</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='kw'>saving</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>,
-  <span class='kw'>conditions</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
-  <span class='kw'>.map</span> <span class='kw'>=</span> <span class='st'>"(data[0-9]+\\.csv)|([1-9][0-9]*_map\\.txt)"</span>,
-  <span class='kw'>.cnd</span> <span class='kw'>=</span> <span class='st'>"(data[0-9]+|[1-9][0-9]*)\\.cnd"</span>)</pre>
+    <pre class="usage"><span class='fu'>hmean</span>(<span class='no'>x</span>, <span class='kw'>step</span> <span class='kw'>=</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/attr'>attr</a></span>(<span class='no'>x</span>, <span class='st'>"step"</span>)[<span class='fl'>1L</span>], <span class='no'>...</span>)
+
+<span class='co'># S3 method for qntmap</span>
+<span class='fu'>hmean</span>(<span class='no'>x</span>, <span class='kw'>step</span> <span class='kw'>=</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/attr'>attr</a></span>(<span class='no'>x</span>, <span class='st'>"step"</span>)[<span class='fl'>1L</span>], <span class='no'>...</span>)
+
+<span class='fu'>vmean</span>(<span class='no'>x</span>, <span class='kw'>step</span> <span class='kw'>=</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/attr'>attr</a></span>(<span class='no'>x</span>, <span class='st'>"step"</span>)[<span class='fl'>1L</span>], <span class='no'>...</span>)
+
+<span class='co'># S3 method for qntmap</span>
+<span class='fu'>vmean</span>(<span class='no'>x</span>, <span class='kw'>step</span> <span class='kw'>=</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/attr'>attr</a></span>(<span class='no'>x</span>, <span class='st'>"step"</span>)[<span class='fl'>1L</span>], <span class='no'>...</span>)</pre>
     
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
-      <th>wd</th>
-      <td><p>directory path containing mapping data (e.g., ./.map/.1)</p></td>
+      <th>x</th>
+      <td><p>Mapping data (currently restricted to an object of class "qntmap").</p></td>
     </tr>
     <tr>
-      <th>DT</th>
-      <td><p>dead time in nano seconds (0 nsec in default)</p></td>
+      <th>step</th>
+      <td><p>A step size as a numeric value (i.e., length of pixel's sides).
+Specify when <code>x</code> is produced by <code>qntmap</code> before 0.3.4.</p></td>
     </tr>
     <tr>
-      <th>renew</th>
-      <td><p><code>TRUE</code> (default) read data from original files.
-<code>FALSE</code> tries to read <code>xmap.RDS</code> in <code>wd</code>.</p></td>
-    </tr>
-    <tr>
-      <th>saving</th>
-      <td><p><code>TRUE</code> (default) or <code>FALSE</code> to save the result as <code>xmap.RDS</code> file in <code>wd</code>.
-When <code>conditions</code> is specified, <code>saving = FALSE</code> is forced.</p></td>
-    </tr>
-    <tr>
-      <th>conditions</th>
-      <td><p>A path to a csv file which records file paths and analytical conditions of
-mapping data.
-Specifying <code>conditions</code> discards other parameters except <code>saving</code>.</p></td>
-    </tr>
-    <tr>
-      <th>.map, .cnd</th>
-      <td><p>Regular expressions to match file names of
-ASCII converted maps (<code>.map</code>) and condition files (<code>.cnd</code>)</p></td>
+      <th>...</th>
+      <td><p>Arguments passed to <code><a href='mean.html'>mean.qntmap()</a></code>
+if x is a <code>qntmap</code> class object returned by <code><a href='quantify.html'>quantify()</a></code> or <code><a href='qntmap.html'>qntmap()</a></code>.
+Otherwise ignored.</p></td>
     </tr>
     </table>
+    
+    <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
+
+    <div class='dont-index'><p>mean.qntmap</p></div>
     
 
   </div>
@@ -201,7 +196,9 @@ ASCII converted maps (<code>.map</code>) and condition files (<code>.cnd</code>)
     <h2>Contents</h2>
     <ul class="nav nav-pills nav-stacked">
       <li><a href="#arguments">Arguments</a></li>
-                </ul>
+      
+      <li><a href="#see-also">See also</a></li>
+          </ul>
 
   </div>
 </div>

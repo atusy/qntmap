@@ -76,7 +76,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">qntmap</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.3.3</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.3.4</span>
       </span>
     </div>
 
@@ -146,9 +146,43 @@
       <small>Source: <a href='https://github.com/atusy/qntmap/blob/master/NEWS.md'><code>NEWS.md</code></a></small>
     </div>
 
-    <div id="qntmap-0-3-3" class="section level1">
+    <div id="qntmap-034" class="section level1">
 <h1 class="page-header">
-<a href="#qntmap-0-3-3" class="anchor"></a>qntmap 0.3.3</h1>
+<a href="#qntmap-034" class="anchor"></a>qntmap 0.3.4</h1>
+<div id="new-features" class="section level2">
+<h2 class="hasAnchor">
+<a href="#new-features" class="anchor"></a>New features</h2>
+<ul>
+<li>
+<code><a href="../reference/cluster_xmap.html">cluster_xmap()</a></code> passes <code>...</code> to <code><a href="https://www.rdocumentation.org/packages/PoiClaClu/topics/Classify">PoiClaClu::Classify()</a></code>, enabling
+<ul>
+<li>training with selected data</li>
+<li>testing with selected data</li>
+<li>fine tuning on parameters</li>
+<li>and so on.</li>
+</ul>
+</li>
+<li>Added <code><a href="../reference/hmean.html">vmean()</a></code> and <code><a href="../reference/hmean.html">hmean()</a></code> to calculate profile of mean values of mapping data. <code><a href="../reference/hmean.html">vmean()</a></code> stands for vertical mean and <code><a href="../reference/hmean.html">hmean()</a></code> for horizontal mean.</li>
+</ul>
+</div>
+<div id="major-changes" class="section level2">
+<h2 class="hasAnchor">
+<a href="#major-changes" class="anchor"></a>Major changes</h2>
+<ul>
+<li>Drastically improved performance of <code><a href="../reference/plot.html">plot()</a></code>
+</li>
+<li>Clustering results will be saved as an RDS file, a dot-by-dot <code>png</code> image without legend, and a ggplot2 plot with legend saved as <code>svg</code>.
+<ul>
+<li>The size of ggplot2 plot is set to A4 (297 mm * 420 mm), either horizontal or vertical which fits best to the plot.</li>
+<li>The legend used to be saved as a pie chart.</li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+    <div id="qntmap-033" class="section level1">
+<h1 class="page-header">
+<a href="#qntmap-033" class="anchor"></a>qntmap 0.3.3</h1>
 <div id="breaking-changes" class="section level2">
 <h2 class="hasAnchor">
 <a href="#breaking-changes" class="anchor"></a>Breaking changes</h2>
@@ -164,9 +198,9 @@
 </li>
 </ul>
 </div>
-<div id="new-features" class="section level2">
+<div id="new-features-1" class="section level2">
 <h2 class="hasAnchor">
-<a href="#new-features" class="anchor"></a>New features</h2>
+<a href="#new-features-1" class="anchor"></a>New features</h2>
 <ul>
 <li>
 <p><code><a href="../reference/quantify.html">quantify()</a></code> and <code><a href="../reference/tidy_epma.html">tidy_epma()</a></code> supports maps and spots analyzing inequal elements.</p>
@@ -196,14 +230,6 @@
 </tbody>
 </table>
 </li>
-<li>
-<code><a href="../reference/cluster_xmap.html">cluster_xmap()</a></code> has dot-dot-dot argument to pass arguments to <code><a href="https://www.rdocumentation.org/packages/PoiClaClu/topics/Classify">PoiClaClu::Classify()</a></code>. This feature helps
-<ul>
-<li>train with limited data to save time</li>
-<li>separate data into train and test for cross validations</li>
-<li>and so on.</li>
-</ul>
-</li>
 </ul>
 </div>
 <div id="bug-fix" class="section level2">
@@ -214,12 +240,12 @@
 </ul>
 </div>
 </div>
-    <div id="qntmap-0-3-2" class="section level1">
+    <div id="qntmap-032" class="section level1">
 <h1 class="page-header">
-<a href="#qntmap-0-3-2" class="anchor"></a>qntmap 0.3.2</h1>
-<div id="major-changes" class="section level2">
+<a href="#qntmap-032" class="anchor"></a>qntmap 0.3.2</h1>
+<div id="major-changes-1" class="section level2">
 <h2 class="hasAnchor">
-<a href="#major-changes" class="anchor"></a>Major changes</h2>
+<a href="#major-changes-1" class="anchor"></a>Major changes</h2>
 <ul>
 <li>
 <code><a href="../reference/quantify.html">quantify()</a></code> saves parameters alpha, beta, gamma, and their standard errors when <code>saving = TRUE</code>.</li>
@@ -231,12 +257,12 @@
 </ul>
 </div>
 </div>
-    <div id="qntmap-0-3-1" class="section level1">
+    <div id="qntmap-031" class="section level1">
 <h1 class="page-header">
-<a href="#qntmap-0-3-1" class="anchor"></a>qntmap 0.3.1</h1>
-<div id="major-changes-1" class="section level2">
+<a href="#qntmap-031" class="anchor"></a>qntmap 0.3.1</h1>
+<div id="major-changes-2" class="section level2">
 <h2 class="hasAnchor">
-<a href="#major-changes-1" class="anchor"></a>Major changes</h2>
+<a href="#major-changes-2" class="anchor"></a>Major changes</h2>
 <ul>
 <li>
 <code><a href="../reference/quantify.html">quantify()</a></code> supports fixing compositions of certain components of phases.</li>
@@ -280,12 +306,12 @@
 </ul>
 </div>
 </div>
-    <div id="qntmap-0-3-0" class="section level1">
+    <div id="qntmap-030" class="section level1">
 <h1 class="page-header">
-<a href="#qntmap-0-3-0" class="anchor"></a>qntmap 0.3.0</h1>
-<div id="major-changes-2" class="section level2">
+<a href="#qntmap-030" class="anchor"></a>qntmap 0.3.0</h1>
+<div id="major-changes-3" class="section level2">
 <h2 class="hasAnchor">
-<a href="#major-changes-2" class="anchor"></a>Major changes</h2>
+<a href="#major-changes-3" class="anchor"></a>Major changes</h2>
 <ul>
 <li>
 <code><a href="../reference/plot.html">plot()</a></code>
@@ -321,15 +347,15 @@
 </ul>
 </div>
 </div>
-    <div id="qntmap-0-2-2" class="section level1">
+    <div id="qntmap-022" class="section level1">
 <h1 class="page-header">
-<a href="#qntmap-0-2-2" class="anchor"></a>qntmap 0.2.2</h1>
-<div id="major-changes-3" class="section level2">
+<a href="#qntmap-022" class="anchor"></a>qntmap 0.2.2</h1>
+<div id="major-changes-4" class="section level2">
 <h2 class="hasAnchor">
-<a href="#major-changes-3" class="anchor"></a>Major changes</h2>
-<div id="new-features-1" class="section level3">
+<a href="#major-changes-4" class="anchor"></a>Major changes</h2>
+<div id="new-features-2" class="section level3">
 <h3 class="hasAnchor">
-<a href="#new-features-1" class="anchor"></a>New features</h3>
+<a href="#new-features-2" class="anchor"></a>New features</h3>
 <ul>
 <li>
 <code><a href="../reference/read_xmap.html">read_xmap()</a></code>
@@ -377,12 +403,12 @@
 </ul>
 </div>
 </div>
-    <div id="qntmap-0-2-1" class="section level1">
+    <div id="qntmap-021" class="section level1">
 <h1 class="page-header">
-<a href="#qntmap-0-2-1" class="anchor"></a>qntmap 0.2.1</h1>
-<div id="new-features-2" class="section level2">
+<a href="#qntmap-021" class="anchor"></a>qntmap 0.2.1</h1>
+<div id="new-features-3" class="section level2">
 <h2 class="hasAnchor">
-<a href="#new-features-2" class="anchor"></a>New features</h2>
+<a href="#new-features-3" class="anchor"></a>New features</h2>
 <ul>
 <li>Visualize X-ray maps and quantitative maps using a <code>plot</code> function.
 <ul>
@@ -399,9 +425,9 @@
 </ul>
 </div>
 </div>
-    <div id="qntmap-0-2-0" class="section level1">
+    <div id="qntmap-020" class="section level1">
 <h1 class="page-header">
-<a href="#qntmap-0-2-0" class="anchor"></a>qntmap 0.2.0</h1>
+<a href="#qntmap-020" class="anchor"></a>qntmap 0.2.0</h1>
 <p>Check NEWS as 0.2.0 have lots of breaking changes.</p>
 <div id="breaking-changes-1" class="section level2">
 <h2 class="hasAnchor">
@@ -418,9 +444,9 @@
 <li>The above change cause <code>read_qnt</code> to save its result (<code>qnt.RDS</code>) and semi-product (<code>phase_list0.csv</code>) in the directory containing <code>.qnt</code> files unlike <code>qnt_load</code> saved them under the working directory.</li>
 </ul>
 </div>
-<div id="major-changes-4" class="section level2">
+<div id="major-changes-5" class="section level2">
 <h2 class="hasAnchor">
-<a href="#major-changes-4" class="anchor"></a>Major changes</h2>
+<a href="#major-changes-5" class="anchor"></a>Major changes</h2>
 <ul>
 <li>Monster functions are separated into smaller functions.
 <ul>
@@ -517,13 +543,14 @@
     <div id="tocnav">
       <h2>Contents</h2>
       <ul class="nav nav-pills nav-stacked">
-        <li><a href="#qntmap-0-3-3">0.3.3</a></li>
-        <li><a href="#qntmap-0-3-2">0.3.2</a></li>
-        <li><a href="#qntmap-0-3-1">0.3.1</a></li>
-        <li><a href="#qntmap-0-3-0">0.3.0</a></li>
-        <li><a href="#qntmap-0-2-2">0.2.2</a></li>
-        <li><a href="#qntmap-0-2-1">0.2.1</a></li>
-        <li><a href="#qntmap-0-2-0">0.2.0</a></li>
+        <li><a href="#qntmap-034">0.3.4</a></li>
+        <li><a href="#qntmap-033">0.3.3</a></li>
+        <li><a href="#qntmap-032">0.3.2</a></li>
+        <li><a href="#qntmap-031">0.3.1</a></li>
+        <li><a href="#qntmap-030">0.3.0</a></li>
+        <li><a href="#qntmap-022">0.2.2</a></li>
+        <li><a href="#qntmap-021">0.2.1</a></li>
+        <li><a href="#qntmap-020">0.2.0</a></li>
       </ul>
     </div>
   </div>

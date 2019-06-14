@@ -80,7 +80,7 @@ See base::mean()  for general use of mean()." />
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">qntmap</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.3.2.9999</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.3.4</span>
       </span>
     </div>
 
@@ -159,7 +159,8 @@ See <code><a href='https://www.rdocumentation.org/packages/base/topics/mean'>bas
     </div>
 
     <pre class="usage"><span class='co'># S3 method for qntmap</span>
-<span class='fu'>mean</span>(<span class='no'>x</span>, <span class='kw'>index</span> <span class='kw'>=</span> <span class='st'>"Whole area"</span>, <span class='no'>...</span>)</pre>
+<span class='fu'>mean</span>(<span class='no'>x</span>, <span class='kw'>index</span> <span class='kw'>=</span> <span class='st'>"Whole area"</span>, <span class='kw'>cluster</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
+  <span class='kw'>density</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='no'>...</span>)</pre>
     
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -174,8 +175,18 @@ See <code><a href='https://www.rdocumentation.org/packages/base/topics/mean'>bas
 An index can be created using mask image through <code><a href='segment.html'>segment()</a></code>.</p></td>
     </tr>
     <tr>
+      <th>cluster</th>
+      <td><p>A result of <code><a href='cluster_xmap.html'>cluster_xmap()</a></code> (i.e., <code>qm_cluster</code> class object).
+<code>cluster</code> is required when specifying <code>density</code>.</p></td>
+    </tr>
+    <tr>
+      <th>density</th>
+      <td><p>A named numeric vector specifying density of all the phases in <code>x</code>.
+(e.g., <code><a href='https://www.rdocumentation.org/packages/base/topics/c'>c(Qtz = 2.6, Ab = 2.6)</a></code>).</p></td>
+    </tr>
+    <tr>
       <th>...</th>
-      <td><p>Other arguments passed to <code><a href='https://www.rdocumentation.org/packages/base/topics/mean'>base::mean.default()</a></code></p></td>
+      <td><p>Ignored</p></td>
     </tr>
     </table>
     
@@ -194,28 +205,27 @@ and second to last columns lists <code>mean</code> values of each elements by in
     <pre class="examples"><div class='input'><span class='co'># Calculate mean for qntmap class object</span>
 
 <span class='co'>## mapping data corresponds of 100 x 2 pixels</span>
-<span class='co'>## element A in the left half of the map yields </span>
+<span class='co'>## element A in the left half of the map yields</span>
 <span class='co'>## average 50 wt% with standard deviation = 1.</span>
-<span class='co'>## and in the right half of the map yields </span>
+<span class='co'>## and in the right half of the map yields</span>
 <span class='co'>## average 50 wt% with standard deviation = 1.</span>
 <span class='no'>qm</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/list'>list</a></span>(
   <span class='kw'>A</span> <span class='kw'>=</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/list'>list</a></span>(<span class='kw'>wt</span> <span class='kw'>=</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/data.frame'>data.frame</a></span>(<span class='fu'><a href='https://www.rdocumentation.org/packages/stats/topics/Normal'>rnorm</a></span>(<span class='fl'>100</span>, <span class='fl'>50</span>), <span class='fu'><a href='https://www.rdocumentation.org/packages/stats/topics/Normal'>rnorm</a></span>(<span class='fl'>100</span>, <span class='fl'>20</span>)))
 )
-<span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/class'>class</a></span>(<span class='no'>qm</span>) <span class='kw'>&lt;-</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/c'>c</a></span>(<span class='st'>'qntmap'</span>, <span class='st'>'list'</span>)
+<span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/class'>class</a></span>(<span class='no'>qm</span>) <span class='kw'>&lt;-</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/c'>c</a></span>(<span class='st'>"qntmap"</span>, <span class='st'>"list"</span>)
 
-<span class='co'>## If index is not specified, </span>
+<span class='co'>## If index is not specified,</span>
 <span class='co'>## mean value is calculated from whole area,</span>
 <span class='co'>## which in this case gives a value around 35.</span>
 <span class='fu'>mean</span>(<span class='no'>qm</span>)</div><div class='output co'>#&gt;   Element Whole area
 #&gt; 1       A   35.09282</div><div class='input'>
-<span class='co'>## If index is given, </span>
+<span class='co'>## If index is given,</span>
 <span class='co'>## mean is calculated from the pixels sharing the same index.</span>
 <span class='co'>## For example, pixels in the left-half of the map is labelled by 'L',</span>
 <span class='co'>## and the other side by 'R'.</span>
 <span class='co'>## In such a case, mean of A is around 50 fo 'L' and 30 for 'R'</span>
-<span class='fu'>mean</span>(<span class='no'>qm</span>, <span class='kw'>index</span> <span class='kw'>=</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/rep'>rep</a></span>(<span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/c'>c</a></span>(<span class='st'>'L'</span>, <span class='st'>'R'</span>), <span class='kw'>each</span> <span class='kw'>=</span> <span class='fl'>100</span>))</div><div class='output co'>#&gt;   Element        L        R
-#&gt; 1       A 50.07079 20.11486</div><div class='input'>
-</div></pre>
+<span class='fu'>mean</span>(<span class='no'>qm</span>, <span class='kw'>index</span> <span class='kw'>=</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/rep'>rep</a></span>(<span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/c'>c</a></span>(<span class='st'>"L"</span>, <span class='st'>"R"</span>), <span class='kw'>each</span> <span class='kw'>=</span> <span class='fl'>100</span>))</div><div class='output co'>#&gt;   Element        L        R
+#&gt; 1       A 50.07079 20.11486</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
     <h2>Contents</h2>

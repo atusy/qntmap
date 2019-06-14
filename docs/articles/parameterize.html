@@ -38,7 +38,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">qntmap</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.3.2.9999</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.3.4</span>
       </span>
     </div>
 
@@ -106,7 +106,7 @@
       <h1>Inherit parameters from previously quantified maps</h1>
                         <h4 class="author">YASUMOTO Atsushi</h4>
             
-            <h4 class="date">2019-02-06</h4>
+            <h4 class="date">2019-06-14</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/atusy/qntmap/blob/master/vignettes/parameterize.Rmd"><code>vignettes/parameterize.Rmd</code></a></small>
       <div class="hidden name"><code>parameterize.Rmd</code></div>
@@ -148,12 +148,12 @@
 <div id="load-qntmap-package" class="section level2">
 <h2 class="hasAnchor">
 <a href="#load-qntmap-package" class="anchor"></a>Load qntmap package</h2>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/library">library</a></span>(qntmap)</code></pre></div>
+<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb1-1" title="1"><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/library">library</a></span>(qntmap)</a></code></pre></div>
 </div>
 <div id="read-x-ray-mapping-data-to-be-quantified" class="section level2">
 <h2 class="hasAnchor">
 <a href="#read-x-ray-mapping-data-to-be-quantified" class="anchor"></a>Read X-ray mapping data to be quantified</h2>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">xmap &lt;-<span class="st"> </span><span class="kw"><a href="../reference/read_xmap.html">read_xmap</a></span>(<span class="st">".map/2 for example"</span>)</code></pre></div>
+<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb2-1" title="1">xmap &lt;-<span class="st"> </span><span class="kw"><a href="../reference/read_xmap.html">read_xmap</a></span>(<span class="st">".map/2 for example"</span>)</a></code></pre></div>
 </div>
 <div id="cluster-analysis" class="section level2">
 <h2 class="hasAnchor">
@@ -162,8 +162,8 @@
 <h3 class="hasAnchor">
 <a href="#initialize-cluster-centers" class="anchor"></a>Initialize cluster centers</h3>
 <p>Suppose available quantified maps are constructed by following <a href="qntmap.html">“Get started”</a>, <code>centers_initial0.csv</code> is available as well. Read the csv file by following codes.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">centers &lt;-<span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/utils/topics/read.table">read.csv</a></span>(<span class="st">"example/centers_initial0.csv"</span>)
-centers</code></pre></div>
+<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb3-1" title="1">centers &lt;-<span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/utils/topics/read.table">read.csv</a></span>(<span class="st">"example/centers_initial0.csv"</span>)</a>
+<a class="sourceLine" id="cb3-2" title="2">centers</a></code></pre></div>
 <table class="table">
 <thead><tr class="header">
 <th align="left">phase</th>
@@ -188,14 +188,14 @@ centers</code></pre></div>
 <div id="run-cluster-analysis" class="section level3">
 <h3 class="hasAnchor">
 <a href="#run-cluster-analysis" class="anchor"></a>Run cluster analysis</h3>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">cluster &lt;-<span class="st"> </span><span class="kw"><a href="../reference/cluster_xmap.html">cluster_xmap</a></span>(xmap, centers)</code></pre></div>
+<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb4-1" title="1">cluster &lt;-<span class="st"> </span><span class="kw"><a href="../reference/cluster_xmap.html">cluster_xmap</a></span>(xmap, centers)</a></code></pre></div>
 </div>
 </div>
 <div id="quantification" class="section level2">
 <h2 class="hasAnchor">
 <a href="#quantification" class="anchor"></a>Quantification</h2>
 <p>When available quantified mapes are compsoed by <code><a href="../reference/quantify.html">quantify()</a></code> function, <code>parameters.csv</code> is saved in the <code>qntmap</code> directory within the directory storing X-ray mapping data. Specify a file path of <code>parameters.csv</code> as <code>fix</code> parameter of <code><a href="../reference/quantify.html">quantify()</a></code> function.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw"><a href="../reference/quantify.html">quantify</a></span>(<span class="dt">xmap =</span> xmap, <span class="dt">qnt =</span> <span class="ot">NULL</span>, <span class="dt">cluster =</span> cluster, <span class="dt">fix =</span> <span class="st">"example/qntmap/parameters.csv"</span>)</code></pre></div>
+<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb5-1" title="1"><span class="kw"><a href="../reference/quantify.html">quantify</a></span>(<span class="dt">xmap =</span> xmap, <span class="dt">qnt =</span> <span class="ot">NULL</span>, <span class="dt">cluster =</span> cluster, <span class="dt">fix =</span> <span class="st">"example/qntmap/parameters.csv"</span>)</a></code></pre></div>
 <p>Note that <code>qnt</code> paramter is ignored when <code>fix</code> parameter is specified.</p>
 </div>
 </div>

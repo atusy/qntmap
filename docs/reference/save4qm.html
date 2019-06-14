@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>S3 generics to save returned values from functions in QntMap package. — save4qm • qntmap</title>
+<title>Save objects created by qntmap package. — save4qm • qntmap</title>
 
 <!-- jquery -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
@@ -36,9 +36,9 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/mark.js/8.11.1/jquery.mark.min.js" integrity="sha256-4HLtjeVgH0eIB3aZ9mLYF6E8oU5chNdjU6p6rrXpl9U=" crossorigin="anonymous"></script>
 
 
-<meta property="og:title" content="S3 generics to save returned values from functions in QntMap package. — save4qm" />
+<meta property="og:title" content="Save objects created by qntmap package. — save4qm" />
 
-<meta property="og:description" content="S3 generics to save returned values from functions in QntMap package." />
+<meta property="og:description" content="Save objects created by qntmap package." />
 <meta name="twitter:card" content="summary" />
 
 
@@ -79,7 +79,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">qntmap</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.3.2.9999</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.3.4</span>
       </span>
     </div>
 
@@ -145,14 +145,14 @@
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>S3 generics to save returned values from functions in QntMap package.</h1>
+    <h1>Save objects created by qntmap package.</h1>
     <small class="dont-index">Source: <a href='https://github.com/atusy/qntmap/blob/master/R/save.R'><code>R/save.R</code></a></small>
     <div class="hidden name"><code>save4qm.Rd</code></div>
     </div>
 
     <div class="ref-description">
     
-    <p>S3 generics to save returned values from functions in QntMap package.</p>
+    <p>Save objects created by qntmap package.</p>
     
     </div>
 
@@ -175,19 +175,19 @@
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
       <th>x</th>
-      <td><p>object to save</p></td>
+      <td><p>An object to save.</p></td>
     </tr>
     <tr>
       <th>nm</th>
-      <td><p>name of object to save</p></td>
+      <td><p>A name of object to be saved as.</p></td>
     </tr>
     <tr>
       <th>saving</th>
-      <td><p><code>TRUE</code> or <code>FALSE</code> to save result file(s).</p></td>
+      <td><p><code>TRUE</code> (default) or <code>FALSE</code> to save.</p></td>
     </tr>
     <tr>
       <th>...</th>
-      <td><p>other arguments passed to class methods</p></td>
+      <td><p>Other arguments passed to class methods</p></td>
     </tr>
     </table>
     
@@ -198,28 +198,25 @@
     <h2 class="hasAnchor" id="save-qm-default"><a class="anchor" href="#save-qm-default"></a><code>save4qm.default</code></h2>
 
     
-    <p>A default method.
-This is a wrapper of <code>saveRDS</code> together with invisible return of <code>x</code>.</p>
+    <p>A default method saves an object as a binary RDS file.</p>
     
     <h2 class="hasAnchor" id="save-qm-data-frame"><a class="anchor" href="#save-qm-data-frame"></a><code>save4qm.data.frame</code></h2>
 
     
-    <p>A method for <code>data.frame</code> class.
-This is a wrapper of <code><a href='https://www.rdocumentation.org/packages/data.table/topics/fwrite'>data.table::fwrite</a></code>
-together with invisible return of <code>x</code>.</p>
+    <p>A data frame object is saved as a csv.</p>
     
     <h2 class="hasAnchor" id="save-qm-qm-cluster"><a class="anchor" href="#save-qm-qm-cluster"></a><code>save4qm.qm_cluster</code></h2>
 
     
-    <p>A method for <code>qm_cluster</code> class returned by
-<code><a href='cluster_xmap.html'>cluster_xmap()</a></code> or <code><a href='group_cluster.html'>group_cluster()</a></code>.
-Object is saved as RDS file and png file.
-The latter shows distribution of phases among a mapped area.</p>
+    <p>A value returned by <code><a href='cluster_xmap.html'>cluster_xmap()</a></code> or <code><a href='group_cluster.html'>group_cluster()</a></code> is
+saved as binary RDS file, dot-by-dot png file, and as svg file with a legend.
+The png and svg files show distribution of phases among a mapped area.</p>
     
     <h2 class="hasAnchor" id="save-qm-qntmap"><a class="anchor" href="#save-qm-qntmap"></a><code>save4qm.qntmap</code></h2>
 
     
-    <p>A method for <code>qntmap</code> class returned by <code><a href='qntmap.html'>qntmap()</a></code> or <code><a href='quantify.html'>quantify()</a></code></p>
+    <p>A value returned by <code><a href='qntmap.html'>qntmap()</a></code> or <code><a href='quantify.html'>quantify()</a></code> is saved as
+a binary RDS file, and csv files.</p>
     
 
   </div>
