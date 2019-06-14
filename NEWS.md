@@ -1,3 +1,11 @@
+# qntmap 0.4.0
+
+## Breaking changes
+
+- `qm_xmap()`
+    - omits the `saving` option
+    - returns `data.frame` instead of `list` and the `data.frame` contains columns `x` and `y` indicating coordinates of pixels
+
 # qntmap 0.3.4
 
 ## New features
