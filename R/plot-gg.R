@@ -44,7 +44,7 @@ gghist.numeric <- function(x, .min = NA_real_, .max = NA_real_, colors) {
     geom_col(show.legend = FALSE, position = "identity") +
     scale_fill[[match.arg(colors)]]() +
     scale_color[[match.arg(colors)]]() +
-    gghist_theme
+    gghist_theme()
 }
 
 #' @rdname gghist
@@ -54,31 +54,33 @@ gghist.character <- function(x, ...) {
 }
 
 #' @rdname gghist
-#' @importFrom ggplot2 geom_bar scale_fill_manual
+#' @importFrom ggplot2 geom_bar scale_fill_manual stat
 #' @noRd
 gghist.factor <- function(x, ...) {
   ggplot(data.frame(x = x)) +
     geom_bar(aes(x, y = stat(count / sum(count)), fill = x), color = "black") +
     scale_fill_manual(values = rgb(lookup$discrete(levels(x)))) +
-    gghist_theme
+    gghist_theme()
 }
 
 #' gghist: background color
 #' @noRd
-gghist_bg <- element_rect(fill = "#f5f5f5", color = "#f5f5f5")
+gghist_bg <- function() element_rect(fill = "#f5f5f5", color = "#f5f5f5")
 
 #' gghist: theme
 #' @noRd
-gghist_theme <- list(
-  coord_cartesian(expand = FALSE),
-  theme_classic(),
-  theme(
-    plot.background = gghist_bg,
-    panel.background = gghist_bg,
-    legend.position = "none",
-    axis.title = element_blank()
+gghist_theme <- function() {
+  list(
+    coord_cartesian(expand = FALSE),
+    theme_classic(),
+    theme(
+      plot.background = gghist_bg(),
+      panel.background = gghist_bg(),
+      legend.position = "none",
+      axis.title = element_blank()
+    )
   )
-)
+}
 
 #' Color palette
 #' @importFrom scales gradient_n_pal viridis_pal
