@@ -5,17 +5,17 @@ Version: 0.3.4
 Authors@R: 
     c(
         person(
-            given = 'YASUMOTO Atsushi', 
+            given = 'Atsushi', family = 'Yasumoto'
             role = c('aut', 'cph', 'cre'), 
             email = 'atusy.7+qntmap@gmail.com',
             comment = c(ORCID = "0000-0002-8335-495X")
         ),
         person(
-            given = 'YOSHIDA Kenta', 
+            given = 'Kenta', family = 'Yoshida',
             role = 'ctb',
             comment = c(ORCID = "0000-0001-9525-1598")
         ),
-        person(given = 'KUWATANI Tatsu', role = 'ctb'),
+        person(given = 'Tatsu', family = 'Kuwatani', role = 'ctb'),
         person(
             given =
                 'Japan Agency for Marine-Earth Science and Technology (JAMSTEC)',
@@ -23,10 +23,9 @@ Authors@R:
         ),
         person(given = 'JST PRESTO (Grant No. JPMJPR1676)', role = c('fnd'))
     )
-Author: YASUMOTO Atsushi [aut, cph, cre]
-Maintainer: YASUMOTO Atsushi <atusy.7+qntmap@gmail.com>
-Description: A main function of this packages is 
-    to produce chemical mass concentration map based on 
+Author: Atsushi Yasumoto [aut, cph, cre]
+Maintainer: Atsushi Yasumoto <atusy.rpkg@gmail.com>
+Description: Generate and analyze chemical mass concentration map based on 
     X-ray maps and some quantified points among the mapped area.
 License: MIT + file LICENSE
 Encoding: UTF-8
