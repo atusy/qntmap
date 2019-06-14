@@ -7,6 +7,7 @@
     - testing with selected data
     - fine tuning on parameters
     - and so on.
+- Added `vmean()` and `hmean()` to calculate profile of mean values of mapping data. `vmean()` stands for vertical mean and `hmean()` for horizontal mean.
 
 ## Major changes
 
