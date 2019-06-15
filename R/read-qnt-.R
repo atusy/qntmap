@@ -13,10 +13,9 @@
 #'   `Oxide`, `Element`, `Bg+ [mm]`, `Bg- [mm]`, `Peak [sec]`, and `Bg [sec]`.
 #'   `NULL` (default) retrieves analytical conditions from
 #'   `elem.qnt`, `elint.qnt`, and `.cnd/elemw.cnd` / `Pos_0001/data001.cnd`.
+#' @param saving 
+#'   `TRUE` (defau;t) or `FALSE` to save phase list.
 #'
-#' @importFrom dplyr mutate
-#' @importFrom rlang !! .data
-#' @importFrom stringr str_replace_all
 #' @importFrom data.table fwrite
 #'
 #' @export
@@ -103,7 +102,7 @@ read_qnt <- function(
     lapply(`[`, seq_along(elm$elem) + 2L) %>>%
     lapply(setNames, elm$elem)
 
-  if (is.null(phase_list) & (!file.exists("phase_list0.csv"))) {
+  if (is.null(phase_list) && (!file.exists("phase_list0.csv")) && saving) {
     fwrite(
       cbind(cnd[c("id", "phase")], use = TRUE),
       file.path(cd, "phase_list0.csv")

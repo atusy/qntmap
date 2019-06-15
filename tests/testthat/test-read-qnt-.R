@@ -10,7 +10,7 @@ prepare <- function() {
 
 test_that("list structure", {
   prepare()
-  qnt <- read_qnt(wd, phase_list = NULL)
+  qnt <- read_qnt(wd, phase_list = NULL, saving = FALSE)
 
   # names
   expect_named(qnt, c("elm", "cnd", "cmp"))
@@ -24,14 +24,14 @@ test_that("list structure", {
 test_that("phase_list = NULL", {
   prepare()
 
-  qnt <- read_qnt(wd, phase_list = NULL)
+  qnt <- read_qnt(wd, phase_list = NULL, saving = FALSE)
   expect_equal(qnt$cnd$comment, qnt$cnd$phase)
 })
 
 test_that("phase_list = 'example.csv'", {
   prepare()
 
-  qnt <- read_qnt(wd, phase_list = NULL)
+  qnt <- read_qnt(wd, phase_list = NULL, saving = TRUE)
 
   p <- read.csv("phase_list0.csv")
   p$phase <- "a"
@@ -39,7 +39,7 @@ test_that("phase_list = 'example.csv'", {
   csv <- "example.csv"
   write.csv(p, csv, row.names = FALSE)
 
-  qnt2 <- read_qnt(wd, phase_list = csv)
+  qnt2 <- read_qnt(wd, phase_list = csv, saving = FALSE)
 
   expect_false(identical(qnt$cnd$phase, qnt2$cnd$phase))
   expect_true(any(is.na(qnt2$cnd$phase)))
@@ -49,7 +49,7 @@ test_that("phase_list = 'example.csv'", {
 
 test_that("phase_list = 'does-not-exist'", {
   prepare()
-  expect_error(read_qnt(wd, phase_list = "does-not-exist"))
+  expect_error(read_qnt(wd, phase_list = "does-not-exist", saving = FALSE))
 })
 
 
@@ -58,7 +58,7 @@ test_that("phase_list = 'does-not-exist'", {
 test_that("params = hoge.csv", { # © 2018 JAMSTEC
   prepare()
 
-  qnt <- read_qnt(wd, phase_list = NULL)
+  qnt <- read_qnt(wd, phase_list = NULL, saving = FALSE)
 
   qnt$elm$elem <- qnt$elm$elint <- c(Si = "SiO2", Mg = "MgO")[qnt$elm$elint]
   qnt$elm[sapply(qnt$elm, is.numeric)] <- 1000
@@ -78,7 +78,7 @@ test_that("params = hoge.csv", { # © 2018 JAMSTEC
   )
 
   qnt2 <- read_qnt(
-    wd, phase_list = NULL, conditions = csv
+    wd, phase_list = NULL, conditions = csv, saving = FALSE
   )
 
   expect_equal(qnt$elm, qnt2$elm)
