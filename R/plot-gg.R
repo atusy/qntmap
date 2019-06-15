@@ -108,11 +108,11 @@ palette <- list(
 #' @importFrom scales rescale
 #' @noRd
 lookup <- list(
-  viridis  = function(x, to, ...) palette$viridis[rescale(x, to = to, ...), ],
+  viridis  = function(x, to, ...) palette$viridis[rescale(x, to = to, ...), , drop = FALSE],
   gray     = rescale,
   discrete = function(x, ...) {
     x <- as.factor(x)
-    (palette$discrete(rescale(seq_along(levels(x)))) / 255L)[as.integer(x), ]
+    (palette$discrete(rescale(seq_along(levels(x)))) / 255L)[as.integer(x), , drop = FALSE]
   }
 )
 formals(lookup$viridis)$to <- c(1L, nrow(palette$viridis))
