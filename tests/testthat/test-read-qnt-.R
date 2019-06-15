@@ -1,5 +1,3 @@
-context("test-read-qnt-.R")
-
 if (interactive()) setwd(here::here("tests/testthat"))
 
 wd <- "minimal/.qnt"
@@ -12,7 +10,7 @@ prepare <- function() {
 
 test_that("list structure", {
   prepare()
-  qnt <- read_qnt(wd, phase_list = NULL, renew = TRUE, saving = FALSE)
+  qnt <- read_qnt(wd, phase_list = NULL)
 
   # names
   expect_named(qnt, c("elm", "cnd", "cmp"))
@@ -21,54 +19,19 @@ test_that("list structure", {
   expect_true(all(c("bgm", "bgp", "net", "wt") %in% names(qnt$cmp)))
 })
 
-"Param: saving"
-
-test_that("saving = FALSE", {
-  prepare()
-
-  qnt <- read_qnt(wd, phase_list = NULL, renew = TRUE, saving = FALSE)
-  expect_false(file.exists(file.path(wd, "phase_list0.csv")))
-  expect_false(file.exists(file.path(wd, "qnt.RDS")))
-})
-
-test_that("saving = TRUE", {
-  prepare()
-
-  qnt <- read_qnt(wd, phase_list = NULL, renew = TRUE, saving = TRUE)
-  rds <- file.path(wd, "qnt.RDS")
-  expect_true(file.exists(rds))
-  expect_equal(qnt, readRDS(rds))
-})
-
-"Param: renew"
-
-test_that("renew = FALSE", {
-  prepare()
-
-  saveRDS(list(), file.path(wd, "qnt.RDS"))
-  expect_length(read_qnt(wd, phase_list = NULL, renew = FALSE, saving = FALSE), 0)
-})
-
-test_that("renew = TRUE", {
-  prepare()
-
-  saveRDS(list(), file.path(wd, "qnt.RDS"))
-  expect_length(read_qnt(wd, phase_list = NULL, renew = TRUE, saving = FALSE), 3)
-})
-
 "Param: phase_list"
 
 test_that("phase_list = NULL", {
   prepare()
 
-  qnt <- read_qnt(wd, phase_list = NULL, renew = TRUE, saving = FALSE)
+  qnt <- read_qnt(wd, phase_list = NULL)
   expect_equal(qnt$cnd$comment, qnt$cnd$phase)
 })
 
 test_that("phase_list = 'example.csv'", {
   prepare()
 
-  qnt <- read_qnt(wd, phase_list = NULL, renew = TRUE, saving = TRUE)
+  qnt <- read_qnt(wd, phase_list = NULL)
 
   p <- read.csv("phase_list0.csv")
   p$phase <- "a"
@@ -76,7 +39,7 @@ test_that("phase_list = 'example.csv'", {
   csv <- "example.csv"
   write.csv(p, csv, row.names = FALSE)
 
-  qnt2 <- read_qnt(wd, phase_list = csv, renew = TRUE, saving = FALSE)
+  qnt2 <- read_qnt(wd, phase_list = csv)
 
   expect_false(identical(qnt$cnd$phase, qnt2$cnd$phase))
   expect_true(any(is.na(qnt2$cnd$phase)))
@@ -95,7 +58,7 @@ test_that("phase_list = 'does-not-exist'", {
 test_that("params = hoge.csv", { # © 2018 JAMSTEC
   prepare()
 
-  qnt <- read_qnt(wd, phase_list = NULL, renew = TRUE, saving = FALSE)
+  qnt <- read_qnt(wd, phase_list = NULL)
 
   qnt$elm$elem <- qnt$elm$elint <- c(Si = "SiO2", Mg = "MgO")[qnt$elm$elint]
   qnt$elm[sapply(qnt$elm, is.numeric)] <- 1000
@@ -115,7 +78,7 @@ test_that("params = hoge.csv", { # © 2018 JAMSTEC
   )
 
   qnt2 <- read_qnt(
-    wd, phase_list = NULL, renew = TRUE, saving = FALSE, conditions = csv
+    wd, phase_list = NULL, conditions = csv
   )
 
   expect_equal(qnt$elm, qnt2$elm)
