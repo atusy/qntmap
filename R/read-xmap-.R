@@ -13,14 +13,11 @@
 #'   Regular expressions to match file names of
 #'   ASCII converted maps (`.map`) and condition files (`.cnd`)
 #'
-#' @importFrom purrr map_at
-#' @importFrom stats setNames
 #' @export
 #'
 read_xmap <- function(
                       wd = ".map/1",
                       DT = 0,
-                      renew = FALSE,
                       conditions = NULL,
                       .map = "(data[0-9]+\\.csv)|([1-9][0-9]*_map\\.txt)",
                       .cnd = "(data[0-9]+|[1-9][0-9]*)\\.cnd"
