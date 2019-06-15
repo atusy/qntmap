@@ -11,8 +11,6 @@
 #' @param conf.level
 #'   A confidence level for the returned confidence interval.
 #'
-#' @importFrom dplyr bind_cols
-#' @importFrom purrr map2
 #' @importFrom stats qgamma setNames
 #' @noRd
 cipois <- function(x, vars = names(x), offset = 1L, conf.level = 0.95) {
@@ -82,11 +80,12 @@ reduce_add <- function(x) Reduce(`+`, x)
 
 #' Prioritize certain components of x, and order the others alphabetically
 #' @param x A named object
-#' @param prior
-#'   A character vector specifying the name of `x` which needs be prioritized.
+#' @param ...
+#'   Character vectors specifying the name of `x` which needs be prioritized.
 #' @noRd
-prioritize <- function(x, prior) {
+prioritize <- function(x, ...) {
   nm <- names(x)
+  prior <- c(...)
   x[c(intersect(prior, nm), sort(setdiff(nm, prior)))]
 }
 
