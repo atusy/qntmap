@@ -46,7 +46,7 @@ test_that("read_cnd", {
 
 test_that("qm_xmap is data frame", {
   prepare()
-  xm <- read_xmap(wd, renew = TRUE)
+  xm <- read_xmap(wd)
 
   expect_named(xm, c("x", "y", "Si", "Mg"))
   expect_false(file.exists(file.path(wd, "xmap.RDS")))
@@ -55,7 +55,7 @@ test_that("qm_xmap is data frame", {
 test_that("conditions = hoge", { # © 2018 JAMSTEC
   prepare()
   cd <- getwd()
-  xm <- read_xmap(wd, renew = TRUE)
+  xm <- read_xmap(wd)
   setwd("minimal")
   xm2 <- read_xmap(conditions = "conditions_xmap.csv")
   setwd(cd)
