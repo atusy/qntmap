@@ -56,10 +56,10 @@ tidy_epma <- function(
     lapply(unlist, use.names = FALSE) %>>%
     lapply(function(x) `if`(is.null(x), NA_integer_, x)) %>>%
     as.data.frame %>>%
-    `[`(qnt$cnd$nr, ) %>>%
+    `[`(qnt$cnd$nr, , drop = FALSE) %>>%
     list %>>%
     setNames("map") %>>%
-    c(lapply(qnt$cmp, `[`, qnt$cnd$id, )) %>>%
+    c(lapply(qnt$cmp, `[`, qnt$cnd$id, , drop = FALSE)) %>>%
     lapply(mutate, id = qnt$cnd$id) %>>%
     bind_rows(.id = ".var") %>>%
     gather(elm, .val, -.var, -id) %>>%
