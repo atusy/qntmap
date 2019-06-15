@@ -55,9 +55,9 @@ qntmap <- function() {
   }
 
   cat("Loading mapping data\n")
-  xmap <- read_xmap(dir_map, DT = DT, renew = TRUE)
+  xmap <- read_xmap(dir_map, DT = DT)
   cat("Loading quantified data\n")
-  qnt <- read_qnt(".qnt", phase_list, renew = TRUE)
+  qnt <- read_qnt(".qnt", phase_list)
   cat("Peforming cluster analysis\n")
   centers <- find_centers(xmap = xmap, qnt = qnt)
   cls <- cluster_xmap(xmap = xmap, centers = centers)
