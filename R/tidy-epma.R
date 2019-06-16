@@ -58,58 +58,60 @@ tidy_epma <- function(
     c(lapply(qnt$cmp, `[`, qnt$cnd$id, , drop = FALSE)) %>>%
     lapply(mutate, id = qnt$cnd$id) %>>%
     bind_rows(.id = ".var") %>>%
-    gather(elm, .val, -.var, -id) %>>%
-    spread(.var, .val)
+    gather("elm", ".val", -".var", -"id") %>>%
+    spread(".var", ".val")
 
   ## join cmp, cnd, elem in qnt
   ## calculate 95% ci of data
   clustered <- !is.null(cluster)
   qnt$cnd %>>%
     mutate(
-      cls = `if`(!!clustered, cluster$cluster[qnt$cnd$nr], NA_real_),
-      mem =
-        `if`(!!clustered, rowMaxs(cluster$membership[qnt$cnd$nr, ]), NA_real_),
-      elm = list(qnt$elm)
+      cls = !! `if`(clustered, cluster$cluster[qnt$cnd$nr], NA_real_),
+      mem = !! `if`(clustered, cluster$membership[qnt$cnd$nr], NA_real_),
+      elm = !! list(qnt$elm)
     ) %>>%
     unnest %>>%
-    rename(elm = elem) %>>%
+    rename(elm = .data$elem) %>>%
     left_join(qnt$cmp, by = c("id", "elm")) %>>%
     mutate(
-      elint = ifelse(is.na(elint), elm, elint),
-      beam = beam * 1e+6,
-      beam_map = beam_map * 1e+6,
-      mapint = map / dwell / beam_map,
-      bgm2 = bgm * bgm_pos,
-      bgp2 = bgp * bgp_pos,
-      bgint = bgm2 + bgp2,
-      pkint = `if`(exists("pkint"), pkint, net + bgint  / (bgm_pos + bgp_pos)),
-      pkint = pkint * (pkint > 0L)
+      elint = ifelse(is.na(.data$elint), .data$elm, .data$elint),
+      beam = .data$beam * 1e+6,
+      beam_map = .data$beam_map * 1e+6,
+      mapint = .data$map / .data$dwell / .data$beam_map,
+      bgm2 = .data$bgm * .data$bgm_pos,
+      bgp2 = .data$bgp * .data$bgp_pos,
+      bgint = .data$bgm2 + .data$bgp2,
+      pkint = `if`(
+        exists("pkint"),
+        .data$pkint, .data$net + .data$bgint  / (.data$bgm_pos + .data$bgp_pos)
+      ),
+      pkint = .data$pkint * (.data$pkint > 0L)
     ) %>>%
     cipois(
       vars = c("pkint", "bgm", "bgp", "mapint"),
       offset =
         transmute(
           .,
-          pkint = pk_t * beam,
-          bgm = bg_t * beam,
-          bgp = bgm, # == bg_t * beam
-          mapint = dwell * beam_map
+          pkint = .data$pk_t * .data$beam,
+          bgm = .data$bg_t * .data$beam,
+          bgp = .data$bgm, # == bg_t * beam
+          mapint = .data$dwell * .data$beam_map
         )
     ) %>>%
     mutate(
-      beam = beam * 1e-6,
-      beam_map = beam_map * 1e-6,
-      .tmp = bgm.L * bgm_pos,
-      bgint.L = bgint - propagate_add(bgm2, .tmp, bgp2, .tmp),
-      .tmp = bgm.H * bgm_pos,
-      bgint.H = bgint + propagate_add(bgm2, .tmp, bgp2, .tmp),
-      .tmp = bgp_pos + bgm_pos,
-      bgint = bgint / .tmp,
-      bgint.L = bgint.L / .tmp,
-      bgint.H = bgint.H / .tmp,
+      beam = .data$beam * 1e-6,
+      beam_map = .data$beam_map * 1e-6,
+      .tmp = .data$bgm.L * .data$bgm_pos,
+      bgint.L = .data$bgint - propagate_add(.data$bgm2, .data$.tmp, .data$bgp2, .data$.tmp),
+      .tmp = .data$bgm.H * .data$bgm_pos,
+      bgint.H = .data$bgint + propagate_add(.data$bgm2, .data$.tmp, .data$bgp2, .data$.tmp),
+      .tmp = .data$bgp_pos + .data$bgm_pos,
+      bgint = .data$bgint / .data$.tmp,
+      bgint.L = .data$bgint.L / .data$.tmp,
+      bgint.H = .data$bgint.H / .data$.tmp,
       .tmp = NULL,
-      net.L = net - propagate_add(pkint, pkint.L, bgint, bgint.L),
-      net.H = net + propagate_add(pkint, pkint.H, bgint, bgint.H)
+      net.L = .data$net - propagate_add(.data$pkint, .data$pkint.L, .data$bgint, .data$bgint.L),
+      net.H = .data$net + propagate_add(.data$pkint, .data$pkint.H, .data$bgint, .data$bgint.H)
     ) %>>%
     as.data.frame
 }
@@ -117,9 +119,6 @@ tidy_epma <- function(
 
 
 #' Only used interanlly by quantify
-#' @importFrom dplyr mutate
-#' @importFrom rlang !!
-#' @importFrom stringr str_replace
 #' @noRd
 tidy_epma_for_quantify <- function(
                                    epma, maps_x, maps_y, elements,
@@ -127,14 +126,20 @@ tidy_epma_for_quantify <- function(
 ) {
   mutate(
     epma[epma$elm %in% elements, ],
-    net = net * (net > 0L),
-    phase3 = if (!!distinguished) phase else phase2,
-    x_stg = ((x_px - 1L) %/% !!maps_x + 1L) * (0L < x_px) * (x_px <= maps_x),
-    y_stg = ((y_px - 1L) %/% !!maps_y + 1L) * (0L < y_px) * (y_px <= maps_y),
-    stg = ifelse((x_stg * y_stg) <= 0L, NA_character_, flag0(x_stg, y_stg)),
-    mem = mem *
-      (str_replace(cls, "_.*", "") == phase2) *
-      (cls %nin% fine_phase) *
-      (mem > fine_th)
+    net = .data$net * (.data$net > 0L),
+    phase3 = if (!!distinguished) .data$phase else .data$phase2,
+    x_stg = ((.data$x_px - 1L) %/% !!maps_x + 1L) * 
+      (0L < .data$x_px) * (.data$x_px <= !!maps_x),
+    y_stg = ((.data$y_px - 1L) %/% !!maps_y + 1L) * 
+      (0L < .data$y_px) * (.data$y_px <= !!maps_y),
+    stg = ifelse(
+      (.data$x_stg * .data$y_stg) <= 0L, 
+      NA_character_,
+      flag0(.data$x_stg, .data$y_stg)
+    ),
+    mem = .data$mem *
+      (str_replace(.data$cls, "_.*", "") == .data$phase2) *
+      (.data$cls %nin% !!fine_phase) *
+      (.data$mem > !!fine_th)
   )
 }
