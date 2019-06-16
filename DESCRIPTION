@@ -47,6 +47,7 @@ Imports:
     PoiClaClu,
     purrr,
     rlang,
+    rmarkdown,
     R.utils,
     scales,
     shiny,
@@ -61,7 +62,6 @@ Suggests:
     covr,
     here,
     pkgdown,
-    rmarkdown,
     roxygen2,
     svglite,
     testthat (>= 2.1.0)
