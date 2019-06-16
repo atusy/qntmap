@@ -29,7 +29,13 @@ save4qm.data.frame <- function(x, nm, saving, ...) {
   invisible(x)
 }
 
+#' @include cluster.R
 #' @rdname save4qm
+#' 
+#' @param dir_out output directory
+#' @inheritParams cluster_xmap
+#' @inheritParams group_subclusters
+#' 
 #' @section `save4qm.qm_cluster`:
 #'  A value returned by [`cluster_xmap()`] or [`group_cluster()`] is
 #'  saved as binary RDS file, dot-by-dot png file, and as svg file with a legend.
