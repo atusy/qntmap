@@ -22,7 +22,8 @@
 read_qnt <- function(
                      wd = dir(pattern = ("(.*_QNT|^\\.qnt)$"), all.files = TRUE)[1],
                      phase_list = NULL,
-                     conditions = NULL
+                     conditions = NULL,
+                     saving = TRUE
 ) {
 
   cd <- getwd()
@@ -97,10 +98,11 @@ read_qnt <- function(
 
   # extract compositional data
   # bgm, bgp, pkint, bgint [cps/uA]
-  cmp <- qnt[names(qnt) %in% c("bgm", "bgp", "net", "pkint", "wt")] %>>%
+  cmp <- lapply(
+    qnt[names(qnt) %in% c("bgm", "bgp", "net", "pkint", "wt")],
     # 1st and 2nd collumns are id and integeer, last column is sum
-    lapply(`[`, seq_along(elm$elem) + 2L) %>>%
-    lapply(setNames, elm$elem)
+    function(x, nm) setNames(x[seq_along(nm) + 2L], nm), nm = elm$elem
+  )
 
   if (is.null(phase_list) && (!file.exists("phase_list0.csv")) && saving) {
     fwrite(
