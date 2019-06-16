@@ -26,9 +26,7 @@ gghist.numeric <- function(x, .min = NA_real_, .max = NA_real_, colors) {
     `[`(c("mids", "counts")) %>>%
     c(list(width = .$mids[2L] - .$mids[1L])) %>>%
     as.data.frame() %>>%
-    bind_rows(
-      data.frame(mids = c(.min, .max), counts = 0L, width = 1L)
-    ) %>>%
+    bind_rows(data.frame(mids = c(.min, .max), counts = 0L, width = 1L)) %>>%
     ggplot(aes(mids, counts, width = width, fill = mids, color = mids)) +
     geom_col(show.legend = FALSE, position = "identity") +
     scale_fill[[match.arg(colors)]]() +
@@ -97,7 +95,7 @@ palette <- list(
 #' @noRd
 lookup <- list(
   viridis  = function(x, to, ...) palette$viridis[rescale(x, to = to, ...), , drop = FALSE],
-  gray     = rescale,
+  gray     = function(x, ...) rep(rescale(x, ...), 3L),
   discrete = function(x, ...) {
     x <- as.factor(x)
     (palette$discrete(rescale(seq_along(levels(x)))) / 255L)[as.integer(x), , drop = FALSE]
@@ -111,7 +109,7 @@ formals(lookup$viridis)$to <- c(1L, nrow(palette$viridis))
 #' @param col Number of columns
 #' @noRd
 as_img <- function(x, row, col) {
-  array(x, dim = c(row, col, 3L))
+  structure(x, .Dim = c(row, col, 3L))
 }
 
 #' Choice of scales for filling
@@ -153,7 +151,8 @@ gg_img <- function(
 ) {
   is_z_num <- is.numeric(zlim)
   colors <- `if`(is_z_num, match.arg(colors), "discrete")
-  ggplot(data.frame(x = 0, y = 0, fill = zlim), aes(x, y, fill = fill)) +
+  ggplot(data.frame(x = 0, y = 0, fill = zlim)) +
+    aes(.data$x, .data$y, fill = .data$fill) +
     geom_tile(width = 0, height = 0) + # Invisible tile for legend
     coord_fixed(xlim = xlim, ylim = ylim, expand = FALSE) +
     annotation_raster(
