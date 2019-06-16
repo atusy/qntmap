@@ -89,10 +89,16 @@ save4qm_qm_cluster <- function(
 #'  a binary RDS file, and csv files.
 save4qm.qntmap <- function(x, nm, saving, ...) {
   saveRDS(x, file.path(nm, "qntmap.RDS"))
-  unlist(x, recursive = FALSE) %>>%
+  
+  .Dim <- c(max(x$y), max(x$x))
+  
+  x %>>%
+    select(-"x", -"y") %>>%
+    lapply(function(x) as.data.frame(structure(x, .Dim = .Dim))) %>>% 
     walk2(
       file.path(nm, paste0(str_replace(names(.), "\\.", "_"), ".csv")),
-      fwrite
+      fwrite, col.names = FALSE
     )
+  
   invisible(x)
 }
