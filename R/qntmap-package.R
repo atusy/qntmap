@@ -30,7 +30,7 @@
 #'   ungroup
 #'   vars
 #' @importFrom ggplot2
-#'   aes annotation_raster
+#'   aes annotation_raster autoplot
 #'   coord_cartesian coord_fixed
 #'   element_blank element_rect
 #'   geom_bar geom_col geom_tile
