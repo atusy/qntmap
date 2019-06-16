@@ -53,7 +53,7 @@ quantify <- function(
   params <- if (is.null(fix)) list() else fread(fix)    # © 2018 JAMSTEC
   TF_inherit_params <- check_ABG(params, xmap, cluster) # © 2018 JAMSTEC
 
-  X <- as.data.frame(cluster$membership)
+  X <- select(cluster, -"x", -"y", -"cluster", -"membership")
 
   # Find alpha (A), beta (B), and gamma (G)
   if (TF_inherit_params) {                              # © 2018 JAMSTEC
@@ -65,7 +65,7 @@ quantify <- function(
     # Tidy compilation of epma data
     epma <- tidy_epma_for_quantify(
       tidy_epma(qnt = qnt, xmap = xmap, cluster = cluster) %>>%
-        filter(elint %in% names(!!xmap)),
+        filter(.data$elint %in% names(!!xmap)),
       maps_x, maps_y,
       elements = qnt$elm$elem,
       distinguished = any(grepl("_", colnames(cluster$membership))),
@@ -78,13 +78,14 @@ quantify <- function(
     nm <- setNames(qnt$elm$elem, qnt$elm$elint)
   }
 
-  names(xmap) <- nm[names(xmap)]
+  names(xmap) <- c(x = "x", y = "y", nm)[names(xmap)]
 
   XAG <- find_XAG(
     X,
     AG %>>%
       mutate(
-        ag = a * g, ag_se = `if`(!!se, L2(a * g_se, g * a_se), NA_real_),
+        ag = .data$a * .data$g, 
+        ag_se = `if`(!!se, L2(.data$a * .data$g_se, .data$g * .data$a_se), NA_real_),
         g = NULL, g_se = NULL
       ),
     se = se
@@ -102,7 +103,7 @@ quantify <- function(
   rm(AG, B)
 
   AB %>>%
-    rename(se = ab_se) %>>%
+    rename(se = "ab_se") %>>%
     select(setdiff(names(.), "se"[!(!!(se))])) %>>%
     expand_AB(stg) %>>%
     lapply(function(x) { # XAB and its err
@@ -118,15 +119,24 @@ quantify <- function(
       se = if (se) list(L2(xabi[[2L]], xag[[2L]]))
     )) %>>% 
     lapply(map_at, 'wt', as_positive) %>>%
-    c(list(Total = c(
-      list(wt = as.data.frame(reduce_add(lapply(., `[[`, "wt")))),
-      if (se) list(se = as.data.frame(sqrt(reduce_add(lapply(lapply(., `[[`, "se"), square)))))
-    ))) %>>%
+    c(list(
+      Total = c(
+        list(wt = reduce_add(lapply(., `[[`, "wt"))),
+        `if`(se, list(
+          se = sqrt(reduce_add(lapply(lapply(., `[[`, "se"), square)))
+        ))
+      )
+    )) %>>%
     prioritize(.component) %>>%
+    unlist(recursive = FALSE) %>>%
+    bind_cols(select(xmap, "x", "y")) %>>%
+    select("x", "y", everything()) %>>%
+    rename_at(vars(ends_with(".wt")), str_replace, "\\.wt$", "") %>>%
+    as.data.frame %>>%
     structure(
       pixel = attributes(xmap)$pixel,
       step  = attributes(xmap)$step,
-      class = c("qntmap", "list")
+      class = c("qntmap", class(.))
     ) %>>%
     save4qm(nm = dir_qntmap, saving = saving)
 }
@@ -135,12 +145,11 @@ quantify <- function(
 #' @noRd
 #'
 #' @return `TRUE` or `FALSE`
-#' @importFrom dplyr anti_join
 #' @note © 2018 JAMSTEC
 #'
 check_ABG <- function(params, xmap, cls) {
   # FALSE if not fixed
-  if (!is.data.frame(params)) return (FALSE)
+  if (!is.data.frame(params)) return(FALSE)
 
   # FALSE if only fixing product of alpha and beta
   nm <- names(params)
@@ -150,7 +159,7 @@ check_ABG <- function(params, xmap, cls) {
 
   # FALSE if parameters are only fixed by wt
   if ((!all(nm_AGB %in% nm)) & (all(c(nm_common, nm_wt) %in% nm)))
-    return (FALSE)
+    return(FALSE)
 
   # FALSE if required columns are missing
   col_missing <- setdiff(c(nm_AGB, nm_common), names(params))
@@ -164,7 +173,7 @@ check_ABG <- function(params, xmap, cls) {
   # Check if all elements are quantified
   element_missing <- expand.grid(
     phase = unique(cls$cluster),
-    element = setdiff(names(xmap), .electron),
+    element = setdiff(names(xmap), c("x", "y", .electron)),
     stringsAsFactors = FALSE
   ) %>>%
     anti_join(params, by = c("phase", "element")) %>>%
