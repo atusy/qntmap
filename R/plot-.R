@@ -72,7 +72,6 @@ plot.qm_raster <- function(
 #' xm <- list(A = as.data.frame(matrix(runif(25), 5)))
 #' class(xm) <- c("qm_xmap", "list")
 #' plot(xm, interactive = FALSE)
-#' @importFrom dplyr bind_cols
 #' @export
 plot.qm_xmap <- function(x, y = setdiff(names(x), c("x", "y"))[1L], ...) {
   plot.qm_raster(
@@ -105,8 +104,6 @@ plot.qntmap <- function(x, y = setdiff(names(x), c("x", "y"))[1L], ...) {
 #' )
 #' class(cls) <- "qm_cluster"
 #' plot(cls, interactive = FALSE)
-#' @importFrom dplyr mutate select
-#' @importFrom rlang !!
 #' @importFrom stats setNames
 #' @export
 plot.qm_cluster <- function(x, y = NULL, colors =  "discrete", ...) {

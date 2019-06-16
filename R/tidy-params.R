@@ -4,7 +4,6 @@
 #' @param AG alpha and gamma returned by [`find_AG()`]
 #' @param B beta returned by [`find_B()`]
 #'
-#' @importFrom dplyr transmute left_join
 tidy_params <- function(AG, B, qnt) {
   params <- left_join(AG, B, by = c("elm")) %>>%
     left_join(rename(qnt$elm[c("elem", "elint")], elm = elem), by = "elm") %>>%

@@ -85,7 +85,6 @@ stop_if_inequal_xmap_and_cnd <- function(
 #'   `step` for step size as an integer,
 #'   `instrument` for name of the instrument.
 #'
-#' @importFrom purrr map_at
 #' @importFrom stats setNames
 #' @noRd
 construct_qm_xmap <- function(files_xmap, elm, dwell, deadtime, dir_map, ...) {

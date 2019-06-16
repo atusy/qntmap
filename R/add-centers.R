@@ -17,7 +17,6 @@ NULL
 #' @inheritParams cluster
 #' @inheritParams pick
 #'
-#' @importFrom dplyr bind_rows
 #' @export
 add_centers <- function(centers, xmap) {
   save4qm(

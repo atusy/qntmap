@@ -4,12 +4,8 @@
 #' @param xmap object returned by read_xmap
 #' @param cluster object returned by cluster_xmap
 #'
-#' @importFrom dplyr distinct left_join mutate mutate_at rename transmute
 #' @importFrom matrixStats rowMaxs
-#' @importFrom purrr map2
-#' @importFrom rlang !!
 #' @importFrom stats setNames
-#' @importFrom stringr str_c str_replace_all str_replace str_detect
 #'
 #' @export
 #'

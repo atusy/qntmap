@@ -1,7 +1,6 @@
 #' find B
 #' @noRd
 #' @param epma A tidy epma data output by [`tidy_epma()`]
-#' @importFrom dplyr bind_rows left_join
 find_B <- function(epma) {
   epma <- epma[
     !is.na(epma$stg),
@@ -32,8 +31,6 @@ find_B <- function(epma) {
 #'
 #' @param epma `tidy_epma``
 #' @param ... Grouping variables in NSE.
-#' @importFrom dplyr group_by mutate summarize ungroup
-#' @importFrom purrr map_dbl
 #' @importFrom stats coef lm vcov
 lm_B <- function(epma, ...) {
   mutate(
@@ -48,7 +45,7 @@ lm_B <- function(epma, ...) {
     b = unlist(ifelse(.kept, b, NA_real_), use.names = FALSE) / k,
     b_se = unlist(ifelse(.kept, b_se, NA_real_), use.names = FALSE) / k,
     .kept = NULL,
-    # b = map_dbl(fit, coef) / k, b_se = map_dbl(fit, vcov) / k,
+    # b = vapply(fit, coef, 1.0) / k, b_se = vapply(fit, vcov, 1.0) / k,
     #  # Simple but works only after R 3.5.x
     fit = NULL, k = NULL
   )
@@ -59,7 +56,6 @@ lm_B <- function(epma, ...) {
 #' @noRd
 #' @param params tidy parameters
 #'
-#' @importFrom dplyr transmute
 fix_B <- function(params) {
   if (!is.null(params$stage))
     stop("Cannot inherit parameters from a file containing stage column.")

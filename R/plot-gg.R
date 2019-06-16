@@ -1,19 +1,8 @@
-#' @importFrom ggplot2 ggplot aes
-NULL
-
 #' Draw a histgram for numeric vector based on Scott's choice
 #' @name gghist
 #' @param x An atomic vector
 #'
 #' @importFrom graphics hist
-#' @importFrom ggplot2
-#'   coord_cartesian
-#'   element_blank
-#'   element_rect
-#'   geom_col
-#'   theme
-#'   theme_classic
-#'   scale_fill_manual
 #' @noRd
 gghist <- function(x, ...) {
   UseMethod("gghist")
@@ -54,7 +43,6 @@ gghist.character <- function(x, ...) {
 }
 
 #' @rdname gghist
-#' @importFrom ggplot2 geom_bar scale_fill_manual stat
 #' @noRd
 gghist.factor <- function(x, ...) {
   ggplot(data.frame(x = x)) +
@@ -127,10 +115,6 @@ as_img <- function(x, row, col) {
 }
 
 #' Choice of scales for filling
-#' @importFrom ggplot2
-#'   scale_fill_gradient
-#'   scale_fill_viridis_c
-#'   scale_fill_manual
 #' @noRd
 scale_fill <- list(
   gray = function(...) scale_fill_gradient(..., low = "black", high = "white"),
@@ -139,10 +123,6 @@ scale_fill <- list(
 )
 
 #' Choice of scales for coloring
-#' @importFrom ggplot2
-#'   scale_color_gradient
-#'   scale_color_viridis_c
-#'   scale_color_manual
 #' @noRd
 scale_color <- list(
   gray = function(...) scale_color_gradient(..., low = "black", high = "white"),
@@ -151,21 +131,15 @@ scale_color <- list(
 )
 
 #' Raster image with ggplot2::annotation_raster
+#' 
 #' @param img A value returned by `as_img`
 #' @param xlim,ylim,zlim Limits of x, y, and z
 #' @param zname Name of z (title of scale_fill)
 #' @param colors A palette of colros to use. If manual, specify `values` in `...`
 #' @param barheight Barheight for continuous scale
 #' @param ... Other arguments passed to `scale_fill_*`
-#' @importFrom ggplot2
-#'   annotation_raster
-#'   coord_fixed
-#'   geom_tile
-#'   scale_y_reverse
-#'   guides
-#'   guide_colorbar
-#' @importFrom grid
-#'   unit
+#' 
+#' @importFrom grid unit
 #' @noRd
 gg_img <- function(
                    img,

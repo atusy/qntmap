@@ -17,7 +17,6 @@ summary.qm_cluster <- function(object, ...) {
 #' @rdname summary
 #' @aliases summary.qntmap
 #' @section summary.qntmap: Summarize qntmap class data.
-#' @importFrom dplyr bind_rows
 #' @inheritParams base::round
 #' @export
 summary.qntmap <- function(object, digits = 2L, ...) {

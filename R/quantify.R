@@ -18,9 +18,6 @@
 #'   `TRUE` (default) saves the results into `qntmap` directory under
 #'   the directory `xmap` is read from. `FALSE` does not save.`
 #'
-#' @importFrom dplyr mutate rename select
-#' @importFrom purrr map map_at map2
-#' @importFrom rlang !!
 #' @importFrom stats setNames
 #'
 #' @export

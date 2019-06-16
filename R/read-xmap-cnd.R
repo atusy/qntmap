@@ -1,7 +1,6 @@
 # read .cnd files of X-ray mapping data
 
 #' A list of patterns to look for contents in cnd files
-#' @importFrom purrr pmap
 #' @noRd
 patterns_xmap_cnd <-
   list(
@@ -31,10 +30,10 @@ patterns_xmap_cnd <-
   unlist
 
 #' Read cnd files of X-ray mapping data
+#' 
 #' @param x path to the cnd file
 #' @param patterns list of patterns
-#' @importFrom purrr map_int
-#' @importFrom stringr str_detect str_replace_all str_subset
+#' 
 #' @importFrom stats setNames
 #'
 #' @noRd
@@ -50,7 +49,7 @@ read_xmap_cnd <- function(x, patterns = patterns_xmap_cnd) {
   )
   y <- y[(lengths(y) > 1L)]
   names(y) <-
-    names(patterns)[map_int(y, function(.p) which(str_detect(patterns, .p[1])))]
+    names(patterns)[vapply(y, function(.p) which(str_detect(patterns, .p[1])), 1L)]
   lapply(y, `[`, -1L)
 }
 

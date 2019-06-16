@@ -8,7 +8,6 @@
 read_cnd <- function(x, pattern = NULL, ...) UseMethod("read_cnd")
 
 #' @rdname read_cnd
-#' @importFrom stringr str_detect str_subset
 #' @section .default:
 #' A default method which returns a result of [`readLines()`]
 #' with additional class according to the content of the file.
@@ -22,10 +21,7 @@ read_cnd.default <- function(x, pattern = NULL, ...) {
 
 #' @rdname read_cnd
 #' @section read_cnd.map_cnd: A method for `map_cnd` class object.
-#' @importFrom tidyr separate
 #' @importFrom utils type.convert
-#' @importFrom dplyr arrange
-#' @importFrom stringr str_extract
 #' @export
 read_cnd.map_cnd <- function(x, pattern = NULL, ...) {
   x %>>%

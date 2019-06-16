@@ -1,7 +1,5 @@
 #' Find AB
 #' @noRd
-#' @importFrom dplyr mutate right_join
-#' @importFrom rlang !!
 #' @param AG AG
 #' @param B B
 #' @examples
@@ -38,8 +36,6 @@ find_AB <- function(AG, B, se = TRUE) {
 #' @param AB AB
 #' @param stg stg
 #'
-#' @importFrom tidyr gather spread
-#' @importFrom dplyr right_join select
 #' @note
 #' > AB
 #'   elm stg phase3         ab        ab_se
@@ -90,10 +86,6 @@ join_by_stg <- function(x, stg) {
 #'   A file path to the csv file with columns `phase`, `oxide` and `wt`.
 #'
 #' @importFrom matrixStats rowMaxs weightedMedian
-#' @importFrom dplyr
-#'   filter group_by mutate right_join summarize
-#' @importFrom rlang !!
-#' @importFrom tidyr gather
 fix_AB_by_wt <- function(xmap, cls, params) {
   if (!any(is.finite(params$wt))) return(NULL)
   params <- params[is.finite(params$wt), c("phase", "oxide", "wt")]
@@ -117,7 +109,6 @@ fix_AB_by_wt <- function(xmap, cls, params) {
 #' @param AB returned by find_AB
 #' @param AB_fixed returnd by fix_AB_by_wt()
 #'
-#' @importFrom dplyr anti_join bind_rows left_join select semi_join
 join_AB <- function(AB, AB_fixed = NULL) {
   if (is.null(AB_fixed)) return(AB)
   semi_join(AB, AB_fixed, by = c("elm", "phase3")) %>>%

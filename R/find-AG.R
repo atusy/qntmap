@@ -4,8 +4,6 @@
 #' @param not_quantified
 #'   A character vector specifying phases who weren't analyzed
 #'   during point analysis # JAMSTEC
-#' @importFrom dplyr bind_rows left_join mutate
-#' @importFrom tidyr unnest
 find_AG <- function(
                     epma,
                     not_quantified = character(0L) # © 2018 JAMSTEC
@@ -27,8 +25,6 @@ find_AG <- function(
 
 #' @param epma `tidy_epma``
 #' @param ... Grouping variables in NSE.
-#' @importFrom dplyr group_by mutate summarize ungroup
-#' @importFrom purrr map map_dbl
 #' @importFrom stats coef lm sd vcov
 #' @seealso [`find_B()`]
 #' @noRd
@@ -57,7 +53,6 @@ lm_AG <- function(epma, ...) {
 #' @noRd
 #' @param params tidy parameters
 #'
-#' @importFrom dplyr transmute
 fix_AG <- function(params) {
   transmute(params, elm = oxide, phase3 = phase, a = alpha, g = gamma)
 }

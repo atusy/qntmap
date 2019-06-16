@@ -55,14 +55,8 @@
 #'
 #' @inherit qntmap-package references
 #'
-#' @importFrom data.table fwrite
-#' @importFrom dplyr
-#'   bind_cols bind_rows filter group_by mutate summarise ungroup
 #' @importFrom matrixStats colSums2
-#' @importFrom purrr map2 pmap
-#' @importFrom rlang !! .data
 #' @importFrom stats lsfit qnbinom median
-#' @importFrom tidyr gather spread
 #'
 #' @export
 find_centers <- function(
@@ -127,7 +121,7 @@ find_centers <- function(
       .data$not_mapped_phase | .data$within_pi | .data$n_within_pi == 0
     ) %>>%
     group_by(.data$elint, .data$phase) %>>%
-    summarise(map = median(.data$map)) %>>%
+    summarize(map = median(.data$map)) %>>%
     ungroup %>>%
     spread("elint", "map") %>>%
     # guess mapping intensity of certain phases in case

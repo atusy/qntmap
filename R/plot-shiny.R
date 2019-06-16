@@ -81,7 +81,6 @@ ui <- function(elm, selected = elm[[1L]], pcol = TRUE) {
 
 
 #' @importFrom DT renderDT
-#' @importFrom dplyr everything mutate select summarize_if
 #' @importFrom scales squish
 #' @importFrom shiny
 #'   htmlOutput reactive reactiveValues observeEvent
@@ -221,7 +220,6 @@ pick_hover <- function(data, hover, z) {
   data[data$x == h[1L] & data$y == h[2L], c("x", "y", z)]
 }
 
-#' @importFrom purrr map_if
 #' @importFrom knitr kable
 #' @noRd
 format_hover <- function(h) {
@@ -234,8 +232,6 @@ format_hover <- function(h) {
   )
 }
 
-#' @importFrom dplyr bind_rows everything mutate select summarize_if
-#' @importFrom rlang !!
 #' @noRd
 summarize_box <- function(data, box, .env, .format = format_summary) {
   .env$id <- .env$id + 1L
@@ -251,8 +247,6 @@ summarize_box <- function(data, box, .env, .format = format_summary) {
 }
 
 
-#' @importFrom dplyr bind_rows everything mutate select
-#' @importFrom rlang !!
 #' @noRd
 summarize_click <- function(data, click, .env, .format = format_summary) {
   .env$id <- .env$id + 1L

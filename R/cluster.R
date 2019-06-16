@@ -41,8 +41,6 @@ cluster <- function(x, centers, xte = x, ...) {
 #'   clusters named "Pl_NaRich" and "Pl_NaPoor" are integrated to "Pl" cluster .
 #' @inheritDotParams PoiClaClu::Classify -x -y
 #'
-#' @importFrom dplyr group_by mutate mutate_if summarize ungroup
-#' @importFrom tidyr gather spread
 #' @importFrom matrixStats rowMaxs rowSums2
 #'
 #' @export

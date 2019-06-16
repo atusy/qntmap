@@ -5,10 +5,7 @@
 #' @param saving `TRUE` (default) or `FALSE` to save.
 #' @param ...    Other arguments passed to class methods
 #' @importFrom data.table fwrite
-#' @importFrom ggplot2    ggsave labs
-#' @importFrom pipeR      %>>%
 #' @importFrom png        writePNG
-#' @importFrom purrr      walk2
 #' @export
 save4qm <- function(x, nm = "", saving = TRUE, ...) {
   if (!saving) return(invisible(x))

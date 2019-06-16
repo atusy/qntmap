@@ -20,14 +20,15 @@
 #'   anti_join arrange
 #'   bind_cols bind_rows
 #'   distinct
-#'   everything
 #'   filter
 #'   group_by
 #'   left_join
 #'   mutate mutate_at
-#'   rename right_join row_number
-#'   select semi_join starts_with summarize summarize_all summarize_if
-#'   transmute transmute_at ungroup
+#'   rename rename_at right_join row_number
+#'   select semi_join summarize summarize_all summarize_if
+#'   transmute transmute_at
+#'   ungroup
+#'   vars
 #' @importFrom ggplot2
 #'   aes annotation_raster
 #'   coord_cartesian coord_fixed
@@ -45,8 +46,11 @@
 #' @importFrom rlang !! .data
 #' @importFrom stringr 
 #'   str_c str_detect str_extract str_replace str_replace_all str_subset
-#' @importFrom tidyr gather separate spread unnest
-#'
+#' @importFrom tidyr
+#'   gather separate spread unnest
+#' @importFrom tidyselect
+#'   ends_with everything matches starts_with
+#'   
 NULL
 
 # 10 major oxides
