@@ -38,6 +38,7 @@ Imports:
     dplyr,
     DT,
     easycsv,
+    flexdashboard,
     ggplot2,
     htmltools,
     knitr,
