@@ -17,3 +17,4 @@ docs
 ^\.gitignore$
 ^\.\.Rcheck
 ^\.Rproj.user
+^vignettes/*\.csv

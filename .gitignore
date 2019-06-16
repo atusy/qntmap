@@ -16,6 +16,7 @@ inst/doc
 # RStudio files
 .Rproj.user/
 # produced vignettes
+vignettes/*.csv
 vignettes/*.html
 vignettes/*.pdf
 # OAuth2 token, see https://github.com/hadley/httr/releases/tag/v0.3
