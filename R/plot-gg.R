@@ -21,15 +21,17 @@ gghist.numeric <- function(x, .min = NA_real_, .max = NA_real_, colors) {
   if (!is.finite(.min) || .min < range_x[1]) .min <- range_x[1]
   if (!is.finite(.max) || .max > range_x[2]) .max <- range_x[2]
 
-  x[.min <= x & x <= .max] %>>%
+  df_hist <- x[.min <= x & x <= .max] %>>%
     hist(breaks = "FD", plot = FALSE) %>>%
     `[`(c("mids", "counts")) %>>%
     c(list(width = .$mids[2L] - .$mids[1L])) %>>%
-    as.data.frame() %>>%
+    as.data.frame()
+  df_hist %>>%
     bind_rows(data.frame(mids = c(.min, .max), counts = 0L, width = 1L)) %>>%
     ggplot() +
     aes(.data$mids, .data$counts, width = .data$width, fill = .data$mids, color = .data$mids) +
     geom_col(show.legend = FALSE, position = "identity") +
+    geom_step(position = position_nudge(x = -df_hist$width[[1L]] / 2L), color = "gray") +
     scale_fill[[match.arg(colors)]]() +
     scale_color[[match.arg(colors)]]() +
     gghist_theme()
@@ -50,10 +52,6 @@ gghist.factor <- function(x, ...) {
     gghist_theme()
 }
 
-#' gghist: background color
-#' @noRd
-gghist_bg <- function() element_rect(fill = "#f5f5f5", color = "#f5f5f5")
-
 #' gghist: theme
 #' @noRd
 gghist_theme <- function() {
@@ -61,8 +59,6 @@ gghist_theme <- function() {
     coord_cartesian(expand = FALSE),
     theme_classic(),
     theme(
-      plot.background = gghist_bg(),
-      panel.background = gghist_bg(),
       legend.position = "none",
       axis.title = element_blank()
     )
