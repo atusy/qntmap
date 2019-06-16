@@ -15,12 +15,12 @@ test_that("cluster_xmap returns", {
 
 test_that("Specifying xte = xm and missing xte are identical", {
   set.seed(1)
+  nm <- c("cluster", "membership", "Ol", "Qtz")
   expect_identical(
-    cluster_xmap(xm, cn, saving = FALSE),
+    cluster_xmap(xm, cn, saving = FALSE)[nm],
     cluster_xmap(
-      xm, cn,
-      xte = xm[setdiff(names(xm), c("x", "y"))],
-      saving = FALSE)
+      xm, cn, xte = xm[setdiff(names(xm), c("x", "y"))], saving = FALSE
+    )[nm]
   )
 })
 

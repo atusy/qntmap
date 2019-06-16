@@ -1,7 +1,7 @@
 # © 2018 JAMSTEC
 x <- matrix(1:2, 2L, 10L)
 qm <- structure(
-  cbind(expand.grid(y = 1:2, x = 1:10), A = x, B = x * 2L),
+  cbind(expand.grid(y = 1:2, x = 1:10), A = c(x), B = c(x) * 2L),
   step = 1,
   class = c("qntmap", "data.frame")
 )

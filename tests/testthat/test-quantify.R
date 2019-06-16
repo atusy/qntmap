@@ -89,10 +89,9 @@ test_that("quantify() doubles result if alpha is doubled by fix parameter", { # 
   .qmap1 <- quantify(xmap, qnt, cluster, se = FALSE,  saving = FALSE)
   .qmap2 <- quantify(xmap, NULL, cluster, se = FALSE,  saving = FALSE, fix = csv)
 
-  ratios <- unlist(.qmap2[[1]][["wt"]], use.names = FALSE) /
-    unlist(.qmap1[[1]][["wt"]], use.names = FALSE)
-
-  expect_true(all(sapply(ratios, all.equal, 2)))
+  ratios <- unique(unlist(.qmap2[-(1:2)] / .qmap1[-(1:2)]))
+  
+  expect_true(all(ratios[!is.nan(ratios)] - 2 < 1e-10))
 
   unlink(csv)
 })
@@ -126,7 +125,10 @@ test_that("quantify() gives 200 wt% for SiO2 in Qtz by fix parameter", {
   csv <- "params.csv"
   data.table::fwrite(.params, csv)
 
-  .mean <- mean(quantify(xmap, qnt, cluster, se = FALSE, saving = FALSE, fix = csv), index = cluster$cluster)
+  .mean <- mean(
+    quantify(xmap, qnt, cluster, se = FALSE, saving = FALSE, fix = csv), 
+    index = cluster$cluster
+  )
   expect_equal(200, round(.mean$Qtz[.mean$Element == "SiO2"], -2))
 
   unlink(csv)
