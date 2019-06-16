@@ -2,23 +2,19 @@
 #'
 #' @param x
 #'   A `qntmap` class object returned by [`quantify()`] or [`qntmap()`].
-#' @param summarizing
-#'   `TRUE` or `FALSE` to summarize x (default: `TRUE`.
 #' @param ...
 #'   Discarded.
 #'
 #' @export
-#'
-print.qntmap <- function(x, summarizing = TRUE, ...) {
-  if (!summarizing) return(x)
-  cat(
+print.qntmap <- function(x, ...) {
+  message(
     "Summary of",
     paste(dim(x[[c(1L, 1L)]]), collapse = " * "),
     " mass concentration map\n",
     sep = " "
   )
   print(summary(x))
-  cat(
+  message(
     "",
     "This is a list object",
     "x$CaO$wt returns CaO mass concentration map, and",
