@@ -126,7 +126,7 @@ Also, `renew` parameter of `read_qnt` must be `TRUE`.
 phase_list <- read.csv('phase_list0.csv')
 phase_list$use[phase_list$phase == 'Qtz'] <- FALSE
 write.csv(phase_list, file.path(dir_qnt, 'phase_list_no_qtz.csv'))
-qnt <- read_qnt(dir_qnt, phase_list = file.path(dir_qnt, 'phase_list_no_qtz.csv'), renew = TRUE)
+qnt <- read_qnt(dir_qnt, phase_list = file.path(dir_qnt, 'phase_list_no_qtz.csv'))
 ```
 
 After editing, only olivine is said to be quantified.
