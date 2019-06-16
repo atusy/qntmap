@@ -2,9 +2,34 @@
 
 ## Breaking changes
 
-- `qm_xmap()`
-    - omits the `saving` option
-    - returns `data.frame` instead of `list` and the `data.frame` contains columns `x` and `y` indicating coordinates of pixels
+- `read_qnt()`
+    - omits the `renew` option
+    - uses the `saving` option only to save phase list, no more to cache data
+- `read_xmap()`
+    - omits the `saving` and the `renew` option
+    - returns a data frame with columns `x` and `y` indicating coordinates of pixels
+      instead of a list
+- `cluster_xmap()`
+    - returns data frame with the `center` attribute instead of list with too much data
+    - saves the result
+        - as is in the formats of 
+          RDS, png (dot-by-dot phase map), and svg (phase map with legend)
+        - converted by `group_subclusters` in the format of only png and svg
+- `group_subclusters()`
+    - is defined to defunct `group_cluster()`
+    - returns a value similar to `cluster_xmap()` whreas omitting the `center` attribute.
+
+## Major changes
+
+- `hmean()` and `vmean()` supports the objects with class `qntmap`, `qm_xmap`, and `qm_cluster`.
+  Previously they only supported the `qntmap` class object.
+
+## Internal changes
+
+- `pick()`, `mean()`, 
+- Fully follow tidyeval
+- Tidyverse related functions are imported in `qntmap-package.R`
+  to avoid importing the same funcions in multiple files.
 
 # qntmap 0.3.4
 
