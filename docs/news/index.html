@@ -146,6 +146,68 @@
       <small>Source: <a href='https://github.com/atusy/qntmap/blob/master/NEWS.md'><code>NEWS.md</code></a></small>
     </div>
 
+    <div id="qntmap-040" class="section level1">
+<h1 class="page-header">
+<a href="#qntmap-040" class="anchor"></a>qntmap 0.4.0</h1>
+<div id="breaking-changes" class="section level2">
+<h2 class="hasAnchor">
+<a href="#breaking-changes" class="anchor"></a>Breaking changes</h2>
+<ul>
+<li>
+<code><a href="../reference/read_qnt.html">read_qnt()</a></code>
+<ul>
+<li>omits the <code>renew</code> option</li>
+<li>uses the <code>saving</code> option only to save phase list, no more to cache data</li>
+</ul>
+</li>
+<li>
+<code><a href="../reference/read_xmap.html">read_xmap()</a></code>
+<ul>
+<li>omits the <code>saving</code> and the <code>renew</code> option</li>
+<li>returns a data frame with columns <code>x</code> and <code>y</code> indicating coordinates of pixels instead of a list</li>
+</ul>
+</li>
+<li>
+<code><a href="../reference/cluster_xmap.html">cluster_xmap()</a></code>
+<ul>
+<li>returns data frame with the <code>center</code> attribute instead of list with too much data</li>
+<li>saves the result
+<ul>
+<li>as is in the formats of RDS, png (dot-by-dot phase map), and svg (phase map with legend)</li>
+<li>converted by <code>group_subclusters</code> in the format of only png and svg</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>
+<code><a href="../reference/group_subclusters.html">group_subclusters()</a></code>
+<ul>
+<li>is defined to defunct <code><a href="../reference/defunct.html">group_cluster()</a></code>
+</li>
+<li>returns a value similar to <code><a href="../reference/cluster_xmap.html">cluster_xmap()</a></code> whreas omitting the <code>center</code> attribute.</li>
+</ul>
+</li>
+</ul>
+</div>
+<div id="major-changes" class="section level2">
+<h2 class="hasAnchor">
+<a href="#major-changes" class="anchor"></a>Major changes</h2>
+<ul>
+<li>
+<code><a href="../reference/hmean.html">hmean()</a></code> and <code><a href="../reference/hmean.html">vmean()</a></code> supports the objects with class <code>qntmap</code>, <code>qm_xmap</code>, and <code>qm_cluster</code>. Previously they only supported the <code>qntmap</code> class object.</li>
+</ul>
+</div>
+<div id="internal-changes" class="section level2">
+<h2 class="hasAnchor">
+<a href="#internal-changes" class="anchor"></a>Internal changes</h2>
+<ul>
+<li>
+<code><a href="../reference/pick.html">pick()</a></code>, <code><a href="../reference/mean.html">mean()</a></code>,</li>
+<li>Fully follow tidyeval</li>
+<li>Tidyverse related functions are imported in <code>qntmap-package.R</code> to avoid importing the same funcions in multiple files.</li>
+</ul>
+</div>
+</div>
     <div id="qntmap-034" class="section level1">
 <h1 class="page-header">
 <a href="#qntmap-034" class="anchor"></a>qntmap 0.3.4</h1>
@@ -165,11 +227,11 @@
 <li>Added <code><a href="../reference/hmean.html">vmean()</a></code> and <code><a href="../reference/hmean.html">hmean()</a></code> to calculate profile of mean values of mapping data. <code><a href="../reference/hmean.html">vmean()</a></code> stands for vertical mean and <code><a href="../reference/hmean.html">hmean()</a></code> for horizontal mean.</li>
 </ul>
 </div>
-<div id="major-changes" class="section level2">
+<div id="major-changes-1" class="section level2">
 <h2 class="hasAnchor">
-<a href="#major-changes" class="anchor"></a>Major changes</h2>
+<a href="#major-changes-1" class="anchor"></a>Major changes</h2>
 <ul>
-<li>Drastically improved performance of <code><a href="../reference/plot.html">plot()</a></code>
+<li>Drastically improved performance of <code><a href="https://www.rdocumentation.org/packages/graphics/topics/plot">plot()</a></code>
 </li>
 <li>Clustering results will be saved as an RDS file, a dot-by-dot <code>png</code> image without legend, and a ggplot2 plot with legend saved as <code>svg</code>.
 <ul>
@@ -183,9 +245,9 @@
     <div id="qntmap-033" class="section level1">
 <h1 class="page-header">
 <a href="#qntmap-033" class="anchor"></a>qntmap 0.3.3</h1>
-<div id="breaking-changes" class="section level2">
+<div id="breaking-changes-1" class="section level2">
 <h2 class="hasAnchor">
-<a href="#breaking-changes" class="anchor"></a>Breaking changes</h2>
+<a href="#breaking-changes-1" class="anchor"></a>Breaking changes</h2>
 <ul>
 <li>
 <code><a href="../reference/quantify.html">quantify()</a></code> no more calculates standard errors by default. This is to save time and memory usage. Set <code>se = TRUE</code> to calculate the errors.</li>
@@ -243,9 +305,9 @@
     <div id="qntmap-032" class="section level1">
 <h1 class="page-header">
 <a href="#qntmap-032" class="anchor"></a>qntmap 0.3.2</h1>
-<div id="major-changes-1" class="section level2">
+<div id="major-changes-2" class="section level2">
 <h2 class="hasAnchor">
-<a href="#major-changes-1" class="anchor"></a>Major changes</h2>
+<a href="#major-changes-2" class="anchor"></a>Major changes</h2>
 <ul>
 <li>
 <code><a href="../reference/quantify.html">quantify()</a></code> saves parameters alpha, beta, gamma, and their standard errors when <code>saving = TRUE</code>.</li>
@@ -253,16 +315,16 @@
 <code><a href="../reference/quantify.html">quantify()</a></code> loads parameters from a csv file by giving its path to <code>fix</code> parameter.</li>
 <li>
 <code><a href="../reference/read_qnt.html">read_qnt()</a></code> and <code><a href="../reference/read_xmap.html">read_xmap()</a></code> supports to retrieve analytical conditions from manually prepared csv files. This feature is implemented to avoid failures in reading data caused by difference in formats output by different EPMA instruments.</li>
-<li>Hover on <code><a href="../reference/plot.html">plot()</a></code> of mapping data shows coordinates and a chemical composition of a selected element.</li>
+<li>Hover on <code><a href="https://www.rdocumentation.org/packages/graphics/topics/plot">plot()</a></code> of mapping data shows coordinates and a chemical composition of a selected element.</li>
 </ul>
 </div>
 </div>
     <div id="qntmap-031" class="section level1">
 <h1 class="page-header">
 <a href="#qntmap-031" class="anchor"></a>qntmap 0.3.1</h1>
-<div id="major-changes-2" class="section level2">
+<div id="major-changes-3" class="section level2">
 <h2 class="hasAnchor">
-<a href="#major-changes-2" class="anchor"></a>Major changes</h2>
+<a href="#major-changes-3" class="anchor"></a>Major changes</h2>
 <ul>
 <li>
 <code><a href="../reference/quantify.html">quantify()</a></code> supports fixing compositions of certain components of phases.</li>
@@ -309,12 +371,12 @@
     <div id="qntmap-030" class="section level1">
 <h1 class="page-header">
 <a href="#qntmap-030" class="anchor"></a>qntmap 0.3.0</h1>
-<div id="major-changes-3" class="section level2">
+<div id="major-changes-4" class="section level2">
 <h2 class="hasAnchor">
-<a href="#major-changes-3" class="anchor"></a>Major changes</h2>
+<a href="#major-changes-4" class="anchor"></a>Major changes</h2>
 <ul>
 <li>
-<code><a href="../reference/plot.html">plot()</a></code>
+<code><a href="https://www.rdocumentation.org/packages/graphics/topics/plot">plot()</a></code>
 <ul>
 <li>Interactive plot is a combination of shiny, ggplot2, and more. No more using plotly.
 <ul>
@@ -350,9 +412,9 @@
     <div id="qntmap-022" class="section level1">
 <h1 class="page-header">
 <a href="#qntmap-022" class="anchor"></a>qntmap 0.2.2</h1>
-<div id="major-changes-4" class="section level2">
+<div id="major-changes-5" class="section level2">
 <h2 class="hasAnchor">
-<a href="#major-changes-4" class="anchor"></a>Major changes</h2>
+<a href="#major-changes-5" class="anchor"></a>Major changes</h2>
 <div id="new-features-2" class="section level3">
 <h3 class="hasAnchor">
 <a href="#new-features-2" class="anchor"></a>New features</h3>
@@ -429,9 +491,9 @@
 <h1 class="page-header">
 <a href="#qntmap-020" class="anchor"></a>qntmap 0.2.0</h1>
 <p>Check NEWS as 0.2.0 have lots of breaking changes.</p>
-<div id="breaking-changes-1" class="section level2">
+<div id="breaking-changes-2" class="section level2">
 <h2 class="hasAnchor">
-<a href="#breaking-changes-1" class="anchor"></a>Breaking changes</h2>
+<a href="#breaking-changes-2" class="anchor"></a>Breaking changes</h2>
 <ul>
 <li>Renamed functions to follow <code>verb_hoge</code> style. This leads some functions to be deprecated or defunct. See “Summary of defunct, deprecated, and unexported functions”.</li>
 <li>Unexported <code>cipois</code> and <code>flag0</code>.</li>
@@ -444,9 +506,9 @@
 <li>The above change cause <code>read_qnt</code> to save its result (<code>qnt.RDS</code>) and semi-product (<code>phase_list0.csv</code>) in the directory containing <code>.qnt</code> files unlike <code>qnt_load</code> saved them under the working directory.</li>
 </ul>
 </div>
-<div id="major-changes-5" class="section level2">
+<div id="major-changes-6" class="section level2">
 <h2 class="hasAnchor">
-<a href="#major-changes-5" class="anchor"></a>Major changes</h2>
+<a href="#major-changes-6" class="anchor"></a>Major changes</h2>
 <ul>
 <li>Monster functions are separated into smaller functions.
 <ul>
@@ -543,6 +605,7 @@
     <div id="tocnav">
       <h2>Contents</h2>
       <ul class="nav nav-pills nav-stacked">
+        <li><a href="#qntmap-040">0.4.0</a></li>
         <li><a href="#qntmap-034">0.3.4</a></li>
         <li><a href="#qntmap-033">0.3.3</a></li>
         <li><a href="#qntmap-032">0.3.2</a></li>
@@ -559,7 +622,7 @@
 
       <footer>
       <div class="copyright">
-  <p>Developed by YASUMOTO Atsushi, Japan Agency for Marine-Earth Science and Technology (JAMSTEC), JST PRESTO (Grant No. JPMJPR1676).</p>
+  <p>Developed by Atsushi Yasumoto, Japan Agency for Marine-Earth Science and Technology (JAMSTEC), JST PRESTO (Grant No. JPMJPR1676).</p>
 </div>
 
 <div class="pkgdown">

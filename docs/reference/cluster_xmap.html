@@ -157,7 +157,7 @@
     </div>
 
     <pre class="usage"><span class='fu'>cluster_xmap</span>(<span class='no'>xmap</span>, <span class='no'>centers</span>, <span class='kw'>elements</span> <span class='kw'>=</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/sets'>intersect</a></span>(<span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/names'>names</a></span>(<span class='no'>xmap</span>),
-  <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/colnames'>colnames</a></span>(<span class='no'>centers</span>)), <span class='kw'>saving</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='kw'>group_cluster</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='no'>...</span>)</pre>
+  <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/colnames'>colnames</a></span>(<span class='no'>centers</span>)), <span class='kw'>saving</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='kw'>suffix</span> <span class='kw'>=</span> <span class='st'>"_.*"</span>, <span class='no'>...</span>)</pre>
     
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -182,13 +182,15 @@ See <code><a href='find_centers.html'>find_centers()</a></code>.</p></td>
     </tr>
     <tr>
       <th>saving</th>
-      <td><p><code>TRUE</code> or <code>FALSE</code> to save result.</p></td>
+      <td><p><code>TRUE</code> or <code>FALSE</code> to save result.
+Specifying <code>xte</code> coerces <code>saving</code> to be <code>FALSE</code>.</p></td>
     </tr>
     <tr>
-      <th>group_cluster</th>
-      <td><p><code>FALSE</code> (default) or <code>TRUE</code> to integrate same phase subgrouped using suffix.
-For example,
-clusters named "Pl_NaRich" and "Pl_NaPoor" are integrated to "Pl" cluster .</p></td>
+      <th>suffix</th>
+      <td><p>A regular expression of suffix of cluster names.
+Clusters with the same prefix comprise a super cluster.
+For example, "Pl_NaRich" and "Pl_NaPoor" becomes "Pl" cluster if
+<code>suffix = "_.*"</code> (default).</p></td>
     </tr>
     <tr>
       <th>...</th>
@@ -254,7 +256,7 @@ predicted class labels will be output (one for each element of "rhos").</p></dd>
 
       <footer>
       <div class="copyright">
-  <p>Developed by YASUMOTO Atsushi, Japan Agency for Marine-Earth Science and Technology (JAMSTEC), JST PRESTO (Grant No. JPMJPR1676).</p>
+  <p>Developed by Atsushi Yasumoto, Japan Agency for Marine-Earth Science and Technology (JAMSTEC), JST PRESTO (Grant No. JPMJPR1676).</p>
 </div>
 
 <div class="pkgdown">

@@ -86,7 +86,7 @@ dir_qnt <- 'minimal/.qnt'
 
 ## Load data
 
-```{r, message = FALSE}
+```{r load-data, message = FALSE}
 # Read X-ray mapping data
 xmap <- read_xmap(dir_map)
 
@@ -97,7 +97,7 @@ qnt <- read_qnt(dir_qnt, renew = TRUE)
 The example data contains olivine and quartz in the mapping area.
 The phases are quantified 20 points each.
 
-```{r, message = FALSE, echo = FALSE, warning = FALSE}
+```{r tidy, message = FALSE, echo = FALSE, warning = FALSE}
 epma <- tidy_epma(qnt, xmap) %>>%
   filter(elm == elm[[1]]) %>>%
   select(x_px, y_px, phase)
@@ -122,7 +122,7 @@ plot(xmap)
 # plot(xmap, 'Mg', interactive = FALSE)
 ```
 
-```{r, echo = FALSE}
+```{r plot-mg, echo = FALSE}
 plot(xmap, 'Mg', interactive = FALSE)
 ```
 

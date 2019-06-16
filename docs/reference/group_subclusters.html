@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Group clusters who share same prefix — group_cluster • qntmap</title>
+<title>Group sub-clusters who share same prefix — group_subclusters • qntmap</title>
 
 <!-- jquery -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
@@ -36,7 +36,7 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/mark.js/8.11.1/jquery.mark.min.js" integrity="sha256-4HLtjeVgH0eIB3aZ9mLYF6E8oU5chNdjU6p6rrXpl9U=" crossorigin="anonymous"></script>
 
 
-<meta property="og:title" content="Group clusters who share same prefix — group_cluster" />
+<meta property="og:title" content="Group sub-clusters who share same prefix — group_subclusters" />
 
 <meta property="og:description" content="When data points are assigned to clusters A_1 and A_2,
 their clusters are renamed to be A by matching regular expressions." />
@@ -146,9 +146,9 @@ their clusters are renamed to be A by matching regular expressions." />
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Group clusters who share same prefix</h1>
-    <small class="dont-index">Source: <a href='https://github.com/atusy/qntmap/blob/master/R/group-cluster.R'><code>R/group-cluster.R</code></a></small>
-    <div class="hidden name"><code>group_cluster.Rd</code></div>
+    <h1>Group sub-clusters who share same prefix</h1>
+    <small class="dont-index">Source: <a href='https://github.com/atusy/qntmap/blob/master/R/cluster.R'><code>R/cluster.R</code></a></small>
+    <div class="hidden name"><code>group_subclusters.Rd</code></div>
     </div>
 
     <div class="ref-description">
@@ -158,22 +158,21 @@ their clusters are renamed to be A by matching regular expressions.</p>
     
     </div>
 
-    <pre class="usage"><span class='fu'>group_cluster</span>(<span class='no'>x</span>, <span class='kw'>saving</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='kw'>suffix</span> <span class='kw'>=</span> <span class='st'>"_.*"</span>)</pre>
+    <pre class="usage"><span class='fu'>group_subclusters</span>(<span class='no'>x</span>, <span class='kw'>suffix</span> <span class='kw'>=</span> <span class='st'>"_.*"</span>)</pre>
     
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
       <th>x</th>
-      <td><p><code>qm_cluster</code> class object returned by <code><a href='cluster_xmap.html'>cluster_xmap()</a></code>.</p></td>
-    </tr>
-    <tr>
-      <th>saving</th>
-      <td><p><code>TRUE</code> or <code>FALSE</code> to save result (default: <code>TRUE</code>).</p></td>
+      <td><p>The <code>qm_cluster</code> class object.</p></td>
     </tr>
     <tr>
       <th>suffix</th>
-      <td><p>A regular expression of suffix (default: <code>'_.*'</code>)</p></td>
+      <td><p>A regular expression of suffix of cluster names.
+Clusters with the same prefix comprise a super cluster.
+For example, "Pl_NaRich" and "Pl_NaPoor" becomes "Pl" cluster if
+<code>suffix = "_.*"</code> (default).</p></td>
     </tr>
     </table>
     
@@ -190,7 +189,7 @@ their clusters are renamed to be A by matching regular expressions.</p>
 
       <footer>
       <div class="copyright">
-  <p>Developed by YASUMOTO Atsushi, Japan Agency for Marine-Earth Science and Technology (JAMSTEC), JST PRESTO (Grant No. JPMJPR1676).</p>
+  <p>Developed by Atsushi Yasumoto, Japan Agency for Marine-Earth Science and Technology (JAMSTEC), JST PRESTO (Grant No. JPMJPR1676).</p>
 </div>
 
 <div class="pkgdown">

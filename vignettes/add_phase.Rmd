@@ -122,7 +122,7 @@ To do it on R, execute codes below.
 Be sure to specify a path to modified csv file to `phase_list` parameter of `read_qnt`.
 Also, `renew` parameter of `read_qnt` must be `TRUE`.
 
-```{r}
+```{r phase-list}
 phase_list <- read.csv('phase_list0.csv')
 phase_list$use[phase_list$phase == 'Qtz'] <- FALSE
 write.csv(phase_list, file.path(dir_qnt, 'phase_list_no_qtz.csv'))
@@ -131,11 +131,11 @@ qnt <- read_qnt(dir_qnt, phase_list = file.path(dir_qnt, 'phase_list_no_qtz.csv'
 
 After editing, only olivine is said to be quantified.
 
-```{r}
+```{r table-phase}
 table(qnt$cnd$phase)
 ```
 
-```{r, message = FALSE, echo = FALSE}
+```{r plot-quantified-points, message = FALSE, echo = FALSE}
 epma <- tidy_epma(qnt, xmap) %>>%
   filter(elm == elm[[1]]) %>>%
   select(x_px, y_px, phase)
@@ -156,14 +156,14 @@ plot(xmap, 'Si', interactive = FALSE, colors = "gray") +
 
 ### Initialize cluster centers
 
-```{r}
+```{r init-centers}
 centers <- find_centers(xmap, qnt)
 centers
 ```
 
 ### Compare the initial centroids with X-ray map plotted with heatmap
 
-```{r}
+```{r plot-si}
 plot(xmap, 'Si', interactive = FALSE)
 ```
 
@@ -177,13 +177,13 @@ Keep it on your note.
 
 Add initial centers by using `add_centers`.
 
-```{r}
+```{r add-centers}
 centers <- add_centers(centers = centers, xmap = xmap, x = 18, y = 28, p = 'Qtz')
 ```
 
 Then, Qtz is properly added to `centers`.
 
-```{r}
+```{r print-centers}
 print(centers)
 ```
 #### on Spreadsheet program + R
@@ -201,12 +201,12 @@ without considering different phases.
 Try "[Quasi-calibrations]" in case phases not quantified have known and 
 constant chemical compositions.
 
-```{r, fig.show = 'hide'}
+```{r quantify, fig.show = 'hide'}
 cluster <- cluster_xmap(xmap, centers)
 qmap <- quantify(xmap, qnt, cluster)
 ```
 
-```{r}
+```{r summary}
 summary(cluster)
 summary(qmap)
 ```
@@ -219,7 +219,7 @@ specifying their chemical compositions in csv format.
 
 For example, prepare a csv file, and specify it to `fix` parameter of `quantify()`.
 
-```{r}
+```{r csv}
 csv <- paste(
     'phase, oxide, wt',
     'Qtz,   SiO2,      100',
@@ -228,7 +228,7 @@ csv <- paste(
 cat(csv)
 ```
 
-```{r}
+```{r quantify2}
 qmap2 <- quantify(xmap, qnt, cluster, fix = csv)
 summary(qmap2)
 ```

@@ -165,7 +165,8 @@
 <span class='fu'>save4qm</span>(<span class='no'>x</span>, <span class='no'>nm</span>, <span class='no'>saving</span>, <span class='no'>...</span>)
 
 <span class='co'># S3 method for qm_cluster</span>
-<span class='fu'>save4qm</span>(<span class='no'>x</span>, <span class='no'>nm</span>, <span class='no'>saving</span>, <span class='no'>...</span>)
+<span class='fu'>save4qm</span>(<span class='no'>x</span>, <span class='no'>nm</span>, <span class='no'>saving</span>, <span class='kw'>dir_out</span> <span class='kw'>=</span> <span class='st'>"."</span>,
+  <span class='kw'>suffix</span> <span class='kw'>=</span> <span class='st'>"_.*"</span>, <span class='kw'>elements</span> <span class='kw'>=</span> <span class='st'>""</span>, <span class='no'>...</span>)
 
 <span class='co'># S3 method for qntmap</span>
 <span class='fu'>save4qm</span>(<span class='no'>x</span>, <span class='no'>nm</span>, <span class='no'>saving</span>, <span class='no'>...</span>)</pre>
@@ -189,6 +190,22 @@
       <th>...</th>
       <td><p>Other arguments passed to class methods</p></td>
     </tr>
+    <tr>
+      <th>dir_out</th>
+      <td><p>output directory</p></td>
+    </tr>
+    <tr>
+      <th>suffix</th>
+      <td><p>A regular expression of suffix of cluster names.
+Clusters with the same prefix comprise a super cluster.
+For example, "Pl_NaRich" and "Pl_NaPoor" becomes "Pl" cluster if
+<code>suffix = "_.*"</code> (default).</p></td>
+    </tr>
+    <tr>
+      <th>elements</th>
+      <td><p>A character vector to chose elements to be utilized in cluster analysis.
+<code>NULL</code> (default) selects as much elements as possible.</p></td>
+    </tr>
     </table>
     
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
@@ -208,7 +225,7 @@
     <h2 class="hasAnchor" id="save-qm-qm-cluster"><a class="anchor" href="#save-qm-qm-cluster"></a><code>save4qm.qm_cluster</code></h2>
 
     
-    <p>A value returned by <code><a href='cluster_xmap.html'>cluster_xmap()</a></code> or <code><a href='group_cluster.html'>group_cluster()</a></code> is
+    <p>A value returned by <code><a href='cluster_xmap.html'>cluster_xmap()</a></code> or <code><a href='defunct.html'>group_cluster()</a></code> is
 saved as binary RDS file, dot-by-dot png file, and as svg file with a legend.
 The png and svg files show distribution of phases among a mapped area.</p>
     
@@ -241,7 +258,7 @@ a binary RDS file, and csv files.</p>
 
       <footer>
       <div class="copyright">
-  <p>Developed by YASUMOTO Atsushi, Japan Agency for Marine-Earth Science and Technology (JAMSTEC), JST PRESTO (Grant No. JPMJPR1676).</p>
+  <p>Developed by Atsushi Yasumoto, Japan Agency for Marine-Earth Science and Technology (JAMSTEC), JST PRESTO (Grant No. JPMJPR1676).</p>
 </div>
 
 <div class="pkgdown">
