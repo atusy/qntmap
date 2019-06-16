@@ -34,11 +34,13 @@ cluster <- function(x, centers, xte = x, ...) {
 #'   A character vector to chose elements to be utilized in cluster analysis.
 #'   `NULL` (default) selects as much elements as possible.
 #' @param saving
-#'   `TRUE` or `FALSE` to save result.
-#' @param group_cluster
-#'   `FALSE` (default) or `TRUE` to integrate same phase subgrouped using suffix.
-#'   For example,
-#'   clusters named "Pl_NaRich" and "Pl_NaPoor" are integrated to "Pl" cluster .
+#'   `TRUE` or `FALSE` to save result. 
+#'   Specifying `xte` coerces `saving` to be `FALSE`.
+#' @param suffix
+#'   A regular expression of suffix of cluster names.
+#'   Clusters with the same prefix comprise a super cluster.
+#'   For example, "Pl_NaRich" and "Pl_NaPoor" becomes "Pl" cluster if
+#'   `suffix = "_.*"` (default).
 #' @inheritDotParams PoiClaClu::Classify -x -y
 #'
 #' @importFrom matrixStats rowMaxs rowSums2
@@ -49,78 +51,104 @@ cluster_xmap <- function(
                          centers,
                          elements = intersect(names(xmap), colnames(centers)),
                          saving = TRUE,
-                         group_cluster = FALSE,
+                         suffix = "_.*",
                          ...
 ) {
-  dir_map <- attr(xmap, "dir_map")
+  xte <- list(...)[["xte"]]
+  if (!is.null(xte)) saving <- FALSE
   centers$phase <- as.character(centers$phase)
-  dims <- dim(xmap[[1L]])
-
-  x <- as.data.frame(lapply(xmap[elements], unlist, use.names = FALSE))
-
-  rm(xmap)
 
   # Classify by PoiClaClu
   result <- cluster(
-    x, centers = centers[, elements], ...
-  )[c("ytehat", "discriminant", "xte")]
+    xmap[elements], centers[elements], ...
+  )[c("ytehat", "discriminant")]
 
   # give phase names to result$ytehat
-  names(result$ytehat) <- result$cluster <- centers$phase[result$ytehat]
-
-  # Find representative values of each clusters (~ centers)
-  result$center <- as.data.frame(result$xte) %>>%
-    mutate_if(is.integer, as.double) %>>%
-    mutate(phase = result$cluster) %>>%
-    gather(elm, val, -phase) %>>%
-    group_by(phase, elm) %>>%
-    summarise(val = median(val)) %>>%
-    ungroup %>>%
-    spread(elm, val)
-
-  result$xte <- NULL
+  clusters <- centers$phase[result$ytehat]
 
   # estimate membership of each clusters
-  result$membership <- result$discriminant %>>%
-    `-`(rowMaxs(.)) %>>%
-    exp %>>%
-    `/`(rowSums2(.))
+  find_membership(result$discriminant, centers, clusters) %>>%
+    cbind(membership = rowMaxs(.)) %>>%
+    as.data.frame %>>%
+    mutate(cluster = !!clusters) %>>%
+    bind_cols(if (is.null(xte)) xmap[c("x", "y")]) %>>%
+    prioritize(c("x", "y", "cluster", "membership")) %>>%
+    structure(
+      class = c("qm_cluster", class(.)),
+      centers = `if`(is.null(xte), select(xmap, -"x", -"y"), xte) %>>%
+        mutate(phase = !! clusters) %>>% 
+        group_by(.data$phase) %>>%
+        summarize_all(median),
+      step = attributes(xmap)$step
+    ) %>>%
+    save4qm(saving = saving, dir_out = attr(xmap, "dir_map"), suffix = suffix)
+}
 
-  result$discriminant <- NULL
+#' Find membership degrees based on discriminant
+#' 
+#' If some clusters are removed due to sparsity, they are added with 0 values.
+#' 
+#' @param discriminant Discriminant returned by `cluster`
+#' @param centers Initial centers
+#' @param clusters Name of hard clusters
+#' 
+#' @noRd
+#' @return numeric matrix
+find_membership <- function(discriminant, centers, clusters) {
+  membership <- exp(discriminant - rowMaxs(discriminant))
+  membership / rowSums2(discriminant)
 
-  if (nrow(centers) == ncol(result$membership)) {
-    colnames(result$membership) <- centers$phase
-  } else {
-    if (ncol(result$membership) == 1L) {
-      colnames(result$membership) <- result$cluster[1L]
-    } else {
-      TF <- !duplicated(result$cluster)
-      colnames(result$membership)[apply(result$membership[TF, ], 1L, which.max)] <-
-        result$cluster[TF]
-      rm(TF)
-    }
-    missings <- setdiff(centers$phase, colnames(result$membership))
-    result$membership <- cbind(
-      result$membership,
-      matrix(
-        0L,
-        nrow = nrow(result$membership),
-        ncol = length(missings),
-        dimnames = list(NULL, missings)
-      )
-    )[, centers$phase]
-    rm(missings)
+  if (nrow(centers) == ncol(membership)) {
+    colnames(membership) <- centers$phase
+    return(membership)
   }
 
-  # additional informations
-  class(result) <- c("qm_cluster", "list")
-  result$date <- format(Sys.time(), "%y%m%d_%H%M")
-  result$dims <- dims
-  result$elements <- elements
-  result$dir_map <- dir_map
+  if (ncol(membership) == 1L) {
+    colnames(membership) <- clusters[1L]
+  } else {
+    TF <- !duplicated(clusters)
+    colnames(membership)[apply(membership[TF, ], 1L, which.max)] <- clusters[TF]
+  }
 
-  if (group_cluster && any(grepl("_", colnames(result$membership))))
-    return(group_cluster(result, saving = saving))
+  missings <- setdiff(centers$phase, colnames(membership))
 
-  save4qm(result, "pois", saving)
+  structure(
+    c(membership, integer(nrow(membership) * length(missings))),
+    .Dim = c(nrow(membership), length(missings) + ncol(membership)),
+    .Dimnames = list(NULL, c(colnames(membership), missings))
+  )[, centers$phase]
+}
+
+
+#' Group sub-clusters who share same prefix
+#'
+#' When data points are assigned to clusters A_1 and A_2,
+#' their clusters are renamed to be A by matching regular expressions.
+#' 
+#' @param x The `qm_cluster` class object.
+#' @inheritParams cluster_xmap
+#'
+#' @export
+group_subclusters <- function(x, suffix = "_.*") {
+  x %>>%
+    select(-"x", -"y", -"cluster", -"membership") %>>%
+    mutate(n = row_number()) %>>%
+    gather("cluster", "membership", -"n") %>>%
+    mutate(cluster = str_replace(.data$cluster, !! suffix, "")) %>>%
+    group_by(.data$cluster, .data$n) %>>%
+    summarize(membership = sum(.data$membership)) %>>%
+    ungroup %>>%
+    spread("cluster", "membership") %>>%
+    select(-"n") %>>%
+    mutate(membership = reduce_add(.)) %>>%
+    bind_cols(
+      mutate(
+        x[c("x", "y", "cluster")], cluster = str_replace(cluster, !! suffix, "")
+      )
+    ) %>>%
+    prioritize(c("x", "y", "cluster", "membership")) %>>%
+    structure(
+      step = attributes(x)$step,
+      class = c("qm_cluster", class(.))
+    )
 }
