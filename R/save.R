@@ -34,34 +34,53 @@ save4qm.data.frame <- function(x, nm, saving, ...) {
 #'  A value returned by [`cluster_xmap()`] or [`group_cluster()`] is
 #'  saved as binary RDS file, dot-by-dot png file, and as svg file with a legend.
 #'  The png and svg files show distribution of phases among a mapped area.
-save4qm.qm_cluster <- function(x, nm, saving, ...) {
+save4qm.qm_cluster <- function(
+  x, nm, saving, dir_out = ".", suffix = "_.*", elements = "", ...
+) {
   # setting for output
-  dir_out <- paste0(x$dir_map, "/clustering")
+  dir_out <- file.path(dir_out, "clustering")
   dir.create(dir_out, showWarnings = FALSE)
-  k <- ncol(x$membership)
-  nm <- paste0(
-    dir_out, "/", x$date, "_", nm, "_k", k, "_",
-    paste(x$elements, collapse = "")
+
+  date <- format(Sys.time(), "%y%m%d-%H%M")
+  
+  save4qm_qm_cluster(x, dir_out, date = date, elements = elements)
+  
+  if (!any(grepl(suffix, x$cluster))) return(invisible(x))
+  
+  save4qm_qm_cluster(
+    group_subclusters(x, suffix = suffix), 
+    dir_out = dir_out, rds = FALSE, date = date, elements = elements
   )
 
+  invisible(x)
+}
+
+save4qm_qm_cluster <- function(
+  x, dir_out = ".", rds = TRUE, date = "", elements = ""
+) {
+  k <- ncol(x) - 4L # length(c("x", "y", "membership", "cluster"))
+  nm <- paste0(
+    dir_out, "/", 
+    paste(date, paste0("k", k), paste(elements, collapse = ""), sep = "_")
+  )
+
+  .dims <- c(max(x$y), max(x$x))
   .cls <- as.factor(x$cluster)
-  .img <- as_img(lookup$discrete(.cls), x$dims[1L], x$dims[2L])
-
+  .img <- as_img(lookup$discrete(.cls), .dims[[1L]], .dims[[2L]])
+  
   # Save as binary
-  saveRDS(x, paste0(nm, "_result.RDS"))
-
+  if (rds) saveRDS(x, paste0(nm, "_result.RDS"))
+  
   # Save as dot-by-dot png
   writePNG(image = .img, target = paste0(nm, "_map.png"))
-
+  
   # Save plot with legend as svg
-  A4 <- c(210, 297)[order(x$dims)] # 1st = H and 2nd = W in millimeters
+  A4 <- c(210, 297)[order(.dims)] # 1st = H and 2nd = W in millimeters
   ggsave(
     paste0(nm, "_legend.svg"),
     gg_img(.img, zlim = levels(.cls)) + labs(y = "Rows", x = "Columns"),
     height = A4[[1L]], width = A4[[2L]], units = "mm"
   )
-
-  invisible(x)
 }
 
 #' @rdname save4qm
