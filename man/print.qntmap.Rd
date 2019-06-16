@@ -4,12 +4,10 @@
 \alias{print.qntmap}
 \title{\code{print} method for \code{qntmap} class object}
 \usage{
-\method{print}{qntmap}(x, summarizing = TRUE, ...)
+\method{print}{qntmap}(x, ...)
 }
 \arguments{
 \item{x}{A \code{qntmap} class object returned by \code{\link[=quantify]{quantify()}} or \code{\link[=qntmap]{qntmap()}}.}
-
-\item{summarizing}{\code{TRUE} or \code{FALSE} to summarize x (default: \code{TRUE}.}
 
 \item{...}{Discarded.}
 }

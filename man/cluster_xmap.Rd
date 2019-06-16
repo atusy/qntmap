@@ -5,7 +5,7 @@
 \title{Cluster mapping data into mineral species}
 \usage{
 cluster_xmap(xmap, centers, elements = intersect(names(xmap),
-  colnames(centers)), saving = TRUE, group_cluster = FALSE, ...)
+  colnames(centers)), saving = TRUE, suffix = "_.*", ...)
 }
 \arguments{
 \item{xmap}{A \code{qm_xmap} class object returned by \code{\link[=read_xmap]{read_xmap()}}}
@@ -20,11 +20,13 @@ See \code{\link[=find_centers]{find_centers()}}.}
 \item{elements}{A character vector to chose elements to be utilized in cluster analysis.
 \code{NULL} (default) selects as much elements as possible.}
 
-\item{saving}{\code{TRUE} or \code{FALSE} to save result.}
+\item{saving}{\code{TRUE} or \code{FALSE} to save result.
+Specifying \code{xte} coerces \code{saving} to be \code{FALSE}.}
 
-\item{group_cluster}{\code{FALSE} (default) or \code{TRUE} to integrate same phase subgrouped using suffix.
-For example,
-clusters named "Pl_NaRich" and "Pl_NaPoor" are integrated to "Pl" cluster .}
+\item{suffix}{A regular expression of suffix of cluster names.
+Clusters with the same prefix comprise a super cluster.
+For example, "Pl_NaRich" and "Pl_NaPoor" becomes "Pl" cluster if
+\code{suffix = "_.*"} (default).}
 
 \item{...}{Arguments passed on to \code{PoiClaClu::Classify}
 \describe{

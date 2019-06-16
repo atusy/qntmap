@@ -14,7 +14,8 @@ save4qm(x, nm = "", saving = TRUE, ...)
 
 \method{save4qm}{data.frame}(x, nm, saving, ...)
 
-\method{save4qm}{qm_cluster}(x, nm, saving, ...)
+\method{save4qm}{qm_cluster}(x, nm, saving, dir_out = ".",
+  suffix = "_.*", elements = "", ...)
 
 \method{save4qm}{qntmap}(x, nm, saving, ...)
 }
@@ -26,6 +27,16 @@ save4qm(x, nm = "", saving = TRUE, ...)
 \item{saving}{\code{TRUE} (default) or \code{FALSE} to save.}
 
 \item{...}{Other arguments passed to class methods}
+
+\item{dir_out}{output directory}
+
+\item{suffix}{A regular expression of suffix of cluster names.
+Clusters with the same prefix comprise a super cluster.
+For example, "Pl_NaRich" and "Pl_NaPoor" becomes "Pl" cluster if
+\code{suffix = "_.*"} (default).}
+
+\item{elements}{A character vector to chose elements to be utilized in cluster analysis.
+\code{NULL} (default) selects as much elements as possible.}
 }
 \value{
 \code{invisible(x)}
