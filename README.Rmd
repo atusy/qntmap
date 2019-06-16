@@ -30,7 +30,7 @@ Current version supports data from JEOL-style EPMA.
 
 Copy & paste a following command to R.
 
-```{r install}
+```r
 source("https://install-github.me/atusy/qntmap")
 ```
 
