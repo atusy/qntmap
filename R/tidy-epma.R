@@ -47,7 +47,7 @@ tidy_epma <- function(
   if (all(is.na(qnt$cnd$nr))) stop("No points are quantified in mapping area.")
 
   ## Let's join
-  qnt$cmp <- xmap[qnt$elm$elint] %>>%
+  qnt$cmp <- as.list(xmap)[qnt$elm$elint] %>>%
     setNames(qnt$elm$elem) %>>%
     lapply(unlist, use.names = FALSE) %>>%
     lapply(function(x) `if`(is.null(x), NA_integer_, x)) %>>%
