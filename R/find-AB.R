@@ -90,17 +90,15 @@ fix_AB_by_wt <- function(xmap, cls, params) {
   if (!any(is.finite(params$wt))) return(NULL)
   params <- params[is.finite(params$wt), c("phase", "oxide", "wt")]
   xmap[(unique(params$oxide))] %>>%
-    lapply(unlist, use.names = FALSE) %>>%
-    c(list(phase = cls$cluster, w = rowMaxs(cls$membership))) %>>%
-    as.data.frame(stringsAsFactors = FALSE) %>>%
-    filter(phase %in% (!!params$phase)) %>>%
-    gather(oxide, mapint, -phase, -w) %>>%
-    group_by(phase, oxide) %>>%
-    summarize(mapint = weightedMedian(mapint, w)) %>>%
+    mutate(phase = !!cls$cluster, w = !!cls$membership) %>>%
+    filter(.data$phase %in% (!!params$phase)) %>>%
+    gather("oxide", "mapint", -"phase", -"w") %>>%
+    group_by(.data$phase, .data$oxide) %>>%
+    summarize(mapint = weightedMedian(.data$mapint, .data$w)) %>>%
     ungroup %>>%
     right_join(params, by = c("phase", "oxide")) %>>%
-    mutate(ab = wt / mapint, mapint = NULL, wt = NULL) %>>%
-    rename(elm = oxide, phase3 = phase)
+    mutate(ab = .data$wt / .data$mapint, mapint = NULL, wt = NULL) %>>%
+    rename(elm = .data$oxide, phase3 = .data$phase)
 }
 
 # © 2018 JAMSTEC
