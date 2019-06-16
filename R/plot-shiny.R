@@ -95,7 +95,7 @@ server <- function(data) {
   .env$log <- data %>>%
     summarize_if(is.numeric, mean) %>>%
     mutate(ID = 0L, Area = "Whole") %>>%
-    select(ID, Area, x, y, everything())
+    select("ID", "Area", "x", "y", everything())
   .env$id <- 0L
 
   function(input, output) {
@@ -241,7 +241,7 @@ summarize_box <- function(data, box, .env, .format = format_summary) {
   ] %>>%
     summarize_if(is.numeric, mean) %>>%
     mutate(ID = !!.env$id, Area = "Box") %>>%
-    select(ID, Area, x, y, everything()) %>>%
+    select("ID", "Area", "x", "y", everything()) %>>%
     bind_rows(.env$log)
   .format(.env$log)
 }
@@ -252,7 +252,7 @@ summarize_click <- function(data, click, .env, .format = format_summary) {
   .env$id <- .env$id + 1L
   .env$log <- data[data$x == round(click$x) & data$y == round(click$y), ] %>>%
     mutate(ID = !!.env$id, Area = "Click") %>>%
-    select(ID, Area, x, y, everything()) %>>%
+    select("ID", "Area", "x", "y", everything()) %>>%
     bind_rows(.env$log)
   .format(.env$log)
 }

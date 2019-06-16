@@ -25,8 +25,8 @@
 find_AB <- function(AG, B, se = TRUE) {
   mutate(
     right_join(AG[, c("elm", "phase3", "a", "a_se"[se])], B, by = "elm"),
-    ab = a * b,
-    ab_se = if (!!se) L2(a * b_se, b * a_se) else NA_real_,
+    ab = .data$a * .data$b,
+    ab_se = if (!!se) L2(.data$a * .data$b_se, .data$b * .data$a_se) else NA_real_,
     a = NULL, a_se = NULL, b = NULL, b_se = NULL
   )
 }
@@ -63,17 +63,14 @@ find_AB <- function(AG, B, se = TRUE) {
 #' .. ..$ Qtz: num [1:2] 3.81e-08 3.81e-08
 expand_AB <- function(AB, stg) {
   .stg <- data.frame(stg = stg)
-  gather(AB, .var, .val, -elm, -stg, -phase3) %>>%
-    spread(phase3, .val) %>>%
+  gather(AB, ".var", ".val", -"elm", -"stg", -"phase3") %>>%
+    spread("phase3", ".val") %>>%
     split(.$elm) %>>%
     lapply(function(x) lapply(split(x, x$.var), join_by_stg, .stg))
 }
 
 join_by_stg <- function(x, stg) {
-  x %>>%
-    select(-elm, -.var) %>>%
-    right_join(stg, by = "stg") %>>%
-    select(-stg)
+  select(right_join(select(x, -"elm", -".var"), stg, by = "stg"), -"stg")
 }
 
 # © 2018 JAMSTEC
@@ -98,7 +95,7 @@ fix_AB_by_wt <- function(xmap, cls, params) {
     ungroup %>>%
     right_join(params, by = c("phase", "oxide")) %>>%
     mutate(ab = .data$wt / .data$mapint, mapint = NULL, wt = NULL) %>>%
-    rename(elm = .data$oxide, phase3 = .data$phase)
+    rename(elm = "oxide", phase3 = "phase")
 }
 
 # © 2018 JAMSTEC
@@ -110,7 +107,7 @@ fix_AB_by_wt <- function(xmap, cls, params) {
 join_AB <- function(AB, AB_fixed = NULL) {
   if (is.null(AB_fixed)) return(AB)
   semi_join(AB, AB_fixed, by = c("elm", "phase3")) %>>%
-    select(-ab, -ab_se) %>>%
+    select(-"ab", -"ab_se") %>>%
     left_join(AB_fixed, by = c("elm", "phase3")) %>>%
     bind_rows(anti_join(AB, AB_fixed, by = c("elm", "phase3")))
 }

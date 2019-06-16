@@ -63,3 +63,5 @@ NULL
 .electron <- c("BSE", "BSI", "COMPO", "CP", "SEI", "SL", "TOPO", "TP")
 # combination of the above
 .component <- c(.electron, .element, .oxide)
+
+utils::globalVariables(".")

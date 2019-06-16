@@ -27,7 +27,8 @@ gghist.numeric <- function(x, .min = NA_real_, .max = NA_real_, colors) {
     c(list(width = .$mids[2L] - .$mids[1L])) %>>%
     as.data.frame() %>>%
     bind_rows(data.frame(mids = c(.min, .max), counts = 0L, width = 1L)) %>>%
-    ggplot(aes(mids, counts, width = width, fill = mids, color = mids)) +
+    ggplot() +
+    aes(.data$mids, .data$counts, width = .data$width, fill = .data$mids, color = .data$mids) +
     geom_col(show.legend = FALSE, position = "identity") +
     scale_fill[[match.arg(colors)]]() +
     scale_color[[match.arg(colors)]]() +
@@ -44,7 +45,7 @@ gghist.character <- function(x, ...) {
 #' @noRd
 gghist.factor <- function(x, ...) {
   ggplot(data.frame(x = x)) +
-    geom_bar(aes(x, y = stat(count / sum(count)), fill = x), color = "black") +
+    geom_bar(aes(x, y = stat(.data$count / sum(.data$count)), fill = x), color = "black") +
     scale_fill_manual(values = rgb(lookup$discrete(levels(x)))) +
     gghist_theme()
 }

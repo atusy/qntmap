@@ -27,18 +27,18 @@ tidy_epma <- function(
   ## mm -> px
   qnt$cnd <- qnt$cnd[!is.na(qnt$cnd$phase), ] %>>%
     mutate(
-      x_px = (round((x - pos$start[1L]) * 1e3 / pos$step[1]) + 1L) *
-        `if`(inst %in% "JXA8230", -1L, 1L),
-      y_px = round((y - pos$start[2L]) * 1e3 / pos$step[2]) + 1L,
+      x_px = (round((.data$x - !!pos$start[1L]) * 1e3 / !!pos$step[1]) + 1L) *
+        `if`(!!inst %in% "JXA8230", -1L, 1L),
+      y_px = round((.data$y - !!pos$start[2L]) * 1e3 / !!pos$step[2]) + 1L,
       nr0 = `if`(
-        inst %in% "JXA8230",
-        (x_px - 1L) * pos$pixel[2L] + y_px,
-        (y_px - 1L) * pos$pixel[1L] + x_px
+        !!inst %in% "JXA8230",
+        (.data$x_px - 1L) * (!!pos$pixel[2L]) + .data$y_px,
+        (.data$y_px - 1L) * (!!pos$pixel[1L]) + .data$x_px
       ),
-      nr = ifelse(0L < nr0 & nr0 < prod(pos$pixel), nr0, NA_integer_),
-      phase2 = str_replace(phase, "_.*", "")
+      nr = ifelse(0L < .data$nr0 & .data$nr0 < prod(!!pos$pixel), .data$nr0, NA_integer_),
+      phase2 = str_replace(.data$phase, "_.*", "")
     ) %>>%
-    distinct(nr0, .keep_all = TRUE)
+    distinct(.data$nr0, .keep_all = TRUE)
 
   qnt$elm$dwell <- beam[["dwell"]] * 1e-3
   qnt$elm$beam_map <- beam[["beam_map"]]

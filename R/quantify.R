@@ -181,7 +181,7 @@ check_ABG <- function(params, xmap, cls) {
     stringsAsFactors = FALSE
   ) %>>%
     anti_join(params, by = c("phase", "element")) %>>%
-    (element) %>>%
+    `[[`("element") %>>%
     unique
 
   if (length(element_missing) > 0L)
