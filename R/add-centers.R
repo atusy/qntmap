@@ -8,11 +8,6 @@ NULL
 #'
 #' @seealso [pick()], [find_centers()]
 #'
-#' @examples
-#' centers <- data.frame(phase = "a", A = 1, B = 1)
-#' xmap <- list(A = data.frame(1:2), B = data.frame(1:2))
-#' class(xmap) <- c("qm_xmap", "list")
-#' add_centers(centers, xmap, x = 1, y = 2, saveas = FALSE)
 #' @inheritParams find_centers
 #' @inheritParams cluster
 #' @inheritParams pick
