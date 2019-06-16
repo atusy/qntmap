@@ -1,10 +1,18 @@
-context("quantify.R")
-
 if (interactive()) setwd(here::here("tests/testthat"))
 
-xmap <- read_xmap("minimal/.map/1", saving = FALSE)
+xmap <- read_xmap("minimal/.map/1")
 qnt <- read_qnt("minimal/.qnt", saving = FALSE)
 cluster <- cluster_xmap(xmap, find_centers(xmap, qnt, saveas = FALSE), saving = FALSE)
+
+
+# maps_x = attr(xmap, "pixel")[1L]
+# maps_y = attr(xmap, "pixel")[2L]
+# fine_phase = NULL
+# fine_th = 0.9
+# fix = NULL
+# se = FALSE
+# saving = FALSE
+
 epma <- tidy_epma_for_quantify(
   tidy_epma(qnt, xmap, cluster),
   maps_x = attr(xmap, "pixel")[1],
@@ -51,14 +59,11 @@ test_that("check_ABG() returns TRUE", {
 test_that("quantify() returns a qntmap class object", {
   .qmap <- quantify(xmap, qnt, cluster, se = TRUE, saving = TRUE)
   dir_qmap <- "minimal/.map/1/qntmap"
-  expect_s3_class(.qmap, c("qntmap", "list"))
-  expect_named(.qmap, c("SiO2", "MgO", "Total"))
-  for (i in .qmap) expect_named(i, c("wt", "se"))
-  for (i in .qmap) expect_type(i, "list")
-  for (i in .qmap) for (j in i) expect_s3_class(j, "data.frame")
+  expect_s3_class(.qmap, c("qntmap", "data.frame"))
+  expect_named(.qmap, c("x", "y", "SiO2", "SiO2.se", "MgO", "MgO.se", "Total", "Total.se"))
   expect_true(all(
-    c("MgO_se.csv", "MgO_wt.csv", "parameters.csv", "qntmap.RDS",
-      "SiO2_se.csv", "SiO2_wt.csv", "Total_se.csv", "Total_wt.csv") %in%
+    c("MgO_se.csv", "MgO.csv", "parameters.csv", "qntmap.RDS",
+      "SiO2_se.csv", "SiO2.csv", "Total_se.csv", "Total.csv") %in%
       dir(dir_qmap)
   ))
   
