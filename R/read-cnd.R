@@ -8,7 +8,6 @@
 read_cnd <- function(x, pattern = NULL, ...) UseMethod("read_cnd")
 
 #' @rdname read_cnd
-#' @importFrom stringr str_detect str_subset
 #' @section .default:
 #' A default method which returns a result of [`readLines()`]
 #' with additional class according to the content of the file.
@@ -22,10 +21,7 @@ read_cnd.default <- function(x, pattern = NULL, ...) {
 
 #' @rdname read_cnd
 #' @section read_cnd.map_cnd: A method for `map_cnd` class object.
-#' @importFrom tidyr separate
 #' @importFrom utils type.convert
-#' @importFrom dplyr arrange
-#' @importFrom stringr str_extract
 #' @export
 read_cnd.map_cnd <- function(x, pattern = NULL, ...) {
   x %>>%
@@ -35,7 +31,7 @@ read_cnd.map_cnd <- function(x, pattern = NULL, ...) {
     (.x ~ Reduce(rbind, .x)) %>>%
     as.data.frame %>>%
     setNames(paste0("V", seq(0, by = 1, length.out = length(.)))) %>>%
-    mutate(V0 = str_replace(V0, "\\$", "")) %>>%
+    mutate(V0 = str_replace(.data$V0, "\\$", "")) %>>%
     separate(
       "V0", into = c("id", "no"),
       sep = "%", fill = "right", convert = TRUE
@@ -43,11 +39,11 @@ read_cnd.map_cnd <- function(x, pattern = NULL, ...) {
     split(.$id) %>>%
     lapply(function(x) {
       x %>>%
-        select(-id) %>>%
+        select(-"id") %>>%
         lapply(function(x) unname(type.convert(x, as.is = TRUE))) %>>%
         as.data.frame %>>%
-        arrange(no) %>>%
-        select(-no)
+        arrange(.data$no) %>>%
+        select(-"no")
     }) %>>%
     `class<-`("map_cnd")
 }
@@ -69,11 +65,10 @@ read_cnd.0_cnd <- function(x, pattern = NULL, n = NULL, ...) {
   detection_n <- lengths(detection)
 
   # error if any pattern matched more than 1 phrase
-  if (any(too_many <- detection_n > 1L)) {
+  too_many <- detection_n > 1L
+  if (any(too_many)) {
     stop(
-      'Some of the regular expression patterns matched more than 1 lines in "',
-      path,
-      '"\n',
+      'Some of the regular expression patterns matched more than 1 lines.\n',
       paste(
         paste0(
           '"', pattern[too_many], '"\n matched lines ',
@@ -85,10 +80,10 @@ read_cnd.0_cnd <- function(x, pattern = NULL, n = NULL, ...) {
   }
 
   # warn if any pattern did not match any phrase
-  if (any(mismatch <- detection_n == 0L)) {
+  mismatch <- detection_n == 0L
+  if (any(mismatch)) {
     warning(
-      'Some of the regular expression patterns matched 0 phrases in "',
-      path, '".\n',
+      'Some of the regular expression patterns matched 0 phrases.\n',
       "Such patterns as follows are assumed to be in lines specified",
       "by a parameter n.\n",
       paste(

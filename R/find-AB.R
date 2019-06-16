@@ -1,7 +1,5 @@
 #' Find AB
 #' @noRd
-#' @importFrom dplyr mutate right_join
-#' @importFrom rlang !!
 #' @param AG AG
 #' @param B B
 #' @examples
@@ -27,8 +25,8 @@
 find_AB <- function(AG, B, se = TRUE) {
   mutate(
     right_join(AG[, c("elm", "phase3", "a", "a_se"[se])], B, by = "elm"),
-    ab = a * b,
-    ab_se = if (!!se) L2(a * b_se, b * a_se) else NA_real_,
+    ab = .data$a * .data$b,
+    ab_se = if (!!se) L2(.data$a * .data$b_se, .data$b * .data$a_se) else NA_real_,
     a = NULL, a_se = NULL, b = NULL, b_se = NULL
   )
 }
@@ -38,8 +36,6 @@ find_AB <- function(AG, B, se = TRUE) {
 #' @param AB AB
 #' @param stg stg
 #'
-#' @importFrom tidyr gather spread
-#' @importFrom dplyr right_join select
 #' @note
 #' > AB
 #'   elm stg phase3         ab        ab_se
@@ -67,17 +63,14 @@ find_AB <- function(AG, B, se = TRUE) {
 #' .. ..$ Qtz: num [1:2] 3.81e-08 3.81e-08
 expand_AB <- function(AB, stg) {
   .stg <- data.frame(stg = stg)
-  gather(AB, .var, .val, -elm, -stg, -phase3) %>>%
-    spread(phase3, .val) %>>%
+  gather(AB, ".var", ".val", -"elm", -"stg", -"phase3") %>>%
+    spread("phase3", ".val") %>>%
     split(.$elm) %>>%
     lapply(function(x) lapply(split(x, x$.var), join_by_stg, .stg))
 }
 
 join_by_stg <- function(x, stg) {
-  x %>>%
-    select(-elm, -.var) %>>%
-    right_join(stg, by = "stg") %>>%
-    select(-stg)
+  select(right_join(select(x, -"elm", -".var"), stg, by = "stg"), -"stg")
 }
 
 # © 2018 JAMSTEC
@@ -90,25 +83,19 @@ join_by_stg <- function(x, stg) {
 #'   A file path to the csv file with columns `phase`, `oxide` and `wt`.
 #'
 #' @importFrom matrixStats rowMaxs weightedMedian
-#' @importFrom dplyr
-#'   filter group_by mutate right_join summarize
-#' @importFrom rlang !!
-#' @importFrom tidyr gather
 fix_AB_by_wt <- function(xmap, cls, params) {
   if (!any(is.finite(params$wt))) return(NULL)
   params <- params[is.finite(params$wt), c("phase", "oxide", "wt")]
   xmap[(unique(params$oxide))] %>>%
-    lapply(unlist, use.names = FALSE) %>>%
-    c(list(phase = cls$cluster, w = rowMaxs(cls$membership))) %>>%
-    as.data.frame(stringsAsFactors = FALSE) %>>%
-    filter(phase %in% (!!params$phase)) %>>%
-    gather(oxide, mapint, -phase, -w) %>>%
-    group_by(phase, oxide) %>>%
-    summarize(mapint = weightedMedian(mapint, w)) %>>%
+    mutate(phase = !!cls$cluster, w = !!cls$membership) %>>%
+    filter(.data$phase %in% (!!params$phase)) %>>%
+    gather("oxide", "mapint", -"phase", -"w") %>>%
+    group_by(.data$phase, .data$oxide) %>>%
+    summarize(mapint = weightedMedian(.data$mapint, .data$w)) %>>%
     ungroup %>>%
     right_join(params, by = c("phase", "oxide")) %>>%
-    mutate(ab = wt / mapint, mapint = NULL, wt = NULL) %>>%
-    rename(elm = oxide, phase3 = phase)
+    mutate(ab = .data$wt / .data$mapint, mapint = NULL, wt = NULL) %>>%
+    rename(elm = "oxide", phase3 = "phase")
 }
 
 # © 2018 JAMSTEC
@@ -117,11 +104,10 @@ fix_AB_by_wt <- function(xmap, cls, params) {
 #' @param AB returned by find_AB
 #' @param AB_fixed returnd by fix_AB_by_wt()
 #'
-#' @importFrom dplyr anti_join bind_rows left_join select semi_join
 join_AB <- function(AB, AB_fixed = NULL) {
   if (is.null(AB_fixed)) return(AB)
   semi_join(AB, AB_fixed, by = c("elm", "phase3")) %>>%
-    select(-ab, -ab_se) %>>%
+    select(-"ab", -"ab_se") %>>%
     left_join(AB_fixed, by = c("elm", "phase3")) %>>%
     bind_rows(anti_join(AB, AB_fixed, by = c("elm", "phase3")))
 }

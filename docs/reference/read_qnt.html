@@ -157,8 +157,7 @@
     </div>
 
     <pre class="usage"><span class='fu'>read_qnt</span>(<span class='kw'>wd</span> <span class='kw'>=</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/list.files'>dir</a></span>(<span class='kw'>pattern</span> <span class='kw'>=</span> (<span class='st'>"(.*_QNT|^\\.qnt)$"</span>), <span class='kw'>all.files</span> <span class='kw'>=</span>
-  <span class='fl'>TRUE</span>)[<span class='fl'>1</span>], <span class='kw'>phase_list</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>renew</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='kw'>saving</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>,
-  <span class='kw'>conditions</span> <span class='kw'>=</span> <span class='kw'>NULL</span>)</pre>
+  <span class='fl'>TRUE</span>)[<span class='fl'>1</span>], <span class='kw'>phase_list</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>conditions</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>saving</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)</pre>
     
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -173,21 +172,16 @@
 phase of each analysis and <code>TRUE</code> or <code>FALSE</code> to use it for quantifying.</p></td>
     </tr>
     <tr>
-      <th>renew</th>
-      <td><p><code>TRUE</code> (default) read all data from original files.
-<code>FALSE</code> tries to read <code>qnt.RDS</code> exists in <code>wd</code>, instead.</p></td>
-    </tr>
-    <tr>
-      <th>saving</th>
-      <td><p><code>TRUE</code> (default) or <code>FALSE</code> to save the result as <code>qnt.RDS</code> file in <code>wd</code>.</p></td>
-    </tr>
-    <tr>
       <th>conditions</th>
       <td><p>A path to a csv file which records analytical conditions of elements.
 The csv file must have following columns while others are discarded:
 <code>Oxide</code>, <code>Element</code>, <code>Bg+ [mm]</code>, <code>Bg- [mm]</code>, <code>Peak [sec]</code>, and <code>Bg [sec]</code>.
 <code>NULL</code> (default) retrieves analytical conditions from
 <code>elem.qnt</code>, <code>elint.qnt</code>, and <code>.cnd/elemw.cnd</code> / <code>Pos_0001/data001.cnd</code>.</p></td>
+    </tr>
+    <tr>
+      <th>saving</th>
+      <td><p><code>TRUE</code> (defau;t) or <code>FALSE</code> to save phase list.</p></td>
     </tr>
     </table>
     
@@ -204,7 +198,7 @@ The csv file must have following columns while others are discarded:
 
       <footer>
       <div class="copyright">
-  <p>Developed by YASUMOTO Atsushi, Japan Agency for Marine-Earth Science and Technology (JAMSTEC), JST PRESTO (Grant No. JPMJPR1676).</p>
+  <p>Developed by Atsushi Yasumoto, Japan Agency for Marine-Earth Science and Technology (JAMSTEC), JST PRESTO (Grant No. JPMJPR1676).</p>
 </div>
 
 <div class="pkgdown">

@@ -105,7 +105,7 @@ centers
 
 ```{r find-centers, echo = FALSE}
 dirs <- file.path(system.file('extdata', 'minimal', package = 'qntmap'), c(".map/1", ".qnt"))
-xmap <- read_xmap(dirs[[1]], saving = FALSE)
+xmap <- read_xmap(dirs[[1]])
 qnt <- read_qnt(dirs[[2]], saving = FALSE)
 kable(find_centers(xmap, qnt, saveas = FALSE))
 ```

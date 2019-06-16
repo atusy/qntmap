@@ -156,8 +156,7 @@
     
     </div>
 
-    <pre class="usage"><span class='fu'>read_xmap</span>(<span class='kw'>wd</span> <span class='kw'>=</span> <span class='st'>".map/1"</span>, <span class='kw'>DT</span> <span class='kw'>=</span> <span class='fl'>0</span>, <span class='kw'>renew</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='kw'>saving</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>,
-  <span class='kw'>conditions</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
+    <pre class="usage"><span class='fu'>read_xmap</span>(<span class='kw'>wd</span> <span class='kw'>=</span> <span class='st'>".map/1"</span>, <span class='kw'>DT</span> <span class='kw'>=</span> <span class='fl'>0</span>, <span class='kw'>conditions</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
   <span class='kw'>.map</span> <span class='kw'>=</span> <span class='st'>"(data[0-9]+\\.csv)|([1-9][0-9]*_map\\.txt)"</span>,
   <span class='kw'>.cnd</span> <span class='kw'>=</span> <span class='st'>"(data[0-9]+|[1-9][0-9]*)\\.cnd"</span>)</pre>
     
@@ -171,16 +170,6 @@
     <tr>
       <th>DT</th>
       <td><p>dead time in nano seconds (0 nsec in default)</p></td>
-    </tr>
-    <tr>
-      <th>renew</th>
-      <td><p><code>TRUE</code> (default) read data from original files.
-<code>FALSE</code> tries to read <code>xmap.RDS</code> in <code>wd</code>.</p></td>
-    </tr>
-    <tr>
-      <th>saving</th>
-      <td><p><code>TRUE</code> (default) or <code>FALSE</code> to save the result as <code>xmap.RDS</code> file in <code>wd</code>.
-When <code>conditions</code> is specified, <code>saving = FALSE</code> is forced.</p></td>
     </tr>
     <tr>
       <th>conditions</th>
@@ -208,7 +197,7 @@ ASCII converted maps (<code>.map</code>) and condition files (<code>.cnd</code>)
 
       <footer>
       <div class="copyright">
-  <p>Developed by YASUMOTO Atsushi, Japan Agency for Marine-Earth Science and Technology (JAMSTEC), JST PRESTO (Grant No. JPMJPR1676).</p>
+  <p>Developed by Atsushi Yasumoto, Japan Agency for Marine-Earth Science and Technology (JAMSTEC), JST PRESTO (Grant No. JPMJPR1676).</p>
 </div>
 
 <div class="pkgdown">

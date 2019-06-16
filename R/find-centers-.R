@@ -55,13 +55,8 @@
 #'
 #' @inherit qntmap-package references
 #'
-#' @importFrom data.table fwrite
-#' @importFrom dplyr
-#'   bind_cols bind_rows filter group_by mutate summarise ungroup
 #' @importFrom matrixStats colSums2
-#' @importFrom purrr map2 pmap
 #' @importFrom stats lsfit qnbinom median
-#' @importFrom tidyr spread
 #'
 #' @export
 find_centers <- function(
@@ -71,51 +66,64 @@ find_centers <- function(
                          saveas = "centers0.csv"
 ) {
 
-  quantified <- names(xmap) %in% qnt$elm$elint
-  xmap_df <- as.data.frame(lapply(xmap, unlist, use.names = FALSE))
+  quantified <- names(xmap) %in% c("x", "y", qnt$elm$elint)
 
   tidy_epma(qnt = qnt, xmap = xmap, cluster = NULL) %>>%
-    group_by(phase) %>>%
-    filter(all(is.na(map)) | !is.na(map)) %>>%
+    group_by(.data$phase) %>>%
+    filter(all(is.na(.data$map)) | !is.na(.data$map)) %>>%
     ungroup %>>%
     mutate( # Let weights in OLS be 0 for phases specified by `fine_phase``
-      w = if (is.null(fine_phase)) 1 else as.integer(phase %nin% fine_phase)
+      w = `if`(is.null(!! fine_phase), 1, as.integer(.data$phase %nin% !! fine_phase))
     ) %>>%
-    group_by(elint) %>>% # Peform OLS and estimate 99% prediction interval
+    group_by(.data$elint) %>>% # Peform OLS and estimate 99% prediction interval
     mutate(
-      .tmp = is.finite(map),
+      .tmp = is.finite(.data$map),
       map_est =
-        pkint * lsfit(pkint[.tmp], map[.tmp], w[.tmp], intercept = FALSE)$coef,
+        .data$pkint * 
+        lsfit(
+          x = .data$pkint[.data$.tmp], y = .data$map[.data$.tmp], 
+          wt = .data$w[.data$.tmp], intercept = FALSE
+        )$coef,
       .tmp = NULL,
-      pi_L = qnbinom(0.005, map_est, 0.5),
-      pi_H = qnbinom(0.995, map_est + 1, 0.5)
+      pi_L = qnbinom(0.005, .data$map_est, 0.5),
+      pi_H = qnbinom(0.995, .data$map_est + 1, 0.5)
     ) %>>%
-    group_by(id) %>>%
-    mutate(within_pi = all((pi_L <= map) & (map <= pi_H))) %>>%
+    group_by(.data$id) %>>%
+    mutate(
+      within_pi = all((.data$pi_L <= .data$map) & (.data$map <= .data$pi_H))
+    ) %>>%
     # pi = prediction interval
-    group_by(elint, phase) %>>%
-    mutate(n_within_pi = sum(within_pi)) %>>%
+    group_by(.data$elint, .data$phase) %>>%
+    mutate(n_within_pi = sum(.data$within_pi)) %>>%
     ungroup %>>%
-    select(elint, map, map_est, within_pi, n_within_pi, phase, id, nr) %>>%
+    select(
+      "elint", "map", "map_est", "within_pi", "n_within_pi", "phase", "id", "nr"
+    ) %>>%
     bind_rows(
       if (!all(quantified)) {
         . %>>%
-          filter(elint == elint[1L]) %>>%
-          select(-elint, -map, -map_est) %>>%
-          bind_cols(lapply(xmap_df[!quantified], `[`, .$nr)) %>>%
-          gather(elint, map, -within_pi, -n_within_pi, -phase, -id, -nr) %>>%
-          mutate(map_est = map)
+          filter(.data$elint == .data$elint[1L]) %>>%
+          select(-"elint", -"map", -"map_est") %>>%
+          bind_cols(lapply(xmap[!quantified], `[`, .$nr)) %>>%
+          gather(
+            "elint", "map", -"within_pi", -"n_within_pi", -"phase", -"id", -"nr"
+          ) %>>%
+          mutate(map_est = .data$map)
       }
     ) %>>%
-    group_by(phase) %>>%
-    mutate(not_mapped_phase = all(is.na(map))) %>>%
+    group_by(.data$phase) %>>%
+    mutate(not_mapped_phase = all(is.na(.data$map))) %>>%
     ungroup %>>%
-    mutate(map = ifelse(not_mapped_phase | within_pi == 0, map_est, map)) %>>%
-    filter(not_mapped_phase | within_pi | n_within_pi == 0) %>>%
-    group_by(elint, phase) %>>%
-    summarise(map = median(map)) %>>%
+    mutate(map = ifelse(
+      .data$not_mapped_phase | .data$within_pi == 0, .data$map_est, .data$map)
+    ) %>>%
+    filter(
+      .data$not_mapped_phase | .data$within_pi | .data$n_within_pi == 0
+    ) %>>%
+    group_by(.data$elint, .data$phase) %>>%
+    summarize(map = median(.data$map)) %>>%
     ungroup %>>%
-    spread(elint, map) %>>%
+    spread("elint", "map") %>>%
     # guess mapping intensity of certain phases in case
     # target elements are not analyzed by reference point analysis
     (function(x) {
@@ -123,11 +131,11 @@ find_centers <- function(
       if (all(!miss)) return(x)
       x[miss, -1] <-
         map2(
-          list(t(xmap_df[names(x[-1])])),
+          list(t(xmap[names(x[-1])])),
           pmap(x[miss, -1], c),
           `-`
         ) %>>%
-        lapply(function(x) xmap_df[which.min(colSums2(square(x), na.rm = TRUE)), ]) %>>%
+        lapply(function(x) xmap[which.min(colSums2(square(x), na.rm = TRUE)), ]) %>>%
         bind_rows %>>%
         `[`(names(x[-1L])) %>>%
         map2(x[miss, -1L], function(y, x) ifelse(is.na(x), y, x)) %>>%

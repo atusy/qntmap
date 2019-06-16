@@ -3,27 +3,23 @@
 NULL
 
 #' @rdname summary
-#' @aliases summary.qm_cluster
-#' @section summary.qm_cluster: Summarize abundance ratios of clusters.
 #' @importFrom matrixStats colSums2
 #' @export
 #' @inheritParams summary
 summary.qm_cluster <- function(object, ...) {
-  object$membership %>>%
-    colSums2 %>>%
-    `/`(sum(.))
+  object %>>%
+    select(-"x", -"y", -"cluster", -"membership") %>>%
+    summarize_all(mean) %>>%
+    as.data.frame
 }
 
 #' @rdname summary
-#' @aliases summary.qntmap
-#' @section summary.qntmap: Summarize qntmap class data.
-#' @importFrom dplyr bind_rows
 #' @inheritParams base::round
 #' @export
 summary.qntmap <- function(object, digits = 2L, ...) {
   object %>>%
-    lapply(function(x) as.list(round(summary(unlist(x[["wt"]])), digits))) %>>%
+    select(-"x", -"y") %>>%
+    lapply(function(x) as.list(round(summary(x), digits))) %>>%
     bind_rows(.id = "Element") %>>%
-    as.data.frame %>>%
-    print
+    as.data.frame
 }

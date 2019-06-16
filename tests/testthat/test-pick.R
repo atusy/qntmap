@@ -1,22 +1,21 @@
 # © 2018 JAMSTEC
 context("test-pick.R")
 
+d <- cbind(expand.grid(y = 1:2, x = 1:2), A = 1:4)
+
 test_that("Pixels to be picked can be specified by parameters x, y, and phase", {
-  xm <- structure(list(A = data.frame(1:2, 2:3)), class = c("qm_xmap", "list"))
-  expect_equal(pick(xm, 1:2, 1:2), data.frame(phase = c("P1", "P2"), A = c(1, 3)))
+  expect_equal(pick(d, 1:2, 1:2), data.frame(phase = c("P1", "P2"), A = c(1, 4)))
 })
 
 test_that("Pixels to be picked can be specified by data frame", {
-  xm <- structure(list(A = data.frame(1:2, 2:3)), class = c("qm_xmap", "list"))
   expect_equal(
-    pick(xm, i = data.frame(phase = "p", x = 1, y = 1)),
+    pick(d, i = data.frame(phase = "p", x = 1, y = 1)),
     data.frame(phase = c("p"), A = 1)
   )
 })
 
 test_that("Specify phase manually", {
-  xm <- structure(list(A = data.frame(1:2, 2:3)), class = c("qm_xmap", "list"))
-  expect_equal(pick(xm, 1, 1, "a"), data.frame(phase = "a", A = 1))
+  expect_equal(pick(d, 1, 1, "a"), data.frame(phase = "a", A = 1))
 })
 
 test_that("Error if not lengths of x, y, phase are not same", {

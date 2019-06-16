@@ -2,12 +2,6 @@
 #'
 #' @param wd directory path containing mapping data (e.g., ./.map/.1)
 #' @param DT dead time in nano seconds (0 nsec in default)
-#' @param renew
-#'   `TRUE` (default) read data from original files.
-#'   `FALSE` tries to read `xmap.RDS` in `wd`.
-#' @param saving
-#'   `TRUE` (default) or `FALSE` to save the result as `xmap.RDS` file in `wd`.
-#'   When `conditions` is specified, `saving = FALSE` is forced.
 #' @param conditions
 #'   A path to a csv file which records file paths and analytical conditions of
 #'   mapping data.
@@ -16,37 +10,23 @@
 #'   Regular expressions to match file names of
 #'   ASCII converted maps (`.map`) and condition files (`.cnd`)
 #'
-#' @importFrom purrr map_at
-#' @importFrom stats setNames
 #' @export
 #'
 read_xmap <- function(
                       wd = ".map/1",
                       DT = 0,
-                      renew = FALSE,
-                      saving = TRUE,
                       conditions = NULL,
                       .map = "(data[0-9]+\\.csv)|([1-9][0-9]*_map\\.txt)",
                       .cnd = "(data[0-9]+|[1-9][0-9]*)\\.cnd"
 ) {
 
-  rds <- "xmap.RDS"
-
   if (is.character(conditions)) # © 2018 JAMSTEC
-    return(read_xmap_by_conditions(conditions, rds, saving = FALSE)) # © 2018 JAMSTEC
+    return(read_xmap_by_conditions(conditions)) # © 2018 JAMSTEC
 
   cd <- getwd()
   on.exit(setwd(cd))
   wd <- normalizePath(wd)
   setwd(wd)
-
-  # Read old file with version check
-  if ((!renew) && file.exists(rds)) {
-    xmap <- readRDS(rds)
-    if (identical(list(ver = ver, deadtime = DT), attributes(xmap)[c("ver", "deadtime")]))
-      return(structure(xmap, dir_map = wd))
-    rm(xmap)
-  }
 
   files_xmap <- dir(pattern = .map, full.names = TRUE)
   files_cnd <- dir(pattern = .cnd, full.names = TRUE)
@@ -65,8 +45,7 @@ read_xmap <- function(
     pixel      = as.integer(cnd[[1L]][["pixel"]][1:2]),
     step       = as.numeric(cnd[[1L]][["step"]][1:2]),
     instrument =            cnd[[1L]][["instrument"]][1L]
-  ) %>>%
-    save4qm(rds, saving)
+  )
 }
 
 #' Stop if lengths of files_xmap and files_cnd are different
@@ -77,7 +56,7 @@ stop_if_inequal_xmap_and_cnd <- function(
                                          files_xmap, files_cnd
 ) {
   if (length(files_xmap) != length(files_cnd)) {
-    cat(
+    message(
       "File names of mapping data:", files_xmap, "\n",
       "File names of mapping conditions:", files_cnd
     )
@@ -103,15 +82,17 @@ stop_if_inequal_xmap_and_cnd <- function(
 #'   `step` for step size as an integer,
 #'   `instrument` for name of the instrument.
 #'
-#' @importFrom purrr map_at
 #' @importFrom stats setNames
 #' @noRd
 construct_qm_xmap <- function(files_xmap, elm, dwell, deadtime, dir_map, ...) {
   files_xmap %>>%
     lapply(fread) %>>%
     setNames(elm) %>>%
-    prioritize(.component) %>>%
     correct_deadtime(deadtime = deadtime, dwell = dwell) %>>%
+    c(expand.grid(y = seq(NROW(.[[1L]])), x = seq(NCOL(.[[1L]])))) %>>%
+    lapply(unlist, use.names = FALSE, recursive = FALSE) %>>%
+    prioritize(c("x", "y", .component)) %>>%
+    as.data.frame %>>%
     structure(
       class = c("qm_xmap", class(.)),
       deadtime = deadtime,
@@ -122,9 +103,9 @@ construct_qm_xmap <- function(files_xmap, elm, dwell, deadtime, dir_map, ...) {
     )
 }
 
-correct_deadtime <- function(x, deadtime = 0L, dwell) {
+correct_deadtime <- function(x, deadtime = 0, dwell) {
   # Dead time corrections except for electron signals (e.g., BSE)
-  if (deadtime == 0L) return(x)
+  if (deadtime == 0) return(x)
   map_at(
     x,
     setdiff(names(x), .electron),
@@ -137,7 +118,7 @@ correct_deadtime <- function(x, deadtime = 0L, dwell) {
 #' @inheritParams read_xmap
 #' @noRd
 #'
-read_xmap_by_conditions <- function(conditions, rds, saving) {
+read_xmap_by_conditions <- function(conditions) {
   .cnd <- fread(conditions)
   construct_qm_xmap(
     files_xmap = .cnd[["File path"]],
@@ -150,6 +131,5 @@ read_xmap_by_conditions <- function(conditions, rds, saving) {
     pixel      = unlist(.cnd[1L, c("Steps X", "Steps Y")], use.names = FALSE),
     step       = rep(.cnd[["Step size [um]"]][1L], 2L),
     instrument = .cnd[["Instrument"]][1L]
-  ) %>>%
-    save4qm(rds, saving)
+  )
 }

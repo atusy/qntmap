@@ -7,6 +7,9 @@
     <loc>https://qntmap.atusy.net/reference/add_centers.html</loc>
   </url>
   <url>
+    <loc>https://qntmap.atusy.net/reference/autoplot-qntmap.html</loc>
+  </url>
+  <url>
     <loc>https://qntmap.atusy.net/reference/cluster.html</loc>
   </url>
   <url>
@@ -22,7 +25,7 @@
     <loc>https://qntmap.atusy.net/reference/find_centers_kpp.html</loc>
   </url>
   <url>
-    <loc>https://qntmap.atusy.net/reference/group_cluster.html</loc>
+    <loc>https://qntmap.atusy.net/reference/group_subclusters.html</loc>
   </url>
   <url>
     <loc>https://qntmap.atusy.net/reference/hmean.html</loc>
@@ -34,7 +37,7 @@
     <loc>https://qntmap.atusy.net/reference/pick.html</loc>
   </url>
   <url>
-    <loc>https://qntmap.atusy.net/reference/plot.html</loc>
+    <loc>https://qntmap.atusy.net/reference/plot-qntmap.html</loc>
   </url>
   <url>
     <loc>https://qntmap.atusy.net/reference/print.qntmap.html</loc>
@@ -56,6 +59,9 @@
   </url>
   <url>
     <loc>https://qntmap.atusy.net/reference/read_xmap.html</loc>
+  </url>
+  <url>
+    <loc>https://qntmap.atusy.net/reference/reexports.html</loc>
   </url>
   <url>
     <loc>https://qntmap.atusy.net/reference/save4qm.html</loc>

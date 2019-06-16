@@ -2,10 +2,8 @@
 #' @noRd
 #' @param X X
 #' @param AG AG
-#' @importFrom dplyr transmute_at
 #' @importFrom matrixStats colSums2
 #' @importFrom stats setNames
-#' @importFrom purrr map_at
 find_XAG <- function(X, AG, se = TRUE) {
   X_trans <- t(X)
   nm <- c("val", "se"[se])

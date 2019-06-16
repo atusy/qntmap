@@ -2,18 +2,13 @@
 % Please edit documentation in R/pick.R
 \name{pick}
 \alias{pick}
-\alias{pick.qm_xmap}
 \title{Pick values from mapping data}
 \usage{
-pick(.data, x = NULL, y = NULL, phase = if (is.null(x)) NULL else
+pick(.df, x = NULL, y = NULL, phase = if (is.null(x)) NULL else
   paste0("P", seq_along(x)), i = data.frame(x, y, phase), ...)
-
-\method{pick}{qm_xmap}(.data, x = NULL, y = NULL, phase = if
-  (is.null(x)) NULL else paste0("P", seq_along(x)), i = data.frame(x, y,
-  phase), ...)
 }
 \arguments{
-\item{.data}{Mapping data. Currentl version only supports \code{qm_xmap} object.}
+\item{.df}{Mapping data. Currentl version only supports \code{qm_xmap} object.}
 
 \item{x, y}{Integer vectors specifying x- and y-coordinates of pixels of mapping data.
 In other words, x- and y- corresponds to n-th column and row of a matrix.}
@@ -31,24 +26,6 @@ If not manually supplied \code{phase} is supplied by \code{c('P1', 'P2', ...)}.}
 }
 \description{
 Pick values from mapping data based on coordinates of x and y.
-}
-\examples{
-# For qm_xmap class object
-xm <- list(
-  Si = as.data.frame(matrix(1:4, 2)),
-  Ti = as.data.frame(matrix(5:8, 2))
-)
-class(xm) <- c("qm_xmap", "list")
-
-## following codes return same results
-pick(xm, x = 1:2, y = 1:2)
-pick(xm, x = 1:2, y = 1:2, phase = c("P1", "P2"))
-pick(xm, i = data.frame(x = 1:2, y = 1:2, phase = c("P1", "P2")))
-
-## The last code is especially useful in case data frame is saved as a file such as csv.
-\dontrun{
-pick(xm, i = read.csv("pick_centers.csv"))
-}
 }
 \seealso{
 \code{\link[=add_centers]{add_centers()}}

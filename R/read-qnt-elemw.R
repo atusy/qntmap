@@ -22,7 +22,6 @@ read_qnt_elemw.map_cnd <- function(x, ...) {
 #' @inheritParams read_cnd
 #'
 #' @param pattern named character vectors
-#' @importFrom stringr str_replace str_detect
 #' @param n number of rows
 #' @param each n appears in each rows
 #' @noRd

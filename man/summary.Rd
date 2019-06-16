@@ -53,14 +53,6 @@ For \code{\link{factor}}s, the frequency of the first \code{maxsum - 1}
     of particular methods which summarize the results produced by
     \code{\link{lm}} and \code{\link{glm}}.
 }
-\section{summary.qm_cluster}{
- Summarize abundance ratios of clusters.
-}
-
-\section{summary.qntmap}{
- Summarize qntmap class data.
-}
-
 \examples{
 summary(attenu, digits = 4) #-> summary.data.frame(...), default precision
 summary(attenu $ station, maxsum = 20) #-> summary.factor(...)

@@ -5,6 +5,13 @@ NULL
 
 #' @rdname defunct
 #' @export
+group_cluster <- function(...) {
+  .Defunct(new = "group_subclusters")
+}
+
+
+#' @rdname defunct
+#' @export
 qntmap_quantify <- function(...) {
   .Defunct(new = "quantify")
 }

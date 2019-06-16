@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>summary methods — summary_methods • qntmap</title>
+<title>Create a ggplot object for objects created by qntmap package — autoplot-qntmap • qntmap</title>
 
 <!-- jquery -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
@@ -36,9 +36,9 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/mark.js/8.11.1/jquery.mark.min.js" integrity="sha256-4HLtjeVgH0eIB3aZ9mLYF6E8oU5chNdjU6p6rrXpl9U=" crossorigin="anonymous"></script>
 
 
-<meta property="og:title" content="summary methods — summary_methods" />
+<meta property="og:title" content="Create a ggplot object for objects created by qntmap package — autoplot-qntmap" />
 
-<meta property="og:description" content="summary methods" />
+<meta property="og:description" content="Create a ggplot object for objects created by qntmap package" />
 <meta name="twitter:card" content="summary" />
 
 
@@ -79,7 +79,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">qntmap</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.3.2.9999</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.3.4</span>
       </span>
     </div>
 
@@ -145,36 +145,56 @@
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>summary methods</h1>
-    <small class="dont-index">Source: <a href='https://github.com/atusy/qntmap/blob/master/R/summary.R'><code>R/summary.R</code></a></small>
-    <div class="hidden name"><code>summary_methods.Rd</code></div>
+    <h1>Create a ggplot object for objects created by qntmap package</h1>
+    <small class="dont-index">Source: <a href='https://github.com/atusy/qntmap/blob/master/R/plot-autoplot.R'><code>R/plot-autoplot.R</code></a></small>
+    <div class="hidden name"><code>autoplot-qntmap.Rd</code></div>
     </div>
 
     <div class="ref-description">
     
-    <p>summary methods</p>
+    <p>Create a ggplot object for objects created by qntmap package</p>
     
     </div>
 
-    <pre class="usage"><span class='co'># S3 method for qm_cluster</span>
-<span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/summary'>summary</a></span>(<span class='no'>object</span>, <span class='no'>...</span>)</pre>
+    <pre class="usage"><span class='co'># S3 method for qntmap</span>
+<span class='fu'><a href='https://www.rdocumentation.org/packages/ggplot2/topics/autoplot'>autoplot</a></span>(<span class='no'>object</span>, <span class='kw'>zname</span> <span class='kw'>=</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/sets'>setdiff</a></span>(<span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/names'>names</a></span>(<span class='no'>object</span>), <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/c'>c</a></span>(<span class='st'>"x"</span>,
+  <span class='st'>"y"</span>))<span class='kw'>[[</span><span class='fl'>1L</span>]], <span class='kw'>zlim</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>colors</span> <span class='kw'>=</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/c'>c</a></span>(<span class='st'>"viridis"</span>, <span class='st'>"gray"</span>), <span class='no'>...</span>)
+
+<span class='co'># S3 method for qm_xmap</span>
+<span class='fu'><a href='https://www.rdocumentation.org/packages/ggplot2/topics/autoplot'>autoplot</a></span>(<span class='no'>object</span>, <span class='kw'>zname</span> <span class='kw'>=</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/sets'>setdiff</a></span>(<span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/names'>names</a></span>(<span class='no'>object</span>), <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/c'>c</a></span>(<span class='st'>"x"</span>,
+  <span class='st'>"y"</span>))<span class='kw'>[[</span><span class='fl'>1L</span>]], <span class='kw'>zlim</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>colors</span> <span class='kw'>=</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/c'>c</a></span>(<span class='st'>"viridis"</span>, <span class='st'>"gray"</span>), <span class='no'>...</span>)
+
+<span class='co'># S3 method for qm_cluster</span>
+<span class='fu'><a href='https://www.rdocumentation.org/packages/ggplot2/topics/autoplot'>autoplot</a></span>(<span class='no'>object</span>, <span class='kw'>zname</span> <span class='kw'>=</span> <span class='st'>"cluster"</span>, <span class='kw'>zlim</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
+  <span class='kw'>colors</span> <span class='kw'>=</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/c'>c</a></span>(<span class='st'>"viridis"</span>, <span class='st'>"gray"</span>), <span class='no'>...</span>)</pre>
     
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
       <th>object</th>
-      <td><p>object to be summarized</p></td>
+      <td><p>an object, whose class will determine the behaviour of autoplot</p></td>
+    </tr>
+    <tr>
+      <th>zname</th>
+      <td><p>Name of z-axis (fill).
+If unset, first column except "x" and "y" is chosen for objects with
+<code>qm_xmap</code> or <code>qntmap</code> classes, and "cluster" is chosen for the <code>qm_cluster</code>
+class object.</p></td>
+    </tr>
+    <tr>
+      <th>zlim</th>
+      <td><p>Range limit of z-coordinates. This is neglected if z is discrete.</p></td>
+    </tr>
+    <tr>
+      <th>colors</th>
+      <td><p>If z is numeric, "viridis" or "gray" are the choice.</p></td>
     </tr>
     <tr>
       <th>...</th>
-      <td><p>other arguments to control summary results</p></td>
+      <td><p>other arguments passed to specific methods</p></td>
     </tr>
     </table>
-    
-    <h2 class="hasAnchor" id="summary-qm-cluster"><a class="anchor" href="#summary-qm-cluster"></a>summary.qm_cluster</h2>
-
-    <p>Returns abundance ratios of clusters.</p>
     
 
   </div>
@@ -182,16 +202,14 @@
     <h2>Contents</h2>
     <ul class="nav nav-pills nav-stacked">
       <li><a href="#arguments">Arguments</a></li>
-      
-      <li><a href="#summary-qm-cluster">summary.qm_cluster</a></li>
-          </ul>
+                </ul>
 
   </div>
 </div>
 
       <footer>
       <div class="copyright">
-  <p>Developed by YASUMOTO Atsushi, Japan Agency for Marine-Earth Science and Technology (JAMSTEC), JST PRESTO (Grant No. JPMJPR1676).</p>
+  <p>Developed by Atsushi Yasumoto, Japan Agency for Marine-Earth Science and Technology (JAMSTEC), JST PRESTO (Grant No. JPMJPR1676).</p>
 </div>
 
 <div class="pkgdown">

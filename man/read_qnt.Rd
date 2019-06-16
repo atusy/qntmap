@@ -5,8 +5,7 @@
 \title{compile quantitative data}
 \usage{
 read_qnt(wd = dir(pattern = ("(.*_QNT|^\\\\.qnt)$"), all.files =
-  TRUE)[1], phase_list = NULL, renew = FALSE, saving = TRUE,
-  conditions = NULL)
+  TRUE)[1], phase_list = NULL, conditions = NULL, saving = TRUE)
 }
 \arguments{
 \item{wd}{directory path containing .qnt files}
@@ -14,16 +13,13 @@ read_qnt(wd = dir(pattern = ("(.*_QNT|^\\\\.qnt)$"), all.files =
 \item{phase_list}{A path to a csv file containing columns indicating
 phase of each analysis and \code{TRUE} or \code{FALSE} to use it for quantifying.}
 
-\item{renew}{\code{TRUE} (default) read all data from original files.
-\code{FALSE} tries to read \code{qnt.RDS} exists in \code{wd}, instead.}
-
-\item{saving}{\code{TRUE} (default) or \code{FALSE} to save the result as \code{qnt.RDS} file in \code{wd}.}
-
 \item{conditions}{A path to a csv file which records analytical conditions of elements.
 The csv file must have following columns while others are discarded:
 \code{Oxide}, \code{Element}, \code{Bg+ [mm]}, \code{Bg- [mm]}, \code{Peak [sec]}, and \code{Bg [sec]}.
 \code{NULL} (default) retrieves analytical conditions from
 \code{elem.qnt}, \code{elint.qnt}, and \code{.cnd/elemw.cnd} / \code{Pos_0001/data001.cnd}.}
+
+\item{saving}{\code{TRUE} (defau;t) or \code{FALSE} to save phase list.}
 }
 \description{
 compile quantitative data

@@ -2,6 +2,7 @@
 % Please edit documentation in R/defunct.R
 \name{defunct}
 \alias{defunct}
+\alias{group_cluster}
 \alias{qntmap_quantify}
 \alias{qltmap_cls_centers}
 \alias{qltmap_load}
@@ -9,6 +10,8 @@
 \alias{qnt_load}
 \title{Defunct functions}
 \usage{
+group_cluster(...)
+
 qntmap_quantify(...)
 
 qltmap_cls_centers(...)

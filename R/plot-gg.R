@@ -1,19 +1,8 @@
-#' @importFrom ggplot2 ggplot aes
-NULL
-
 #' Draw a histgram for numeric vector based on Scott's choice
 #' @name gghist
 #' @param x An atomic vector
 #'
 #' @importFrom graphics hist
-#' @importFrom ggplot2
-#'   coord_cartesian
-#'   element_blank
-#'   element_rect
-#'   geom_col
-#'   theme
-#'   theme_classic
-#'   scale_fill_manual
 #' @noRd
 gghist <- function(x, ...) {
   UseMethod("gghist")
@@ -37,10 +26,9 @@ gghist.numeric <- function(x, .min = NA_real_, .max = NA_real_, colors) {
     `[`(c("mids", "counts")) %>>%
     c(list(width = .$mids[2L] - .$mids[1L])) %>>%
     as.data.frame() %>>%
-    bind_rows(
-      data.frame(mids = c(.min, .max), counts = 0L, width = 1L)
-    ) %>>%
-    ggplot(aes(mids, counts, width = width, fill = mids, color = mids)) +
+    bind_rows(data.frame(mids = c(.min, .max), counts = 0L, width = 1L)) %>>%
+    ggplot() +
+    aes(.data$mids, .data$counts, width = .data$width, fill = .data$mids, color = .data$mids) +
     geom_col(show.legend = FALSE, position = "identity") +
     scale_fill[[match.arg(colors)]]() +
     scale_color[[match.arg(colors)]]() +
@@ -54,11 +42,10 @@ gghist.character <- function(x, ...) {
 }
 
 #' @rdname gghist
-#' @importFrom ggplot2 geom_bar scale_fill_manual stat
 #' @noRd
 gghist.factor <- function(x, ...) {
   ggplot(data.frame(x = x)) +
-    geom_bar(aes(x, y = stat(count / sum(count)), fill = x), color = "black") +
+    geom_bar(aes(x, y = stat(.data$count / sum(.data$count)), fill = x), color = "black") +
     scale_fill_manual(values = rgb(lookup$discrete(levels(x)))) +
     gghist_theme()
 }
@@ -108,11 +95,11 @@ palette <- list(
 #' @importFrom scales rescale
 #' @noRd
 lookup <- list(
-  viridis  = function(x, to, ...) palette$viridis[rescale(x, to = to, ...), ],
-  gray     = rescale,
+  viridis  = function(x, to, ...) palette$viridis[rescale(x, to = to, ...), , drop = FALSE],
+  gray     = function(x, ...) rep(rescale(x, ...), 3L),
   discrete = function(x, ...) {
     x <- as.factor(x)
-    (palette$discrete(rescale(seq_along(levels(x)))) / 255L)[as.integer(x), ]
+    (palette$discrete(rescale(seq_along(levels(x)))) / 255L)[as.integer(x), , drop = FALSE]
   }
 )
 formals(lookup$viridis)$to <- c(1L, nrow(palette$viridis))
@@ -123,14 +110,10 @@ formals(lookup$viridis)$to <- c(1L, nrow(palette$viridis))
 #' @param col Number of columns
 #' @noRd
 as_img <- function(x, row, col) {
-  array(x, dim = c(row, col, 3L))
+  structure(x, .Dim = c(row, col, 3L))
 }
 
 #' Choice of scales for filling
-#' @importFrom ggplot2
-#'   scale_fill_gradient
-#'   scale_fill_viridis_c
-#'   scale_fill_manual
 #' @noRd
 scale_fill <- list(
   gray = function(...) scale_fill_gradient(..., low = "black", high = "white"),
@@ -139,10 +122,6 @@ scale_fill <- list(
 )
 
 #' Choice of scales for coloring
-#' @importFrom ggplot2
-#'   scale_color_gradient
-#'   scale_color_viridis_c
-#'   scale_color_manual
 #' @noRd
 scale_color <- list(
   gray = function(...) scale_color_gradient(..., low = "black", high = "white"),
@@ -151,21 +130,15 @@ scale_color <- list(
 )
 
 #' Raster image with ggplot2::annotation_raster
+#' 
 #' @param img A value returned by `as_img`
 #' @param xlim,ylim,zlim Limits of x, y, and z
 #' @param zname Name of z (title of scale_fill)
 #' @param colors A palette of colros to use. If manual, specify `values` in `...`
 #' @param barheight Barheight for continuous scale
 #' @param ... Other arguments passed to `scale_fill_*`
-#' @importFrom ggplot2
-#'   annotation_raster
-#'   coord_fixed
-#'   geom_tile
-#'   scale_y_reverse
-#'   guides
-#'   guide_colorbar
-#' @importFrom grid
-#'   unit
+#' 
+#' @importFrom grid unit
 #' @noRd
 gg_img <- function(
                    img,
@@ -179,7 +152,8 @@ gg_img <- function(
 ) {
   is_z_num <- is.numeric(zlim)
   colors <- `if`(is_z_num, match.arg(colors), "discrete")
-  ggplot(data.frame(x = 0, y = 0, fill = zlim), aes(x, y, fill = fill)) +
+  ggplot(data.frame(x = 0, y = 0, fill = zlim)) +
+    aes(.data$x, .data$y, fill = .data$fill) +
     geom_tile(width = 0, height = 0) + # Invisible tile for legend
     coord_fixed(xlim = xlim, ylim = ylim, expand = FALSE) +
     annotation_raster(

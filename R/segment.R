@@ -27,7 +27,6 @@ segment <- function(x, ...) {
 #' head(segment(x))
 #' @importFrom grDevices rgb
 #' @importFrom png readPNG
-#' @importFrom purrr pmap
 #' @importFrom stats setNames
 #'
 #' @export

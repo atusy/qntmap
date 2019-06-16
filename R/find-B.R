@@ -1,18 +1,17 @@
 #' find B
 #' @noRd
 #' @param epma A tidy epma data output by [`tidy_epma()`]
-#' @importFrom dplyr bind_rows left_join
 find_B <- function(epma) {
   epma <- epma[
     !is.na(epma$stg),
     c("elm", "pkint", "mapint", "mem", "stg", "dwell", "beam_map")
   ]
 
-  B <- lm_B(epma, elm, stg)
+  B <- lm_B(epma, .data$elm, .data$stg)
   kept <- is.finite(B$b + B$b_se)
   B <- bind_rows(
     B[kept, ],
-    left_join(B[!kept, c("elm", "stg")], lm_B(epma, elm), by = "elm")
+    left_join(B[!kept, c("elm", "stg")], lm_B(epma, .data$elm), by = "elm")
   )
 
   as.data.frame(B)
@@ -32,23 +31,21 @@ find_B <- function(epma) {
 #'
 #' @param epma `tidy_epma``
 #' @param ... Grouping variables in NSE.
-#' @importFrom dplyr group_by mutate summarize ungroup
-#' @importFrom purrr map_dbl
 #' @importFrom stats coef lm vcov
 lm_B <- function(epma, ...) {
   mutate(
     ungroup(summarize(
       group_by(epma, ...),
-      fit = list(lm(pkint ~ 0 + mapint, weights = mem)),
-      k = dwell[1L] * beam_map[1L] * 1e+6
+      fit = list(lm(.data$pkint ~ 0 + .data$mapint, weights = .data$mem)),
+      k = .data$dwell[1L] * .data$beam_map[1L] * 1e+6
     )),
-    b = map(fit, coef, complete = FALSE),
-    b_se = map(fit, vcov, complete = FALSE),
-    .kept = (lengths(b) * lengths(b_se)) == 1L,
-    b = unlist(ifelse(.kept, b, NA_real_), use.names = FALSE) / k,
-    b_se = unlist(ifelse(.kept, b_se, NA_real_), use.names = FALSE) / k,
+    b = map(.data$fit, coef, complete = FALSE),
+    b_se = map(.data$fit, vcov, complete = FALSE),
+    .kept = (lengths(.data$b) * lengths(.data$b_se)) == 1L,
+    b = unlist(ifelse(.data$.kept, .data$b, NA_real_), use.names = FALSE) / .data$k,
+    b_se = unlist(ifelse(.data$.kept, .data$b_se, NA_real_), use.names = FALSE) / .data$k,
     .kept = NULL,
-    # b = map_dbl(fit, coef) / k, b_se = map_dbl(fit, vcov) / k,
+    # b = vapply(fit, coef, 1.0) / k, b_se = vapply(fit, vcov, 1.0) / k,
     #  # Simple but works only after R 3.5.x
     fit = NULL, k = NULL
   )
@@ -59,10 +56,9 @@ lm_B <- function(epma, ...) {
 #' @noRd
 #' @param params tidy parameters
 #'
-#' @importFrom dplyr transmute
 fix_B <- function(params) {
   if (!is.null(params$stage))
     stop("Cannot inherit parameters from a file containing stage column.")
 
-  distinct(transmute(params, elm = oxide, stg = "11", b = beta))
+  distinct(transmute(params, elm = .data$oxide, stg = "11", b = .data$beta))
 }
