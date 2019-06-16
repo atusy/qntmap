@@ -3,7 +3,7 @@
 #'
 #' Pick values from mapping data based on coordinates of x and y.
 #'
-#' @param .data
+#' @param .df
 #'   Mapping data. Currentl version only supports `qm_xmap` object.
 #' @param x,y
 #'   Integer vectors specifying x- and y-coordinates of pixels of mapping data.
