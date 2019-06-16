@@ -1,8 +1,6 @@
-context("qntmap.R")
-
 if (interactive()) setwd(here::here("tests/testthat"))
 
-xmap <- read_xmap("minimal/.map/1", saving = FALSE)
+xmap <- read_xmap("minimal/.map/1")
 xmap2 <- xmap
 xmap2$Ti <- xmap$Si
 qnt <- read_qnt("minimal/.qnt", saving = FALSE)
