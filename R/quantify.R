@@ -77,8 +77,12 @@ quantify <- function(
     rm(epma)
     nm <- setNames(qnt$elm$elem, qnt$elm$elint)
   }
-
-  names(xmap) <- c(x = "x", y = "y", nm)[names(xmap)]
+  
+  names(xmap) <- setdiff(names(xmap), names(nm)) %>>% 
+    setNames(.) %>>%
+    c(nm) %>>%
+    `[`(names(xmap))
+  # names(xmap) <- c(x = "x", y = "y", nm)[names(xmap)]
 
   XAG <- find_XAG(
     X,
