@@ -2,9 +2,6 @@
 #'
 #' @param wd directory path containing mapping data (e.g., ./.map/.1)
 #' @param DT dead time in nano seconds (0 nsec in default)
-#' @param renew
-#'   `TRUE` (default) read data from original files.
-#'   `FALSE` tries to read `xmap.RDS` in `wd`.
 #' @param conditions
 #'   A path to a csv file which records file paths and analytical conditions of
 #'   mapping data.

@@ -4,9 +4,6 @@
 #' @param phase_list
 #'   A path to a csv file containing columns indicating
 #'   phase of each analysis and `TRUE` or `FALSE` to use it for quantifying.
-#' @param renew
-#'   `TRUE` (default) read all data from original files.
-#'   `FALSE` tries to read `qnt.RDS` exists in `wd`, instead.
 #' @param conditions
 #'   A path to a csv file which records analytical conditions of elements.
 #'   The csv file must have following columns while others are discarded:
