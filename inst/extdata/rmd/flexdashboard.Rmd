@@ -1,0 +1,551 @@
+---
+title: qntmap `r packageVersion("qntmap")`
+output: 
+  flexdashboard::flex_dashboard:
+    orientation: columns
+    vertical_layout: fill
+params:
+  xmap: NULL
+  qnt: NULL
+  deadtime: 0
+runtime: shiny
+---
+
+```{r setup-knit-and-shiny}
+knitr::opts_chunk$set(echo = FALSE, cache = TRUE)
+```
+
+
+```{r setup, include=FALSE}
+library(DT)
+library(dplyr)
+library(flexdashboard)
+library(ggAtusy)
+library(ggplot2)
+library(htmltools)
+library(knitr)
+library(purrr)
+library(pipeR)
+library(plotly)
+library(qntmap)
+library(scales)
+library(shinyWidgets)
+library(tibble)
+library(tidyr)
+
+if (!exists("params")) {
+  params <- list(xmap = NULL, qnt = NULL, deadtime = 0)
+}
+
+example_data <- system.file(package = "qntmap", "extdata", "minimal")
+
+dir_xmap <- if (is.null(params$xmap)) {
+  file.path(example_data, ".map", "1")
+} else {
+  params$xmap
+}
+
+dir_qnt <- if (is.null(params$qnt)) {
+  file.path(example_data, ".qnt")
+} else {
+  params$qnt
+}
+```
+
+```{r setup-functions}
+summarize_box <- function(data, box, .env, .key) {
+  .env[[.key]]$df <- data[
+    box$xmin <= data$x & data$x <= box$xmax &
+      box$ymin <= data$y & data$y <= box$ymax,
+  ] %>>%
+    summarize_if(is.numeric, mean) %>>%
+    mutate(
+      ID = !!.env[[.key]]$df$ID[[1L]] + 1L,
+      Area = "Box"
+    ) %>>%
+    select("ID", "Area", "x", "y", everything()) %>>%
+    filter(is.finite(x), is.finite(y)) %>>%
+    bind_rows(.env[[.key]]$df)
+  .env[[.key]]$df
+}
+
+
+summarize_click <- function(data, click, .env, .key) {
+  .env[[.key]]$df <- data[
+    data$x == round(click$x) & data$y == round(click$y), 
+  ] %>>%
+    mutate(
+      ID = !!.env[[.key]]$df$ID[[1L]] + 1L, 
+      Area = "Click"
+    ) %>>%
+    select("ID", "Area", "x", "y", everything()) %>>%
+    bind_rows(.env[[.key]]$df)
+  .env[[.key]]$df
+}
+
+mouse_action <- function(inputId) {
+  radioGroupButtons(
+    inputId = inputId,
+    label = "Mouse actions",
+    choices = c("Zoom", "Move", "Summarize"),
+    selected = "Zoom",
+    status = "secondary",
+    individual = TRUE
+  )
+}
+
+map_output <- function(id) {
+  ids <- paste0(id, "_", c("heatmap", "click", "brush"))
+  plotOutput(
+    ids[[1L]],
+    dblclick = ids[[2L]],
+    brush = brushOpts(id = ids[[3L]], resetOnNew = TRUE)
+  )
+}
+
+map_render <- function(x, ranges, .margin, zlim, input) {
+  renderPlot(
+    qntmap:::gg_img(
+      x()[ranges$y[1]:ranges$y[2], ranges$x[1]:ranges$x[2], ],
+      xlim = ranges$x + .margin, ylim = ranges$y + .margin,
+      zlim = zlim(), zname = input$xmap_elem,
+      colors = input$xmap_color
+    )
+  )
+}
+```
+
+```{r setup-input}
+# Read demo files if params xmap and qnt are unset
+xmap <- read_xmap(dir_xmap, DT = params$deadtime)
+qnt <- read_qnt(dir_qnt, saving = FALSE)
+epma <- tidy_epma(qnt, xmap) %>>% qntmap:::prioritize("id")
+.margin <- c(-.5, .5)
+range_x <- range(xmap$x)
+range_y <- range(xmap$y)
+.env <- new.env()
+.env$xmap$df <- xmap %>>%
+  summarize_if(is.numeric, mean) %>>%
+  mutate(ID = 0L, Area = "Whole") %>>%
+  select("ID", "Area", "x", "y", everything())
+.env$xmap$id <- 0L
+
+msg <- list(
+  action = c(
+    Zoom = "Zoom by double click selected area. Pan by double click again.",
+    Move = "Move by double click within zoomed area.",
+    Summarize = "Double click or select area to save data."
+  )
+)
+```
+
+# Map
+
+## xmap-menu {data-width=200}
+
+
+```{r select-element}
+splitLayout(
+  selectInput(
+    "xmap_elem", label = "Element", 
+    choices = setdiff(names(xmap), c("x", "y")),
+    selectize = FALSE
+  ),
+  numericInput("xmap_min", "Min", value = NA_real_),
+  numericInput("xmap_max", "Max", value = NA_real_),
+  cellWidths = 100
+)
+selectInput(
+  "xmap_color", label = "Color", 
+  choices = c("viridis", "gray"),
+  selectize = FALSE
+)
+mouse_action("xmap_action")
+```
+
+```{r msg-action, cache = FALSE}
+renderText(msg$action[[input$xmap_action]])
+```
+
+----
+
+**Summarized** ([View full](#xmap-log))
+
+```{r xmap-summarize, eval = TRUE, cache = FALSE}
+xmap_df <- reactive({
+  if (input$xmap_action != "Summarize") return(.env$xmap$df)
+  if (!is.null(input$xmap_brush))
+    return(summarize_box(xmap, input$xmap_brush, .env, "xmap"))
+  if (!is.null(input$xmap_click))
+    return(summarize_click(xmap, input$xmap_click, .env, "xmap"))
+  .env$xmap$df
+})
+
+xmap_df_latest <- reactive({
+  xmap_df() %>>%
+    head(3) %>>%
+    modify_if(is.numeric, function(x) sprintf("%.2f", x)) %>>%
+    mutate(ID = as.integer(ID)) %>>%
+    gather(Var, Val, -ID, factor_key = TRUE) %>>%
+    spread(ID, Val) %>>%
+    rename(ID = Var)
+})
+
+renderTable(xmap_df_latest(), align = "r")
+```
+
+
+```{r xmap-zoom-move, eval = TRUE}
+ranges <- reactiveValues(x = range_x, y = range_y)
+
+zoom <- function(.axis, .input, .range) {
+  if (is.null(.input)) return(.range)
+  squish(
+    c(
+      .input[[paste0(.axis, "min")]],
+      .input[[paste0(.axis, "max")]]
+    ), 
+    .range
+  )
+}
+
+move <- function(.axis, .input, .from, .to) {
+  .range <- .from + c(1, -1) * (.to[2L] - .to[1L]) / 2
+  .to - mean(.to) + squish(.input[[.axis]], .range)
+}
+
+observeEvent(input$xmap_click, {
+  if (input$xmap_action == "Zoom") {
+    ranges$x <- zoom("x", input$xmap_brush, range_x)
+    ranges$y <- zoom("y", input$xmap_brush, range_y)
+  }
+  if (input$xmap_action == "Move" && !is.null(ranges$x)) {
+    ranges$x <- move("x", input$xmap_click, range_x, ranges$x)
+    ranges$y <- move("y", input$xmap_click, range_y, ranges$y)
+  }
+})
+
+observeEvent(input$cluster_click, {
+  if (input$cluster_action == "Zoom") {
+    ranges$x <- zoom("x", input$cluster_brush, range_x)
+    ranges$y <- zoom("y", input$cluster_brush, range_y)
+  }
+  if (input$xmap_action == "Move" && !is.null(ranges$x)) {
+    ranges$x <- move("x", input$cluster_click, range_x, ranges$x)
+    ranges$y <- move("y", input$cluster_click, range_y, ranges$y)
+  }
+})
+```
+
+
+## xmap-viewer {.tabset}
+
+### Map
+
+```{r xmap-zlim}
+zlim <- reactive({
+  zrange <- range(xmap[[input$xmap_elem]])
+  c(
+    `if`(is.na(input$xmap_min) || input$xmap_min < zrange[1L], zrange[1L], input$xmap_min),
+    `if`(is.na(input$xmap_max) || input$xmap_max > zrange[2L], zrange[2L], input$xmap_max)
+  )
+})
+
+squished <- reactive(squish(xmap[[input$xmap_elem]], zlim()))
+
+xmap_img <- reactive(qntmap:::as_img(
+  qntmap:::lookup[[input$xmap_color]](squished(), from = zlim()),
+  range_y[2L], range_x[2L]
+))
+```
+
+
+```{r xmap-heatmap}
+output$xmap_heatmap <- map_render(xmap_img, ranges, .margin, zlim, input)
+
+map_output("xmap")
+```
+
+
+### Histogram
+
+```{r hist-xmap, cache = FALSE}
+renderPlot(
+  qntmap:::gghist.numeric(
+    unlist(xmap[[input$xmap_elem]], use.names = FALSE),
+    colors = input$xmap_color
+  )
+)
+```
+
+### Log {#xmap-log}
+
+```{r xmap-full-summary, cache=FALSE}
+renderDT(xmap_df())
+```
+
+
+### Analytical conditions
+
+```{r cnd-map}
+datatable(tribble(
+  ~ Varables, ~ Values, ~ Units,
+  "Elements", paste(setdiff(names(xmap), c("x", "y")), collapse = ", "), "",
+  "Dead time", attr(xmap, "deadtime"), "nsec",
+  "Dwell", attr(xmap, "dwell"), "msec",
+  "Probe current", attr(xmap, "current"), "A",
+  "Start X", attr(xmap, "start")[[1L]], "mm",
+  "Start Y", attr(xmap, "start")[[2L]], "mm",
+  "Start Z", attr(xmap, "start")[[3L]], "mm",
+  "Pixel size", attr(xmap, "pixel")[[1L]], "μm",
+  "Step size", attr(xmap, "step")[[1L]], "μm",
+  "Instrument", attr(xmap, "instrument"), "",
+  "Path", "dir_xmap", ""
+))
+```
+
+
+
+
+
+# Spots
+
+## qnt {.tabset}
+
+### Analytical conditions
+
+```{r elm}
+datatable(qnt$elm)
+```
+
+### Spots
+
+```{r spot}
+datatable(qnt$cnd)
+```
+
+### Wt%
+
+```{r wt}
+datatable(qnt$cmp$wt)
+```
+
+### Net
+
+```{r net}
+datatable(qnt$cmp$net)
+```
+
+### Peak
+
+```{r pkint}
+datatable(qnt$cmp$pkint)
+```
+
+### Background +
+
+```{r bgp}
+datatable(qnt$cmp$bgp)
+```
+
+### Background -
+
+```{r bgm}
+datatable(qnt$cmp$bgm)
+```
+
+# Check 1
+
+## Guide to check1 {data-width=200}
+
+#### Find outliers
+
+The scatter plots on the right pane compares peak X-ray intensities of
+X-ray maps ans spot analysis from the same pixels.
+Regression curves are drawn by least squares with y-intercept = 0.
+
+The outliers generally indicate that
+they are analyzing multiple phases during mapping.
+
+
+```{r select-outliers}
+checkboxGroupInput(
+  "outlier",
+  "Select phases tend to be outliers",
+  choices = sort(unique(qnt$cnd$phase))
+)
+```
+
+
+## Find fine grained phases {.tabset}
+
+```{r find-fine-grained, warning=FALSE, results='asis'}
+epma %>>%
+  filter(is.finite(mapint), is.finite(pkint)) %>>%
+  split(.$elm) %>>%
+  qntmap:::prioritize(qntmap:::.element) %>>%
+  iwalk(~ {
+    cat("\n\n###", .y, "\n\n")
+    print(
+      ggplot(.x, aes(mapint, pkint)) +
+        geom_smooth(
+          formula = y ~ 0 + x, color = "gray10", se = FALSE, method = "lm"
+        ) +
+        stat_err(aes(
+          color = phase,
+          xmin = mapint.L, xmax = mapint.H,
+          ymin = pkint.L, ymax = pkint.H,
+        )) +
+        # geom_point(aes(color = phase)) +
+        facet_wrap(vars(!!.y)) +
+        labs(
+          x = "Peak (Map) [cps/μA]",
+          y = "Peak (Spot) [cps/μA]"
+        )
+    )
+  }) %>>%
+  invisible()
+```
+
+# Cluster
+
+## cluster-menu {data-width=200}
+
+```{r cluster-menu}
+actionButton(
+  "cluster_run", label = "Run cluster analysis", width = "90%",
+  style = "background: #EE0000;"
+)
+
+mouse_action("cluster_action")
+```
+
+```{r cluster-run}
+centers <- reactive(find_centers(xmap, qnt, fine_phase = input$outlier))
+
+cluster_out <- reactive({
+  input$cluster_run
+  isolate(if (input$cluster_run != 0L) {
+    cluster_xmap(xmap, centers())
+  } else {
+    structure(
+      transmute(xmap, x, y, cluster = "Not yet"), 
+      class = c("qm_cluster", "data.frame")
+    )
+  })
+})
+```
+
+
+## cluster-tabset {.tabset}
+
+### Map
+
+```{r cluster-heatmap, eval=TRUE, cache=FALSE}
+cluster_zlim <- reactive(unique(cluster_out()$cluster))
+
+cluster_img <- reactive(qntmap:::as_img(
+  qntmap:::lookup[["discrete"]](cluster_out()$cluster),
+  range_y[2L], range_x[2L]
+))
+
+output$cluster_heatmap <- map_render(
+  cluster_img, ranges, .margin, cluster_zlim, input
+)
+
+map_output("cluster")
+```
+
+### Initial centroids
+
+```{r init-centers, cache = FALSE}
+renderDT(centers())
+```
+
+### Table
+
+```{r, cache = FALSE}
+renderDT(cluster_out())
+```
+
+
+### Final Centroids
+
+```{r, cache = FALSE}
+renderDT(attr(cluster_out(), "center"))
+```
+
+# Check 2
+
+## check params {.tabset}
+
+### α
+
+```{r alpha, warning=FALSE}
+epma %>>%
+  group_by(elm, phase) %>>%
+  group_walk(~ print(
+    ggplot(.x, aes(wt, pkint)) +
+      geom_linerange(aes(ymin = pkint.L, ymax = pkint.H)) +
+      geom_point() +
+      facet_wrap(vars(!!paste(.y$phase, .y$elm))) +
+      labs(
+        x = "Peak (Map) [cps/μA]",
+        y = "Peak (Spot) [cps/μA]"
+      )
+  )) %>>%
+  invisible
+```
+
+### β
+
+```{r beta, warning=FALSE}
+epma %>>%
+  group_by(elm) %>>%
+  group_walk(~ print(
+    ggplot(.x, aes(mapint, pkint, color = phase)) +
+      stat_err(aes(
+        xmin = mapint.L, xmax = mapint.H,
+        ymin = pkint.L, ymax = pkint.H,
+      )) +
+      # geom_point() +
+      facet_wrap(~ .y$elm) +
+      labs(
+        x = "Peak (Map) [cps/μA]",
+        y = "Peak (Spot) [cps/μA]"
+      )
+  )) %>>%
+  invisible
+```
+
+
+### γ
+
+```{r gamma, warning=FALSE}
+epma %>>%
+  group_by(phase, elm) %>>%
+  group_walk(~ print(
+    ggplot(.x, aes(wt, bgint)) +
+      geom_point() +
+      geom_linerange(aes(ymin = bgint.L, ymax = bgint.H)) +
+      facet_wrap(vars(!!paste(.y$phase, .y$elm))) +
+      labs(x = "wt%", y = "Background [cps/μA]")
+  )) %>>%
+  invisible
+```
+
+
+# Quantify
+
+### Map
+
+
+# Misc.
+
+## miscellaneous-tabset {.tabset}
+
+### Table
+
+```{r tidy-epma}
+datatable(epma)
+```
