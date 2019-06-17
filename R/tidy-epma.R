@@ -42,7 +42,9 @@ tidy_epma <- function(
         (.data$x_px - 1L) * (!!pos$pixel[2L]) + .data$y_px,
         (.data$y_px - 1L) * (!!pos$pixel[1L]) + .data$x_px
       ),
-      nr = ifelse(0L < .data$nr0 & .data$nr0 < prod(!!pos$pixel), .data$nr0, NA_integer_),
+      nr = ifelse(
+        0L < .data$nr0 & .data$nr0 < prod(!!pos$pixel), .data$nr0, NA_integer_
+      ),
       phase_grouped = str_replace(.data$phase, "_.*", "")
     ) %>>%
     distinct(.data$nr0, .keep_all = TRUE)
@@ -110,16 +112,20 @@ tidy_epma <- function(
       beam = .data$beam * 1e-6,
       beam_map = .data$beam_map * 1e-6,
       .tmp = .data$bgm.L * .data$bgm_pos,
-      bgint.L = .data$bgint - propagate_add(.data$bgm2, .data$.tmp, .data$bgp2, .data$.tmp),
+      bgint.L = .data$bgint - 
+        propagate_add(.data$bgm2, .data$.tmp, .data$bgp2, .data$.tmp),
       .tmp = .data$bgm.H * .data$bgm_pos,
-      bgint.H = .data$bgint + propagate_add(.data$bgm2, .data$.tmp, .data$bgp2, .data$.tmp),
+      bgint.H = .data$bgint + 
+        propagate_add(.data$bgm2, .data$.tmp, .data$bgp2, .data$.tmp),
       .tmp = .data$bgp_pos + .data$bgm_pos,
       bgint = .data$bgint / .data$.tmp,
       bgint.L = .data$bgint.L / .data$.tmp,
       bgint.H = .data$bgint.H / .data$.tmp,
       .tmp = NULL,
-      net.L = .data$net - propagate_add(.data$pkint, .data$pkint.L, .data$bgint, .data$bgint.L),
-      net.H = .data$net + propagate_add(.data$pkint, .data$pkint.H, .data$bgint, .data$bgint.H)
+      net.L = .data$net - 
+        propagate_add(.data$pkint, .data$pkint.L, .data$bgint, .data$bgint.L),
+      net.H = .data$net + 
+        propagate_add(.data$pkint, .data$pkint.H, .data$bgint, .data$bgint.H)
     ) %>>%
     as.data.frame
 }

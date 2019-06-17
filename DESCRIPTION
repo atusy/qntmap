@@ -1,7 +1,7 @@
 Package: qntmap
 Type: Package
 Title: Enhance quantitative analysis of EPMA map
-Version: 0.3.4
+Version: 0.4.0
 Authors@R: 
     c(
         person(
@@ -40,6 +40,7 @@ Imports:
     easycsv,
     flexdashboard,
     ggplot2,
+    ggAtusy,
     htmltools,
     knitr,
     matrixStats,
@@ -66,6 +67,8 @@ Suggests:
     roxygen2,
     svglite,
     testthat (>= 2.1.0)
+Remotes:
+    atusy/ggAtusy
 URL: https://github.com/atusy/qntmap/
 BugReports: https://github.com/atusy/qntmap/issues
 Collate:
