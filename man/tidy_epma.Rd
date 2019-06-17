@@ -4,7 +4,8 @@
 \alias{tidy_epma}
 \title{Compile epma data into a data frame}
 \usage{
-tidy_epma(qnt, xmap, cluster = NULL)
+tidy_epma(qnt, xmap, cluster = NULL, subcluster = TRUE,
+  suffix = "_.*")
 }
 \arguments{
 \item{qnt}{object returned by read_qnt}
@@ -12,6 +13,11 @@ tidy_epma(qnt, xmap, cluster = NULL)
 \item{xmap}{object returned by read_xmap}
 
 \item{cluster}{object returned by cluster_xmap}
+
+\item{subcluster}{Calculate parameters for
+sub-clusters (TRUE) or for super-clusters (FALSE).}
+
+\item{suffix}{A regular expression of suffix to identify sub-clusters.}
 }
 \description{
 Compile epma data into a data frame

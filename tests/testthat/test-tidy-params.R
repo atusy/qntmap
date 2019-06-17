@@ -6,7 +6,7 @@ xmap <- read_xmap("minimal/.map/1")
 qnt <- read_qnt("minimal/.qnt", saving = FALSE)
 cluster <- cluster_xmap(xmap, find_centers(xmap, qnt, saveas = FALSE), saving = FALSE)
 epma <- tidy_epma_for_quantify(
-  tidy_epma(qnt, xmap, cluster),
+  qnt, xmap, cluster,
   maps_x = attr(xmap, "pixel")[1],
   maps_y = attr(xmap, "pixel")[2],
   elements = qnt$elm$elem

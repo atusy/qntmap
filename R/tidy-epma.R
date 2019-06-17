@@ -3,6 +3,11 @@
 #' @param qnt object returned by read_qnt
 #' @param xmap object returned by read_xmap
 #' @param cluster object returned by cluster_xmap
+#' @param subcluster
+#'   Calculate parameters for 
+#'   sub-clusters (TRUE) or for super-clusters (FALSE).
+#' @param suffix
+#'   A regular expression of suffix to identify sub-clusters.
 #'
 #' @importFrom matrixStats rowMaxs
 #' @importFrom stats setNames
@@ -13,7 +18,9 @@
 tidy_epma <- function(
                       qnt,
                       xmap, # NA,
-                      cluster = NULL
+                      cluster = NULL,
+                      subcluster = TRUE,
+                      suffix = "_.*"
 ) {
 
   # load mapping conditions
@@ -36,7 +43,7 @@ tidy_epma <- function(
         (.data$y_px - 1L) * (!!pos$pixel[1L]) + .data$x_px
       ),
       nr = ifelse(0L < .data$nr0 & .data$nr0 < prod(!!pos$pixel), .data$nr0, NA_integer_),
-      phase2 = str_replace(.data$phase, "_.*", "")
+      phase_grouped = str_replace(.data$phase, "_.*", "")
     ) %>>%
     distinct(.data$nr0, .keep_all = TRUE)
 
@@ -64,6 +71,7 @@ tidy_epma <- function(
   ## join cmp, cnd, elem in qnt
   ## calculate 95% ci of data
   clustered <- !is.null(cluster)
+  if (clustered && !subcluster) cluster <- group_subclusters(cluster, suffix)
   qnt$cnd %>>%
     mutate(
       cls = !! `if`(clustered, cluster$cluster[qnt$cnd$nr], NA_real_),
@@ -121,25 +129,34 @@ tidy_epma <- function(
 #' Only used interanlly by quantify
 #' @noRd
 tidy_epma_for_quantify <- function(
-                                   epma, maps_x, maps_y, elements,
-                                   distinguished = FALSE, fine_phase = NULL, fine_th = .9
+  qnt,
+  xmap, # NA,
+  cluster = NULL,
+  subcluster = TRUE,
+  suffix = "_.*",
+  maps_x = attr(xmap, "pixel")[1L],
+  maps_y = attr(xmap, "pixel")[2L],
+  elements = qnt$elm$elem,
+  fine_phase = NULL,
+  fine_th = .9
 ) {
-  mutate(
-    epma[epma$elm %in% elements, ],
-    net = .data$net * (.data$net > 0L),
-    phase3 = if (!!distinguished) .data$phase else .data$phase2,
-    x_stg = ((.data$x_px - 1L) %/% !!maps_x + 1L) * 
-      (0L < .data$x_px) * (.data$x_px <= !!maps_x),
-    y_stg = ((.data$y_px - 1L) %/% !!maps_y + 1L) * 
-      (0L < .data$y_px) * (.data$y_px <= !!maps_y),
-    stg = ifelse(
-      (.data$x_stg * .data$y_stg) <= 0L, 
-      NA_character_,
-      flag0(.data$x_stg, .data$y_stg)
-    ),
-    mem = .data$mem *
-      (str_replace(.data$cls, "_.*", "") == .data$phase2) *
-      (.data$cls %nin% !!fine_phase) *
-      (.data$mem > !!fine_th)
-  )
+  tidy_epma(qnt, xmap, cluster, subcluster, suffix) %>>%
+    filter(.data$elint %in% names(!!xmap), .data$elm %in% !!elements) %>>%
+    mutate(
+      net = .data$net * (.data$net > 0L),
+      phase3 = if (!!subcluster) .data$phase else .data$phase_grouped,
+      x_stg = ((.data$x_px - 1L) %/% !!maps_x + 1L) * 
+        (0L < .data$x_px) * (.data$x_px <= !!maps_x),
+      y_stg = ((.data$y_px - 1L) %/% !!maps_y + 1L) * 
+        (0L < .data$y_px) * (.data$y_px <= !!maps_y),
+      stg = ifelse(
+        (.data$x_stg * .data$y_stg) <= 0L, 
+        NA_character_,
+        flag0(.data$x_stg, .data$y_stg)
+      ),
+      mem = .data$mem *
+        (str_replace(.data$cls, "_.*", "") == .data$phase_grouped) *
+        (.data$cls %nin% !!fine_phase) *
+        (.data$mem > !!fine_th)
+    )
 }

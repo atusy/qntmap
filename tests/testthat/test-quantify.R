@@ -14,9 +14,9 @@ cluster <- cluster_xmap(xmap, find_centers(xmap, qnt, saveas = FALSE), saving = 
 # saving = FALSE
 
 epma <- tidy_epma_for_quantify(
-  tidy_epma(qnt, xmap, cluster),
-  maps_x = attr(xmap, "pixel")[1],
-  maps_y = attr(xmap, "pixel")[2],
+  qnt, xmap, cluster,
+  maps_x = attr(xmap, "pixel")[1L],
+  maps_y = attr(xmap, "pixel")[2L],
   elements = qnt$elm$elem
 )
 

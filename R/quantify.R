@@ -3,6 +3,11 @@
 #' @param xmap `qm_xmap` class object returned by [`read_xmap()`].
 #' @param qnt `qm_qnt` class object returned by [`read_qnt()`].
 #' @param cluster `qm_cluster` class object returned by [`cluster_xmap()`].
+#' @param subcluster
+#'   Calculate parameters for 
+#'   sub-clusters (TRUE) or for super-clusters (FALSE).
+#' @param suffix
+#'   A regular expression of suffix to identify sub-clusters.
 #' @param maps_x,maps_y
 #'   Sizes of maps along x- and y-axes comprising guide net map.
 #'   (default: `NULL`).
@@ -25,6 +30,8 @@ quantify <- function(
                      xmap,
                      qnt,
                      cluster,
+                     subcluster = TRUE,
+                     suffix = "_.*",
                      maps_x = attr(xmap, "pixel")[1L],
                      maps_y = attr(xmap, "pixel")[2L],
                      fine_phase = NULL,
@@ -64,11 +71,10 @@ quantify <- function(
   } else {
     # Tidy compilation of epma data
     epma <- tidy_epma_for_quantify(
-      tidy_epma(qnt = qnt, xmap = xmap, cluster = cluster) %>>%
-        filter(.data$elint %in% names(!!xmap)),
+      qnt = qnt, xmap = xmap, cluster = cluster,
+      subcluster = subcluster, suffix = suffix,
       maps_x, maps_y,
       elements = qnt$elm$elem,
-      distinguished = any(grepl("_", colnames(cluster$membership))),
       fine_phase = fine_phase,
       fine_th = fine_th
     )

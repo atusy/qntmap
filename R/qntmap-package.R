@@ -33,9 +33,10 @@
 #'   aes annotation_raster autoplot
 #'   coord_cartesian coord_fixed
 #'   element_blank element_rect
-#'   geom_bar geom_col geom_tile
+#'   geom_bar geom_col geom_step geom_tile
 #'   ggplot ggsave guide_colorbar guides
 #'   labs
+#'   position_nudge
 #'   scale_color_gradient scale_color_manual scale_color_viridis_c
 #'   scale_fill_gradient scale_fill_manual scale_fill_viridis_c
 #'   scale_y_reverse

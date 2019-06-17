@@ -24,17 +24,17 @@ test_that("cluster specified", {
 
 test_that("tidy_epma_for_quantify", {
   epma <- tidy_epma_for_quantify(
-    tidy_epma(qnt, xmap, cls),
+    qnt, xmap, cls,
     maps_x = 100L,
     maps_y = 100L,
     elements = qnt$elm$elem,
-    distinguished = FALSE,
+    subcluster = FALSE,
     fine_phase = NULL,
     fine_th = .9
   )
   expect_true(all(epma$net >= 0))
   expect_true(is.character(epma$stg))
-  expect_equal(epma$phase3, epma$phase2)
+  expect_equal(epma$phase3, epma$phase_grouped)
   expect_true(all(is.finite(epma$mem)))
 })
 
