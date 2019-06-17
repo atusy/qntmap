@@ -53,15 +53,14 @@ dir_qnt <- if (is.null(params$qnt)) {
 
 ```{r setup-functions}
 summarize_box <- function(data, box, .env, .key) {
+  id <- .env[[.key]]$df$ID[[1L]]
+  if (is.null(id)) id <- 0L
   .env[[.key]]$df <- data[
     box$xmin <= data$x & data$x <= box$xmax &
       box$ymin <= data$y & data$y <= box$ymax,
   ] %>>%
     summarize_if(is.numeric, mean) %>>%
-    mutate(
-      ID = !!.env[[.key]]$df$ID[[1L]] + 1L,
-      Area = "Box"
-    ) %>>%
+    mutate(ID = !!id + 1L, Area = "Box") %>>%
     select("ID", "Area", "x", "y", everything()) %>>%
     filter(is.finite(x), is.finite(y)) %>>%
     bind_rows(.env[[.key]]$df)
@@ -70,13 +69,12 @@ summarize_box <- function(data, box, .env, .key) {
 
 
 summarize_click <- function(data, click, .env, .key) {
+  id <- .env[[.key]]$df$ID[[1L]]
+  if (is.null(id)) id <- 0L
   .env[[.key]]$df <- data[
     data$x == round(click$x) & data$y == round(click$y), 
   ] %>>%
-    mutate(
-      ID = !!.env[[.key]]$df$ID[[1L]] + 1L, 
-      Area = "Click"
-    ) %>>%
+    mutate(ID = !!id + 1L, Area = "Click") %>>%
     select("ID", "Area", "x", "y", everything()) %>>%
     bind_rows(.env[[.key]]$df)
   .env[[.key]]$df
@@ -112,11 +110,35 @@ map_render <- function(x, ranges, .margin, zlim, input) {
     )
   )
 }
+
+summarize_action <- function(df, input, id, .env) {
+  ids <- paste0(id, "_", c("action", "brush", "click"))
+  if (input[[ids[[1L]]]] != "Summarize") return(.env[[id]]$df)
+  if (!is.null(input[[ids[[2L]]]]))
+    return(summarize_box(df, input[[ids[[2L]]]], .env, "xmap"))
+  if (!is.null(input[[ids[[3L]]]]))
+    return(summarize_click(df, input[[ids[[3L]]]], .env, "xmap"))
+  .env[[id]]$df
+}
+
+summarize_latest <- function(df) {
+  df() %>>%
+    head(3) %>>%
+    modify_if(is.numeric, function(x) sprintf("%.2f", x)) %>>%
+    mutate(ID = as.integer(ID)) %>>%
+    gather(Var, Val, -ID, factor_key = TRUE) %>>%
+    spread(ID, Val) %>>%
+    rename(ID = Var)
+}
+
 ```
 
 ```{r setup-input}
 # Read demo files if params xmap and qnt are unset
 xmap <- read_xmap(dir_xmap, DT = params$deadtime)
+cluster_dummy <- xmap[c("x", "y")] %>>%
+  mutate(cluster = "Not yet") %>>%
+  structure(class = c("qm_cluster", "data.frame"))
 qnt <- read_qnt(dir_qnt, saving = FALSE)
 epma <- tidy_epma(qnt, xmap) %>>% qntmap:::prioritize("id")
 .margin <- c(-.5, .5)
@@ -171,24 +193,9 @@ renderText(msg$action[[input$xmap_action]])
 **Summarized** ([View full](#xmap-log))
 
 ```{r xmap-summarize, eval = TRUE, cache = FALSE}
-xmap_df <- reactive({
-  if (input$xmap_action != "Summarize") return(.env$xmap$df)
-  if (!is.null(input$xmap_brush))
-    return(summarize_box(xmap, input$xmap_brush, .env, "xmap"))
-  if (!is.null(input$xmap_click))
-    return(summarize_click(xmap, input$xmap_click, .env, "xmap"))
-  .env$xmap$df
-})
+xmap_df <- reactive(summarize_action(xmap, input, "xmap", .env))
 
-xmap_df_latest <- reactive({
-  xmap_df() %>>%
-    head(3) %>>%
-    modify_if(is.numeric, function(x) sprintf("%.2f", x)) %>>%
-    mutate(ID = as.integer(ID)) %>>%
-    gather(Var, Val, -ID, factor_key = TRUE) %>>%
-    spread(ID, Val) %>>%
-    rename(ID = Var)
-})
+xmap_df_latest <- reactive(summarize_latest(xmap_df))
 
 renderTable(xmap_df_latest(), align = "r")
 ```
@@ -406,6 +413,14 @@ epma %>>%
   invisible()
 ```
 
+### Initial centroid
+
+```{r init-centers, cache = FALSE}
+centers <- reactive(find_centers(xmap, qnt, fine_phase = input$outlier))
+renderDT(centers())
+```
+
+
 # Cluster
 
 ## cluster-menu {data-width=200}
@@ -420,20 +435,16 @@ mouse_action("cluster_action")
 ```
 
 ```{r cluster-run}
-centers <- reactive(find_centers(xmap, qnt, fine_phase = input$outlier))
-
 cluster_out <- reactive({
   input$cluster_run
   isolate(if (input$cluster_run != 0L) {
     cluster_xmap(xmap, centers())
   } else {
-    structure(
-      transmute(xmap, x, y, cluster = "Not yet"), 
-      class = c("qm_cluster", "data.frame")
-    )
+    cluster_dummy
   })
 })
 ```
+
 
 
 ## cluster-tabset {.tabset}
@@ -455,28 +466,35 @@ output$cluster_heatmap <- map_render(
 map_output("cluster")
 ```
 
-### Initial centroids
-
-```{r init-centers, cache = FALSE}
-renderDT(centers())
-```
-
-### Table
+### Membership
 
 ```{r, cache = FALSE}
 renderDT(cluster_out())
 ```
 
 
-### Final Centroids
+### Centroid
 
 ```{r, cache = FALSE}
 renderDT(attr(cluster_out(), "center"))
 ```
 
-# Check 2
 
-## check params {.tabset}
+# Quantify
+
+### Map
+
+
+# Misc.
+
+## miscellaneous-tabset {.tabset}
+
+### Table
+
+```{r tidy-epma}
+datatable(epma)
+```
+
 
 ### α
 
@@ -533,18 +551,3 @@ epma %>>%
   invisible
 ```
 
-
-# Quantify
-
-### Map
-
-
-# Misc.
-
-## miscellaneous-tabset {.tabset}
-
-### Table
-
-```{r tidy-epma}
-datatable(epma)
-```
