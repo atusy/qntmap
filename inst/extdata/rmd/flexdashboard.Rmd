@@ -32,10 +32,6 @@ library(shinyWidgets)
 library(tibble)
 library(tidyr)
 
-if (!exists("params")) {
-  params <- list(xmap = NULL, qnt = NULL, deadtime = 0)
-}
-
 example_data <- system.file(package = "qntmap", "extdata", "minimal")
 
 dir_xmap <- if (is.null(params$xmap)) {
@@ -55,9 +51,9 @@ dir_qnt <- if (is.null(params$qnt)) {
 summarize_box <- function(data, box, .env, .key) {
   id <- .env[[.key]]$df$ID[[1L]]
   if (is.null(id)) id <- 0L
-  .env[[.key]]$df <- data[
-    box$xmin <= data$x & data$x <= box$xmax &
-      box$ymin <= data$y & data$y <= box$ymax,
+  .env[[.key]]$df <- data()[
+    box$xmin <= data()$x & data()$x <= box$xmax &
+      box$ymin <= data()$y & data()$y <= box$ymax,
   ] %>>%
     summarize_if(is.numeric, mean) %>>%
     mutate(ID = !!id + 1L, Area = "Box") %>>%
@@ -71,8 +67,8 @@ summarize_box <- function(data, box, .env, .key) {
 summarize_click <- function(data, click, .env, .key) {
   id <- .env[[.key]]$df$ID[[1L]]
   if (is.null(id)) id <- 0L
-  .env[[.key]]$df <- data[
-    data$x == round(click$x) & data$y == round(click$y), 
+  .env[[.key]]$df <- data()[
+    data()$x == round(click$x) & data()$y == round(click$y), 
   ] %>>%
     mutate(ID = !!id + 1L, Area = "Click") %>>%
     select("ID", "Area", "x", "y", everything()) %>>%
@@ -135,17 +131,18 @@ summarize_latest <- function(df) {
 
 ```{r setup-input}
 # Read demo files if params xmap and qnt are unset
-xmap <- read_xmap(dir_xmap, DT = params$deadtime)
-cluster_dummy <- xmap[c("x", "y")] %>>%
+xmap0 <- read_xmap(dir_xmap, DT = params$deadtime)
+xmap <- function() xmap0
+cluster_dummy <- xmap()[c("x", "y")] %>>%
   mutate(cluster = "Not yet") %>>%
   structure(class = c("qm_cluster", "data.frame"))
 qnt <- read_qnt(dir_qnt, saving = FALSE)
-epma <- tidy_epma(qnt, xmap) %>>% qntmap:::prioritize("id")
+epma <- tidy_epma(qnt, xmap()) %>>% qntmap:::prioritize("id")
 .margin <- c(-.5, .5)
-range_x <- range(xmap$x)
-range_y <- range(xmap$y)
+range_x <- range(xmap()$x)
+range_y <- range(xmap()$y)
 .env <- new.env()
-.env$xmap$df <- xmap %>>%
+.env$xmap$df <- xmap() %>>%
   summarize_if(is.numeric, mean) %>>%
   mutate(ID = 0L, Area = "Whole") %>>%
   select("ID", "Area", "x", "y", everything())
@@ -169,7 +166,7 @@ msg <- list(
 splitLayout(
   selectInput(
     "xmap_elem", label = "Element", 
-    choices = setdiff(names(xmap), c("x", "y")),
+    choices = setdiff(names(xmap()), c("x", "y")),
     selectize = FALSE
   ),
   numericInput("xmap_min", "Min", value = NA_real_),
@@ -236,7 +233,7 @@ observeEvent(input$cluster_click, {
     ranges$x <- zoom("x", input$cluster_brush, range_x)
     ranges$y <- zoom("y", input$cluster_brush, range_y)
   }
-  if (input$xmap_action == "Move" && !is.null(ranges$x)) {
+  if (input$cluster_action == "Move" && !is.null(ranges$x)) {
     ranges$x <- move("x", input$cluster_click, range_x, ranges$x)
     ranges$y <- move("y", input$cluster_click, range_y, ranges$y)
   }
@@ -250,14 +247,14 @@ observeEvent(input$cluster_click, {
 
 ```{r xmap-zlim}
 zlim <- reactive({
-  zrange <- range(xmap[[input$xmap_elem]])
+  zrange <- range(xmap()[[input$xmap_elem]])
   c(
     `if`(is.na(input$xmap_min) || input$xmap_min < zrange[1L], zrange[1L], input$xmap_min),
     `if`(is.na(input$xmap_max) || input$xmap_max > zrange[2L], zrange[2L], input$xmap_max)
   )
 })
 
-squished <- reactive(squish(xmap[[input$xmap_elem]], zlim()))
+squished <- reactive(squish(xmap()[[input$xmap_elem]], zlim()))
 
 xmap_img <- reactive(qntmap:::as_img(
   qntmap:::lookup[[input$xmap_color]](squished(), from = zlim()),
@@ -278,7 +275,7 @@ map_output("xmap")
 ```{r hist-xmap, cache = FALSE}
 renderPlot(
   qntmap:::gghist.numeric(
-    unlist(xmap[[input$xmap_elem]], use.names = FALSE),
+    unlist(xmap()[[input$xmap_elem]], use.names = FALSE),
     colors = input$xmap_color
   )
 )
@@ -296,16 +293,16 @@ renderDT(xmap_df())
 ```{r cnd-map}
 datatable(tribble(
   ~ Varables, ~ Values, ~ Units,
-  "Elements", paste(setdiff(names(xmap), c("x", "y")), collapse = ", "), "",
-  "Dead time", attr(xmap, "deadtime"), "nsec",
-  "Dwell", attr(xmap, "dwell"), "msec",
-  "Probe current", attr(xmap, "current"), "A",
-  "Start X", attr(xmap, "start")[[1L]], "mm",
-  "Start Y", attr(xmap, "start")[[2L]], "mm",
-  "Start Z", attr(xmap, "start")[[3L]], "mm",
-  "Pixel size", attr(xmap, "pixel")[[1L]], "μm",
-  "Step size", attr(xmap, "step")[[1L]], "μm",
-  "Instrument", attr(xmap, "instrument"), "",
+  "Elements", paste(setdiff(names(xmap()), c("x", "y")), collapse = ", "), "",
+  "Dead time", attr(xmap(), "deadtime"), "nsec",
+  "Dwell", attr(xmap(), "dwell"), "msec",
+  "Probe current", attr(xmap(), "current"), "A",
+  "Start X", attr(xmap(), "start")[[1L]], "mm",
+  "Start Y", attr(xmap(), "start")[[2L]], "mm",
+  "Start Z", attr(xmap(), "start")[[3L]], "mm",
+  "Pixel size", attr(xmap(), "pixel")[[1L]], "μm",
+  "Step size", attr(xmap(), "step")[[1L]], "μm",
+  "Instrument", attr(xmap(), "instrument"), "",
   "Path", "dir_xmap", ""
 ))
 ```
@@ -416,7 +413,7 @@ epma %>>%
 ### Initial centroid
 
 ```{r init-centers, cache = FALSE}
-centers <- reactive(find_centers(xmap, qnt, fine_phase = input$outlier))
+centers <- reactive(find_centers(xmap(), qnt, fine_phase = input$outlier))
 renderDT(centers())
 ```
 
@@ -438,7 +435,7 @@ mouse_action("cluster_action")
 cluster_out <- reactive({
   input$cluster_run
   isolate(if (input$cluster_run != 0L) {
-    cluster_xmap(xmap, centers())
+    cluster_xmap(xmap(), centers())
   } else {
     cluster_dummy
   })
