@@ -35,9 +35,7 @@ library(tidyr)
 example <- system.file(package = "qntmap", "extdata", "minimal")
 dir_xmap <- `if`(is.null(params$xmap), file.path(example, ".map/1"), params$xmap)
 dir_qnt <- `if`(is.null(params$qnt), file.path(example, ".qnt"), params$qnt)
-```
 
-```{r setup-input}
 # Read demo files if params xmap and qnt are unset
 .env <- new.env()
 xmap0 <- read_xmap(dir_xmap, DT = params$deadtime)
@@ -128,27 +126,28 @@ select_action <- function(id) {
   )
 }
 
-map_output <- function(id) {
-  ids <- paste0(id, "_", c("heatmap", "click", "brush"))
-  plotOutput(
-    ids[[1L]], dblclick = ids[[2L]],
-    brush = brushOpts(id = ids[[3L]], resetOnNew = TRUE)
-  )
-}
-
-map_render <- function(x, ranges, .margin, zlim, input, id) {
-  ids <- paste0(id, "_", c("elem", "color"))
+map_render <- function(id, map_reactive) {
+  ids <- paste0(id, "_", c("click", "brush"))
   renderPlot(
-    qntmap:::gg_img(
-      x()[ranges$y[[1L]]:ranges$y[[2L]], ranges$x[[1L]]:ranges$x[[2L]], ],
-      xlim = ranges$x + .margin, ylim = ranges$y + .margin,
-      zlim = zlim(), zname = input[[ids[[1L]]]],
-      colors = input[[ids[[2L]]]]
+    map_reactive(), 
+    outputArgs = list(
+      dblclick = ids[[1L]],
+      brush = brushOpts(id = ids[[2L]], resetOnNew = TRUE)
     )
   )
 }
 
-summarize_action <- function(df, input, id, .env) {
+raster_react <- function(x, ranges, .margin, zlim, input, id) {reactive({
+  ids <- paste0(id, "_", c("elem", "color"))
+  qntmap:::gg_img(
+    x()[ranges$y[[1L]]:ranges$y[[2L]], ranges$x[[1L]]:ranges$x[[2L]], ],
+    xlim = ranges$x + .margin, ylim = ranges$y + .margin,
+    zlim = zlim(), zname = input[[ids[[1L]]]],
+    colors = input[[ids[[2L]]]]
+  )
+})}
+
+summarize_action_react <- function(df, input, id, .env) {reactive({
   ids <- paste0(id, "_", c("action", "brush", "click"))
   if (input[[ids[[1L]]]] != "Summarize") return(.env[[id]]$summary)
   if (!is.null(input[[ids[[2L]]]]))
@@ -156,9 +155,9 @@ summarize_action <- function(df, input, id, .env) {
   if (!is.null(input[[ids[[3L]]]]))
     return(summarize_click(df, input[[ids[[3L]]]], .env, id))
   .env[[id]]$summary
-}
+})}
 
-summarize_latest <- function(df) {
+summarize_latest_react <- function(df) {reactive({
   df() %>>%
     head(3) %>>%
     modify_if(is.numeric, function(x) sprintf("%.2f", x)) %>>%
@@ -166,7 +165,7 @@ summarize_latest <- function(df) {
     gather(Var, Val, -ID, factor_key = TRUE) %>>%
     spread(ID, Val) %>>%
     rename(ID = Var)
-}
+})}
 
 zoom <- function(.axis, .input, .range) {
   if (is.null(.input)) return(.range)
@@ -214,7 +213,7 @@ select_color <- function(id) {
   )
 }
 
-zlim_reactive <- function(id, map_reactive, input) {reactive({
+zlim_react <- function(id, map_reactive, input) {reactive({
   ids <- paste0(id, "_", c("elem", "min", "max"))
   z <- range(map_reactive()[[input[[ids[[1L]]]]]])
   .min <- input[[ids[[2L]]]]
@@ -225,7 +224,7 @@ zlim_reactive <- function(id, map_reactive, input) {reactive({
   )
 })}
 
-hist_reactive <- function(id, map_reactive, input) {reactive({
+hist_react <- function(id, map_reactive, input) {reactive({
   ids <- paste0(id, "_", c("elem", "min", "max", "color"))
   qntmap:::gghist.numeric(
     unlist(map_reactive()[[input[[ids[[1L]]]]]], use.names = FALSE),
@@ -234,7 +233,7 @@ hist_reactive <- function(id, map_reactive, input) {reactive({
   )
 })}
 
-squish_reactive <- function(map_reactive, z, zlim_reactive) {reactive({
+squish_react <- function(map_reactive, z, zlim_reactive) {reactive({
   squish(map_reactive()[[z]], zlim_reactive())
 })}
 ```
@@ -248,6 +247,7 @@ squish_reactive <- function(map_reactive, z, zlim_reactive) {reactive({
 
 ## xmap-menu {data-width=200}
 
+### Menu
 
 ```{r xmap-menu}
 select_element_and_range("xmap", setdiff(names(xmap()), c("x", "y")))
@@ -255,17 +255,17 @@ select_color("xmap")
 select_action("xmap_action")
 ```
 
-```{r xmap-msg-action, cache = FALSE}
-renderText(msg$action[[input$xmap_action]])
+```{r xmap-msg-action, cache = FALSE, eval=TRUE}
+renderText(msg$action[[input$xmap_action]], outputArgs = list(inline = TRUE))
 ```
 
-----
+---
 
 **Summarized** ([View full](#xmap-log))
 
 ```{r xmap-summarize, eval = TRUE, cache = FALSE}
-xmap_df <- reactive(summarize_action(xmap, input, "xmap", .env))
-xmap_df_latest <- reactive(summarize_latest(xmap_df))
+xmap_df <- summarize_action_react(xmap, input, "xmap", .env)
+xmap_df_latest <- summarize_latest_react(xmap_df)
 renderTable(xmap_df_latest(), align = "r")
 ```
 
@@ -282,31 +282,29 @@ observe_action("qmap", input, ranges, range_x, range_y)
 
 ### Map
 
-```{r xmap-zlim}
-xmap_zlim <- zlim_reactive("xmap", xmap, input)
+```{r xmap-raster}
+xmap_zlim <- zlim_react("xmap", xmap, input)
 
-xmap_squished <- squish_reactive(xmap, input$xmap_elem, xmap_zlim)
+xmap_squished <- squish_react(xmap, input$xmap_elem, xmap_zlim)
 
 xmap_img <- reactive(qntmap:::as_img(
   qntmap:::lookup[[input$xmap_color]](xmap_squished(), from = xmap_zlim()),
   range_y[2L], range_x[2L]
 ))
+
+xmap_rastered <- raster_react(xmap_img, ranges, .margin, xmap_zlim, input, "xmap")
 ```
 
 
-```{r xmap-heatmap}
-output$xmap_heatmap <- map_render(
-  xmap_img, ranges, .margin, xmap_zlim, input, "xmap"
-)
-
-map_output("xmap")
+```{r xmap-heatmap, cache=FALSE}
+map_render("xmap", xmap_rastered)
 ```
 
 
 ### Histogram
 
 ```{r xmap-hist, cache = FALSE}
-xmap_hist <- hist_reactive("xmap", xmap, input)
+xmap_hist <- hist_react("xmap", xmap, input)
 renderPlot(xmap_hist())
 ```
 
@@ -382,11 +380,11 @@ datatable(qnt$cmp$bgp)
 datatable(qnt$cmp$bgm)
 ```
 
-# Tune
+# Check
 
-## Guide to check1 {data-width=200}
+## check-menu {data-width=200}
 
-#### Find outliers
+### Find outliers
 
 The scatter plots on the right pane compares peak X-ray intensities of
 X-ray maps ans spot analysis from the same pixels.
@@ -424,12 +422,8 @@ epma %>>%
           xmin = mapint.L, xmax = mapint.H,
           ymin = pkint.L, ymax = pkint.H,
         )) +
-        # geom_point(aes(color = phase)) +
-        facet_wrap(vars(!!.y)) +
-        labs(
-          x = "Peak (Map) [cps/uA]",
-          y = "Peak (Spot) [cps/uA]"
-        )
+        labs(x = "Peak (Map) [cps/uA]", y = "Peak (Spot) [cps/uA]") +
+        theme_minimal()
     )
   }) %>>%
   invisible()
@@ -447,6 +441,8 @@ renderDT(centers())
 
 ## cluster-menu {data-width=200}
 
+### Menu
+
 ```{r cluster-menu}
 actionButton(
   "cluster_run", label = "Run cluster analysis", width = "90%",
@@ -461,13 +457,6 @@ select_action("cluster_action")
 
 **Summarized** ([View full](#cluster-log))
 
-```{r cluster-summarize, eval = TRUE, cache = FALSE}
-cluster_df <- reactive(summarize_action(cluster_out, input, "cluster", .env))
-cluster_df_latest <- reactive(summarize_latest(cluster_df))
-renderTable(cluster_df_latest(), align = "r")
-```
-
-
 ```{r cluster-run}
 cluster_out <- reactive({
   input$cluster_run
@@ -480,9 +469,13 @@ cluster_out <- reactive({
   })
   .env$cluster$result
 })
+cluster_df <- summarize_action_react(cluster_out, input, "cluster", .env)
+cluster_df_latest <- summarize_latest_react(cluster_df)
 ```
 
-
+```{r cluster-summarize, eval = TRUE, cache = FALSE}
+renderTable(cluster_df_latest(), align = "r")
+```
 
 ## cluster-viewer {.tabset}
 
@@ -496,11 +489,9 @@ cluster_img <- reactive(qntmap:::as_img(
   range_y[2L], range_x[2L]
 ))
 
-output$cluster_heatmap <- map_render(
-  cluster_img, ranges, .margin, cluster_zlim, input, "cluster"
-)
+cluster_rastered <- raster_react(cluster_img, ranges, .margin, cluster_zlim, input, "cluster")
 
-map_output("cluster")
+map_render("cluster", cluster_rastered)
 ```
 
 ### Membership
@@ -523,8 +514,9 @@ renderDT(cluster_df())
 
 # Quantify
 
-
 ## quantify-menu {data-width=200}
+
+### Menu
 
 ```{r quantify-menu}
 actionButton(
@@ -542,9 +534,9 @@ select_action("qmap_action")
 **Summarized** ([View full](#quantify-log))
 
 ```{r quantify-summarize, eval = TRUE, cache = FALSE}
-qmap_df <- reactive(summarize_action(qmap_out, input, "qmap", .env))
+qmap_df <- summarize_action_react(qmap_out, input, "qmap", .env)
 
-qmap_df_latest <- reactive(summarize_latest(qmap_df))
+qmap_df_latest <- summarize_latest_react(qmap_df)
 
 renderTable(qmap_df_latest(), align = "r")
 ```
@@ -571,29 +563,27 @@ qmap_out <- reactive({
 ### Map
 
 
-```{r quantify-zlim}
-qmap_zlim <- zlim_reactive("qmap", qmap_out, input)
+```{r quantify-raster}
+qmap_zlim <- zlim_react("qmap", qmap_out, input)
 
-qmap_squished <- squish_reactive(qmap_out, input$qmap_elem, qmap_zlim)
+qmap_squished <- squish_react(qmap_out, input$qmap_elem, qmap_zlim)
 
 qmap_img <- reactive(qntmap:::as_img(
   qntmap:::lookup[[input$qmap_color]](qmap_squished(), from = qmap_zlim()),
   range_y[2L], range_x[2L]
 ))
+
+qmap_rastered <- raster_react(qmap_img, ranges, .margin, qmap_zlim, input, "qmap")
 ```
 
-```{r quantify-heatmap}
-output$qmap_heatmap <- map_render(
-  qmap_img, ranges, .margin, qmap_zlim, input, "qmap"
-)
-
-map_output("qmap")
+```{r quantify-heatmap, cache=FALSE}
+map_render("qmap", qmap_rastered)
 ```
 
 ### Histogram
 
 ```{r quantify-hist, cache = FALSE}
-qmap_hist <- hist_reactive("qmap", qmap_out, input)
+qmap_hist <- hist_react("qmap", qmap_out, input)
 renderPlot(qmap_hist())
 ```
 
