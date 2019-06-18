@@ -79,13 +79,13 @@ range_y <- range(xmap()$y)
   summarize_if(is.numeric, mean) %>>%
   mutate(ID = 0L, Area = "Whole") %>>%
   select("ID", "Area", "x", "y", everything())
-.env$quantify$element <- qnt$elm %>>%
+.env$qmap$element <- qnt$elm %>>%
   filter(elint %in% names(xmap())) %>>%
   `[[`("elem")
-.env$quantify$result <- xmap()[c("x", "y")] %>>%
-  mutate(!!!(setNames(as.list(numeric(length(.env$quantify$element))), .env$quantify$element))) %>>%
+.env$qmap$result <- xmap()[c("x", "y")] %>>%
+  mutate(!!!(setNames(as.list(numeric(length(.env$qmap$element))), .env$qmap$element))) %>>%
   structure(class = c("qntmap", class(.)))
-.env$quantify$summary <- .env$quantify$result %>>%
+.env$qmap$summary <- .env$qmap$result %>>%
   summarize_if(is.numeric, mean) %>>%
   mutate(ID = 0L, Area = "Whole") %>>%
   select("ID", "Area", "x", "y", everything())
@@ -237,19 +237,41 @@ select_color <- function(id) {
   )
 }
 
-select_element_and_range <- function(id, choices) {
+select_element_and_range <- function(id, choices, label = "Element") {
   ids <- paste0(id, "_", c("elem", "min", "max"))
   splitLayout(
     selectInput(
-      ids[[1L]], label = "Element", 
-      choices = choices,
-      selectize = FALSE
+      ids[[1L]], label = label, choices = choices, selectize = FALSE
     ),
     numericInput(ids[[2L]], "Min", value = NA_real_),
     numericInput(ids[[3L]], "Max", value = NA_real_),
     cellWidths = 100
   )
 }
+
+zlim_reactive <- function(id, map_reactive, input) {reactive({
+  ids <- paste0(id, "_", c("elem", "min", "max"))
+  z <- range(map_reactive()[[input[[ids[[1L]]]]]])
+  .min <- input[[ids[[2L]]]]
+  .max <- input[[ids[[3L]]]]
+  c(
+    `if`(is.na(.min) || .min < z[1L], z[1L], .min),
+    `if`(is.na(.max) || .max > z[2L], z[2L], .max)
+  )
+})}
+
+hist_reactive <- function(id, map_reactive, input) {reactive({
+  ids <- paste0(id, "_", c("elem", "min", "max", "color"))
+  qntmap:::gghist.numeric(
+    unlist(map_reactive()[[input[[ids[[1L]]]]]], use.names = FALSE),
+    .min = input[[ids[[2L]]]], .max = input[[ids[[3L]]]],
+    colors = input[[ids[[4L]]]]
+  )
+})}
+
+squish_reactive <- function(map_reactive, z, zlim_reactive) {reactive({
+  squish(map_reactive()[[z]], zlim_reactive())
+})}
 ```
 
 ```{r null, eval = FALSE}
@@ -262,15 +284,13 @@ select_element_and_range <- function(id, choices) {
 ## xmap-menu {data-width=200}
 
 
-```{r xmap-element}
+```{r xmap-menu}
 select_element_and_range("xmap", setdiff(names(xmap()), c("x", "y")))
-
 select_color("xmap")
-
 select_action("xmap_action")
 ```
 
-```{r msg-action, cache = FALSE}
+```{r xmap-msg-action, cache = FALSE}
 renderText(msg$action[[input$xmap_action]])
 ```
 
@@ -280,22 +300,16 @@ renderText(msg$action[[input$xmap_action]])
 
 ```{r xmap-summarize, eval = TRUE, cache = FALSE}
 xmap_df <- reactive(summarize_action(xmap, input, "xmap", .env))
-
 xmap_df_latest <- reactive(summarize_latest(xmap_df))
-
 renderTable(xmap_df_latest(), align = "r")
 ```
 
 
 ```{r xmap-zoom-move, eval = TRUE}
 ranges <- reactiveValues(x = range_x, y = range_y)
-
-
-
-
 observe_action("xmap", input, ranges, range_x, range_y)
 observe_action("cluster", input, ranges, range_x, range_y)
-observe_action("quantify", input, ranges, range_x, range_y)
+observe_action("qmap", input, ranges, range_x, range_y)
 ```
 
 
@@ -304,15 +318,9 @@ observe_action("quantify", input, ranges, range_x, range_y)
 ### Map
 
 ```{r xmap-zlim}
-xmap_zlim <- reactive({
-  zrange <- range(xmap()[[input$xmap_elem]])
-  c(
-    `if`(is.na(input$xmap_min) || input$xmap_min < zrange[1L], zrange[1L], input$xmap_min),
-    `if`(is.na(input$xmap_max) || input$xmap_max > zrange[2L], zrange[2L], input$xmap_max)
-  )
-})
+xmap_zlim <- zlim_reactive("xmap", xmap, input)
 
-xmap_squished <- reactive(squish(xmap()[[input$xmap_elem]], xmap_zlim()))
+xmap_squished <- squish_reactive(xmap, input$xmap_elem, xmap_zlim)
 
 xmap_img <- reactive(qntmap:::as_img(
   qntmap:::lookup[[input$xmap_color]](xmap_squished(), from = xmap_zlim()),
@@ -332,13 +340,9 @@ map_output("xmap")
 
 ### Histogram
 
-```{r hist-xmap, cache = FALSE}
-renderPlot(
-  qntmap:::gghist.numeric(
-    unlist(xmap()[[input$xmap_elem]], use.names = FALSE),
-    colors = input$xmap_color
-  )
-)
+```{r xmap-hist, cache = FALSE}
+xmap_hist <- hist_reactive("xmap", xmap, input)
+renderPlot(xmap_hist())
 ```
 
 ### Log {#xmap-log}
@@ -346,7 +350,6 @@ renderPlot(
 ```{r xmap-full-summary, cache=FALSE}
 renderDT(xmap_df())
 ```
-
 
 ### Analytical conditions
 
@@ -366,9 +369,6 @@ datatable(tribble(
   "Path", "dir_xmap", ""
 ))
 ```
-
-
-
 
 
 # Spots
@@ -462,8 +462,8 @@ epma %>>%
         # geom_point(aes(color = phase)) +
         facet_wrap(vars(!!.y)) +
         labs(
-          x = "Peak (Map) [cps/μA]",
-          y = "Peak (Spot) [cps/μA]"
+          x = "Peak (Map) [cps/uA]",
+          y = "Peak (Spot) [cps/uA]"
         )
     )
   }) %>>%
@@ -498,9 +498,7 @@ select_action("cluster_action")
 
 ```{r cluster-summarize, eval = TRUE, cache = FALSE}
 cluster_df <- reactive(summarize_action(cluster_out, input, "cluster", .env))
-
 cluster_df_latest <- reactive(summarize_latest(cluster_df))
-
 renderTable(cluster_df_latest(), align = "r")
 ```
 
@@ -563,31 +561,14 @@ renderDT(cluster_df())
 
 ## quantify-menu {data-width=200}
 
-
 ```{r quantify-menu}
 actionButton(
-  "quantify_run", label = "Quantify Maps", width = "90%",
+  "qmap_run", label = "Quantify Maps", width = "90%",
   style = "background: #EE0000;"
 )
-```
-
-```{r quantify-element}
-# splitLayout(
-#   selectInput(
-#     "quantify_elem", label = "Element", 
-#     choices = .env$quantify$element,
-#     selectize = FALSE
-#   ),
-#   numericInput("quantify_min", "Min", value = NA_real_),
-#   numericInput("quantify_max", "Max", value = NA_real_),
-#   cellWidths = 100
-# )
-
-select_element_and_range("quantify", .env$quantify$element)
-
-select_color("quantify")
-
-select_action("quantify_action")
+select_element_and_range("qmap", .env$qmap$element)
+select_color("qmap")
+select_action("qmap_action")
 ```
 
 
@@ -596,27 +577,27 @@ select_action("quantify_action")
 **Summarized** ([View full](#quantify-log))
 
 ```{r quantify-summarize, eval = TRUE, cache = FALSE}
-quantify_df <- reactive(summarize_action(quantify_out, input, "quantify", .env))
+qmap_df <- reactive(summarize_action(qmap_out, input, "qmap", .env))
 
-quantify_df_latest <- reactive(summarize_latest(quantify_df))
+qmap_df_latest <- reactive(summarize_latest(qmap_df))
 
-renderTable(quantify_df_latest(), align = "r")
+renderTable(qmap_df_latest(), align = "r")
 ```
 
 
 ```{r quantify-run}
-quantify_out <- reactive({
-  input$quantify_run
-  isolate(if (input$quantify_run != 0L && input$cluster_run != 0L) {
-    .env$quantify$result <- quantify(
+qmap_out <- reactive({
+  input$qmap_run
+  isolate(if (input$qmap_run != 0L && input$cluster_run != 0L) {
+    .env$qmap$result <- quantify(
       xmap(), qnt, cluster_out(), fine_phase = input$outlier
     )
-    .env$quantify$summary <- .env$quantify$result %>>%
+    .env$qmap$summary <- .env$qmap$result %>>%
       summarize_if(is.numeric, mean) %>>%
       mutate(ID = 0L, Area = "Whole", membership = NULL) %>>%
       select("ID", "Area", "x", "y", everything())
   })
-  .env$quantify$result
+  .env$qmap$result
 })
 ```
 
@@ -626,44 +607,35 @@ quantify_out <- reactive({
 
 
 ```{r quantify-zlim}
-quantify_zlim <- reactive({
-  zrange <- range(quantify_out()[[input$quantify_elem]])
-  c(
-    `if`(is.na(input$quantify_min) || input$quantify_min < zrange[1L], zrange[1L], input$quantify_min),
-    `if`(is.na(input$quantify_max) || input$quantify_max > zrange[2L], zrange[2L], input$quantify_max)
-  )
-})
+qmap_zlim <- zlim_reactive("qmap", qmap_out, input)
 
-quantify_squished <- reactive(squish(quantify_out()[[input$quantify_elem]], quantify_zlim()))
+qmap_squished <- squish_reactive(qmap_out, input$qmap_elem, qmap_zlim)
 
-quantify_img <- reactive(qntmap:::as_img(
-  qntmap:::lookup[[input$quantify_color]](quantify_squished(), from = quantify_zlim()),
+qmap_img <- reactive(qntmap:::as_img(
+  qntmap:::lookup[[input$qmap_color]](qmap_squished(), from = qmap_zlim()),
   range_y[2L], range_x[2L]
 ))
 ```
 
 ```{r quantify-heatmap}
-output$quantify_heatmap <- map_render(quantify_img, ranges, .margin, quantify_zlim, input, "quantify")
+output$qmap_heatmap <- map_render(
+  qmap_img, ranges, .margin, qmap_zlim, input, "qmap"
+)
 
-map_output("quantify")
+map_output("qmap")
 ```
 
 ### Histogram
 
 ```{r quantify-hist, cache = FALSE}
-renderPlot(
-  qntmap:::gghist.numeric(
-    unlist(quantify_out()[[input$quantify_elem]], use.names = FALSE),
-    .min = input$quantify_min, .max = input$quantify_max,
-    colors = input$quantify_color
-  )
-)
+qmap_hist <- hist_reactive("qmap", qmap_out, input)
+renderPlot(qmap_hist())
 ```
 
 ### Table
 
 ```{r quantify-table, cache=FALSE}
-renderDT(quantify_out())
+renderDT(qmap_out())
 ```
 
 
@@ -689,8 +661,8 @@ epma %>>%
       geom_point() +
       facet_wrap(vars(!!paste(.y$phase, .y$elm))) +
       labs(
-        x = "Peak (Map) [cps/μA]",
-        y = "Peak (Spot) [cps/μA]"
+        x = "Peak (Map) [cps/uA]",
+        y = "Peak (Spot) [cps/uA]"
       )
   )) %>>%
   invisible
@@ -710,8 +682,8 @@ epma %>>%
       # geom_point() +
       facet_wrap(~ .y$elm) +
       labs(
-        x = "Peak (Map) [cps/μA]",
-        y = "Peak (Spot) [cps/μA]"
+        x = "Peak (Map) [cps/uA]",
+        y = "Peak (Spot) [cps/uA]"
       )
   )) %>>%
   invisible
@@ -728,7 +700,7 @@ epma %>>%
       geom_point() +
       geom_linerange(aes(ymin = bgint.L, ymax = bgint.H)) +
       facet_wrap(vars(!!paste(.y$phase, .y$elm))) +
-      labs(x = "wt%", y = "Background [cps/μA]")
+      labs(x = "wt%", y = "Background [cps/uA]")
   )) %>>%
   invisible
 ```
