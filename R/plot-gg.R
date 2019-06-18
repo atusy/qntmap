@@ -21,20 +21,19 @@ gghist.numeric <- function(x, .min = NA_real_, .max = NA_real_, colors) {
   if (!is.finite(.min) || .min < range_x[1]) .min <- range_x[1]
   if (!is.finite(.max) || .max > range_x[2]) .max <- range_x[2]
 
-  df_hist <- x[.min <= x & x <= .max] %>>%
-    hist(breaks = "FD", plot = FALSE) %>>%
-    `[`(c("mids", "counts")) %>>%
-    c(list(width = .$mids[2L] - .$mids[1L])) %>>%
-    as.data.frame()
-  df_hist %>>%
-    bind_rows(data.frame(mids = c(.min, .max), counts = 0L, width = 1L)) %>>%
-    ggplot() +
-    aes(.data$mids, .data$counts, width = .data$width, fill = .data$mids, color = .data$mids) +
-    geom_col(show.legend = FALSE, position = "identity") +
-    geom_step(position = position_nudge(x = -df_hist$width[[1L]] / 2L), color = "gray") +
+  freq <- hist(x[.min <= x & x <= .max], breaks = "FD", plot = FALSE)
+  width <- freq$breaks[[2L]] - freq$breaks[[1L]]
+  
+  df_col <- data.frame(x = freq$mids, y = freq$counts)
+  df_lim <- data.frame(x = c(.min, .max), y = c(0L, 0L))
+  
+  ggplot(df_col) +
+    aes(.data$x, .data$y, width = {{ width }}, fill = .data$x, color = .data$x) +
+    geom_col(show.legend = FALSE, color = "gray", fill = "transparent", size = 3) +
+    geom_col(data = rbind(df_col, df_lim), show.legend = FALSE) +
     scale_fill[[match.arg(colors)]]() +
     scale_color[[match.arg(colors)]]() +
-    gghist_theme()
+    gghist_theme(ylim = c(0L, max(freq$counts) + 1L))
 }
 
 #' @rdname gghist
@@ -54,9 +53,9 @@ gghist.factor <- function(x, ...) {
 
 #' gghist: theme
 #' @noRd
-gghist_theme <- function() {
+gghist_theme <- function(xlim = NULL, ylim = NULL) {
   list(
-    coord_cartesian(expand = FALSE),
+    coord_cartesian(xlim = xlim, ylim = ylim, expand = FALSE),
     theme_classic(),
     theme(
       legend.position = "none",
