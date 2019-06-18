@@ -12,19 +12,11 @@ runtime: shiny
 ---
 
 ```{css, echo = FALSE}
-.btn.radiobtn.btn-secondary.active {
-  background: #2780e3;
-  color: white;
-}
+.btn.radiobtn.btn-secondary.active {background: #2780e3; color: white;}
 ```
-
-
-```{r setup-knit-and-shiny}
-knitr::opts_chunk$set(echo = FALSE, cache = TRUE)
-```
-
 
 ```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE, cache = TRUE)
 library(DT)
 library(dplyr)
 library(flexdashboard)
@@ -40,22 +32,10 @@ library(shinyWidgets)
 library(tibble)
 library(tidyr)
 
-example_data <- system.file(package = "qntmap", "extdata", "minimal")
-
-dir_xmap <- if (is.null(params$xmap)) {
-  file.path(example_data, ".map", "1")
-} else {
-  params$xmap
-}
-
-dir_qnt <- if (is.null(params$qnt)) {
-  file.path(example_data, ".qnt")
-} else {
-  params$qnt
-}
+example <- system.file(package = "qntmap", "extdata", "minimal")
+dir_xmap <- `if`(is.null(params$xmap), file.path(example, ".map/1"), params$xmap)
+dir_qnt <- `if`(is.null(params$qnt), file.path(example, ".qnt"), params$qnt)
 ```
-
-
 
 ```{r setup-input}
 # Read demo files if params xmap and qnt are unset
@@ -215,13 +195,11 @@ observe_action <- function(id, input, ranges, range_x, range_y) {
   })
 }
 
-select_element_and_range <- function(id, choices) {
+select_element_and_range <- function(id, choices, label = "Element") {
   ids <- paste0(id, "_", c("elem", "min", "max"))
   splitLayout(
     selectInput(
-      ids[[1L]], label = "Element", 
-      choices = choices,
-      selectize = FALSE
+      ids[[1L]], label = label, choices = choices, selectize = FALSE
     ),
     numericInput(ids[[2L]], "Min", value = NA_real_),
     numericInput(ids[[3L]], "Max", value = NA_real_),
@@ -232,20 +210,7 @@ select_element_and_range <- function(id, choices) {
 select_color <- function(id) {
   selectInput(
     paste0(id, "_color"), label = "Color", 
-    choices = c("viridis", "gray"), 
-    selectize = FALSE
-  )
-}
-
-select_element_and_range <- function(id, choices, label = "Element") {
-  ids <- paste0(id, "_", c("elem", "min", "max"))
-  splitLayout(
-    selectInput(
-      ids[[1L]], label = label, choices = choices, selectize = FALSE
-    ),
-    numericInput(ids[[2L]], "Min", value = NA_real_),
-    numericInput(ids[[3L]], "Max", value = NA_real_),
-    cellWidths = 100
+    choices = c("viridis", "gray"), selectize = FALSE
   )
 }
 
