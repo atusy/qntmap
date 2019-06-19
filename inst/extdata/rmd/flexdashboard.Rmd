@@ -4,10 +4,11 @@ output:
   flexdashboard::flex_dashboard:
     orientation: columns
     vertical_layout: fill
+#    theme: bootstrap
 params:
   xmap: NULL
   qnt: NULL
-  deadtime: 0
+  deadtime: 1300
 runtime: shiny
 ---
 
@@ -33,6 +34,7 @@ library(tibble)
 library(tidyr)
 
 example <- system.file(package = "qntmap", "extdata", "minimal")
+# example <- "/home/rstudio/Documents/Univ/Data_ND/epma/WDX/JGb1a_170912/"
 dir_xmap <- `if`(is.null(params$xmap), file.path(example, ".map/1"), params$xmap)
 dir_qnt <- `if`(is.null(params$qnt), file.path(example, ".qnt"), params$qnt)
 
@@ -40,33 +42,23 @@ dir_qnt <- `if`(is.null(params$qnt), file.path(example, ".qnt"), params$qnt)
 .env <- new.env()
 xmap0 <- read_xmap(dir_xmap, DT = params$deadtime)
 xmap <- function() xmap0
+# xmap <- reactive(read_xmap(dir_xmap, DT = params$deadtime))
 qnt <- read_qnt(dir_qnt, saving = FALSE)
-epma <- tidy_epma(qnt, xmap()) %>>% qntmap:::prioritize("id")
+epma <- reactive(tidy_epma(qnt, xmap()) %>>% qntmap:::prioritize("id"))
 .margin <- c(-.5, .5)
 range_x <- range(xmap()$x)
 range_y <- range(xmap()$y)
 
+.env$xmap$elint <- setdiff(names(xmap()), c("x", "y"))
 .env$xmap$summary <- xmap() %>>%
   summarize_if(is.numeric, mean) %>>%
   mutate(ID = 0L, Area = "Whole") %>>%
   select("ID", "Area", "x", "y", everything())
-.env$cluster$result <- xmap()[c("x", "y")] %>>%
-  mutate(cluster = "NA") %>>%
-  structure(class = c("qm_cluster", "data.frame"))
-.env$cluster$summary <- .env$cluster$result %>>%
-  summarize_if(is.numeric, mean) %>>%
-  mutate(ID = 0L, Area = "Whole") %>>%
-  select("ID", "Area", "x", "y", everything())
-.env$qmap$element <- qnt$elm %>>%
-  filter(elint %in% names(xmap())) %>>%
-  `[[`("elem")
-.env$qmap$result <- xmap()[c("x", "y")] %>>%
-  mutate(!!!(setNames(as.list(numeric(length(.env$qmap$element))), .env$qmap$element))) %>>%
-  structure(class = c("qntmap", class(.)))
-.env$qmap$summary <- .env$qmap$result %>>%
-  summarize_if(is.numeric, mean) %>>%
-  mutate(ID = 0L, Area = "Whole") %>>%
-  select("ID", "Area", "x", "y", everything())
+.env$qmap[c("elem", "elint")] <- qnt$elm %>>%
+  filter(elint %in% !!.env$xmap$elint) %>>%
+  select(elem, elint) %>>%
+  as.list %>>%
+  map(qntmap:::prioritize, qntmap:::.component)
 
 msg <- list(
   action = c(
@@ -148,6 +140,7 @@ raster_react <- function(x, ranges, .margin, zlim, input, id) {reactive({
 })}
 
 summarize_action_react <- function(df, input, id, .env) {reactive({
+  req(df())
   ids <- paste0(id, "_", c("action", "brush", "click"))
   if (input[[ids[[1L]]]] != "Summarize") return(.env[[id]]$summary)
   if (!is.null(input[[ids[[2L]]]]))
@@ -214,6 +207,7 @@ select_color <- function(id) {
 }
 
 zlim_react <- function(id, map_reactive, input) {reactive({
+  req(map_reactive())
   ids <- paste0(id, "_", c("elem", "min", "max"))
   z <- range(map_reactive()[[input[[ids[[1L]]]]]])
   .min <- input[[ids[[2L]]]]
@@ -225,6 +219,7 @@ zlim_react <- function(id, map_reactive, input) {reactive({
 })}
 
 hist_react <- function(id, map_reactive, input) {reactive({
+  req(map_reactive())
   ids <- paste0(id, "_", c("elem", "min", "max", "color"))
   qntmap:::gghist.numeric(
     unlist(map_reactive()[[input[[ids[[1L]]]]]], use.names = FALSE),
@@ -233,7 +228,10 @@ hist_react <- function(id, map_reactive, input) {reactive({
   )
 })}
 
-squish_react <- function(map_reactive, z, zlim_reactive) {reactive({
+squish_react <- function(id, map_reactive, zlim_reactive, input) {reactive({
+  req(map_reactive())
+  z <- input[[paste0(id, "_elem")]]
+  if (is.null(z)) z <- "cluster"
   squish(map_reactive()[[z]], zlim_reactive())
 })}
 ```
@@ -250,7 +248,7 @@ squish_react <- function(map_reactive, z, zlim_reactive) {reactive({
 ### Menu
 
 ```{r xmap-menu}
-select_element_and_range("xmap", setdiff(names(xmap()), c("x", "y")))
+select_element_and_range("xmap", .env$xmap$elint)
 select_color("xmap")
 select_action("xmap_action")
 ```
@@ -285,7 +283,7 @@ observe_action("qmap", input, ranges, range_x, range_y)
 ```{r xmap-raster}
 xmap_zlim <- zlim_react("xmap", xmap, input)
 
-xmap_squished <- squish_react(xmap, input$xmap_elem, xmap_zlim)
+xmap_squished <- squish_react("xmap", xmap, xmap_zlim, input)
 
 xmap_img <- reactive(qntmap:::as_img(
   qntmap:::lookup[[input$xmap_color]](xmap_squished(), from = xmap_zlim()),
@@ -536,12 +534,18 @@ renderTable(cluster_df_latest(), align = "r")
 ### Map
 
 ```{r cluster-heatmap, eval=TRUE, cache=FALSE}
-cluster_zlim <- reactive(unique(cluster_out()$cluster))
+cluster_zlim <- reactive({
+  req(cluster_out())
+  unique(cluster_out()$cluster)
+})
 
-cluster_img <- reactive(qntmap:::as_img(
-  qntmap:::lookup[["discrete"]](cluster_out()$cluster),
-  range_y[2L], range_x[2L]
-))
+cluster_img <- reactive({
+  req(cluster_out())
+  qntmap:::as_img(
+    qntmap:::lookup[["discrete"]](cluster_out()$cluster),
+    range_y[2L], range_x[2L]
+  )
+})
 
 cluster_rastered <- raster_react(cluster_img, ranges, .margin, cluster_zlim, input, "cluster")
 
@@ -577,7 +581,7 @@ actionButton(
   "qmap_run", label = "Quantify Maps", width = "90%",
   style = "background: #EE0000;"
 )
-select_element_and_range("qmap", .env$qmap$element)
+select_element_and_range("qmap", .env$qmap$elem)
 select_color("qmap")
 select_action("qmap_action")
 ```
@@ -586,15 +590,6 @@ select_action("qmap_action")
 ----
 
 **Summarized** ([View full](#quantify-log))
-
-```{r quantify-summarize, eval = TRUE, cache = FALSE}
-qmap_df <- summarize_action_react(qmap_out, input, "qmap", .env)
-
-qmap_df_latest <- summarize_latest_react(qmap_df)
-
-renderTable(qmap_df_latest(), align = "r")
-```
-
 
 ```{r quantify-run}
 qmap_out <- reactive({
@@ -612,6 +607,14 @@ qmap_out <- reactive({
 })
 ```
 
+```{r quantify-summarize, eval = TRUE, cache = FALSE}
+qmap_df <- summarize_action_react(qmap_out, input, "qmap", .env)
+
+qmap_df_latest <- summarize_latest_react(qmap_df)
+
+renderTable(qmap_df_latest(), align = "r")
+```
+
 ## quantify-viewer {.tabset}
 
 ### Map
@@ -620,7 +623,7 @@ qmap_out <- reactive({
 ```{r quantify-raster}
 qmap_zlim <- zlim_react("qmap", qmap_out, input)
 
-qmap_squished <- squish_react(qmap_out, input$qmap_elem, qmap_zlim)
+qmap_squished <- squish_react("qmap", qmap_out, qmap_zlim, input)
 
 qmap_img <- reactive(qntmap:::as_img(
   qntmap:::lookup[[input$qmap_color]](qmap_squished(), from = qmap_zlim()),
@@ -718,3 +721,4 @@ epma %>>%
 
 ```{r tidy-epma}
 renderDT(epma())
+```
