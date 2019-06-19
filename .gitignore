@@ -1,3 +1,6 @@
+inst/extdata/rmd/*
+!inst/extdata/rmd/*.Rmd
+
 Meta
 doc
 inst/doc
