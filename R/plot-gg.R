@@ -29,8 +29,11 @@ gghist.numeric <- function(x, .min = NA_real_, .max = NA_real_, colors) {
   
   ggplot(df_col) +
     aes(.data$x, .data$y, width = {{ width }}, fill = .data$x, color = .data$x) +
-    geom_col(show.legend = FALSE, color = "gray", fill = "transparent", size = 3) +
-    geom_col(data = rbind(df_col, df_lim), show.legend = FALSE) +
+    geom_col(
+      color = "gray", fill = "transparent", size = 2, 
+      show.legend = FALSE, position = "identity"
+    ) +
+    geom_col(data = rbind(df_col, df_lim), show.legend = FALSE, position = "identity") +
     scale_fill[[match.arg(colors)]]() +
     scale_color[[match.arg(colors)]]() +
     gghist_theme(ylim = c(0L, max(freq$counts) + 1L))
