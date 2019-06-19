@@ -650,13 +650,13 @@ renderDT(qmap_out())
 
 # Misc.
 
+```{r}
+knitr::opts_chunk$set(eval = FALSE)
+```
+
+
 ## miscellaneous-tabset {.tabset}
 
-### Table
-
-```{r tidy-epma}
-datatable(epma)
-```
 
 
 ### α
@@ -714,3 +714,7 @@ epma %>>%
   invisible
 ```
 
+### Table
+
+```{r tidy-epma}
+renderDT(epma())
