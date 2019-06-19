@@ -79,12 +79,16 @@ reduce_add <- function(x) Reduce(`+`, x)
 `%nin%` <- function(x, table) !match(x, table, nomatch = 0L)
 
 #' Prioritize certain components of x, and order the others alphabetically
-#' @param x A named object
+#' 
+#' If the vector is unnamed, it is named by itself.
+#' 
+#' @param x A vector
 #' @param ...
 #'   Character vectors specifying the name of `x` which needs be prioritized.
 #' @noRd
 prioritize <- function(x, ...) {
   nm <- names(x)
+  if (is.null(nm)) names(x) <- nm <- as.character(x)
   prior <- c(...)
   x[c(intersect(prior, nm), sort(setdiff(nm, prior)))]
 }
