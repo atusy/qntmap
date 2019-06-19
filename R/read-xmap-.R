@@ -106,9 +106,9 @@ construct_qm_xmap <- function(files_xmap, elm, dwell, deadtime, dir_map, ...) {
 correct_deadtime <- function(x, deadtime = 0, dwell) {
   # Dead time corrections except for electron signals (e.g., BSE)
   if (deadtime == 0) return(x)
-  map_at(
+  modify_at(
     x,
-    setdiff(names(x), .electron),
+    setdiff(names(x), c("x", "y", .electron)),
     function(x) round(x / (1 - deadtime / dwell * 1e-6 * x))
   )
 }
