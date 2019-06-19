@@ -418,38 +418,69 @@ they are analyzing multiple phases during mapping.
 
 
 ```{r select-outliers}
-checkboxGroupInput(
-  "outlier",
-  "Select phases tend to be outliers",
-  choices = sort(unique(qnt$cnd$phase))
+selectInput(
+  inputId = "outlier_elint",
+  label = "Element to plot", 
+  choices = .env$qmap$elint,
+  selected = .env$qmap$elint[[1L]],
+  selectize = FALSE
+)
+
+pickerInput(
+  inputId = "outlier",
+  label = "Phases being outliers", 
+  choices = sort(unique(qnt$cnd$phase)),
+  multiple = TRUE
+)
+
+radioGroupButtons(
+  inputId = "outlier_action",
+  label = "Actions on outliers",
+  choices = c("Desaturate", "Filter"),
+  selected = "Desaturate",
+  status = "secondary",
+  individual = TRUE
 )
 ```
 
 
 ## Find fine grained phases {.tabset}
 
-```{r find-fine-grained, warning=FALSE, results='asis'}
-epma %>>%
-  filter(is.finite(mapint), is.finite(pkint)) %>>%
-  split(.$elm) %>>%
-  qntmap:::prioritize(qntmap:::.element) %>>%
-  iwalk(~ {
-    cat("\n\n###", .y, "\n\n")
-    print(
-      ggplot(.x, aes(mapint, pkint)) +
-        geom_smooth(
-          formula = y ~ 0 + x, color = "gray10", se = FALSE, method = "lm"
-        ) +
-        stat_err(aes(
-          color = phase,
-          xmin = mapint.L, xmax = mapint.H,
-          ymin = pkint.L, ymax = pkint.H,
-        )) +
-        labs(x = "Peak (Map) [cps/uA]", y = "Peak (Spot) [cps/uA]") +
-        theme_minimal()
-    )
-  }) %>>%
-  invisible()
+### Plot
+
+```{r find-fine-grained, cache = FALSE}
+outlier_gg_layers <- list(
+  aes(
+    .data$mapint, .data$pkint, color = .data$phase,
+    xmin = .data$mapint.L, xmax = .data$mapint.H,
+    ymin = .data$pkint.L, ymax = .data$pkint.H,
+    weight = .data$weight, alpha = .data$alpha
+  ),
+  geom_smooth(formula = y ~ 0 + x, color = "gray10", se = FALSE, method = "lm"),
+  stat_err(),
+  labs(
+    x = "Map Peak [cps/uA]", y = "Spot Peak [cps/uA]"
+  ),
+  scale_color_discrete(name = "Phase"),
+  scale_alpha_identity(),
+  theme_minimal()
+)
+
+outlier_plot <- reactive({
+  epma() %>>%
+    filter(elint == !!input$outlier_elint) %>>%
+    mutate(
+      good = !(phase %in% !!input$outlier),
+      weight = as.integer(good),
+      alpha = weight * .7 + .3
+    ) %>>%
+    filter((!!input$outlier_action != "Filter") | good) %>>%
+    ggplot() + 
+    ggtitle(input$outlier_elint) +
+    outlier_gg_layers
+})
+
+renderPlot(outlier_plot())
 ```
 
 ### Initial centroid
