@@ -336,7 +336,30 @@ datatable(tribble(
 
 # Spots
 
-## qnt {.tabset}
+## qnt-menu {data-width=200}
+
+### Phase list
+
+- Edit by double click a cell
+- Confirm by Ctrl + Enter
+
+```{r, cache=FALSE}
+.env$qnt$phase_list <- transmute(qnt$cnd, id, phase, use = TRUE)
+output$qnt_phase_list <- renderDT(
+  .env$qnt$phase_list,
+  editable = list(target = "column", disable = list(columns = 0:1)),
+  server = TRUE
+)
+DTOutput("qnt_phase_list")
+observeEvent(input$qnt_phase_list_cell_edit, {
+  .env$qnt$phase_list <- editData(
+    .env$qnt$phase_list, input$qnt_phase_list_cell_edit, 'phase_list'
+  )
+})
+```
+
+
+## qnt-viwer {.tabset}
 
 ### Analytical conditions
 
