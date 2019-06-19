@@ -69,5 +69,23 @@ test_that("conditions = hoge", { # © 2018 JAMSTEC
 
 prepare()
 
+test_that("correct_deadtime()", {
+  devtools::load_all()
+  x <- data.frame(x = 10000, y = 10000, CP = 10000, Si = 10000)
+  y <- structure(correct_deadtime(x, 1, 100), deadtime = 1, dwell = 100)
+  
+  # Calculated correctly
+  expect_equal(y$Si, 10001)
+  
+  # Elements belonging to "x", "y", and .electron are unaffected
+  expect_equal(x[1:3], y[1:3])
+  
+  # deadtime = 0 will revert correction
+  z <- correct_deadtime(y, 0)
+  expect_equal(z$Si, x$Si)
+  
+  # deadtime correction works on the value already affected
+  expect_identical(correct_deadtime(y, 1), y)
+})
 
 if (interactive()) setwd(here())

@@ -103,13 +103,31 @@ construct_qm_xmap <- function(files_xmap, elm, dwell, deadtime, dir_map, ...) {
     )
 }
 
-correct_deadtime <- function(x, deadtime = 0, dwell) {
-  # Dead time corrections except for electron signals (e.g., BSE)
-  if (deadtime == 0) return(x)
-  modify_at(
-    x,
-    setdiff(names(x), c("x", "y", .electron)),
-    function(x) round(x / (1 - deadtime / dwell * 1e-6 * x))
+#' Dead time corrections except for electron signals (e.g., BSE)
+#' 
+#' @noRd
+#' 
+#' @param x
+#' @param deadtime nano-sec
+#' @param dwell milli-sec
+correct_deadtime <- function(x, deadtime = 0, dwell = 0) {
+  old <- attributes(x)$deadtime
+  
+  if (is.null(old)) {
+    old <- 0
+  } else {
+    dwell <- attributes(x)$dwell
+  }
+  
+  if (deadtime == 0 && old == 0) return(structure(x, deadtime = 0))
+
+  structure(
+    modify_at(
+      x,
+      setdiff(names(x), c("x", "y", .electron)),
+      function(x) (x / (1 - (deadtime - old) / dwell * 1e-6 * x))
+    ),
+    deadtime = deadtime
   )
 }
 
