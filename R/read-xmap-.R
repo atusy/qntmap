@@ -107,7 +107,7 @@ construct_qm_xmap <- function(files_xmap, elm, dwell, deadtime, dir_map, ...) {
 #' 
 #' @noRd
 #' 
-#' @param x
+#' @param x input data
 #' @param deadtime nano-sec
 #' @param dwell milli-sec
 correct_deadtime <- function(x, deadtime = 0, dwell = 0) {
