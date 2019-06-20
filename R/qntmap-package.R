@@ -21,9 +21,10 @@
 #'   bind_cols bind_rows
 #'   distinct
 #'   filter
-#'   group_by
+#'   group_by group_modify
 #'   left_join
 #'   mutate mutate_at
+#'   n
 #'   rename rename_at right_join row_number
 #'   select semi_join summarize summarize_all summarize_if
 #'   transmute transmute_at
