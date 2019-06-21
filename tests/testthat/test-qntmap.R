@@ -5,7 +5,10 @@ xmap2 <- xmap
 xmap2$Ti <- xmap$Si
 qnt <- read_qnt("minimal/.qnt", saving = FALSE)
 qnt2 <- list()
-qnt2$elm <- dplyr::bind_rows(qnt$elm, dplyr::mutate_at(qnt$elm, c("elem", "elint"), paste0, "_dummy"))
+qnt2$elm <- dplyr::bind_rows(
+  qnt$elm, 
+  dplyr::mutate_at(qnt$elm, c("elem", "elint"), paste0, "_dummy")
+)
 qnt2$cnd <- qnt$cnd
 qnt2$cmp <- lapply(qnt$cmp, function(x) cbind(x, setNames(x, paste0(names(x), "_dummy"))))
 cluster <- cluster_xmap(xmap, find_centers(xmap, qnt, saveas = FALSE), saving = FALSE)

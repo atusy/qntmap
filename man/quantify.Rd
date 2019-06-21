@@ -24,9 +24,8 @@ sub-clusters (TRUE) or for super-clusters (FALSE).}
 \item{maps_x, maps_y}{Sizes of maps along x- and y-axes comprising guide net map.
 (default: \code{NULL}).}
 
-\item{fine_phase}{A character vector to specify fine grained phases
-which tend to comprise multi-phase pixels.
-See \href{#multi-phase-pixels}{"Multi-phase pixels"} section for details.}
+\item{fine_phase}{A character vector specifying fine grained phases who should comprise
+multi-phase pixels.}
 
 \item{fine_th}{A threshold of membership degrees to 0.9}
 

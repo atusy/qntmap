@@ -17,16 +17,16 @@
 #'   <https://doi.org/10.2138/am-2018-6323CCBY>.
 #'
 #' @importFrom dplyr
-#'   anti_join arrange
+#'   anti_join any_vars arrange
 #'   bind_cols bind_rows
-#'   distinct
-#'   filter
+#'   distinct distinct_all
+#'   filter filter_all
 #'   group_by group_modify
 #'   left_join
 #'   mutate mutate_at
 #'   n
 #'   rename rename_at right_join row_number
-#'   select semi_join summarize summarize_all summarize_if
+#'   select select_if semi_join summarize summarize_all summarize_if
 #'   transmute transmute_at
 #'   ungroup
 #'   vars
