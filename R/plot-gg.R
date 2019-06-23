@@ -157,6 +157,7 @@ gg_img <- function(
     annotation_raster(
       img, xmin = xlim[1L], xmax = xlim[2L], ymin = -ylim[2L], ymax = -ylim[1L]
     ) +
+    labs(x = "x", y = "y") +
     scale_y_reverse() +
     `if`(
       is_z_num,
