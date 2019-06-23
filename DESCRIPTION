@@ -34,6 +34,7 @@ RoxygenNote: 6.1.1
 Depends: R(>= 3.1.2)
 Imports: 
     curl,
+    cssgrid,
     data.table,
     dplyr,
     DT,
@@ -69,6 +70,7 @@ Suggests:
     svglite,
     testthat (>= 2.1.0)
 Remotes:
+    atusy/cssgrid,
     atusy/ggAtusy
 URL: https://github.com/atusy/qntmap/
 BugReports: https://github.com/atusy/qntmap/issues
