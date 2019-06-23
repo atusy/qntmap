@@ -23,7 +23,8 @@ multi-phase pixels.}
 If \code{"prediction"`` (default), prediction intervals are used based on Poisson process. If }"tukey"``, conditional lower and upper whiskers are used where the lower is
 $Q_{1/4} - 1.5 IQR$ and the upper is $Q_{3/4} + 1.5 IQR$.}
   \item{method}{Applicable when \code{interval = "prediction"}.
-If \code{"rq"`` (default), quantile regression is performed. If }"lsfit"`, least square regression is performed.}
+If \code{"rq"} (default), quantile regression is performed (\code{quantreg::rq}).
+If \code{"lsfit"}, least square regression is performed (\code{stats::lsfit}).}
   \item{percentile}{A percentile of predictive interaval.
 Applicable when \code{interval = "prediction"}.}
 }}

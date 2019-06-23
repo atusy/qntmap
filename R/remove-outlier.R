@@ -14,15 +14,16 @@
 #'  $Q_{1/4} - 1.5 IQR$ and the upper is $Q_{3/4} + 1.5 IQR$.
 #' @param method
 #'  Applicable when `interval = "prediction"`.
-#'  If `"rq"`` (default), quantile regression is performed.
-#'  If `"lsfit"`, least square regression is performed.
+#'  If `"rq"` (default), quantile regression is performed (`quantreg::rq`).
+#'  If `"lsfit"`, least square regression is performed (`stats::lsfit`).
 #' @param percentile
 #'  A percentile of predictive interaval.
 #'  Applicable when `interval = "prediction"`.
 #' 
 #' @export
 remove_outlier <- function(
-  epma, interval = c("prediction", "tukey"), method = c("rq", "lsft", "median"), percentile = .99
+  epma, interval = c("prediction", "tukey"),
+  method = c("rq", "lsfit", "median"), percentile = .99
 ) {
   method <- match.arg(method)
   
