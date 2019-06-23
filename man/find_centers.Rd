@@ -17,7 +17,7 @@ multi-phase pixels.}
 
 \item{saveas}{File name to save result. \code{FALSE} if not saving.}
 
-\item{...}{Arguments passed on to \code{remove_outlier}
+\item{...}{Arguments passed on to \code{find_outlier}
 \describe{
   \item{interval}{A type of the interval. Data points outside intervals are treated as outliers.
 If \code{"prediction"`` (default), prediction intervals are used based on Poisson process. If }"tukey"``, conditional lower and upper whiskers are used where the lower is

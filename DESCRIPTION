@@ -83,7 +83,7 @@ Collate:
     'find-AG.R'
     'find-B.R'
     'find-XAG.R'
-    'remove-outlier.R'
+    'find-outlier.R'
     'find-centers-.R'
     'find-centers-kpp.R'
     'mean-.R'

@@ -1,4 +1,4 @@
-#' @include remove-outlier.R
+#' @include find-outlier.R
 NULL
 
 #' Initialize centroids for [`cluster_xmap()`]
@@ -18,7 +18,7 @@ NULL
 #' @param fine_phase
 #'   A character vector specifying fine grained phases who should comprise
 #'   multi-phase pixels.
-#' @inheritDotParams remove_outlier interval method percentile
+#' @inheritDotParams find_outlier interval method percentile
 #' @param saveas File name to save result. `FALSE` if not saving.
 #'
 #' @section Multi-phase pixels:
@@ -84,11 +84,8 @@ find_centers <- function(
       starts_with("mapint"), starts_with("pkint")
     ) %>>%
     # Find outliers
-    filter(!(.data$phase %in% !!fine_phase)) %>>%
-    remove_outlier(...) %>>%
-    select("id", "elint", ends_with("est")) %>>%
-    mutate(kept = TRUE) %>>%
-    right_join(epma, by = c("id", "elint")) %>>% 
+    find_outlier(fine_phase = fine_phase) %>>%
+    mutate(kept = .data$outlier %in% TRUE) %>>%
     # Add elint not quantified
     bind_rows(missings) %>>%
     group_by(.data$id) %>>%
