@@ -1,5 +1,9 @@
 # Small internal functions
 
+#' Inverse of %in%
+#' @noRd
+`%nin%` <- function(x, table) match(x, table, nomatch = 0L) == 0L
+
 #' Confidence interval of observed data from poisson process
 #'
 #' @param x
