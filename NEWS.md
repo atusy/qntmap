@@ -1,5 +1,16 @@
 # qntmap 0.4.0
 
+## On going
+
+- `lm_AG()` and `lm_B()` performs regressions after omitting outliers.
+- `tidy_epma` returns `qm_epma` class object.
+- `autoplot.qm_epma`
+
+
+## Biggest NEWS
+
+- **Graphical user interface is ready!**
+
 ## Breaking changes
 
 - `read_qnt()`
@@ -7,29 +18,49 @@
     - uses the `saving` option only to save phase list, no more to cache data
 - `read_xmap()`
     - omits the `saving` and the `renew` option
-    - returns a data frame with columns `x` and `y` indicating coordinates of pixels
-      instead of a list
+    - returns a data frame with columns `x` and `y` indicating coordinates of
+      pixels instead of a list
 - `cluster_xmap()`
-    - returns data frame with the `center` attribute instead of list with too much data
+    - returns a data frame with the `center` attribute unlike older one returned
+      a list
     - saves the result
         - as is in the formats of 
           RDS, png (dot-by-dot phase map), and svg (phase map with legend)
         - converted by `group_subclusters` in the format of only png and svg
 - `group_subclusters()`
     - is defined to defunct `group_cluster()`
-    - returns a value similar to `cluster_xmap()` whreas omitting the `center` attribute.
+    - returns a data frame in the same format as `cluster_xmap()` but lacks the
+      `center` attribute.
 
 ## Major changes
 
-- `hmean()` and `vmean()` supports the objects with class `qntmap`, `qm_xmap`, and `qm_cluster`.
-  Previously they only supported the `qntmap` class object.
+- `find_outlier()` is implemented to detect unexpectedly high or low mapping
+  intensities compared to spot intenstieis, which typically occurs due to
+  outliers are analysing multi-phase pixels
+- `find_centers()`
+    - has more robust approach to find centroids powered by `find_outlier()`
+    - has additional arguments `phase` and `element`. Specifying them controls
+      which phases and elements are used to find outliers. They suppot tidyeval.
+      For example `element = c(Si, Ti, Al)` indicates the 3 elements are used,
+      and `element = c(-Si, -Ti, -Al)` indicates the 3 elements are NOT used.
+    - deprecates `fine_phase` which is generalized by `phase`.
+- `hmean()` and `vmean()` supports the objects with class `qntmap`, `qm_xmap`,
+  and `qm_cluster`.mPreviously they only supported the `qntmap` class object.
+- All layers for `ggplot2` are no longer pre-compiled at installation stage.
+  This is to avoid possible conflicts on updates on `ggplot2` after installing
+  `qntmap`.
 
 ## Internal changes
 
-- `pick()`, `mean()`, 
-- Fully follow tidyeval
-- Tidyverse related functions are imported in `qntmap-package.R`
-  to avoid importing the same funcions in multiple files.
+- `gghist.numeric()`
+    - draws border to be legible regardless of background colors.
+    - supports single column.
+- `correct_deadtime()` supports re-calculation of dead time.
+- `prioritize()` accepts unnamed vector.
+- Full support of tidyeval
+- Tidyverse and r-lib related functions are imported in `qntmap-package.R` to
+  avoid importing the same funcions in multiple files.
+- Tests run faster by exporting duplicated codes to `setup.R`.
 
 # qntmap 0.3.4
 
