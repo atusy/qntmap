@@ -1,19 +1,6 @@
-context("tidy_params()")
-
 if (interactive()) setwd(here::here("tests/testthat"))
 
-xmap <- read_xmap("minimal/.map/1")
-qnt <- read_qnt("minimal/.qnt", saving = FALSE)
-cluster <- cluster_xmap(xmap, find_centers(xmap, qnt, saveas = FALSE), saving = FALSE)
-epma <- tidy_epma_for_quantify(
-  qnt, xmap, cluster,
-  maps_x = attr(xmap, "pixel")[1],
-  maps_y = attr(xmap, "pixel")[2],
-  elements = qnt$elm$elem
-)
-
-AG <- find_AG(epma)
-B <- find_B(epma)
+if (!exists("xmap")) source("setup.R")
 
 test_that("Structure of a returned value by tidy_params()", {
   params <- tidy_params(AG = AG, B = B, qnt = qnt)

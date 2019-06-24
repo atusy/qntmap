@@ -2,31 +2,23 @@ context("test-find-AG.R")
 
 if (interactive()) setwd(here::here("tests/testthat"))
 
-xmap <- read_xmap("minimal/.map/1")
-qnt <- read_qnt("minimal/.qnt", saving = FALSE)
-cluster <- cluster_xmap(xmap, find_centers(xmap, qnt, saveas = FALSE), saving = FALSE)
-epma <- tidy_epma_for_quantify(
-  qnt, xmap, cluster,
-  maps_x = attr(xmap, "pixel")[1],
-  maps_y = attr(xmap, "pixel")[2],
-  elements = qnt$elm$elem
-)
+if (!exists("xmap")) source("setup.R")
 
 # lm_AG
 
 test_that("lm_AG(): returns data frame named at least by 'a', 'a_se', 'g', and 'g_se'", {
-  AG <- lm_AG(epma)
+  AG <- lm_AG(epma2)
   nm <- c("g", "g_se", "a", "a_se")
   expect_true("data.frame" %in% class(AG))
   expect_named(AG, nm)
-  expect_named(lm_AG(epma, elm), c("elm", nm))
-  expect_named(lm_AG(epma, elm, phase3), c("elm", "phase3", nm))
+  expect_named(lm_AG(epma2, elm), c("elm", nm))
+  expect_named(lm_AG(epma2, elm, phase3), c("elm", "phase3", nm))
 })
 
 # find_AG()
 
 test_that("find_AG(): returns a data frame without NA", {
-  AG <- find_AG(epma)
+  AG <- find_AG(epma2)
   expect_equal(nrow(AG), 4)
   expect_named(AG, c("elm", "phase3", "g", "g_se", "a", "a_se"))
   expect_true(all(!is.na(AG$g)))
@@ -38,7 +30,7 @@ test_that("find_AG(): returns a data frame without NA", {
 
 
 test_that("find_AG(): In case map should be divided into smaller maps (e.g., guidenet map)", {
-  AG <- find_AG(epma, not_quantified = "A")
+  AG <- find_AG(epma2, not_quantified = "A")
   expect_equal(nrow(AG), 6)
   expect_named(AG, c("elm", "phase3", "g", "g_se", "a", "a_se"))
   expect_true(all(!is.na(AG$g)))

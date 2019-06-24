@@ -1,9 +1,6 @@
 if (interactive()) setwd(here::here("tests/testthat"))
 
-xmap <- read_xmap("minimal/.map/1")
-qnt <- read_qnt("minimal/.qnt", saving = FALSE)
-cluster <- cluster_xmap(xmap, find_centers(xmap, qnt, saveas = FALSE), saving = FALSE)
-
+if (!exists("xmap")) source("setup.R")
 
 # maps_x = attr(xmap, "pixel")[1L]
 # maps_y = attr(xmap, "pixel")[2L]
@@ -12,17 +9,6 @@ cluster <- cluster_xmap(xmap, find_centers(xmap, qnt, saveas = FALSE), saving = 
 # fix = NULL
 # se = FALSE
 # saving = FALSE
-
-epma <- tidy_epma_for_quantify(
-  qnt, xmap, cluster,
-  maps_x = attr(xmap, "pixel")[1L],
-  maps_y = attr(xmap, "pixel")[2L],
-  elements = qnt$elm$elem
-)
-
-params <- tidy_params(find_AG(epma), find_B(epma), qnt)
-
-
 
 context("quantify.R - check_ABG()") # © 2018 JAMSTEC
 

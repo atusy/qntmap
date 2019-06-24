@@ -1,9 +1,9 @@
 if (interactive()) setwd(here::here("tests/testthat"))
 
-xmap <- read_xmap("minimal/.map/1")
+if (!exists("xmap")) source("setup.R")
+
 xmap2 <- xmap
 xmap2$Ti <- xmap$Si
-qnt <- read_qnt("minimal/.qnt", saving = FALSE)
 qnt2 <- list()
 qnt2$elm <- dplyr::bind_rows(
   qnt$elm, 
@@ -11,7 +11,6 @@ qnt2$elm <- dplyr::bind_rows(
 )
 qnt2$cnd <- qnt$cnd
 qnt2$cmp <- lapply(qnt$cmp, function(x) cbind(x, setNames(x, paste0(names(x), "_dummy"))))
-cluster <- cluster_xmap(xmap, find_centers(xmap, qnt, saveas = FALSE), saving = FALSE)
 
 test_that("Map analyzed more elements than spots", {
 

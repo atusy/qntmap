@@ -1,10 +1,8 @@
 context("test-tidy-epma.R")
 
-if (interactive()) setwd(here("tests/testthat"))
+if (interactive()) setwd(here::here("tests/testthat"))
 
-xmap <- read_xmap("minimal/.map/1")
-qnt <- read_qnt("minimal/.qnt")
-cls <- cluster_xmap(xmap, find_centers(xmap, qnt, saveas = FALSE), saving = FALSE)
+if (!exists("xmap")) source("setup.R")
 
 test_that("cluster = NULL", {
   epma <- tidy_epma(qnt, xmap)
@@ -14,7 +12,7 @@ test_that("cluster = NULL", {
 })
 
 test_that("cluster specified", {
-  epma <- tidy_epma(qnt, xmap, cls)
+  epma <- tidy_epma(qnt, xmap, cluster)
   expect_false(any(is.na(epma$cls)))
   expect_true(is.character(epma$cls))
   expect_false(any(is.na(epma$mem)))
@@ -24,7 +22,7 @@ test_that("cluster specified", {
 
 test_that("tidy_epma_for_quantify", {
   epma <- tidy_epma_for_quantify(
-    qnt, xmap, cls,
+    qnt, xmap, cluster,
     maps_x = 100L,
     maps_y = 100L,
     elements = qnt$elm$elem,
