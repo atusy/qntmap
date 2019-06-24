@@ -45,13 +45,13 @@
 #'   theme theme_classic
 #' @importFrom pipeR %>>%
 #' @importFrom purrr map map2 map_at map_dbl map_if modify_at pmap walk2
-#' @importFrom rlang !! .data
+#' @importFrom rlang !! .data enquo
 #' @importFrom stringr 
 #'   str_c str_detect str_extract str_replace str_replace_all str_subset
 #' @importFrom tidyr
 #'   gather separate spread unnest
 #' @importFrom tidyselect
-#'   ends_with everything matches starts_with
+#'   ends_with everything matches starts_with vars_select
 #'   
 NULL
 
