@@ -4,11 +4,6 @@ if (interactive()) setwd(here::here("tests/testthat"))
 
 if (!exists("xmap")) source("setup.R")
 
-test_that(
-  "lm_B() has arguments same as find_outlier except `...` and `remove_outlier`", {
-  expect_identical(formals(lm_B)[-(2:3)], formals(find_outlier)[])
-})
-
 test_that("lm_B(): If `isTRUE(all(mem == 0))`, then coef and vcov return NA", {
   B <- lm_B(mutate(epma2, mem = 0))
   expect_true(all(is.na(B$b)))
@@ -30,6 +25,11 @@ test_that("lm_B(): returns data frame named at least by 'b' and 'b_se'", {
 })
 
 # find_B()
+
+test_that(
+  "find_B() has arguments same as find_outlier except remove_outlier in find_B", {
+    expect_identical(formals(find_B)[-2L], formals(find_outlier)[])
+})
 
 test_that("find_B(): returns a data frame", {
   B <- find_B(epma2)

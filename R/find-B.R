@@ -1,11 +1,29 @@
 #' find B
 #' @noRd
 #' @param epma A tidy epma data output by [`tidy_epma()`]
-find_B <- function(epma) {
+find_B <- function(
+  epma, remove_outlier = TRUE, phase = everything(), element = everything(),
+  interval = c("prediction", "tukey"), method = c("rq", "lsfit", "median"), 
+  percentile = 0.99, fine_phase = NULL
+) {
   epma <- epma[
     !is.na(epma$stg),
     # c("elm", "pkint", "mapint", "mem", "stg", "dwell", "beam_map")
   ]
+  
+  epma <- (if (remove_outlier) {
+    epma %>>%
+      group_by(.data$stg) %>>%
+      group_modify(~ {
+        find_outlier(
+          .x, !!enquo(phase), !!enquo(element),
+          interval, method, percentile, fine_phase
+        )
+      })
+  } else {
+    mutate(epma, outlier = FALSE)
+  }) %>>%
+    filter(!.data$outlier, is.finite(.data$pkint * .data$mapint))
 
   B <- lm_B(epma, .data$elm, .data$stg)
   kept <- is.finite(B$b + B$b_se)
@@ -33,20 +51,9 @@ find_B <- function(epma) {
 #' @param ... Grouping variables in NSE.
 #' @importFrom stats coef lm vcov
 lm_B <- function(
-  epma, ..., remove_outlier = TRUE, phase = everything(), element = everything(),
-  interval = c("prediction", "tukey"), method = c("rq", "lsfit", "median"), 
-  percentile = 0.99, fine_phase = NULL
+  epma, ...
 ) {
-
-  (if (remove_outlier) {
-    find_outlier(
-      epma, !!enquo(phase), !!enquo(element),
-      interval, method, percentile, fine_phase
-    )
-  } else {
-    mutate(epma, outlier = FALSE)
-  }) %>>%
-    filter(!.data$outlier, is.finite(.data$pkint * .data$mapint)) %>>%
+  epma %>>%
     group_by(...) %>>%
     summarize(
       fit = list(lm(.data$pkint ~ 0 + .data$mapint, weights = .data$mem)),
