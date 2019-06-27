@@ -116,7 +116,7 @@ find_whiskers <- function(x, phase = NULL, ...) {
 #' @param phase character vector
 #' @noRd
 find_poisson_prediction_intervals <- function(
-  x, phase, percentile = .99, method = c("rq", "lsfit", "median"), ...
+  x, phase = NULL, percentile = .99, method = c("rq", "lsfit", "median"), ...
 ) {
   method <- match.arg(method)
   lo = (1 - percentile) / 2
