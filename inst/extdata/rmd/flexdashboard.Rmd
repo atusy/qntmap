@@ -8,15 +8,51 @@ output:
 params:
   xmap: NULL
   qnt: NULL
-  deadtime: 1300
+  deadtime: 1100
 runtime: shiny
 ---
 
-```{css, echo = FALSE}
+```{css css, echo = FALSE}
+* {box-sizing: border-box;}
+
+/* splitLayout */
+.shiny-split-layout>div {overflow: visible;}
+
+/* radioButtons */
 .btn.radiobtn.btn-secondary.active {background: #2780e3; color: white;}
+
+/* pickerInput */
+.btn.dropdown-toggle.form-control.shiny-bound-input {border-color: rgb(204, 204, 204);}
+.chart-wrapper .chart-stage {overflow: visible;}
+.btn:hover {color: #333333;}
+    
+/* dropdown */
+.btn-default,
+.btn-default:hover,
+.btn-default:active,
+.btn-default:focus,
+.btn-default:focus:hover,
+.btn-default:focus:active {
+  color: #333333;
+  background-color: #DDDDDD;
+  border-color: #DDDDDD;
+}
+.cssgrid .sw-dropdown {
+  align-self: end;
+  margin-bottom: 15px;
+}
 ```
 
-```{r setup, include=FALSE}
+```{r}
+example <- system.file(package = "qntmap", "extdata", "minimal")
+example <- "/home/rstudio/Documents/Univ/Data_ND/epma/WDX/JGb1a_170912/"
+deadtime <- params$deadtime * is.character(params$xmap)
+xmap_dir <- `if`(is.null(params$xmap), file.path(example, ".map/1"), params$xmap)
+qnt_dir <- `if`(is.null(params$qnt), file.path(example, ".qnt"), params$qnt)
+```
+
+
+```{r setup, include=FALSE, cache=TRUE}
 knitr::opts_chunk$set(echo = FALSE, cache = TRUE)
 library(DT)
 library(dplyr)
@@ -33,18 +69,13 @@ library(shinyWidgets)
 library(tibble)
 library(tidyr)
 
-example <- system.file(package = "qntmap", "extdata", "minimal")
-# example <- "/home/rstudio/Documents/Univ/Data_ND/epma/WDX/JGb1a_170912/"
-dir_xmap <- `if`(is.null(params$xmap), file.path(example, ".map/1"), params$xmap)
-dir_qnt <- `if`(is.null(params$qnt), file.path(example, ".qnt"), params$qnt)
-
 # Read demo files if params xmap and qnt are unset
 .env <- new.env()
-xmap0 <- read_xmap(dir_xmap, DT = params$deadtime)
+xmap0 <- read_xmap(xmap_dir, DT = deadtime)
 xmap <- function() xmap0
-# xmap <- reactive(read_xmap(dir_xmap, DT = params$deadtime))
-qnt <- read_qnt(dir_qnt, saving = FALSE)
-epma <- reactive(tidy_epma(qnt, xmap()) %>>% qntmap:::prioritize("id"))
+# xmap <- reactive(read_xmap(xmap_dir, DT = deadtime))
+qnt <- read_qnt(qnt_dir, saving = FALSE)
+epma <- tidy_epma(qnt, xmap()) %>>% qntmap:::prioritize("id")
 .margin <- c(-.5, .5)
 range_x <- range(xmap()$x)
 range_y <- range(xmap()$y)
@@ -105,6 +136,17 @@ summarize_click <- function(data, click, .env, .key) {
     select("ID", "Area", "x", "y", everything()) %>>%
     bind_rows(.env[[.key]]$summary)
   .env[[.key]]$summary
+}
+
+picker_input <- function(
+  inputId, label = NULL, choices,
+  options = list(style = "form-control shiny-bound-input"),
+  ...
+) {
+  pickerInput(
+    inputId = inputId, label = label, choices = choices, 
+    options = options, ...
+  )
 }
 
 select_action <- function(id) {
@@ -187,22 +229,42 @@ observe_action <- function(id, input, ranges, range_x, range_y) {
   })
 }
 
-select_element_and_range <- function(id, choices, label = "Element") {
+menu_map <- function(
+  id, choices, label = "Element", dropdown = NULL
+) {
   ids <- paste0(id, "_", c("elem", "min", "max"))
-  splitLayout(
+  cssgrid::grid_layout(
     selectInput(
-      ids[[1L]], label = label, choices = choices, selectize = FALSE
+      ids[[1L]], label = label, choices = choices, selected = choices[[1L]],
+      width = "100%", selectize = FALSE
     ),
-    numericInput(ids[[2L]], "Min", value = NA_real_),
-    numericInput(ids[[3L]], "Max", value = NA_real_),
-    cellWidths = 100
+    numericInput(ids[[2L]], "Min", value = NA_real_, width = "100%"),
+    numericInput(ids[[3L]], "Max", value = NA_real_, width = "100%"),
+    dropdown,
+    cols = "auto 1fr 1fr auto",
+    column_gap = "3px",
+    style = "width: 100%;",
+    class = "cssgrid"
   )
 }
 
+drop_map <- function(id, ...) {
+  #div(
+    dropdown(
+    picker_input(
+      paste0(id, "_color"), label = "Color", 
+      choices = c("viridis", "gray"),
+      selected = "viridis", width = "100%"
+    ),
+    ...,
+    circle = FALSE, right = TRUE, width = "200px"
+  )#, style = "align-self: end; margin-bottom: 15px;")
+}
+
 select_color <- function(id) {
-  selectInput(
+  picker_input(
     paste0(id, "_color"), label = "Color", 
-    choices = c("viridis", "gray"), selectize = FALSE
+    choices = c("viridis", "gray"), selected = "viridis"
   )
 }
 
@@ -243,13 +305,12 @@ squish_react <- function(id, map_reactive, zlim_reactive, input) {reactive({
 
 # Map
 
-## xmap-menu {data-width=200}
+## xmap-menu {.tabset data-width=200}
 
-### Menu
+### Visual
 
 ```{r xmap-menu}
-select_element_and_range("xmap", .env$xmap$elint)
-select_color("xmap")
+menu_map("xmap", .env$xmap$elint, dropdown = drop_map("xmap"))
 select_action("xmap_action")
 ```
 
@@ -312,7 +373,7 @@ renderPlot(xmap_hist())
 renderDT(xmap_df())
 ```
 
-### Analytical conditions
+### Meta data {#xmap-meta-data}
 
 ```{r cnd-map}
 datatable(tribble(
@@ -327,10 +388,9 @@ datatable(tribble(
   "Pixel size", attr(xmap(), "pixel")[[1L]], "μm",
   "Step size", attr(xmap(), "step")[[1L]], "μm",
   "Instrument", attr(xmap(), "instrument"), "",
-  "Path", "dir_xmap", ""
+  "Path", xmap_dir, ""
 ))
 ```
-
 
 # Spots
 
@@ -338,15 +398,26 @@ datatable(tribble(
 
 ### Phase list
 
-- Edit by double click a cell
-- Confirm by Ctrl + Enter
+```{r qnt-phase-list-actions, eval = FALSE}
+splitLayout(
+  actionButton(
+    "qnt_phase_list_down", label = "Download",
+    style = "background: #EE0000;"
+  ),
+  actionButton(
+    "qnt_phase_list_up", label = "Upload", style = "background: #EE0000;"
+  )
+)
+```
 
-```{r, cache=FALSE}
+
+```{r qnt-phase-list-view, cache=FALSE}
 .env$qnt$phase_list <- transmute(qnt$cnd, id, phase, use = TRUE)
 output$qnt_phase_list <- renderDT(
   .env$qnt$phase_list,
   editable = list(target = "column", disable = list(columns = 0:1)),
-  server = TRUE
+  server = TRUE,
+  caption = "Edit by double click a cell. Confirm by Ctrl + Enter."
 )
 DTOutput("qnt_phase_list")
 observeEvent(input$qnt_phase_list_cell_edit, {
@@ -403,7 +474,7 @@ datatable(qnt$cmp$bgm)
 
 # Check
 
-## check-menu {data-width=200}
+## check-menu {data-width=200, .tabset}
 
 ### Find outliers
 
@@ -416,15 +487,14 @@ they are analyzing multiple phases during mapping.
 
 
 ```{r select-outliers}
-selectInput(
+picker_input(
   inputId = "outlier_elint",
   label = "Element to plot", 
   choices = .env$qmap$elint,
-  selected = .env$qmap$elint[[1L]],
-  selectize = FALSE
+  selected = .env$qmap$elint[[1L]]
 )
 
-pickerInput(
+picker_input(
   inputId = "outlier",
   label = "Phases being outliers", 
   choices = sort(unique(qnt$cnd$phase)),
@@ -465,7 +535,7 @@ outlier_gg_layers <- list(
 )
 
 outlier_plot <- reactive({
-  epma() %>>%
+  epma %>>%
     filter(elint == !!input$outlier_elint) %>>%
     mutate(
       good = !(phase %in% !!input$outlier),
@@ -581,7 +651,7 @@ actionButton(
   "qmap_run", label = "Quantify Maps", width = "90%",
   style = "background: #EE0000;"
 )
-select_element_and_range("qmap", .env$qmap$elem)
+menu_map("qmap", .env$qmap$elem)
 select_color("qmap")
 select_action("qmap_action")
 ```
@@ -719,6 +789,6 @@ epma %>>%
 
 ### Table
 
-```{r tidy-epma}
-renderDT(epma())
+```{r tidy-epma, eval = TRUE, cache=FALSE}
+renderDT(epma)
 ```

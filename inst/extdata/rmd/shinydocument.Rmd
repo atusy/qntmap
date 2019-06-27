@@ -1,94 +1,96 @@
 ---
-title: "qntmap"
 runtime: shiny
-output: html_document
+output: 
+  flexdashboard::flex_dashboard: default
+  html_document: default
 ---
 
-```{r setup, include=FALSE}
+```{r, include = FALSE}
 knitr::opts_chunk$set(echo = FALSE)
-library(shiny)
-library(qntmap)
 ```
 
-```{r data, include = FALSE}
-td <- tempdir()
-file.copy(
-  system.file(package = "qntmap", "extdata", "minimal"),
-  td,
-  recursive = TRUE
-)
-xmap <- qntmap::read_xmap(file.path(td, "minimal", ".map", "1"))
-.margin <- c(-.5, .5)
-```
+# foo
+
+## bar
 
 
-```{r select-element}
-splitLayout(
-  selectInput(
-    "elem", label = "Element", choices = names(xmap),
-    selectize = FALSE
-  ),
-  numericInput("min", "Min", value = NA_real_),
-  numericInput("max", "Max", value = NA_real_),
-  selectInput(
-    "color", label = "Color", choices = c("viridis", "gray"),
-    selectize = FALSE
+### baz
+
+```{r, eval = TRUE}
+library(shinyWidgets)
+picker_input <- function(
+  inputId, label = NULL, choices,
+  options = list(style = "form-control shiny-bound-input"),
+  ...
+) {
+  pickerInput(
+    inputId = inputId, label = label, choices = choices, 
+    options = options, ...
   )
-)
-```
+}
 
-
-```{r}
-zlim <- reactive({
-  zrange <- range(xmap[[input$elem]])
-  c(
-    `if`(is.na(input$min) || input$min < zrange[1], zrange[1], input$min),
-    `if`(is.na(input$max) || input$max > zrange[2], zrange[2], input$max)
+select_element_and_range <- function(
+  id, choices, label = "Element", dropdown = NULL
+) {
+  ids <- paste0(id, "_", c("elem", "min", "max"))
+  cssgrid::grid_layout(
+    picker_input(
+      ids[[1L]], label = label, choices = choices, selected = choices[[1L]],
+      width = "100%"
+    ),
+    numericInput(ids[[2L]], "Min", value = NA_real_, width = "100%"),
+    numericInput(ids[[3L]], "Max", value = NA_real_, width = "100%"),
+    dropdown,
+    cols = "1fr 1fr 1fr auto",
+    column_gap = "5px",
+    style = "width: 100%;"
   )
-})
+}
+
+dropdown_map <- function(id, ...) {
+  div(dropdown(
+    picker_input(
+      paste0(id, "_color"), label = "Color", 
+      choices = c("viridis", "gray"), selected = "viridis"
+    ),
+    ...,
+    circle = FALSE, right = TRUE, width = "auto"
+  ), style = "align-self: end; margin-bottom: 15px;")
+}
+select_element_and_range("test", "test", dropdown = dropdown_map("xmap"))
 ```
 
 
-```{r output}
-output$heatmap <- renderPlot(
-  plot(xmap, input$elem, interactive = FALSE, colors = input$color, zlim = zlim())
-)
-output$histogram <- renderPlot(
-  qntmap:::gghist.numeric(
-    unlist(xmap[[input$elem]], use.names = FALSE),
-    colors = input$color
-  )
-)
-```
 
 
-```{r}
-tabsetPanel(type = "tabs",
-  tabPanel(
-    "Map", 
-    plotOutput(
-      "heatmap",
-      dblclick = dblclickOpts(id = "plot_dbl_click")
-    )
-  ),
-  tabPanel("Histogram", plotOutput("histogram"))
-)
-```
 
 
-## Dboule click
 
-```{r}
-renderPrint({
-  cat("ダブルクリックした箇所の情報:\n")
-  str(input$plot_dbl_click)
-})
-```
 
-```{r}
-qntmap:::gghist.numeric(
-  unlist(xmap[["Si"]], use.names = FALSE),
-  colors = "viridis"
-)
-```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
