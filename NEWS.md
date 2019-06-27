@@ -3,6 +3,7 @@
 ## On going
 
 - `lm_AG()` and `lm_B()` performs regressions after omitting outliers.
+- Add `remove_outliers` option to quantify and find_centers
 - `tidy_epma` returns `qm_epma` class object.
 - `autoplot.qm_epma`
 
@@ -54,7 +55,7 @@
 
 - `gghist.numeric()`
     - draws border to be legible regardless of background colors.
-    - supports single column.
+    - supports a histogram with a single column.
 - `correct_deadtime()` supports re-calculation of dead time.
 - `prioritize()` accepts unnamed vector.
 - Full support of tidyeval
