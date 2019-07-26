@@ -33,6 +33,9 @@ p {margin-top: 10px;}
 
 /* radioButtons */
 .btn.radiobtn.btn-secondary.active {background: #2780e3; color: white;}
+
+/* picker input */
+.btn.dropdown-toggle.form-control.shiny-bound-input {border-color: rgb(204, 204, 204);}
 "
 )
 

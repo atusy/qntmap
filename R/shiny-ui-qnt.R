@@ -10,7 +10,7 @@ shiny_ui_qnt <- function(qnt_dir) {
             shiny::actionButton("qnt_phase_list_confirm", label = "Confirm"),
             shiny::actionButton("qnt_phase_list_down", label = "Download"),
             shiny::actionButton("qnt_phase_list_up", label = "Upload"),
-            cols = "auto",
+            cols = "auto", gap = "2px",
             style = "margin-bottom: 10px;"
           ),
           DT::DTOutput("qnt_phase_list")
