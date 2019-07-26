@@ -16,21 +16,21 @@
 #'
 #'
 tidy_epma <- function(
-                      qnt,
-                      xmap, # NA,
-                      cluster = NULL,
-                      subcluster = TRUE,
-                      suffix = "_.*"
+  qnt,
+  xmap, # NA,
+  cluster = NULL,
+  subcluster = TRUE,
+  suffix = "_.*"
 ) {
-
+  
   # load mapping conditions
   pos <- attributes(xmap)[c("start", "pixel", "step")]
   beam <-
     setNames(attributes(xmap)[c("current", "dwell")], c("beam_map", "dwell"))
   inst <- attributes(xmap)[["instrument"]]
-
+  
   # tidy data
-
+  
   ## mm -> px
   qnt$cnd <- qnt$cnd[!is.na(qnt$cnd$phase), ] %>>%
     mutate(
@@ -48,13 +48,13 @@ tidy_epma <- function(
       phase_grouped = str_replace(.data$phase, "_.*", "")
     ) %>>%
     distinct(.data$nr0, .keep_all = TRUE)
-
+  
   qnt$elm$dwell <- beam[["dwell"]] * 1e-3
   qnt$elm$beam_map <- beam[["beam_map"]]
-
+  
   ## Error if
   if (all(is.na(qnt$cnd$nr))) stop("No points are quantified in mapping area.")
-
+  
   ## Let's join
   qnt$cmp <- as.list(xmap)[qnt$elm$elint] %>>%
     setNames(qnt$elm$elem) %>>%
@@ -69,7 +69,7 @@ tidy_epma <- function(
     bind_rows(.id = ".var") %>>%
     gather("elm", ".val", -".var", -"id") %>>%
     spread(".var", ".val")
-
+  
   ## join cmp, cnd, elem in qnt
   ## calculate 95% ci of data
   clustered <- !is.null(cluster)
@@ -80,7 +80,7 @@ tidy_epma <- function(
       mem = !! `if`(clustered, cluster$membership[qnt$cnd$nr], NA_real_),
       elm = !! list(qnt$elm)
     ) %>>%
-    unnest %>>%
+    unnest("elm") %>>%
     rename(elm = .data$elem) %>>%
     left_join(qnt$cmp, by = c("id", "elm")) %>>%
     mutate(

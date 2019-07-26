@@ -14,7 +14,7 @@ shiny_server <- function() {
     xmap_elint <- reactive(setdiff(names(xmap_data()), c("x", "y")))
     
     output$xmap_elem_selecter <- renderUI(select_elem("xmap", "Element", xmap_elint))
-
+    
     output$xmap_meta <- DT::renderDT(
       xmap_meta(xmap_data, input), options = list(pageLength = 11L)
     )
@@ -26,11 +26,11 @@ shiny_server <- function() {
     ranges <- shiny::reactiveValues()
     summary <- shiny::reactiveValues()
     observe_action("xmap", input, ranges, range_x, range_y, summary, xmap_data)
-
+    
     output$xmap_message_action <- shiny::renderText(
       message_action[[input$xmap_action]]
     )
-
+    
     ## X-ray maps: summary
     
     output$xmap_summary <- DT::renderDT(summary$xmap)
@@ -89,9 +89,15 @@ shiny_server <- function() {
     
     outlier_elint <- reactive(intersect(xmap_elint(), qnt_elint()))
     output$outlier_elem_selecter <- renderUI(select_elem(
-      "outlier_elint", "Element to plot", outlier_elint
+      "outlier", "Element to plot", outlier_elint
     ))
     output$outlier_phase <- renderUI(select_phase(qnt_data))
+    outlier_epma_data <- reactive(tidy_epma(qnt_data(), xmap_data()))
+    outlier_plot_reactive <- outlier_gg_react(outlier_epma_data, input)
+    output$outlier_plot <- renderPlot(outlier_plot_reactive())
+
+
+
   }
 }
 

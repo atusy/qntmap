@@ -34,15 +34,16 @@
 #'   aes annotation_raster autoplot
 #'   coord_cartesian coord_fixed
 #'   element_blank element_rect
-#'   geom_bar geom_col geom_step geom_tile
+#'   geom_bar geom_col geom_step geom_smooth geom_tile
 #'   ggplot ggsave guide_colorbar guides
 #'   labs
 #'   position_nudge
+#'   scale_alpha_identity scale_color_discrete
 #'   scale_color_gradient scale_color_manual scale_color_viridis_c
 #'   scale_fill_gradient scale_fill_manual scale_fill_viridis_c
 #'   scale_y_reverse
 #'   stat
-#'   theme theme_classic
+#'   theme theme_classic theme_minimal
 #' @importFrom pipeR %>>%
 #' @importFrom purrr map map2 map_at map_dbl map_if modify_at pmap walk2
 #' @importFrom rlang !! .data enquo
