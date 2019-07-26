@@ -4,10 +4,9 @@
 \alias{quantify}
 \title{Quantify X-ray maps}
 \usage{
-quantify(xmap, qnt, cluster, subcluster = TRUE, suffix = "_.*",
-  maps_x = attr(xmap, "pixel")[1L], maps_y = attr(xmap, "pixel")[2L],
-  fine_phase = NULL, fine_th = 0.9, fix = NULL, se = FALSE,
-  saving = TRUE)
+quantify(xmap, qnt, cluster, maps_x = attr(xmap, "pixel")[1L],
+  maps_y = attr(xmap, "pixel")[2L], fine_phase = NULL, fine_th = 0.9,
+  fix = NULL, se = FALSE, saving = TRUE)
 }
 \arguments{
 \item{xmap}{\code{qm_xmap} class object returned by \code{\link[=read_xmap]{read_xmap()}}.}
@@ -15,11 +14,6 @@ quantify(xmap, qnt, cluster, subcluster = TRUE, suffix = "_.*",
 \item{qnt}{\code{qm_qnt} class object returned by \code{\link[=read_qnt]{read_qnt()}}.}
 
 \item{cluster}{\code{qm_cluster} class object returned by \code{\link[=cluster_xmap]{cluster_xmap()}}.}
-
-\item{subcluster}{Calculate parameters for
-sub-clusters (TRUE) or for super-clusters (FALSE).}
-
-\item{suffix}{A regular expression of suffix to identify sub-clusters.}
 
 \item{maps_x, maps_y}{Sizes of maps along x- and y-axes comprising guide net map.
 (default: \code{NULL}).}

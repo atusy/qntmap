@@ -3,8 +3,27 @@
 #' @importFrom easycsv choose_dir
 #' @importFrom utils menu select.list
 #' @export
-qntmap <- function() {
+qntmap <- function(shiny = TRUE, xmap_dir = NULL, qnt_dir = NULL, deadtime = 1100) {
+  if (shiny) {
+    example <- system.file(package = "qntmap", "extdata", "minimal")
+    # example <- "/home/rstudio/Documents/Univ/Data_ND/epma/WDX/JGb1a_170912/"
+    
+    if (is.null(xmap_dir)) {
+      deadtime <- 0
+      xmap_dir <- file.path(example, ".map/1")
+    }
+    if (is.null(qnt_dir)) qnt_dir <- file.path(example, ".qnt")
 
+    shiny::shinyApp(
+      shiny_ui(xmap_dir = xmap_dir, qnt_dir = qnt_dir, deadtime = deadtime), 
+      shiny_server()
+    )
+  } else {
+    qntmap_console()
+  }
+}
+
+qntmap_console <- function() {
   cd <- getwd()
   on.exit(setwd(cd))
 
