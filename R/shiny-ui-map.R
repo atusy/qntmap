@@ -6,7 +6,6 @@ shiny_ui_map <- function(xmap_dir, deadtime) {
         # Visual
         tab_panel(
           "Visual",
-# shiny::verbatimTextOutput("test_print"),
           menu_map("xmap", dropdown = drop_map("xmap")),
           select_action("xmap_action"),
           tags$p(shiny::textOutput("xmap_message_action")),
@@ -58,6 +57,3 @@ shiny_ui_map <- function(xmap_dir, deadtime) {
     )
   )
 }
-
-
-# shiny::verbatimTextOutput("print")

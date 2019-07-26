@@ -41,7 +41,9 @@ shiny_ui <- function(xmap_dir, qnt_dir, deadtime) {
     paste("qntmap", utils::packageVersion("qntmap")),
     id = "nav",
     header = css_page,
-    shiny_ui_map(xmap_dir = xmap_dir, deadtime = deadtime)
+    shiny_ui_map(xmap_dir = xmap_dir, deadtime = deadtime),
+    shiny_ui_qnt(qnt_dir),
+    shiny_ui_check()
   )
 }
 
