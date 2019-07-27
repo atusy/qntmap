@@ -46,7 +46,7 @@ find_outlier <- function(
     tukey = find_whiskers,
     prediction = find_poisson_prediction_intervals
   )[[match.arg(interval)]]
-
+  
   .element <- vars_select(unique(epma$elint), !!enquo(element))
   
   if (!is.null(fine_phase)) {
@@ -60,9 +60,9 @@ find_outlier <- function(
     mutate(
       outlier = any(
         (.data$pkint.H < .data$pkint.L_est | .data$pkint.H_est < .data$pkint.L) &
-        (.data$mapint.H < .data$mapint.L_est | .data$mapint.H_est < .data$mapint.L) &
-        (.data$elint %in% !!.element) |
-        (.data$phase %nin% !!.phase)
+          (.data$mapint.H < .data$mapint.L_est | .data$mapint.H_est < .data$mapint.L) &
+          (.data$elint %in% !!.element) |
+          (.data$phase %nin% !!.phase)
       )
     ) %>>%
     ungroup %>>%

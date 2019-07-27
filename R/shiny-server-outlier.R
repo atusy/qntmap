@@ -1,30 +1,42 @@
-outlier_gg_layers <- list(
-  aes(
-    .data$mapint, .data$pkint, color = .data$phase,
-    xmin = .data$mapint.L, xmax = .data$mapint.H,
-    ymin = .data$pkint.L, ymax = .data$pkint.H,
-    weight = .data$weight, alpha = .data$alpha
-  ),
-  geom_smooth(formula = y ~ 0 + x, color = "gray10", se = FALSE, method = "lm"),
-  ggAtusy::stat_err(),
-  labs(
-    x = "Map Peak [cps/uA]", y = "Spot Peak [cps/uA]"
-  ),
-  scale_color_discrete(name = "Phase"),
-  scale_alpha_identity(),
-  theme_minimal(base_size = 16)
-)
-
-outlier_gg_react <- function(epma, input) {reactive({
-  epma() %>>%
-    filter(elint == !!input$outlier_elem) %>>%
-    mutate(
-      good = !(.data$phase %in% !!input$outlier_phase),
-      weight = as.integer(.data$good),
-      alpha = .data$weight * .7 + .3
+outlier_gg_react <- function(
+  epma, input, percentile = .95, interval = "prediction"
+) {reactive({
+  .phase <- setdiff(unique(epma()$phase), input$outlier_phase)
+  epma() %>>% 
+    mutate(fine_phase = phase %in% !!input$outlier_phase) %>>%
+    find_outlier(
+      phase = !!.phase, element = everything(),
+      percentile = percentile, interval = interval
     ) %>>%
-    filter((!!input$outlier_action != "Filter") | .data$good) %>>%
-    ggplot() + 
-    ggtitle(input$outlier_elem) +
-    outlier_gg_layers
+    filter(
+      elint == !!input$outlier_elem, is.finite(.data$mapint * .data$pkint)
+    ) %>>%
+    mutate(facet = "All") %>>%
+    bind_rows(
+      filter(., !.data$outlier & !.data$fine_phase) %>>% 
+        find_outlier(
+          percentile = percentile, interval = interval
+        ) %>>% 
+        mutate(facet = "Filtered")
+    ) %>>%
+    ggplot(aes(mapint, pkint)) +
+    geom_ribbon(
+      aes(ymin = .data$pkint.L_est, ymax = .data$pkint.H_est),
+      color = "transparent", fill = "gray80"
+    ) +
+    ggAtusy::stat_err(aes(
+      xmin = .data$mapint.L, xmax = .data$mapint.H,
+      ymin = .data$pkint.L, ymax = .data$pkint.H,
+      color = .data$phase
+    )) +
+    geom_smooth(formula = y ~ 0 + x, se = FALSE, color = "red", method = "lm") +
+    geom_quantile(formula = y ~ 0 + x, quantiles = .5, color = "blue") +
+    facet_wrap(
+      vars(.data$facet), 
+      scales = if (input$outlier_scales == "Shared") "fixed" else "free"
+    ) +
+    scale_color_discrete(name = "Phase") +
+    scale_alpha_identity() +
+    theme_bw(base_size = 16) +
+    labs(x = "Mapped peak intensity [cps/uA]", y = "Spot peak intensity [cps/uA]")
 })}

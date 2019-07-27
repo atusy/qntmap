@@ -10,10 +10,10 @@ shiny_ui_check <- function() {
           shiny::uiOutput("outlier_elem_selecter"),
           shiny::uiOutput("outlier_phase"),
           shinyWidgets::radioGroupButtons(
-            inputId = "outlier_action",
-            label = "Appearance of outliers",
-            choices = c("Desaturate", "Filter"),
-            selected = "Desaturate",
+            inputId = "outlier_scales",
+            label = "Ranges of axes",
+            choices = c("Shared", "Individual"),
+            selected = "Shared",
             status = "secondary",
             individual = TRUE
           )

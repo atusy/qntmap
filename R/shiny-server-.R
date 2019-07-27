@@ -1,7 +1,6 @@
 shiny_server <- function() {
   .margin <- c(-.5, .5)
-  qnt_phase_list_csv <- tempfile(fileext = ".csv")
-  
+
   function(input, output, session) {
     
     # X-ray maps
@@ -15,9 +14,7 @@ shiny_server <- function() {
     
     output$xmap_elem_selecter <- renderUI(select_elem("xmap", "Element", xmap_elint))
     
-    output$xmap_meta <- DT::renderDT(
-      xmap_meta(xmap_data, input), options = list(pageLength = 11L)
-    )
+    output$xmap_meta <- DT::renderDT(xmap_meta(xmap_data, input), options = DT_options)
     
     ## X-ray mpas: action
     
@@ -133,15 +130,24 @@ shiny_server <- function() {
       cluster_out(cluster_xmap(xmap_data(), centroid()))
     })
     
-    cluster_zlim <- reactive({
+    cluster_out_for_plot <- reactive({
       req(cluster_out())
-      unique(cluster_out()$cluster)
+      if (input$cluster_subcluster == "Asis") {
+        cluster_out()
+      } else {
+        group_subclusters(cluster_out(), input$cluster_suffix)
+      }
+    })
+    
+    cluster_zlim <- reactive({
+      req(cluster_out_for_plot())
+      unique(cluster_out_for_plot()$cluster)
     })
     
     cluster_img <- reactive({
-      req(cluster_out())
+      req(cluster_out_for_plot())
       as_img(
-        lookup[["discrete"]](cluster_out()$cluster),
+        lookup[["discrete"]](cluster_out_for_plot()$cluster),
         range_y()[2L], range_x()[2L]
       )
     })

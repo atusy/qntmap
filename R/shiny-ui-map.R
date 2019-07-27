@@ -28,11 +28,14 @@ shiny_ui_map <- function(xmap_dir, deadtime) {
             "xmap_read", label = "Reload"
           ),
           tags$p(
-            "Check metadata if data are correctly loaded"
+            "Check",
+            tags$a("metadata", href = "#xmap_tab_metadata"),
+            "if data are correctly loaded"
           )
         )
       ),
       main_tabset_panel(
+        id = "tabset_xmap",
         tab_panel(
           "Map",
           shiny::plotOutput(
@@ -47,10 +50,12 @@ shiny_ui_map <- function(xmap_dir, deadtime) {
         ),
         tab_panel(
           "Summary",
+          tags$div(id = "xmap_tab_summary"),
           DT::DTOutput("xmap_summary", height = "100%")
         ),
         tab_panel(
           "Metadata",
+          tags$div(id = "xmap_tab_metadata"),
           DT::DTOutput("xmap_meta")
         )
       )

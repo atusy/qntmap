@@ -10,6 +10,20 @@ shiny_ui_cluster <- function() {
             "cluster_run", label = "Run cluster analysis", width = "90%",
             style = "background: #EE0000;"
           ),
+          shinyWidgets::radioGroupButtons(
+            inputId = "cluster_subcluster",
+            label = "Appearance of subclusters",
+            choices = c("Asis", "Integrated"),
+            selected = "Asis",
+            status = "secondary",
+            individual = TRUE
+          ),
+          shiny::textInput(
+            "cluster_suffix", 
+            "Suffix of subclusters in Regex",
+            value = "_.*",
+            width = "100%"
+          ),
           select_action("cluster_action"),
           shiny::tableOutput("cluster_summary_latest")
         )
