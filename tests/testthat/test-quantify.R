@@ -77,8 +77,8 @@ test_that("quantify() doubles result if alpha is doubled by fix parameter", { # 
 
   ratios <- unique(unlist(.qmap2[-(1:2)] / .qmap1[-(1:2)]))
   
-  expect_true(all(ratios[!is.nan(ratios)] - 2 < 1e-10))
-
+  expect_true(all(ratios[!is.nan(ratios)] - 2 < 1e-2))
+  
   unlink(csv)
 })
 
