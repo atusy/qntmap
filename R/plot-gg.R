@@ -16,7 +16,7 @@ gghist <- function(x, ...) {
 #' @param colors
 #'   "viridis" or "gray"
 #' @noRd
-gghist.numeric <- function(x, .min = NA_real_, .max = NA_real_, colors) {
+gghist.numeric <- function(x, .min = NA_real_, .max = NA_real_, colors, base_size = 11) {
   range_x <- range(x, na.rm = TRUE)
   if (!is.finite(.min) || .min < range_x[1]) .min <- range_x[1]
   if (!is.finite(.max) || .max > range_x[2]) .max <- range_x[2]
@@ -36,7 +36,7 @@ gghist.numeric <- function(x, .min = NA_real_, .max = NA_real_, colors) {
     geom_col(data = rbind(df_col, df_lim), show.legend = FALSE, position = "identity") +
     scale_fill[[match.arg(colors)]]() +
     scale_color[[match.arg(colors)]]() +
-    gghist_theme(ylim = c(0L, max(freq$counts) + 1L))
+    gghist_theme(ylim = c(0L, max(freq$counts) + 1L), base_size = base_size)
 }
 
 #' @rdname gghist
@@ -47,19 +47,19 @@ gghist.character <- function(x, ...) {
 
 #' @rdname gghist
 #' @noRd
-gghist.factor <- function(x, ...) {
+gghist.factor <- function(x, base_size = 11, ...) {
   ggplot(data.frame(x = x)) +
     geom_bar(aes(x, y = stat(.data$count / sum(.data$count)), fill = x), color = "black") +
     scale_fill_manual(values = rgb(lookup$discrete(levels(x)))) +
-    gghist_theme()
+    gghist_theme(base_size = base_size)
 }
 
 #' gghist: theme
 #' @noRd
-gghist_theme <- function(xlim = NULL, ylim = NULL) {
+gghist_theme <- function(xlim = NULL, ylim = NULL, base_size = 11) {
   list(
     coord_cartesian(xlim = xlim, ylim = ylim, expand = FALSE),
-    theme_classic(),
+    theme_classic(base_size = base_size),
     theme(
       legend.position = "none",
       axis.title = element_blank()
@@ -139,14 +139,15 @@ scale_color <- list(
 #' @importFrom grid unit
 #' @noRd
 gg_img <- function(
-                   img,
-                   xlim = c(0, NCOL(img)) + 0.5,
-                   ylim = c(0, NROW(img)) + 0.5,
-                   zlim = c(0, 1),
-                   zname = NULL,
-                   colors = c("viridis", "gray", "discrete"),
-                   barheight = unit(1, "npc") - unit(4, "line"),
-                   ...
+  img,
+  xlim = c(0, NCOL(img)) + 0.5,
+  ylim = c(0, NROW(img)) + 0.5,
+  zlim = c(0, 1),
+  zname = NULL,
+  colors = c("viridis", "gray", "discrete"),
+  barheight = unit(1, "npc") - unit(5, "line"),
+  base_size = 11,
+  ...
 ) {
   is_z_num <- is.numeric(zlim)
   colors <- `if`(is_z_num, match.arg(colors), "discrete")
@@ -166,7 +167,9 @@ gg_img <- function(
         guides(fill = guide_colorbar(barheight = barheight))
       ),
       scale_fill[[colors]](name = NULL, values = rgb(lookup$discrete(zlim)), ...)
-    )
+    ) +
+    theme_classic(base_size = base_size) +
+    theme(axis.line = element_blank())
 }
 
 formals(gg_img)$colors <- formals(gghist.numeric)$colors <- names(scale_fill)

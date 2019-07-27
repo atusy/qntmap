@@ -29,7 +29,8 @@ summarize_click <- function(data, click, summary, id) {
     bind_rows(summary[[id]])
 }
 
-summarize_latest <- function(df, id, input) {
+summarize_latest <- function(df) {
+  if (is.null(df)) return(NULL)
   df %>>%
     head(3) %>>%
     modify_if(is.numeric, function(x) sprintf("%.2f", x)) %>>%

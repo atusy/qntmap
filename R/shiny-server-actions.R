@@ -14,7 +14,7 @@ move <- function(.axis, .input, .from, .to) {
 observe_action <- function(id, input, ranges, range_x, range_y, summary, data) {
   ids <- paste0(id, "_", c("click", "brush", "action"))
   observeEvent(input[[ids[[3L]]]], {
-    if (is.null(summary[[id]])) {
+    if (is.null(summary[[id]]) && !is.null(data())) {
       summary[[id]] <- summarize_whole(data, summary, id)
     }   
   })
@@ -27,7 +27,7 @@ observe_action <- function(id, input, ranges, range_x, range_y, summary, data) {
       ranges$x <- move("x", input[[ids[[1L]]]], range_x(), ranges$x)
       ranges$y <- move("y", input[[ids[[1L]]]], range_y(), ranges$y)
     }
-    if (input[[ids[[3L]]]] == "Summarize") {
+    if (input[[ids[[3L]]]] == "Summarize" && !is.null(data())) {
       if (!is.null(input[[ids[[1L]]]]) && is.null(input[[ids[[2L]]]]))
         summary[[id]] <- summarize_click(data, input[[ids[[1L]]]], summary, id)
       if (!is.null(input[[ids[[2L]]]]))

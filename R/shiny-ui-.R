@@ -43,11 +43,13 @@ shiny_ui <- function(xmap_dir, qnt_dir, deadtime) {
   shiny::navbarPage(
     paste("qntmap", utils::packageVersion("qntmap")),
     id = "nav",
-selected = "Check",
+selected = "Cluster",
     header = css_page,
     shiny_ui_map(xmap_dir = xmap_dir, deadtime = deadtime),
     shiny_ui_qnt(qnt_dir),
-    shiny_ui_check()
+    shiny_ui_check(),
+    shiny_ui_cluster(),
+    shiny_ui_quantify()
   )
 }
 

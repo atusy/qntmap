@@ -11,13 +11,12 @@ shiny_ui_check <- function() {
           shiny::uiOutput("outlier_phase"),
           shinyWidgets::radioGroupButtons(
             inputId = "outlier_action",
-            label = "Actions on outliers",
+            label = "Appearance of outliers",
             choices = c("Desaturate", "Filter"),
             selected = "Desaturate",
             status = "secondary",
             individual = TRUE
-          ),
-          NULL
+          )
         )
       ),
       main_tabset_panel(
@@ -25,7 +24,10 @@ shiny_ui_check <- function() {
           "Plot",
           plotOutput("outlier_plot", height = "100%")
         ),
-        NULL
+        tab_panel(
+          "Initial centroid",
+          DT::DTOutput("centroid")
+        )
       )
     )
   )
@@ -35,7 +37,7 @@ ui_check_instruction <- htmltools::tagList(
   tags$p(
     "
 The scatter plots on the right pane compares peak X-ray intensities of
-X-ray maps ans spot analysis from the same pixels.
+X-ray maps and spot analysis from the same pixels.
 Regression curves are drawn by least squares with y-intercept = 0.
 "
   ),

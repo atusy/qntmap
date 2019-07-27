@@ -5,7 +5,7 @@ menu_map <- function(id, dropdown = NULL) {
     shiny::numericInput(ids[[2L]], "Min", value = NA_real_, width = "100%"),
     shiny::numericInput(ids[[3L]], "Max", value = NA_real_, width = "100%"),
     dropdown,
-    cols = "auto 1fr 1fr auto",
+    cols = "8em 1fr 1fr auto",
     column_gap = "3px",
     style = "width: 100%;",
     class = "cssgrid"

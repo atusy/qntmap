@@ -12,7 +12,7 @@ outlier_gg_layers <- list(
   ),
   scale_color_discrete(name = "Phase"),
   scale_alpha_identity(),
-  theme_minimal()
+  theme_minimal(base_size = 16)
 )
 
 outlier_gg_react <- function(epma, input) {reactive({

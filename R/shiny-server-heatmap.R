@@ -25,6 +25,6 @@ raster_react <- function(x, ranges, range_x, range_y, .margin, zlim, input, id) 
     x()[ry[[1L]]:ry[[2L]], rx[[1L]]:rx[[2L]], ],
     xlim = rx + .margin, ylim = ry + .margin,
     zlim = zlim(), zname = input[[ids[[1L]]]],
-    colors = input[[ids[[2L]]]]
+    colors = input[[ids[[2L]]]], base_size = 16
   )
 })}

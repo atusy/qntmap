@@ -1,6 +1,6 @@
 shiny_server <- function() {
   .margin <- c(-.5, .5)
-  .env <- new.env()
+  qnt_phase_list_csv <- tempfile(fileext = ".csv")
   
   function(input, output, session) {
     
@@ -46,7 +46,9 @@ shiny_server <- function() {
       lookup[[input$xmap_color]](xmap_squished(), from = xmap_zlim()),
       range_y()[2L], range_x()[2L]
     ))
-    xmap_heatmap <- raster_react(xmap_img, ranges, range_x, range_y, .margin, xmap_zlim, input, "xmap")
+    xmap_heatmap <- raster_react(
+      xmap_img, ranges, range_x, range_y, .margin, xmap_zlim, input, "xmap"
+    )
     output$xmap_heatmap <- renderPlot(xmap_heatmap())
     
     ## X-ray maps: histogram
@@ -56,19 +58,36 @@ shiny_server <- function() {
     
     # Spot
     
+    qnt_phase_list_mod <- shiny::reactiveVal()
+    shiny::observeEvent(input$qnt_phase_list_cell_edit, {
+      qnt_phase_list_mod(
+        DT::editData(
+          phase_list(), input$qnt_phase_list_cell_edit, "qnt_phase_list",
+        )
+      )
+    })
+    
     qnt_data <- shiny::reactive({
       input$qnt_read
-      isolate(read_qnt(input$qnt_dir, saving = FALSE))
+      input$qnt_phase_list_confirm
+      isolate({
+        mod <- !is.null(qnt_phase_list_mod())
+        if (mod) fwrite(qnt_phase_list_mod(), qnt_phase_list_csv)
+        read_qnt(
+          input$qnt_dir, saving = FALSE, 
+          phase_list = if (mod) qnt_phase_list_csv
+        )
+      })
     })
     
     qnt_elint <- reactive(qnt_data()$elm$elint)
     
     phase_list <- reactive(mutate(qnt_data()$cnd[c("id", "phase")], use = TRUE))
+    
     output$qnt_phase_list <- renderDT(
       phase_list(),
       editable = list(target = "column", disable = list(columns = 0:1)),
       server = TRUE,
-      caption = "Edit by double click a cell. Confirm by Ctrl + Enter",
       options = list(
         scrollX = TRUE, scrollY = "calc(100vh - 400px)",
         scrollCollapse = TRUE, paging = FALSE
@@ -95,9 +114,99 @@ shiny_server <- function() {
     outlier_epma_data <- reactive(tidy_epma(qnt_data(), xmap_data()))
     outlier_plot_reactive <- outlier_gg_react(outlier_epma_data, input)
     output$outlier_plot <- renderPlot(outlier_plot_reactive())
+    
+    centroid <- reactive(find_centers(
+      xmap_data(), qnt_data(), fine_phase = input$outlier_phase, saveas = FALSE
+    ))
+    
+    output$centroid <- DT::renderDT(centroid(), options = DT_options)
+    
+    
+    
+    # Cluster
+    
+    cluster_out <- shiny::reactiveVal()
+    
+    observe_action("cluster", input, ranges, range_x, range_y, summary, cluster_out)
+    
+    shiny::observeEvent(input$cluster_run, {
+      cluster_out(cluster_xmap(xmap_data(), centroid()))
+    })
+    
+    cluster_zlim <- reactive({
+      req(cluster_out())
+      unique(cluster_out()$cluster)
+    })
+    
+    cluster_img <- reactive({
+      req(cluster_out())
+      as_img(
+        lookup[["discrete"]](cluster_out()$cluster),
+        range_y()[2L], range_x()[2L]
+      )
+    })
+    
+    cluster_heatmap <- raster_react(
+      cluster_img, ranges, range_x, range_y, .margin, cluster_zlim, input, "cluster"
+    )
+    
+    output$cluster_heatmap <- renderPlot(cluster_heatmap())
+    output$cluster_membership <- DT::renderDT(
+      cluster_out(), options = DT_options[c("scrollY", "scrollCollapse")]
+    )
+    output$cluster_centroid <- DT::renderDT(attr(cluster_out(), "center"), options = DT_options)
+    output$cluster_summary <- DT::renderDT(summary$cluster)
+    output$cluster_summary_latest <- shiny::renderTable(
+      {
+        # req(summary$cluster)
+        summarize_latest(summary$cluster)
+      },
+      align = "r"
+    )
+    
+    # Quantify
+    
+    qmap_out <- shiny::reactiveVal()
 
+    qmap_elint <- reactive(setdiff(names(qmap_out()), c("x", "y")))
+    
+    output$qmap_elem_selecter <- renderUI(select_elem("qmap", "Element", qmap_elint))
+    
+    observeEvent(input$qmap_run, {
+      req(cluster_out())
+      qmap_out(quantify(xmap_data(), qnt_data(), cluster_out(), fine_phase = input$outlier))
+    })
+    
+    observe_action("qmap", input, ranges, range_x, range_y, summary, cluster_out)
 
-
+    output$qmap_summary <- DT::renderDT(summary$qmap)
+    output$qmap_summary_latest <- shiny::renderTable(
+      summarize_latest(summary$qmap), align = "r"
+    )
+    
+    
+    qmap_zlim <- zlim_react("qmap", qmap_out, input)
+    
+    qmap_squished <- squish_react("qmap", qmap_out, qmap_zlim, input)
+    
+    qmap_img <- reactive(as_img(
+      lookup[[input$qmap_color]](qmap_squished(), from = qmap_zlim()),
+      range_y()[2L], range_x()[2L]
+    ))
+    
+    qmap_heatmap <- raster_react(
+      qmap_img, ranges, range_x, range_y, .margin, qmap_zlim, input, "qmap"
+    )
+    output$qmap_heatmap <- renderPlot({
+      req(qmap_out())
+      qmap_heatmap()
+    })
+    
+    qmap_histogram <- hist_react("qmap", qmap_out, input)
+    output$qmap_histogram <- renderPlot(qmap_histogram())
+    
+    output$test <- renderPrint(str(qmap_out()))
+    
   }
 }
 

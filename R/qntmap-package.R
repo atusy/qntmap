@@ -45,7 +45,7 @@
 #'   stat
 #'   theme theme_classic theme_minimal
 #' @importFrom pipeR %>>%
-#' @importFrom purrr map map2 map_at map_dbl map_if modify_at pmap walk2
+#' @importFrom purrr map map2 map_at map_dbl map_if modify_at modify_if pmap walk2
 #' @importFrom rlang !! .data enquo
 #' @importFrom stringr 
 #'   str_c str_detect str_extract str_replace str_replace_all str_subset

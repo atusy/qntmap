@@ -55,9 +55,9 @@ read_qnt <- function(
     (setNames(paste0(., ".qnt"), .)) %>>%
     `[`(file.exists(.)) %>>%
     lapply(fread)
-
+  
   elemw <- c(".cnd/elemw.cnd", "Pos_0001/data001.cnd")
-
+  
   # extract elemental data
   elm <- if (is.null(conditions)) {
     data.frame(

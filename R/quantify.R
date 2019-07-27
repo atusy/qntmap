@@ -36,7 +36,6 @@ quantify <- function(
                      se = FALSE,
                      saving = TRUE
 ) {
-
   cd <- getwd()
   on.exit(setwd(cd))
 
@@ -56,7 +55,7 @@ quantify <- function(
   params <- if (is.null(fix)) list() else fread(fix)    # © 2018 JAMSTEC
   TF_inherit_params <- check_ABG(params, xmap, cluster) # © 2018 JAMSTEC
 
-  X <- as.data.frame(cluster$membership)
+  X <- select(cluster, -"x", -"y", -"cluster", -"membership")
 
   # Find alpha (A), beta (B), and gamma (G)
   if (TF_inherit_params) {                              # © 2018 JAMSTEC
@@ -67,22 +66,27 @@ quantify <- function(
   } else {
     # Tidy compilation of epma data
     epma <- tidy_epma_for_quantify(
-      tidy_epma(qnt = qnt, xmap = xmap, cluster = cluster) %>>%
-        filter(elint %in% names(!!xmap)),
-      maps_x, maps_y,
+      qnt = qnt,
+      xmap = xmap, 
+      cluster = cluster,
+      subcluster = any(grepl("_", colnames(cluster$membership))),
+      suffix = "_.*",
+      maps_x = maps_x, maps_y = maps_y,
       elements = qnt$elm$elem,
-      distinguished = any(grepl("_", colnames(cluster$membership))),
       fine_phase = fine_phase,
       fine_th = fine_th
     )
+
     AG <- find_AG(epma, setdiff(names(X), unique(epma$phase3))) # Future work: supress calc se
     B <- find_B(epma)                                           # Future work: supress calc se
     rm(epma)
     nm <- setNames(qnt$elm$elem, qnt$elm$elint)
   }
-
-  names(xmap) <- nm[names(xmap)]
-
+  
+  nm_old <- names(xmap)
+  nm_new <- nm[nm_old]
+  names(xmap) <- ifelse(is.na(nm_new), nm_old, nm_new)
+  
   XAG <- find_XAG(
     X,
     AG %>>%
@@ -92,20 +96,20 @@ quantify <- function(
       ),
     se = se
   )
-
+  
   AB <- find_AB(AG, B, se = se) %>>%
-    join_AB(fix_AB_by_wt(xmap = xmap, cls = cluster, params = params))
-
+    join_AB(fix_AB_by_wt(xmap = xmap, cls = cluster, params = params)) 
+  
   dir_qntmap <- paste0(dir_map, "/qntmap")
   dir.create(dir_qntmap, FALSE)
-
+  
   if (is.null(fix) && saving) # © 2018 JAMSTEC
     save4qm(tidy_params(AG, B, qnt), nm = file.path(dir_qntmap, "parameters.csv")) # © 2018 JAMSTEC
-
+  
   rm(AG, B)
-
+  
   AB %>>%
-    rename(se = ab_se) %>>%
+    rename(se = "ab_se") %>>%
     select(setdiff(names(.), "se"[!(!!(se))])) %>>%
     expand_AB(stg) %>>%
     lapply(function(x) { # XAB and its err
@@ -121,15 +125,22 @@ quantify <- function(
       se = if (se) list(L2(xabi[[2L]], xag[[2L]]))
     )) %>>% 
     lapply(map_at, 'wt', as_positive) %>>%
-    c(list(Total = c(
-      list(wt = as.data.frame(reduce_add(lapply(., `[[`, "wt")))),
-      if (se) list(se = as.data.frame(sqrt(reduce_add(lapply(lapply(., `[[`, "se"), square)))))
-    ))) %>>%
+    c(
+      list(Total = c(
+        list(wt = reduce_add(lapply(., `[[`, "wt"))),
+        if (se) {
+          list(se = sqrt(reduce_add(lapply(lapply(., `[[`, "se"), square))))
+        }
+      ))
+    ) %>>%
     prioritize(.component) %>>%
+    unlist(recursive = FALSE) %>>%
+    setNames(gsub(".wt", "", names(.), fixed = TRUE)) %>>%
+    (function(.) bind_cols(xmap[c("x", "y")], .))() %>>%
     structure(
       pixel = attributes(xmap)$pixel,
       step  = attributes(xmap)$step,
-      class = c("qntmap", "list")
+      class = c("qntmap", class(.))
     ) %>>%
     save4qm(nm = dir_qntmap, saving = saving)
 }
@@ -167,7 +178,7 @@ check_ABG <- function(params, xmap, cls) {
   # Check if all elements are quantified
   element_missing <- expand.grid(
     phase = unique(cls$cluster),
-    element = setdiff(names(xmap), .electron),
+    element = setdiff(names(xmap), c("x", "y", .electron)),
     stringsAsFactors = FALSE
   ) %>>%
     anti_join(params, by = c("phase", "element")) %>>%
