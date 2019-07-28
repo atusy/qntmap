@@ -96,7 +96,7 @@ cluster_xmap <- function(
 #' @return numeric matrix
 find_membership <- function(discriminant, centers, clusters) {
   membership <- exp(discriminant - rowMaxs(discriminant))
-  membership / rowSums2(discriminant)
+  membership <- membership / rowSums2(membership)
 
   if (nrow(centers) == ncol(membership)) {
     colnames(membership) <- centers$phase
