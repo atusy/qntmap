@@ -20,7 +20,7 @@ gghist.numeric <- function(x, .min = NA_real_, .max = NA_real_, colors, base_siz
   range_x <- range(x, na.rm = TRUE)
   if (!is.finite(.min) || .min < range_x[1]) .min <- range_x[1]
   if (!is.finite(.max) || .max > range_x[2]) .max <- range_x[2]
-
+  
   freq <- hist(x[.min <= x & x <= .max], breaks = "FD", plot = FALSE)
   width <- freq$breaks[[2L]] - freq$breaks[[1L]]
   
