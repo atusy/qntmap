@@ -16,7 +16,10 @@ outlier_gg_react <- function(
       ) %>>% 
       filter(
         .data$elint == !!input$outlier_elem, !.data$outlier, .data$phase %in% !!.phase
-      ) %>>% 
+      ) %>>%
+      find_poisson_prediction_intervals(
+        percentile = percentile, phase = .phase_all
+      ) %>>%
       mutate(facet = "Filtered")
     ) %>>%
     filter(is.finite(.data$mapint * .data$pkint)) %>>%

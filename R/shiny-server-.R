@@ -33,7 +33,7 @@ shiny_server <- function(phase_list = NULL) {
     ## X-ray maps: summary
     
     output$xmap_summary <- DT::renderDT(dt(
-      modify_if(summary$xmap, is.numeric, round, 2L)
+      modify_if(summary$xmap, is.double, round, 2L)
     ))
     output$xmap_summary_latest <- shiny::renderTable(
       summarize_latest(summary$xmap), align = "r"
@@ -121,7 +121,7 @@ shiny_server <- function(phase_list = NULL) {
     ))
     
     output$centroid <- DT::renderDT(dt(
-      mutate_if(centroid(), is.numeric, round, 2)
+      mutate_if(centroid(), is.double, round, 2)
     ))
     
     
@@ -162,16 +162,20 @@ shiny_server <- function(phase_list = NULL) {
     )
     
     output$cluster_heatmap <- renderPlot(cluster_heatmap())
-    output$cluster_membership <- DT::renderDT(dt(
-      modify_if(cluster_out(), is.numeric, round, 2), 
-      options = DT_options[c("scrollY", "scrollCollapse")]
-    ))
-    output$cluster_centroid <- DT::renderDT(dt(
-      modify_if(attr(cluster_out(), "center"), is.numeric, round, 2)
-    ))
+    output$cluster_membership <- DT::renderDT({
+      req(cluster_out())
+      dt(
+        modify_if(cluster_out(), is.double, round, 2), 
+        options = DT_options[c("scrollY", "scrollCollapse")]
+      )
+    })
+    output$cluster_centroid <- DT::renderDT({
+      req(cluster_out())
+      dt(modify_if(attr(cluster_out(), "center"), is.double, round, 2))
+    })
     output$cluster_summary <- DT::renderDT({
       req(summary$cluster)
-      dt(modify_if(summary$cluster, is.numeric, round, 2))
+      dt(modify_if(summary$cluster, is.double, round, 2))
     })
     output$cluster_summary_latest <- shiny::renderTable(
       summarize_latest(summary$cluster),
@@ -195,7 +199,7 @@ shiny_server <- function(phase_list = NULL) {
 
     output$qmap_summary <- DT::renderDT({
       req(summary$qmap)
-      dt(modify_if(summary$qmap, is.numeric, round, 2L))
+      dt(modify_if(summary$qmap, is.double, round, 2L))
     })
     output$qmap_summary_latest <- shiny::renderTable(
       summarize_latest(summary$qmap), align = "r"

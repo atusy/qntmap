@@ -48,10 +48,6 @@ find_outlier <- function(
   )[[match.arg(interval)]]
   
   .element <- vars_select(unique(epma$elint), !!enquo(element))
-  
-  if (!is.null(fine_phase)) {
-    warning("fine_phase argument is deprecated. Use phase argument instead")
-  }
   .phase <- setdiff(vars_select(unique(epma$phase), !!enquo(phase)), fine_phase)
   
   epma %>>%
