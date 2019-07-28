@@ -4,8 +4,8 @@
 \alias{qntmap}
 \title{Interactively quantify X-ray maps}
 \usage{
-qntmap(shiny = TRUE, xmap_dir = NULL, qnt_dir = NULL,
-  deadtime = 1100)
+qntmap(xmap_dir = NULL, qnt_dir = NULL, deadtime = 1100,
+  phase_list = NULL, shiny = TRUE)
 }
 \description{
 Interactively quantify X-ray maps

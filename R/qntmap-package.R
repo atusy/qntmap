@@ -34,7 +34,8 @@
 #'   aes annotation_raster autoplot
 #'   coord_cartesian coord_equal coord_fixed
 #'   element_blank element_rect
-#'   geom_bar geom_col geom_step geom_smooth geom_tile
+#'   facet_wrap
+#'   geom_bar geom_col geom_step geom_ribbon geom_quantile geom_smooth geom_tile
 #'   ggplot ggsave guide_colorbar guides
 #'   labs
 #'   position_nudge
@@ -43,7 +44,7 @@
 #'   scale_fill_gradient scale_fill_manual scale_fill_viridis_c
 #'   scale_y_reverse
 #'   stat
-#'   theme theme_classic theme_minimal
+#'   theme theme_bw theme_classic theme_minimal
 #' @importFrom pipeR %>>%
 #' @importFrom purrr map map2 map_at map_dbl map_if modify_at modify_if pmap walk2
 #' @importFrom rlang !! .data enquo

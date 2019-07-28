@@ -105,7 +105,6 @@ Collate:
     'read-xmap-cnd.R'
     'save.R'
     'segment.R'
-    'shiny-.R'
     'shiny-server-.R'
     'shiny-server-actions.R'
     'shiny-server-heatmap.R'

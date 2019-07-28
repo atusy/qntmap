@@ -5,7 +5,7 @@ outlier_gg_react <- function(
   .phase <- setdiff(.phase_all, input$outlier_phase)
   bind_rows(
     epma() %>>%
-      filter(elint == !!input$outlier_elem) %>>%
+      filter(.data$elint == !!input$outlier_elem) %>>%
       find_poisson_prediction_intervals(
         percentile = percentile, phase = .phase_all
       ) %>>%
@@ -23,7 +23,7 @@ outlier_gg_react <- function(
       mutate(facet = "Filtered")
     ) %>>%
     filter(is.finite(.data$mapint * .data$pkint)) %>>%
-    ggplot(aes(mapint, pkint)) +
+    ggplot(aes(.data$mapint, .data$pkint)) +
     geom_ribbon(
       aes(ymin = .data$pkint.L_est, ymax = .data$pkint.H_est),
       color = "transparent", fill = "gray80"
