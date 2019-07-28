@@ -1,5 +1,7 @@
-shiny_server <- function() {
+shiny_server <- function(phase_list = NULL) {
   .margin <- c(-.5, .5)
+  qnt_phase_list_csv0 <- phase_list
+  qnt_phase_list_csv <- tempfile()
 
   function(input, output, session) {
     
@@ -14,7 +16,7 @@ shiny_server <- function() {
     
     output$xmap_elem_selecter <- renderUI(select_elem("xmap", "Element", xmap_elint))
     
-    output$xmap_meta <- DT::renderDT(xmap_meta(xmap_data, input), options = DT_options)
+    output$xmap_meta <- DT::renderDT(dt(xmap_meta(xmap_data, input), options = DT_options))
     
     ## X-ray mpas: action
     
@@ -30,7 +32,9 @@ shiny_server <- function() {
     
     ## X-ray maps: summary
     
-    output$xmap_summary <- DT::renderDT(summary$xmap)
+    output$xmap_summary <- DT::renderDT(dt(
+      modify_if(summary$xmap, is.numeric, round, 2L)
+    ))
     output$xmap_summary_latest <- shiny::renderTable(
       summarize_latest(summary$xmap), align = "r"
     )
@@ -72,7 +76,7 @@ shiny_server <- function() {
         if (mod) fwrite(qnt_phase_list_mod(), qnt_phase_list_csv)
         read_qnt(
           input$qnt_dir, saving = FALSE, 
-          phase_list = if (mod) qnt_phase_list_csv
+          phase_list = if (mod) qnt_phase_list_csv else qnt_phase_list_csv0
         )
       })
     })
@@ -91,13 +95,13 @@ shiny_server <- function() {
       )
     )
     
-    output$qnt_elm <- DT::renderDT(qnt_data()$elm, options = DT_options)
-    output$qnt_cnd <- DT::renderDT(qnt_data()$cnd, options = DT_options)
-    output$qnt_wt <- DT::renderDT(qnt_data()$cmp$wt, options = DT_options)
-    output$qnt_net <- DT::renderDT(qnt_data()$cmp$net, options = DT_options)
-    output$qnt_pkint <- DT::renderDT(qnt_data()$cmp$pkint, options = DT_options)
-    output$qnt_bgp <- DT::renderDT(qnt_data()$cmp$bgp, options = DT_options)
-    output$qnt_bgm <- DT::renderDT(qnt_data()$cmp$bgm, options = DT_options)
+    output$qnt_elm <- DT::renderDT(dt(qnt_data()$elm))
+    output$qnt_cnd <- DT::renderDT(dt(qnt_data()$cnd))
+    output$qnt_wt <- DT::renderDT(dt(qnt_data()$cmp$wt))
+    output$qnt_net <- DT::renderDT(dt(qnt_data()$cmp$net))
+    output$qnt_pkint <- DT::renderDT(dt(qnt_data()$cmp$pkint))
+    output$qnt_bgp <- DT::renderDT(dt(qnt_data()$cmp$bgp))
+    output$qnt_bgm <- DT::renderDT(dt(qnt_data()$cmp$bgm))
     
     
     
@@ -116,7 +120,9 @@ shiny_server <- function() {
       xmap_data(), qnt_data(), fine_phase = input$outlier_phase, saveas = FALSE
     ))
     
-    output$centroid <- DT::renderDT(centroid(), options = DT_options)
+    output$centroid <- DT::renderDT(dt(
+      mutate_if(centroid(), is.numeric, round, 2)
+    ))
     
     
     
@@ -130,26 +136,25 @@ shiny_server <- function() {
       cluster_out(cluster_xmap(xmap_data(), centroid()))
     })
     
-    cluster_out_for_plot <- reactive({
+    cluster_z <- reactive({
       req(cluster_out())
-      if (input$cluster_subcluster == "Asis") {
-        cluster_out()
-      } else {
-        group_subclusters(cluster_out(), input$cluster_suffix)
-      }
+      as.factor(
+        if (input$cluster_subcluster == "Asis") {
+          cluster_out()$cluster
+        } else {
+          gsub(input$cluster_subcluster, "", cluster_out()$cluster)
+        }
+      )
     })
     
     cluster_zlim <- reactive({
-      req(cluster_out_for_plot())
-      unique(cluster_out_for_plot()$cluster)
+      req(cluster_out())
+      levels(cluster_z())
     })
     
     cluster_img <- reactive({
-      req(cluster_out_for_plot())
-      as_img(
-        lookup[["discrete"]](cluster_out_for_plot()$cluster),
-        range_y()[2L], range_x()[2L]
-      )
+      req(cluster_out())
+      as_img(lookup[["discrete"]](cluster_z()), range_y()[2L], range_x()[2L])
     })
     
     cluster_heatmap <- raster_react(
@@ -157,16 +162,19 @@ shiny_server <- function() {
     )
     
     output$cluster_heatmap <- renderPlot(cluster_heatmap())
-    output$cluster_membership <- DT::renderDT(
-      cluster_out(), options = DT_options[c("scrollY", "scrollCollapse")]
-    )
-    output$cluster_centroid <- DT::renderDT(attr(cluster_out(), "center"), options = DT_options)
-    output$cluster_summary <- DT::renderDT(summary$cluster)
+    output$cluster_membership <- DT::renderDT(dt(
+      modify_if(cluster_out(), is.numeric, round, 2), 
+      options = DT_options[c("scrollY", "scrollCollapse")]
+    ))
+    output$cluster_centroid <- DT::renderDT(dt(
+      modify_if(attr(cluster_out(), "center"), is.numeric, round, 2)
+    ))
+    output$cluster_summary <- DT::renderDT({
+      req(summary$cluster)
+      dt(modify_if(summary$cluster, is.numeric, round, 2))
+    })
     output$cluster_summary_latest <- shiny::renderTable(
-      {
-        # req(summary$cluster)
-        summarize_latest(summary$cluster)
-      },
+      summarize_latest(summary$cluster),
       align = "r"
     )
     
@@ -185,7 +193,10 @@ shiny_server <- function() {
     
     observe_action("qmap", input, ranges, range_x, range_y, summary, cluster_out)
 
-    output$qmap_summary <- DT::renderDT(summary$qmap)
+    output$qmap_summary <- DT::renderDT({
+      req(summary$qmap)
+      dt(modify_if(summary$qmap, is.numeric, round, 2L))
+    })
     output$qmap_summary_latest <- shiny::renderTable(
       summarize_latest(summary$qmap), align = "r"
     )
@@ -220,8 +231,22 @@ DT_options <- list(
   scrollX = TRUE,
   scrollY = "calc(100vh - 300px)",
   scrollCollapse = TRUE,
-  paging = FALSE
+  paging = FALSE,
+  columnDefs = list(
+    list(orderable = TRUE, targets = 0)
+  )
 )
+
+dt <- function(data, options = DT_options, ...) {
+  DT::datatable(
+    data %>>% 
+      mutate(n = row_number()) %>>% 
+      select("n", everything()) %>>%
+      setNames(gsub("^n$", "", names(.))),
+    options = options,
+    rownames = FALSE
+  )
+}
 
 select_elem <- function(id, label, choices) {
   # selectInput(

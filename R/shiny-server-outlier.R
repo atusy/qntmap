@@ -1,24 +1,25 @@
 outlier_gg_react <- function(
   epma, input, percentile = .95, interval = "prediction"
 ) {reactive({
-  .phase <- setdiff(unique(epma()$phase), input$outlier_phase)
-  epma() %>>% 
-    mutate(fine_phase = phase %in% !!input$outlier_phase) %>>%
-    find_outlier(
-      phase = !!.phase, element = everything(),
-      percentile = percentile, interval = interval
+  .phase_all <- unique(epma()$phase)
+  .phase <- setdiff(.phase_all, input$outlier_phase)
+  bind_rows(
+    epma() %>>%
+      filter(elint == !!input$outlier_elem) %>>%
+      find_poisson_prediction_intervals(
+        percentile = percentile, phase = .phase_all
+      ) %>>%
+      mutate(facet = "All"),
+    epma() %>>%
+      find_outlier(
+        phase = !!.phase, percentile = percentile, interval = interval
+      ) %>>% 
+      filter(
+        .data$elint == !!input$outlier_elem, !.data$outlier, .data$phase %in% !!.phase
+      ) %>>% 
+      mutate(facet = "Filtered")
     ) %>>%
-    filter(
-      elint == !!input$outlier_elem, is.finite(.data$mapint * .data$pkint)
-    ) %>>%
-    mutate(facet = "All") %>>%
-    bind_rows(
-      filter(., !.data$outlier & !.data$fine_phase) %>>% 
-        find_outlier(
-          percentile = percentile, interval = interval
-        ) %>>% 
-        mutate(facet = "Filtered")
-    ) %>>%
+    filter(is.finite(.data$mapint * .data$pkint)) %>>%
     ggplot(aes(mapint, pkint)) +
     geom_ribbon(
       aes(ymin = .data$pkint.L_est, ymax = .data$pkint.H_est),

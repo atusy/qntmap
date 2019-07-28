@@ -16,7 +16,7 @@ observe_action <- function(id, input, ranges, range_x, range_y, summary, data) {
   observeEvent(input[[ids[[3L]]]], {
     if (is.null(summary[[id]]) && !is.null(data())) {
       summary[[id]] <- summarize_whole(data, summary, id)
-    }   
+    }
   })
   observeEvent(input[[ids[[1L]]]], {
     if (input[[ids[[3L]]]] == "Zoom") {

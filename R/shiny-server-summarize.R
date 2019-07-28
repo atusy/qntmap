@@ -1,8 +1,8 @@
 summarize_whole <- function(data, summary, id) {
   data() %>>%
     summarize_if(is.numeric, mean) %>>%
-    mutate(ID = 0L, Area = "Whole") %>>%
-    select("ID", "Area", "x", "y", everything()) %>>%
+    mutate(Area = "Whole") %>>%
+    select("Area", "x", "y", everything()) %>>%
     bind_rows(summary[[id]])
 }
 
@@ -13,9 +13,10 @@ summarize_box <- function(data, box, summary, id) {
     ] %>>%
     summarize_if(is.numeric, mean) %>>%
     mutate(Area = "Box", membership = NULL) %>>%
-    select("Area", "x", "y", everything()) %>>%
     filter(is.finite(.data$x), is.finite(.data$y)) %>>%
-    bind_rows(summary[[id]])
+    bind_rows(summary[[id]]) %>>%
+    mutate(ID = row_number()) %>>%
+    select("ID", "Area", "x", "y", everything())
 }
 
 
@@ -25,8 +26,9 @@ summarize_click <- function(data, click, summary, id) {
   
   data()[data()$x == x & data()$y == y, ] %>>%
     mutate(Area = "Click", membership = NULL) %>>%
-    select("Area", "x", "y", everything()) %>>%
-    bind_rows(summary[[id]])
+    bind_rows(summary[[id]]) %>>%
+    mutate(ID = row_number()) %>>%
+    select("ID", "Area", "x", "y", everything())
 }
 
 summarize_latest <- function(df) {

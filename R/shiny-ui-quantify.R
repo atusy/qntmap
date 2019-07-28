@@ -7,8 +7,8 @@ shiny_ui_quantify <- function() {
         tab_panel(
           "Visual",
           shiny::actionButton(
-            "qmap_run", label = "Quantify Maps", width = "90%",
-            style = "background: #EE0000;"
+            "qmap_run", label = tags$strong("Quantify Maps"), width = "100%",
+            style = "background: #EE0000; margin-bottom: 10px;"
           ),
           menu_map("qmap", dropdown = drop_map("qmap")),
           select_action("qmap_action"),

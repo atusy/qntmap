@@ -7,7 +7,7 @@ shiny_ui_cluster <- function() {
         tab_panel(
           "Menu",
           shiny::actionButton(
-            "cluster_run", label = "Run cluster analysis", width = "90%",
+            "cluster_run", label = "Run cluster analysis", width = "100%",
             style = "background: #EE0000;"
           ),
           shinyWidgets::radioGroupButtons(
