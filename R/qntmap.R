@@ -3,7 +3,11 @@
 #' @importFrom easycsv choose_dir
 #' @importFrom utils menu select.list
 #' @export
-qntmap <- function(shiny = TRUE, xmap_dir = NULL, qnt_dir = NULL, deadtime = 1100) {
+qntmap <- function(
+  xmap_dir = NULL, qnt_dir = NULL,
+  deadtime = 1100, phase_list = NULL,
+  shiny = TRUE
+) {
   if (shiny) {
     example <- system.file(package = "qntmap", "extdata", "minimal")
     # example <- "/home/rstudio/Documents/Univ/Data_ND/epma/WDX/JGb1a_170912/"
@@ -13,10 +17,10 @@ qntmap <- function(shiny = TRUE, xmap_dir = NULL, qnt_dir = NULL, deadtime = 110
       xmap_dir <- file.path(example, ".map/1")
     }
     if (is.null(qnt_dir)) qnt_dir <- file.path(example, ".qnt")
-
+    
     shiny::shinyApp(
       shiny_ui(xmap_dir = xmap_dir, qnt_dir = qnt_dir, deadtime = deadtime), 
-      shiny_server()
+      shiny_server(phase_list = phase_list)
     )
   } else {
     qntmap_console()
@@ -26,7 +30,7 @@ qntmap <- function(shiny = TRUE, xmap_dir = NULL, qnt_dir = NULL, deadtime = 110
 qntmap_console <- function() {
   cd <- getwd()
   on.exit(setwd(cd))
-
+  
   cat("(1) Select a directory containing .map and .qnt directories\n")
   setwd(wd <- choose_dir()) # easycsv::choose_dir
   if (!all(file.exists(c(".map", ".qnt"))))
@@ -38,17 +42,17 @@ qntmap_console <- function() {
       setwd(wd <- choose_dir()) # easycsv::choose_dir
     }
   cat("Working directory is settled to\n", wd, "\n\n")
-
+  
   cat("(2) Select directory containing *_map.txt files to be analyzed\n")
   dir_map <- select.list(list.dirs(".map", recursive = FALSE))
   cat("*_map.txt in a following directory will be clustered or quantified\n", dir_map, "\n\n")
-
+  
   if (!length(list.files(dir_map, pattern = "_map\\.txt")))
     stop(
       "Selected directory does not contain *_map.txt files. ",
       "Check if results are ASCII converted by and exported from EPMA."
     )
-
+  
   cat(
     "Input dead time in nano seconds\n",
     "0 if no corrections required)\n",
@@ -57,7 +61,7 @@ qntmap_console <- function() {
   )
   DT <- as.numeric(readline())
   cat("Dead time is ", DT, " nano seconds\n\n")
-
+  
   cat("Identify phases of quantified points based on")
   selection <- menu(
     c(
