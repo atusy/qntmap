@@ -19,7 +19,7 @@ find_AG <- function(
       by = "elm"
     ),
     if (length(not_quantified) > 0L)
-      unnest(mutate(AG_mean, phase3 = list(not_quantified)), "phase3")
+      unnest(mutate(AG_mean, phase3 = list(not_quantified)), .data$phase3)
   ))
 }
 

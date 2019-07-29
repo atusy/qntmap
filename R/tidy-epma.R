@@ -80,7 +80,7 @@ tidy_epma <- function(
       mem = !! `if`(clustered, cluster$membership[qnt$cnd$nr], NA_real_),
       elm = !! list(qnt$elm)
     ) %>>%
-    unnest("elm") %>>%
+    unnest(.data$elm) %>>%
     rename(elm = .data$elem) %>>%
     left_join(qnt$cmp, by = c("id", "elm")) %>>%
     mutate(
