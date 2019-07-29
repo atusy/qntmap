@@ -1,3 +1,6 @@
+#' @importFrom shiny
+#' reactive reactiveVal reactiveValues
+
 shiny_server <- function(phase_list = NULL) {
   .margin <- c(-.5, .5)
   qnt_phase_list_csv0 <- phase_list
@@ -5,12 +8,30 @@ shiny_server <- function(phase_list = NULL) {
 
   function(input, output, session) {
     
-    # X-ray maps
+    # Input
     
-    xmap_data <- shiny::reactive({
-      input$xmap_read
+    xmap_data <- reactive({
+      input$reload
       isolate(read_xmap(input$xmap_dir, DT = input$xmap_deadtime))
     })
+    
+    qnt_phase_list_mod <- reactiveVal()
+    qnt_data <- reactive({
+      input$reload
+      input$qnt_phase_list_confirm
+      isolate({
+        mod <- !is.null(qnt_phase_list_mod())
+        if (mod) fwrite(qnt_phase_list_mod(), qnt_phase_list_csv)
+        read_qnt(
+          input$qnt_dir, saving = FALSE, 
+          phase_list = if (mod) qnt_phase_list_csv else qnt_phase_list_csv0
+        )
+      })
+    })
+    
+    epma_data <- reactive(tidy_epma(qnt_data(), xmap_data()))
+    
+    # X-ray maps
     
     xmap_elint <- reactive(setdiff(names(xmap_data()), c("x", "y")))
     
@@ -50,7 +71,18 @@ shiny_server <- function(phase_list = NULL) {
     xmap_heatmap <- raster_react(
       xmap_img, ranges, range_x, range_y, .margin, xmap_zlim, input, "xmap"
     )
-    output$xmap_heatmap <- renderPlot(xmap_heatmap())
+    xmap_spot <- reactive(
+      geom_point(
+        aes(.data$y_px, .data$x_px), inherit.aes = FALSE, color = "red",
+        epma_data() %>>%
+          filter(.data$elint == .data$elint[[1L]]) %>>%
+          select("x_px", "y_px")
+      )
+    )
+    
+    output$xmap_heatmap <- renderPlot(
+      xmap_heatmap() + `if`(isTRUE(input$xmap_show_spot), xmap_spot())
+    )
     
     ## X-ray maps: histogram
     
@@ -59,26 +91,12 @@ shiny_server <- function(phase_list = NULL) {
     
     # Spot
     
-    qnt_phase_list_mod <- shiny::reactiveVal()
     shiny::observeEvent(input$qnt_phase_list_cell_edit, {
       qnt_phase_list_mod(
         DT::editData(
           phase_list(), input$qnt_phase_list_cell_edit, "qnt_phase_list",
         )
       )
-    })
-    
-    qnt_data <- shiny::reactive({
-      input$qnt_read
-      input$qnt_phase_list_confirm
-      isolate({
-        mod <- !is.null(qnt_phase_list_mod())
-        if (mod) fwrite(qnt_phase_list_mod(), qnt_phase_list_csv)
-        read_qnt(
-          input$qnt_dir, saving = FALSE, 
-          phase_list = if (mod) qnt_phase_list_csv else qnt_phase_list_csv0
-        )
-      })
     })
     
     qnt_elint <- reactive(qnt_data()$elm$elint)
@@ -112,8 +130,7 @@ shiny_server <- function(phase_list = NULL) {
       "outlier", "Element to plot", outlier_elint
     ))
     output$outlier_phase <- renderUI(select_phase(qnt_data))
-    outlier_epma_data <- reactive(tidy_epma(qnt_data(), xmap_data()))
-    outlier_plot_reactive <- outlier_gg_react(outlier_epma_data, input)
+    outlier_plot_reactive <- outlier_gg_react(epma_data, input)
     output$outlier_plot <- renderPlot(outlier_plot_reactive())
     
     centroid <- reactive(find_centers(

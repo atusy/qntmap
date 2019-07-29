@@ -31,8 +31,14 @@ p {margin-top: 10px;}
   margin-bottom: 15px;
 }
 
+/* action button */
+.action-button { background: #dddddd; }
+.action-button.btn-run { 
+    background: #00C851; font-weight: bold; margin-bottom: 15px;
+  }
+
 /* radioButtons */
-.btn.radiobtn.btn-secondary.active {background: #2780e3; color: white;}
+.btn.radiobtn.btn-secondary.active { background: #2780e3; color: white; }
 
 /* picker input */
 .btn.dropdown-toggle.form-control.shiny-bound-input {border-color: rgb(204, 204, 204);}
@@ -41,12 +47,17 @@ p {margin-top: 10px;}
 
 shiny_ui <- function(xmap_dir, qnt_dir, deadtime) {
   shiny::navbarPage(
-    paste("qntmap", utils::packageVersion("qntmap")),
+    tags$a(
+      paste("qntmap", utils::packageVersion("qntmap")),
+      href = "https://qntmap.atusy.net/",
+      target = "_blank"
+    ),
     id = "nav",
     header = css_page,
-    # selected = "Check", # For debug
-    shiny_ui_map(xmap_dir = xmap_dir, deadtime = deadtime),
-    shiny_ui_qnt(qnt_dir),
+    selected = "Map",
+    shiny_ui_input(xmap_dir = xmap_dir, deadtime = deadtime, qnt_dir = qnt_dir),
+    shiny_ui_map(),
+    shiny_ui_qnt(),
     shiny_ui_check(),
     shiny_ui_cluster(),
     shiny_ui_quantify()

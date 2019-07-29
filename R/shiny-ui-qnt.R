@@ -1,4 +1,4 @@
-shiny_ui_qnt <- function(qnt_dir) {
+shiny_ui_qnt <- function() {
   shiny::tabPanel(
     "Spot",
     shiny::sidebarLayout(
@@ -8,24 +8,10 @@ shiny_ui_qnt <- function(qnt_dir) {
           "Phase list",
           DT::DTOutput("qnt_phase_list"),
           tags$p("Edit by double click a cell. Save by Ctrl + Enter"),
-          cssgrid::grid_rowwise(
-            shiny::actionButton("qnt_phase_list_confirm", label = "Confirm"),
-            shiny::actionButton("qnt_phase_list_down", label = "Download"),
-            shiny::actionButton("qnt_phase_list_up", label = "Upload"),
-            cols = "auto", gap = "2px",
-            style = "margin-bottom: 10px;"
+          shiny::actionButton(
+            "qnt_phase_list_confirm", label = "Confirm",
+            width = "100%", class = "btn-run"
           )
-        ),
-        # Input
-        tab_panel(
-          "Input",
-          shiny::textInput(
-            "qnt_dir",
-            "Directory containing spot analysis data.",
-            value = qnt_dir
-          ),
-          shiny::actionButton("qnt_read", label = "Reload"),
-          tags$p("Check data if data are correctly loaded")
         )
       ),
       main_tabset_panel(

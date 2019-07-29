@@ -1,37 +1,21 @@
-shiny_ui_map <- function(xmap_dir, deadtime) {
+shiny_ui_map <- function() {
   shiny::tabPanel(
     "Map",
     shiny::sidebarLayout(
       sidebar_tabset_panel(
-        # Visual
+        # Menu
         tab_panel(
-          "Visual",
-          menu_map("xmap", dropdown = drop_map("xmap")),
+          "Menu",
+          menu_map(
+            "xmap", 
+            dropdown = drop_map(
+              "xmap",
+              shiny::checkboxInput("xmap_show_spot", "Show quantified spots")
+            )
+          ),
           select_action("xmap_action"),
           tags$p(shiny::textOutput("xmap_message_action")),
           shiny::tableOutput("xmap_summary_latest")
-        ),
-        # Input
-        tab_panel(
-          "Input",
-          shiny::textInput(
-            "xmap_dir",
-            "Directory containing mapping data.",
-            value = xmap_dir
-          ),
-          shiny::numericInput(
-            "xmap_deadtime",
-            "Dead time in nanoseconds.",
-            value = deadtime
-          ),
-          shiny::actionButton(
-            "xmap_read", label = "Reload"
-          ),
-          tags$p(
-            "Check",
-            tags$a("metadata", href = "#xmap_tab_metadata"),
-            "if data are correctly loaded"
-          )
         )
       ),
       main_tabset_panel(

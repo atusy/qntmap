@@ -5,10 +5,10 @@ shiny_ui_quantify <- function() {
       sidebar_tabset_panel(
         # Visual
         tab_panel(
-          "Visual",
+          "Menu",
           shiny::actionButton(
-            "qmap_run", label = tags$strong("Quantify Maps"), width = "100%",
-            style = "background: #EE0000; margin-bottom: 10px;"
+            "qmap_run", label = "Quantify Maps", width = "100%",
+            class = "btn-run"
           ),
           menu_map("qmap", dropdown = drop_map("qmap")),
           select_action("qmap_action"),
