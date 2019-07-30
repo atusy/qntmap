@@ -1,9 +1,8 @@
 #' @importFrom shiny
 #' reactive reactiveVal reactiveValues
 
-shiny_server <- function(phase_list = NULL) {
+shiny_server <- function() {
   .margin <- c(-.5, .5)
-  qnt_phase_list_csv0 <- phase_list
   qnt_phase_list_csv <- tempfile()
 
   function(input, output, session) {
@@ -11,24 +10,31 @@ shiny_server <- function(phase_list = NULL) {
     # Input
     
     xmap_data <- reactive({
-      input$reload
+      input$input_load
       isolate(read_xmap(input$xmap_dir, DT = input$xmap_deadtime))
     })
     
     qnt_phase_list_mod <- reactiveVal()
+    observeEvent(input$phase_list, qnt_phase_list_mod(NULL))
     qnt_data <- reactive({
-      input$reload
+      input$input_load
       input$qnt_phase_list_confirm
       isolate({
         mod <- !is.null(qnt_phase_list_mod())
         if (mod) fwrite(qnt_phase_list_mod(), qnt_phase_list_csv)
         read_qnt(
           input$qnt_dir, saving = FALSE, 
-          phase_list = if (mod) qnt_phase_list_csv else qnt_phase_list_csv0
+          phase_list = if (mod) {
+            qnt_phase_list_csv
+          } else if (identical(input$phase_list, "")) {
+            NULL
+          } else {
+            input$phase_list
+          }
         )
       })
     })
-    
+
     epma_data <- reactive(tidy_epma(qnt_data(), xmap_data()))
     
     # X-ray maps
@@ -37,26 +43,24 @@ shiny_server <- function(phase_list = NULL) {
     
     output$xmap_elem_selecter <- renderUI(select_elem("xmap", "Element", xmap_elint))
     
-    output$xmap_meta <- DT::renderDT(dt(xmap_meta(xmap_data, input), options = DT_options))
+    output$xmap_meta <- renderDT(dt(xmap_meta(xmap_data, input), options = DT_options))
     
     ## X-ray mpas: action
     
     range_x <- reactive(range(xmap_data()$x))
     range_y <- reactive(range(xmap_data()$y))
-    ranges <- shiny::reactiveValues()
-    summary <- shiny::reactiveValues()
+    ranges <- reactiveValues()
+    summary <- reactiveValues()
     observe_action("xmap", input, ranges, range_x, range_y, summary, xmap_data)
     
-    output$xmap_message_action <- shiny::renderText(
-      message_action[[input$xmap_action]]
-    )
+    output$xmap_message_action <- renderText(message_action[[input$xmap_action]])
     
     ## X-ray maps: summary
     
-    output$xmap_summary <- DT::renderDT(dt(
+    output$xmap_summary <- renderDT(dt(
       modify_if(summary$xmap, is.double, round, 2L)
     ))
-    output$xmap_summary_latest <- shiny::renderTable(
+    output$xmap_summary_latest <- renderTable(
       summarize_latest(summary$xmap), align = "r"
     )
     
@@ -64,7 +68,7 @@ shiny_server <- function(phase_list = NULL) {
     
     xmap_zlim <- zlim_react("xmap", xmap_data, input)
     xmap_squished <- squish_react("xmap", xmap_data, xmap_zlim, input)
-    xmap_img <- reactive(qntmap:::as_img(
+    xmap_img <- reactive(as_img(
       lookup[[input$xmap_color]](xmap_squished(), from = xmap_zlim()),
       range_y()[2L], range_x()[2L]
     ))
@@ -74,9 +78,7 @@ shiny_server <- function(phase_list = NULL) {
     xmap_spot <- reactive(
       geom_point(
         aes(.data$y_px, .data$x_px), inherit.aes = FALSE, color = "red",
-        epma_data() %>>%
-          filter(.data$elint == .data$elint[[1L]]) %>>%
-          select("x_px", "y_px")
+        filter(epma_data(), .data$elint == .data$elint[[1L]])[c("x_px", "y_px")]
       )
     )
     
@@ -91,11 +93,9 @@ shiny_server <- function(phase_list = NULL) {
     
     # Spot
     
-    shiny::observeEvent(input$qnt_phase_list_cell_edit, {
+    observeEvent(input$qnt_phase_list_cell_edit, {
       qnt_phase_list_mod(
-        DT::editData(
-          phase_list(), input$qnt_phase_list_cell_edit, "qnt_phase_list",
-        )
+        editData(phase_list(), input$qnt_phase_list_cell_edit, "qnt_phase_list")
       )
     })
     
@@ -113,13 +113,13 @@ shiny_server <- function(phase_list = NULL) {
       )
     )
     
-    output$qnt_elm <- DT::renderDT(dt(qnt_data()$elm))
-    output$qnt_cnd <- DT::renderDT(dt(qnt_data()$cnd))
-    output$qnt_wt <- DT::renderDT(dt(qnt_data()$cmp$wt))
-    output$qnt_net <- DT::renderDT(dt(qnt_data()$cmp$net))
-    output$qnt_pkint <- DT::renderDT(dt(qnt_data()$cmp$pkint))
-    output$qnt_bgp <- DT::renderDT(dt(qnt_data()$cmp$bgp))
-    output$qnt_bgm <- DT::renderDT(dt(qnt_data()$cmp$bgm))
+    output$qnt_elm <- renderDT(dt(qnt_data()$elm))
+    output$qnt_cnd <- renderDT(dt(qnt_data()$cnd))
+    output$qnt_wt <- renderDT(dt(qnt_data()$cmp$wt))
+    output$qnt_net <- renderDT(dt(qnt_data()$cmp$net))
+    output$qnt_pkint <- renderDT(dt(qnt_data()$cmp$pkint))
+    output$qnt_bgp <- renderDT(dt(qnt_data()$cmp$bgp))
+    output$qnt_bgm <- renderDT(dt(qnt_data()$cmp$bgm))
     
     
     
@@ -129,27 +129,27 @@ shiny_server <- function(phase_list = NULL) {
     output$outlier_elem_selecter <- renderUI(select_elem(
       "outlier", "Element to plot", outlier_elint
     ))
-    output$outlier_phase <- renderUI(select_phase(qnt_data))
+    outlier_phase_all <- reactive(sort(unique(qnt_data()$cnd$phase)))
+    output$outlier_phase <- renderUI(select_phase(outlier_phase_all()))
     outlier_plot_reactive <- outlier_gg_react(epma_data, input)
     output$outlier_plot <- renderPlot(outlier_plot_reactive())
     
     centroid <- reactive(find_centers(
-      xmap_data(), qnt_data(), fine_phase = input$outlier_phase, saveas = FALSE
+      xmap_data(), qnt_data(), saveas = FALSE,
+      phase = !!quo(setdiff(outlier_phase_all(), input$outlier_phase))
     ))
     
-    output$centroid <- DT::renderDT(dt(
-      mutate_if(centroid(), is.double, round, 2)
-    ))
+    output$centroid <- renderDT(dt(modify_if(centroid(), is.double, round, 2)))
     
     
     
     # Cluster
     
-    cluster_out <- shiny::reactiveVal()
+    cluster_out <- reactiveVal()
     
     observe_action("cluster", input, ranges, range_x, range_y, summary, cluster_out)
     
-    shiny::observeEvent(input$cluster_run, {
+    observeEvent(input$cluster_run, {
       cluster_out(cluster_xmap(xmap_data(), centroid()))
     })
     
@@ -179,29 +179,29 @@ shiny_server <- function(phase_list = NULL) {
     )
     
     output$cluster_heatmap <- renderPlot(cluster_heatmap())
-    output$cluster_membership <- DT::renderDT({
+    output$cluster_membership <- renderDT({
       req(cluster_out())
       dt(
         modify_if(cluster_out(), is.double, round, 2), 
         options = DT_options[c("scrollY", "scrollCollapse")]
       )
     })
-    output$cluster_centroid <- DT::renderDT({
+    output$cluster_centroid <- renderDT({
       req(cluster_out())
       dt(modify_if(attr(cluster_out(), "center"), is.double, round, 2))
     })
-    output$cluster_summary <- DT::renderDT({
+    output$cluster_summary <- renderDT({
       req(summary$cluster)
       dt(modify_if(summary$cluster, is.double, round, 2))
     })
-    output$cluster_summary_latest <- shiny::renderTable(
+    output$cluster_summary_latest <- renderTable(
       summarize_latest(summary$cluster),
       align = "r"
     )
     
     # Quantify
     
-    qmap_out <- shiny::reactiveVal()
+    qmap_out <- reactiveVal()
 
     qmap_elint <- reactive(setdiff(names(qmap_out()), c("x", "y")))
     
@@ -214,15 +214,15 @@ shiny_server <- function(phase_list = NULL) {
     
     observe_action("qmap", input, ranges, range_x, range_y, summary, cluster_out)
 
-    output$qmap_summary <- DT::renderDT({
+    output$qmap_summary <- renderDT({
       req(summary$qmap)
       dt(modify_if(summary$qmap, is.double, round, 2L))
     })
-    output$qmap_summary_latest <- shiny::renderTable(
+    output$qmap_summary_latest <- renderTable(
       summarize_latest(summary$qmap), align = "r"
     )
-    
-    
+
+
     qmap_zlim <- zlim_react("qmap", qmap_out, input)
     
     qmap_squished <- squish_react("qmap", qmap_out, qmap_zlim, input)
@@ -243,8 +243,6 @@ shiny_server <- function(phase_list = NULL) {
     qmap_histogram <- hist_react("qmap", qmap_out, input)
     output$qmap_histogram <- renderPlot(qmap_histogram())
     
-    output$test <- renderPrint(str(qmap_out()))
-    
   }
 }
 
@@ -253,13 +251,11 @@ DT_options <- list(
   scrollY = "calc(100vh - 300px)",
   scrollCollapse = TRUE,
   paging = FALSE,
-  columnDefs = list(
-    list(orderable = TRUE, targets = 0)
-  )
+  columnDefs = list(list(orderable = TRUE, targets = 0))
 )
 
 dt <- function(data, options = DT_options, ...) {
-  DT::datatable(
+  datatable(
     data %>>% 
       mutate(n = row_number()) %>>% 
       select("n", everything()) %>>%
@@ -270,29 +266,27 @@ dt <- function(data, options = DT_options, ...) {
 }
 
 select_elem <- function(id, label, choices) {
-  # selectInput(
   picker_input(
     paste0(id, "_elem"),
     label = label,
     choices = choices(),
     selected = choices()[[1L]],
-    # selectize = FALSE,
     width = "100%"
   )
 }
 
-select_phase <- function(qnt_data) {
+select_phase <- function(phase) {
   picker_input(
     inputId = "outlier_phase",
     label = "Phases being outliers",
-    choices = sort(unique(qnt_data()$cnd$phase)),
+    choices = phase,
     multiple = TRUE
   )
 }
 
 xmap_meta <- function(xmap_data, input) {
-  tibble::tribble(
-    ~ Varables, ~ Values, ~ Units,
+  tribble(
+    ~ Variables, ~ Values, ~ Units,
     "Elements", paste(setdiff(names(xmap_data()), c("x", "y")), collapse = ", "), "",
     "Dead time", attr(xmap_data(), "deadtime"), "nsec",
     "Dwell", attr(xmap_data(), "dwell"), "msec",
@@ -300,8 +294,8 @@ xmap_meta <- function(xmap_data, input) {
     "Start X", attr(xmap_data(), "start")[[1L]], "mm",
     "Start Y", attr(xmap_data(), "start")[[2L]], "mm",
     "Start Z", attr(xmap_data(), "start")[[3L]], "mm",
-    "Pixel size", attr(xmap_data(), "pixel")[[1L]], "μm",
-    "Step size", attr(xmap_data(), "step")[[1L]], "μm",
+    "Pixel size", attr(xmap_data(), "pixel")[[1L]], "\u00b5m",
+    "Step size", attr(xmap_data(), "step")[[1L]], "\u00b5m",
     "Instrument", attr(xmap_data(), "instrument"), "",
     "Path", input$xmap_dir, ""
   )

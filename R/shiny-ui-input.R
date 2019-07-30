@@ -1,15 +1,15 @@
-shiny_ui_input <- function(xmap_dir, deadtime, qnt_dir) {
-  shiny::tabPanel(
+shiny_ui_input <- function(xmap_dir, deadtime, qnt_dir, phase_list) {
+  tabPanel(
     "Input",
-    
+
     # Map
     tags$h1("Mapping"),
-    shiny::textInput(
+    textInput(
       "xmap_dir",
       "Directory containing mapping data.",
       value = xmap_dir
     ),
-    shiny::numericInput(
+    numericInput(
       "xmap_deadtime",
       "Dead time in nanoseconds.",
       value = deadtime
@@ -18,13 +18,18 @@ shiny_ui_input <- function(xmap_dir, deadtime, qnt_dir) {
     
     # Spot
     tags$h1("Spot analysis"),
-    shiny::textInput(
+    textInput(
       "qnt_dir",
       "Directory containing spot analysis data.",
       value = qnt_dir
     ),
+    textInput(
+      "phase_list",
+      "Path to the csv file identifying phases for each analyzed spots",
+      value = phase_list
+    ),
     
     # Reload
-    shiny::actionButton("reload", label = "Reload")
+    actionButton("input_load", label = "Load")
   )
 }

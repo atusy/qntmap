@@ -19,8 +19,11 @@ qntmap <- function(
     if (is.null(qnt_dir)) qnt_dir <- file.path(example, ".qnt")
     
     shiny::shinyApp(
-      shiny_ui(xmap_dir = xmap_dir, qnt_dir = qnt_dir, deadtime = deadtime), 
-      shiny_server(phase_list = phase_list)
+      shiny_ui(
+        xmap_dir = xmap_dir, qnt_dir = qnt_dir, deadtime = deadtime,
+        phase_list = phase_list
+      ), 
+      shiny_server()
     )
   } else {
     qntmap_console()
