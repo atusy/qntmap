@@ -1,11 +1,12 @@
 #' Quantify X-ray maps
 #'
-#' @param xmap `qm_xmap` class object returned by [`read_xmap()`].
-#' @param qnt `qm_qnt` class object returned by [`read_qnt()`].
-#' @param cluster `qm_cluster` class object returned by [`cluster_xmap()`].
+#' @param xmap Object returned by [`read_xmap()`].
+#' @param qnt Object returned by [`read_qnt()`].
+#' @param cluster Object returned by [`cluster_xmap()`].
 #' @param maps_x,maps_y
 #'   Sizes of maps along x- and y-axes comprising guide net map.
 #'   (default: `NULL`).
+#' @inheritParams find_outlier
 #' @inheritParams find_centers
 #' @param fine_th A threshold of membership degrees to 0.9
 #' @param fix
@@ -17,6 +18,7 @@
 #' @param saving
 #'   `TRUE` (default) saves the results into `qntmap` directory under
 #'   the directory `xmap` is read from. `FALSE` does not save.`
+#' @inheritDotParams find_outlier interval method percentile
 #'
 #' @importFrom dplyr mutate rename select
 #' @importFrom purrr map map_at map2
@@ -31,11 +33,13 @@ quantify <- function(
                      maps_x = attr(xmap, "pixel")[1L],
                      maps_y = attr(xmap, "pixel")[2L],
                      phase = everything(),
+                     element = everything(),
                      fine_phase = NULL,
                      fine_th = 0.9,
                      fix = NULL,
                      se = FALSE,
-                     saving = TRUE
+                     saving = TRUE,
+                     ...
 ) {
   cd <- getwd()
   on.exit(setwd(cd))
@@ -57,7 +61,7 @@ quantify <- function(
   TF_inherit_params <- check_ABG(params, xmap, cluster) # © 2018 JAMSTEC
 
   X <- select(cluster, -"x", -"y", -"cluster", -"membership")
-
+print(TRUE)
   # Find alpha (A), beta (B), and gamma (G)
   if (TF_inherit_params) {                              # © 2018 JAMSTEC
     AG <- fix_AG(params)                                # © 2018 JAMSTEC
@@ -74,12 +78,16 @@ quantify <- function(
       suffix = "_.*",
       maps_x = maps_x, maps_y = maps_y,
       elements = qnt$elm$elem,
+      phase = !!enquo(phase),
       fine_phase = fine_phase,
       fine_th = fine_th
     )
 
-    AG <- find_AG(epma, setdiff(names(X), unique(epma$phase3))) # Future work: supress calc se
-    B <- find_B(epma)                                           # Future work: supress calc se
+    # Future work: enable supressing calc se from AG and B
+    AG <- find_AG(epma, setdiff(names(X), unique(epma$phase3)))
+    B <- find_B(
+      epma, phase = !!enquo(phase), element = !!enquo(element), ...
+    )
     rm(epma)
     nm <- setNames(qnt$elm$elem, qnt$elm$elint)
   }

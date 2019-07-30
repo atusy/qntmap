@@ -143,9 +143,11 @@ tidy_epma_for_quantify <- function(
   maps_x = attr(xmap, "pixel")[1L],
   maps_y = attr(xmap, "pixel")[2L],
   elements = qnt$elm$elem,
+  phase = everything(),
   fine_phase = NULL,
   fine_th = .9
 ) {
+  phase <- setdiff(vars_select(unique(qnt$cnd$phase), !!enquo(phase)), fine_phase)
   tidy_epma(qnt, xmap, cluster, subcluster, suffix) %>>%
     filter(.data$elint %in% names(!!xmap), .data$elm %in% !!elements) %>>%
     mutate(
@@ -162,7 +164,7 @@ tidy_epma_for_quantify <- function(
       ),
       mem = .data$mem *
         (str_replace(.data$cls, "_.*", "") == .data$phase_grouped) *
-        (.data$cls %nin% !!fine_phase) *
+        (.data$cls %in% !!phase) *
         (.data$mem > !!fine_th)
     )
 }
