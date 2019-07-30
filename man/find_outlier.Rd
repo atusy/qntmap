@@ -11,10 +11,9 @@ find_outlier(epma, phase = everything(), element = everything(),
 \arguments{
 \item{epma}{A value returned by \code{\link[=tidy_epma]{tidy_epma()}}}
 
-\item{phase, element}{Phases and elements to be used to detect outliers.
-Default to use everything. Tidy selection is available.
-For example \code{c(Si, Ti, Al)} will chose these 3 elements, and
-\code{c(-Si, -Ti, -Al)} will chose everything except these 3.}
+\item{phase, element}{Selected ones are referenced to detect outliers. Default selects everything.
+Tidy selection is available. For example \code{c(Si, Ti)} selects them, and
+\code{c(-Si, -Ti)} selects everything except them.}
 
 \item{interval}{A type of the interval. Data points outside intervals are treated as outliers.
 If \code{"prediction"} (default), prediction intervals are used based on Poisson process.

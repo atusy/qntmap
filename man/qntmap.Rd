@@ -7,6 +7,16 @@
 qntmap(xmap_dir = NULL, qnt_dir = NULL, deadtime = 1100,
   phase_list = NULL, shiny = TRUE)
 }
+\arguments{
+\item{xmap_dir, qnt_dir}{Paths to the directories containing data from mapping and spot analysis.}
+
+\item{deadtime}{Dead time in nano seconds.}
+
+\item{phase_list}{A path to a csv file containing columns indicating
+phase of each analysis and \code{TRUE} or \code{FALSE} to use it for quantifying.}
+
+\item{shiny}{Wheter to use shiny ui (default: \code{TRUE})}
+}
 \description{
 Interactively quantify X-ray maps
 }

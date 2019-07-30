@@ -6,18 +6,26 @@
 \usage{
 quantify(xmap, qnt, cluster, maps_x = attr(xmap, "pixel")[1L],
   maps_y = attr(xmap, "pixel")[2L], phase = everything(),
-  fine_phase = NULL, fine_th = 0.9, fix = NULL, se = FALSE,
-  saving = TRUE)
+  element = everything(), fine_phase = NULL, fine_th = 0.9,
+  fix = NULL, se = FALSE, saving = TRUE, ...)
 }
 \arguments{
-\item{xmap}{\code{qm_xmap} class object returned by \code{\link[=read_xmap]{read_xmap()}}.}
+\item{xmap}{Object returned by \code{\link[=read_xmap]{read_xmap()}}.}
 
-\item{qnt}{\code{qm_qnt} class object returned by \code{\link[=read_qnt]{read_qnt()}}.}
+\item{qnt}{Object returned by \code{\link[=read_qnt]{read_qnt()}}.}
 
-\item{cluster}{\code{qm_cluster} class object returned by \code{\link[=cluster_xmap]{cluster_xmap()}}.}
+\item{cluster}{Object returned by \code{\link[=cluster_xmap]{cluster_xmap()}}.}
 
 \item{maps_x, maps_y}{Sizes of maps along x- and y-axes comprising guide net map.
 (default: \code{NULL}).}
+
+\item{phase}{Selected ones are referenced to detect outliers. Default selects everything.
+Tidy selection is available. For example \code{c(Si, Ti)} selects them, and
+\code{c(-Si, -Ti)} selects everything except them.}
+
+\item{element}{Selected ones are referenced to detect outliers. Default selects everything.
+Tidy selection is available. For example \code{c(Si, Ti)} selects them, and
+\code{c(-Si, -Ti)} selects everything except them.}
 
 \item{fine_phase}{Deprecated as of qntmap > 0.4.0. Use \code{phase} instead.}
 
@@ -31,6 +39,19 @@ some elements in some phases (default: \code{NULL}).}
 
 \item{saving}{\code{TRUE} (default) saves the results into \code{qntmap} directory under
 the directory \code{xmap} is read from. \code{FALSE} does not save.`}
+
+\item{...}{Arguments passed on to \code{find_outlier}
+\describe{
+  \item{interval}{A type of the interval. Data points outside intervals are treated as outliers.
+If \code{"prediction"} (default), prediction intervals are used based on Poisson process.
+If `"tukey"``, conditional lower and upper whiskers are used where the lower is
+$Q_{1/4} - 1.5 IQR$ and the upper is $Q_{3/4} + 1.5 IQR$.}
+  \item{method}{Applicable when \code{interval = "prediction"}.
+If \code{"rq"} (default), quantile regression is performed (\code{\link[quantreg:rq]{quantreg::rq()}}).
+If \code{"lsfit"}, least square regression is performed (\code{\link[stats:lsfit]{stats::lsfit()}}).}
+  \item{percentile}{A percentile of predictive interaval.
+Applicable when \code{interval = "prediction"}.}
+}}
 }
 \description{
 Quantify X-ray maps

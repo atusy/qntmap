@@ -26,8 +26,9 @@ classifier.
 \item{y}{Integer vectors specifying x- and y-coordinates of pixels of mapping data.
 In other words, x- and y- corresponds to n-th column and row of a matrix.}
 
-\item{phase}{Name of phases comprising the pixels to be picked.
-If not manually supplied \code{phase} is supplied by \code{c('P1', 'P2', ...)}.}
+\item{phase}{Selected ones are referenced to detect outliers. Default selects everything.
+Tidy selection is available. For example \code{c(Si, Ti)} selects them, and
+\code{c(-Si, -Ti)} selects everything except them.}
 
 \item{i}{A data frame with clumns \code{x}, \code{y}, and \code{phase}.
 \code{i} have priority to \code{x}, \code{y}, and \code{phase}.`}
