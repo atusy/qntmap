@@ -30,6 +30,7 @@ quantify <- function(
                      cluster,
                      maps_x = attr(xmap, "pixel")[1L],
                      maps_y = attr(xmap, "pixel")[2L],
+                     phase = everything(),
                      fine_phase = NULL,
                      fine_th = 0.9,
                      fix = NULL,
@@ -91,7 +92,8 @@ quantify <- function(
     X,
     AG %>>%
       mutate(
-        ag = a * g, ag_se = `if`(!!se, L2(a * g_se, g * a_se), NA_real_),
+        ag = .data$a * .data$g,
+        ag_se = `if`(!!se, L2(.data$a * .data$g_se, .data$g * .data$a_se), NA_real_),
         g = NULL, g_se = NULL
       ),
     se = se
@@ -182,7 +184,7 @@ check_ABG <- function(params, xmap, cls) {
     stringsAsFactors = FALSE
   ) %>>%
     anti_join(params, by = c("phase", "element")) %>>%
-    (element) %>>%
+    `[[`("element") %>>%
     unique
 
   if (length(element_missing) > 0L)
