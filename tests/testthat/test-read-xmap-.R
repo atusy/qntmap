@@ -70,7 +70,6 @@ test_that("conditions = hoge", { # © 2018 JAMSTEC
 prepare()
 
 test_that("correct_deadtime()", {
-  devtools::load_all()
   x <- data.frame(x = 10000, y = 10000, CP = 10000, Si = 10000)
   y <- structure(correct_deadtime(x, 1, 100), deadtime = 1, dwell = 100)
   
