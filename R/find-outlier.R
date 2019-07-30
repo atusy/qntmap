@@ -11,7 +11,7 @@
 #' pixels by finding outliers of mapping peak intensities.
 #'
 #' @param epma A value returned by [tidy_epma()]
-#' @param phase,element 
+#' @param phase,element
 #'  Phases and elements to be used to detect outliers.
 #'  Default to use everything. Tidy selection is available.
 #'  For example `c(Si, Ti, Al)` will chose these 3 elements, and
