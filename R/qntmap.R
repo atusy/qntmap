@@ -1,4 +1,12 @@
 #' Interactively quantify X-ray maps
+#' 
+#' @param xmap_dir,qnt_dir
+#'  Paths to the directories containing data from mapping and spot analysis.
+#' @param deadtime
+#'  Dead time in nano seconds.
+#' @inheritParams read_xmap
+#' @inheritParams read_qnt
+#' @param shiny Wheter to use shiny ui (default: `TRUE`)
 #'
 #' @importFrom easycsv choose_dir
 #' @importFrom utils menu select.list

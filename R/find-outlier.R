@@ -12,10 +12,9 @@
 #'
 #' @param epma A value returned by [tidy_epma()]
 #' @param phase,element
-#'  Phases and elements to be used to detect outliers.
-#'  Default to use everything. Tidy selection is available.
-#'  For example `c(Si, Ti, Al)` will chose these 3 elements, and
-#'  `c(-Si, -Ti, -Al)` will chose everything except these 3.
+#'  Selected ones are referenced to detect outliers. Default selects everything.
+#'  Tidy selection is available. For example `c(Si, Ti)` selects them, and
+#'  `c(-Si, -Ti)` selects everything except them.
 #' @param interval
 #'  A type of the interval. Data points outside intervals are treated as outliers.
 #'  If `"prediction"` (default), prediction intervals are used based on Poisson process.
@@ -35,8 +34,13 @@
 #' 
 #' @export
 find_outlier <- function(
-  epma, phase = everything(), element = everything(), interval = c("prediction", "tukey"),
-  method = c("rq", "lsfit", "median"), percentile = .99, fine_phase = NULL
+  epma,
+  phase = everything(),
+  element = everything(),
+  interval = c("prediction", "tukey"),
+  method = c("rq", "lsfit", "median"),
+  percentile = .99,
+  fine_phase = NULL
 ) {
   deprecate_fine_phase(fine_phase)
   
