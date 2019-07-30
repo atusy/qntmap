@@ -1,6 +1,6 @@
-#' Enhance quantitative analysis of EPMA maps with QntMap
+#' Enhance quantitative analysis of EPMA maps
 #'
-#' QntMap enables conversion of EPMA X-ray maps to mass concetration maps.
+#' Convert EPMA X-ray maps to mass concetration maps.
 #' See website for more information <https://qntmap.atusy.net>.
 #'
 #' @name qntmap-package
@@ -16,6 +16,7 @@
 #'   American Mineralogist, 103(10), 1690-1698,
 #'   <https://doi.org/10.2138/am-2018-6323CCBY>.
 #'
+#' @importFrom DT datatable DTOutput editData renderDT
 #' @importFrom dplyr
 #'   anti_join any_vars arrange
 #'   bind_cols bind_rows
@@ -35,7 +36,8 @@
 #'   coord_cartesian coord_equal coord_fixed
 #'   element_blank element_rect
 #'   facet_wrap
-#'   geom_bar geom_col geom_step geom_ribbon geom_quantile geom_smooth geom_tile
+#'   geom_bar geom_col geom_point geom_step geom_ribbon geom_quantile
+#'   geom_smooth geom_tile
 #'   ggplot ggsave guide_colorbar guides
 #'   labs
 #'   position_nudge
@@ -45,11 +47,26 @@
 #'   scale_y_reverse
 #'   stat
 #'   theme theme_bw theme_classic theme_minimal
+#' @importFrom htmltools tagList tags
 #' @importFrom pipeR %>>%
 #' @importFrom purrr map map2 map_at map_dbl map_if modify_at modify_if pmap walk2
-#' @importFrom rlang !! .data enquo
+#' @importFrom rlang !! .data enquo quo
+#' @importFrom shiny
+#'   actionButton
+#'   checkboxInput
+#'   isolate
+#'   observeEvent
+#'   mainPanel
+#'   navbarPage numericInput
+#'   plotOutput
+#'   reactiveVal reactiveValues
+#'   renderTable renderText
+#'   sidebarLayout sidebarPanel
+#'   tabPanel tableOutput tabsetPanel textInput textOutput
+#'   uiOutput
 #' @importFrom stringr 
 #'   str_c str_detect str_extract str_replace str_replace_all str_subset
+#' @importFrom tibble tribble
 #' @importFrom tidyr
 #'   gather separate spread unnest
 #' @importFrom tidyselect
