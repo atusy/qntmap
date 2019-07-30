@@ -251,6 +251,8 @@ DT_options <- list(
   scrollY = "calc(100vh - 300px)",
   scrollCollapse = TRUE,
   paging = FALSE,
+  dom = "Blfrtip",
+  buttons = "csv",
   columnDefs = list(list(orderable = TRUE, targets = 0))
 )
 
@@ -260,6 +262,7 @@ dt <- function(data, options = DT_options, ...) {
       mutate(n = row_number()) %>>% 
       select("n", everything()) %>>%
       setNames(gsub("^n$", "", names(.))),
+    extensions = c('Buttons'),
     options = options,
     rownames = FALSE
   )
