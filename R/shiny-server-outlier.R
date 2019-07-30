@@ -1,3 +1,5 @@
+#' @importFrom ggAtusy stat_err
+#' @noRd
 outlier_gg_react <- function(
   epma, input, percentile = .95, interval = "prediction"
 ) {reactive({
@@ -28,7 +30,7 @@ outlier_gg_react <- function(
       aes(ymin = .data$pkint.L_est, ymax = .data$pkint.H_est),
       color = "transparent", fill = "gray80"
     ) +
-    ggAtusy::stat_err(aes(
+    stat_err(aes(
       xmin = .data$mapint.L, xmax = .data$mapint.H,
       ymin = .data$pkint.L, ymax = .data$pkint.H,
       color = .data$phase

@@ -1,7 +1,7 @@
 shiny_ui_map <- function() {
-  shiny::tabPanel(
+  tabPanel(
     "Map",
-    shiny::sidebarLayout(
+    sidebarLayout(
       sidebar_tabset_panel(
         # Menu
         tab_panel(
@@ -10,19 +10,19 @@ shiny_ui_map <- function() {
             "xmap", 
             dropdown = drop_map(
               "xmap",
-              shiny::checkboxInput("xmap_show_spot", "Show quantified spots")
+              checkboxInput("xmap_show_spot", "Show quantified spots")
             )
           ),
           select_action("xmap_action"),
-          tags$p(shiny::textOutput("xmap_message_action")),
-          shiny::tableOutput("xmap_summary_latest")
+          tags$p(textOutput("xmap_message_action")),
+          tableOutput("xmap_summary_latest")
         )
       ),
       main_tabset_panel(
         id = "tabset_xmap",
         tab_panel(
           "Map",
-          shiny::plotOutput(
+          plotOutput(
             "xmap_heatmap", height = "100%",
             dblclick = "xmap_click",
             brush = brushOpts(id = "xmap_brush", resetOnNew = TRUE)
@@ -30,18 +30,10 @@ shiny_ui_map <- function() {
         ),
         tab_panel(
           "Histogram",
-          shiny::plotOutput("xmap_histogram", height = "100%")
+          plotOutput("xmap_histogram", height = "100%")
         ),
-        tab_panel(
-          "Summary",
-          tags$div(id = "xmap_tab_summary"),
-          DT::DTOutput("xmap_summary", height = "100%")
-        ),
-        tab_panel(
-          "Metadata",
-          tags$div(id = "xmap_tab_metadata"),
-          DT::DTOutput("xmap_meta")
-        )
+        tab_panel("Summary", DTOutput("xmap_summary")),
+        tab_panel("Metadata", DTOutput("xmap_meta"))
       )
     )
   )

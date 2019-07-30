@@ -31,6 +31,8 @@ summarize_click <- function(data, click, summary, id) {
     select("ID", "Area", "x", "y", everything())
 }
 
+#' @importFrom utils head
+#' @noRd
 summarize_latest <- function(df) {
   if (is.null(df)) return(NULL)
   df %>>%

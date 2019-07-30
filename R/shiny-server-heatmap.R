@@ -21,7 +21,7 @@ raster_react <- function(x, ranges, range_x, range_y, .margin, zlim, input, id) 
   ids <- paste0(id, "_", c("elem", "color"))
   rx <- if (is.null(ranges$x)) range_x() else ranges$x
   ry <- if (is.null(ranges$y)) range_y() else ranges$y
-  qntmap:::gg_img(
+  gg_img(
     x()[ry[[1L]]:ry[[2L]], rx[[1L]]:rx[[2L]], ],
     xlim = rx + .margin, ylim = ry + .margin,
     zlim = zlim(), zname = input[[ids[[1L]]]],
