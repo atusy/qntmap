@@ -5,8 +5,9 @@
 \title{Quantify X-ray maps}
 \usage{
 quantify(xmap, qnt, cluster, maps_x = attr(xmap, "pixel")[1L],
-  maps_y = attr(xmap, "pixel")[2L], fine_phase = NULL, fine_th = 0.9,
-  fix = NULL, se = FALSE, saving = TRUE)
+  maps_y = attr(xmap, "pixel")[2L], phase = everything(),
+  fine_phase = NULL, fine_th = 0.9, fix = NULL, se = FALSE,
+  saving = TRUE)
 }
 \arguments{
 \item{xmap}{\code{qm_xmap} class object returned by \code{\link[=read_xmap]{read_xmap()}}.}

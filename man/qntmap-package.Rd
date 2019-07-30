@@ -3,9 +3,9 @@
 \docType{package}
 \name{qntmap-package}
 \alias{qntmap-package}
-\title{Enhance quantitative analysis of EPMA maps with QntMap}
+\title{Enhance quantitative analysis of EPMA maps}
 \description{
-QntMap enables conversion of EPMA X-ray maps to mass concetration maps.
+Convert EPMA X-ray maps to mass concetration maps.
 See website for more information \url{https://qntmap.atusy.net}.
 }
 \references{
