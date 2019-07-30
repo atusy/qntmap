@@ -32,8 +32,8 @@ find_interval <- function(
   lo = (1 - range) / 2
   hi = 1 - lo
   x %>>%
-    mutate_at(.vars, interval_type[[type]], lo = lo, hi = hi) %>%
-    rename_at(vars(matches("^[LH]$")), function(x) paste0(.vars, "_", x)) %>%
+    mutate_at(.vars, interval_type[[type]], lo = lo, hi = hi) %>>%
+    rename_at(vars(matches("^[LH]$")), function(x) paste0(.vars, "_", x)) %>>%
     rename_at(
       vars(matches("_[LH]$")), str_replace_all, c("_L$" = ".L", "_H$" = ".H")
     )
