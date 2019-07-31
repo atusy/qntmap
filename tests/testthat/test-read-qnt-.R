@@ -15,7 +15,7 @@ test_that("list structure", {
   # names
   expect_named(qnt, c("elm", "cnd", "cmp"))
   expect_named(qnt$elm, c("elem", "elint", "bgp_pos", "bgm_pos", "pk_t", "bg_t"))
-  expect_named(qnt$cnd, c("id", "x", "y", "z", "comment", "beam", "phase"))
+  expect_named(qnt$cnd, c("id", "x", "y", "z", "comment", "beam", "phase", "use"))
   expect_true(all(c("bgm", "bgp", "net", "wt") %in% names(qnt$cmp)))
 })
 
@@ -42,7 +42,7 @@ test_that("phase_list = 'example.csv'", {
   qnt2 <- read_qnt(wd, phase_list = csv, saving = FALSE)
 
   expect_false(identical(qnt$cnd$phase, qnt2$cnd$phase))
-  expect_true(any(is.na(qnt2$cnd$phase)))
+  expect_false(all(qnt2$cnd$use))
   expect_true(all(qnt2$cnd$phase %in% c("a", NA)))
   unlink(csv)
 })
