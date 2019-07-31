@@ -79,19 +79,17 @@ read_qnt <- function(
   cnd <- mutate(
     setNames(qnt$stg[, c(1L, 5L:7L, 10L)], c("id", "x", "y", "z", "comment")),
     beam = !!qnt$mes$V3,
-    phase =
-      if (is.null(!!phase_list)) {
-        str_replace_all(
-          comment, c("[:blank:]{2,}" = " ", " $" = "", "^ " = "")
-        )
-      } else {
-        mutate(
-          fread(phase_list),
-          use = `if`(exists("use"), .data$use, TRUE),
-          phase = ifelse(.data$use, .data$phase, NA_character_)
-        )[["phase"]]
-      }
+    phase = str_replace_all(comment, c("[:blank:]{2,}" = " ", " $" = "", "^ " = "")),
+    use = TRUE
   )
+  
+  if (!is.null(phase_list)) {
+    cnd <- left_join(
+      select(cnd, -"phase", -"use"),
+      select(fread(phase_list), "id", "phase", "use"), 
+      by = "id"
+    )
+  }
 
   # extract compositional data
   # bgm, bgp, pkint, bgint [cps/uA]

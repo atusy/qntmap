@@ -32,7 +32,7 @@ tidy_epma <- function(
   # tidy data
   
   ## mm -> px
-  qnt$cnd <- qnt$cnd[!is.na(qnt$cnd$phase), ] %>>%
+  qnt$cnd <- qnt$cnd[qnt$cnd$use, ] %>>%
     mutate(
       x_px = (round((.data$x - !!pos$start[1L]) * 1e3 / !!pos$step[1]) + 1L) *
         `if`(!!inst %in% "JXA8230", -1L, 1L),
