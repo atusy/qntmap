@@ -14,6 +14,7 @@ css_page <- tags$style(
 "
 /* Page layout */
 .well.sidebar {padding: 0; margin: 0;}
+.sidebar .tab-pane { overflow: auto; }
 .tab-pane {padding: 10px;}
 p {margin-top: 10px;}
 
@@ -27,7 +28,8 @@ p {margin-top: 10px;}
 .action-button { background: #dddddd; }
 .action-button.btn-run { 
     background: #00C851; font-weight: bold; margin-bottom: 15px;
-  }
+}
+a.action-button { background: none; }
 
 /* radioButtons */
 .btn.radiobtn.btn-secondary.active { background: #2780e3; color: white; }

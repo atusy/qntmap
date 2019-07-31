@@ -25,10 +25,15 @@ shiny_ui_cluster <- function() {
             width = "100%"
           ),
           select_action("cluster_action"),
+          tags$strong(
+            "Latest summary",
+            shiny::actionLink("cluster_tab_summary", "(view full)")
+          ),
           tableOutput("cluster_summary_latest")
         )
       ),
       main_tabset_panel(
+        id = "main_tabset_cluster",
         tab_panel(
           "Plot",
           plotOutput(

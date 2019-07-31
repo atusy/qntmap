@@ -15,11 +15,15 @@ shiny_ui_map <- function() {
           ),
           select_action("xmap_action"),
           tags$p(textOutput("xmap_message_action")),
+          tags$strong(
+            "Latest summary",
+            shiny::actionLink("xmap_tab_summary", "(view full)")
+          ),
           tableOutput("xmap_summary_latest")
         )
       ),
       main_tabset_panel(
-        id = "tabset_xmap",
+        id = "main_tabset_xmap",
         tab_panel(
           "Map",
           plotOutput(

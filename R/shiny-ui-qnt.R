@@ -7,9 +7,9 @@ shiny_ui_qnt <- function() {
         tab_panel(
           "Phase list",
           DTOutput("qnt_phase_list"),
-          tags$p("Edit by double click a cell. Save by Ctrl + Enter"),
+          tags$p("Edit by double click a cell. Confirm by Ctrl + Enter"),
           actionButton(
-            "qnt_phase_list_confirm", label = "Confirm",
+            "qnt_phase_list_confirm", label = "Apply",
             width = "100%", class = "btn-run"
           )
         )

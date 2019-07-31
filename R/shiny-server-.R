@@ -43,7 +43,7 @@ shiny_server <- function() {
     
     output$xmap_elem_selecter <- renderUI(select_elem("xmap", "Element", xmap_elint))
     
-    output$xmap_meta <- renderDT(dt(xmap_meta(xmap_data, input), options = DT_options))
+    output$xmap_meta <- renderDT(dt(xmap_meta(xmap_data, input), options = DT_options()))
     
     ## X-ray mpas: action
     
@@ -57,6 +57,13 @@ shiny_server <- function() {
     
     ## X-ray maps: summary
     
+    show_full_summary <- function(id, input) {
+      observeEvent(input[[paste0(id, "_tab_summary")]], {
+        shiny::showTab(paste0("main_tabset_", id), target = "Summary", select = TRUE)
+      })
+    }
+    show_full_summary("xmap", input)
+
     output$xmap_summary <- renderDT(dt(
       modify_if(summary$xmap, is.double, round, 2L)
     ))
@@ -101,15 +108,13 @@ shiny_server <- function() {
     
     qnt_elint <- reactive(qnt_data()$elm$elint)
     
-    phase_list <- reactive(mutate(qnt_data()$cnd[c("id", "phase")], use = TRUE))
+    phase_list <- reactive(mutate(qnt_data()$cnd[c("id", "phase", "use")]))
     
     output$qnt_phase_list <- renderDT(
-      phase_list(),
-      editable = list(target = "column", disable = list(columns = 0:1)),
-      server = TRUE,
-      options = list(
-        scrollX = TRUE, scrollY = "calc(100vh - 400px)",
-        scrollCollapse = TRUE, paging = FALSE
+      dt(
+        phase_list(),
+        editable = list(target = "column", disable = list(columns = 0:1)),
+        options = DT_options(scrollY = "calc(100vh - 400px)")
       )
     )
     
@@ -133,7 +138,7 @@ shiny_server <- function() {
     output$outlier_phase <- renderUI(select_phase(outlier_phase_all()))
     outlier_plot_reactive <- outlier_gg_react(epma_data, input)
     output$outlier_plot <- renderPlot(outlier_plot_reactive())
-    
+
     centroid <- reactive(find_centers(
       xmap_data(), qnt_data(), saveas = FALSE,
       phase = !!quo(setdiff(outlier_phase_all(), input$outlier_phase))
@@ -149,6 +154,8 @@ shiny_server <- function() {
     
     observe_action("cluster", input, ranges, range_x, range_y, summary, cluster_out)
     
+    show_full_summary("cluster", input)
+    
     observeEvent(input$cluster_run, {
       cluster_out(cluster_xmap(xmap_data(), centroid()))
     })
@@ -159,7 +166,7 @@ shiny_server <- function() {
         if (input$cluster_subcluster == "Asis") {
           cluster_out()$cluster
         } else {
-          gsub(input$cluster_subcluster, "", cluster_out()$cluster)
+          gsub(input$cluster_suffix, "", cluster_out()$cluster)
         }
       )
     })
@@ -183,7 +190,7 @@ shiny_server <- function() {
       req(cluster_out())
       dt(
         modify_if(cluster_out(), is.double, round, 2), 
-        options = DT_options[c("scrollY", "scrollCollapse")]
+        options = DT_options()[c("scrollY", "scrollCollapse")]
       )
     })
     output$cluster_centroid <- renderDT({
@@ -214,6 +221,8 @@ shiny_server <- function() {
     
     observe_action("qmap", input, ranges, range_x, range_y, summary, cluster_out)
 
+    show_full_summary("qmap", input)
+    
     output$qmap_summary <- renderDT({
       req(summary$qmap)
       dt(modify_if(summary$qmap, is.double, round, 2L))
@@ -246,25 +255,37 @@ shiny_server <- function() {
   }
 }
 
-DT_options <- list(
-  scrollX = TRUE,
-  scrollY = "calc(100vh - 300px)",
-  scrollCollapse = TRUE,
-  paging = FALSE,
-  dom = "Blfrtip",
-  buttons = "csv",
-  columnDefs = list(list(orderable = TRUE, targets = 0))
-)
+DT_options <- function(
+  ...,
+  scrollX = TRUE, scrollY = "calc(100vh - 300px)", scrollCollapse = TRUE,
+  paging = FALSE, searching = FALSE, dom = "Bft", buttons = c("csv", "excel")
+) {
+  list(
+    scrollX = scrollX,
+    scrollY = scrollY,
+    scrollCollapse = scrollCollapse,
+    paging = paging,
+    searching = searching,
+    dom = dom,
+    buttons = buttons,
+    ...
+  )
+}
 
-dt <- function(data, options = DT_options, ...) {
+dt <- function(
+  data, options = DT_options(), filter = 'top', extensions = 'Buttons',
+  rownames = FALSE, ...
+) {
   datatable(
     data %>>% 
       mutate(n = row_number()) %>>% 
       select("n", everything()) %>>%
       setNames(gsub("^n$", "", names(.))),
-    extensions = c('Buttons'),
     options = options,
-    rownames = FALSE
+    filter = filter,
+    extensions = extensions,
+    rownames = rownames,
+    ...
   )
 }
 

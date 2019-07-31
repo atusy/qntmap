@@ -1,7 +1,7 @@
 #' @importFrom ggAtusy stat_err
 #' @noRd
 outlier_gg_react <- function(
-  epma, input, percentile = .95, interval = "prediction"
+  epma, input, percentile = .99, interval = "prediction"
 ) {reactive({
   .phase_all <- unique(epma()$phase)
   .phase <- setdiff(.phase_all, input$outlier_phase)

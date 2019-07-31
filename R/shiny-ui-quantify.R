@@ -12,10 +12,15 @@ shiny_ui_quantify <- function() {
           ),
           menu_map("qmap", dropdown = drop_map("qmap")),
           select_action("qmap_action"),
+          tags$strong(
+            "Latest summary",
+            shiny::actionLink("qmap_tab_summary", "(view full)")
+          ),
           tableOutput("qmap_summary_latest")
         )
       ),
       main_tabset_panel(
+        id = "main_tabset_qmap",
         tab_panel(
           "Map",
           plotOutput(
