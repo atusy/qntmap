@@ -36,6 +36,12 @@ a.action-button { background: none; }
 
 /* picker input */
 .btn.dropdown-toggle.form-control.shiny-bound-input {border-color: rgb(204, 204, 204);}
+
+/* dt */
+.dt-buttons {margin-top: 5px; }
+
+/* tippy.js */
+.tippy-tooltip { font-size: 1.5rem; }
 "
 )
 

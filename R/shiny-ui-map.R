@@ -14,7 +14,6 @@ shiny_ui_map <- function() {
             )
           ),
           select_action("xmap_action"),
-          tags$p(textOutput("xmap_message_action")),
           tags$strong(
             "Latest summary",
             shiny::actionLink("xmap_tab_summary", "(view full)")

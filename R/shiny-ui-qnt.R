@@ -3,18 +3,30 @@ shiny_ui_qnt <- function() {
     "Spot",
     sidebarLayout(
       sidebar_tabset_panel(
-        # Phase list
         tab_panel(
-          "Phase list",
-          DTOutput("qnt_phase_list"),
-          tags$p("Edit by double click a cell. Confirm by Ctrl + Enter"),
-          actionButton(
-            "qnt_phase_list_confirm", label = "Apply",
-            width = "100%", class = "btn-run"
-          )
+          "Menu",
+          cssgrid::grid_rowwise(
+            tags$p(tags$strong("Plot:"), style = "margin-top: 7px"),
+            uiOutput("qnt_ui_x"),
+            tags$p("vs.", style = "margin-top: 7px"),
+            uiOutput("qnt_ui_y"),
+            cols = c("auto 1fr auto 1fr"),
+            gap = "5px"
+          ),
+          tags$hr(),
+          tags$p(
+            tags$strong("Edit phase list"),
+            tippy::tippy(
+              "\U1F6C8", 
+              "Double click to start edit.<br />Ctrl + Enter to Confirm.",
+              placement = "bottom"
+            )
+          ),
+          DTOutput("qnt_phase_list")
         )
       ),
       main_tabset_panel(
+        tab_panel("Scatter plot", plotly::plotlyOutput("qnt_plot", height = "100%")),
         tab_panel("Analytical conditions", DTOutput("qnt_elm")),
         tab_panel("Spots", DTOutput("qnt_cnd")),
         tab_panel("Wt%", DTOutput("qnt_wt")),

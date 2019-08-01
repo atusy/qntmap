@@ -8,31 +8,22 @@ shiny_server <- function() {
   function(input, output, session) {
     
     # Input
-    
-    xmap_data <- reactive({
-      input$input_load
-      isolate(read_xmap(input$xmap_dir, DT = input$xmap_deadtime))
+
+    xmap_data <- reactiveVal()
+    qnt_data <- reactiveVal()
+    isolate({
+      xmap_data(read_xmap(input$xmap_dir, DT = input$xmap_deadtime))
+      qnt_data(read_qnt(
+        input$qnt_dir, saving = FALSE, 
+        phase_list = `if`(identical(input$phase_list, ""), NULL, input$phase_list)
+      ))
     })
-    
-    qnt_phase_list_mod <- reactiveVal()
-    observeEvent(input$phase_list, qnt_phase_list_mod(NULL))
-    qnt_data <- reactive({
-      input$input_load
-      input$qnt_phase_list_confirm
-      isolate({
-        mod <- !is.null(qnt_phase_list_mod())
-        if (mod) fwrite(qnt_phase_list_mod(), qnt_phase_list_csv)
-        read_qnt(
-          input$qnt_dir, saving = FALSE, 
-          phase_list = if (mod) {
-            qnt_phase_list_csv
-          } else if (identical(input$phase_list, "")) {
-            NULL
-          } else {
-            input$phase_list
-          }
-        )
-      })
+    observeEvent(input$input_load, {
+      xmap_data(read_xmap(input$xmap_dir, DT = input$xmap_deadtime))
+      qnt_data(read_qnt(
+        input$qnt_dir, saving = FALSE, 
+        phase_list = `if`(identical(input$phase_list, ""), NULL, input$phase_list)
+      ))
     })
 
     epma_data <- reactive(tidy_epma(qnt_data(), xmap_data()))
@@ -52,8 +43,6 @@ shiny_server <- function() {
     ranges <- reactiveValues()
     summary <- reactiveValues()
     observe_action("xmap", input, ranges, range_x, range_y, summary, xmap_data)
-    
-    output$xmap_message_action <- renderText(message_action[[input$xmap_action]])
     
     ## X-ray maps: summary
     
@@ -89,9 +78,10 @@ shiny_server <- function() {
       )
     )
     
-    output$xmap_heatmap <- renderPlot(
+    output$xmap_heatmap <- renderPlot({
+      req(input$xmap_elem)
       xmap_heatmap() + `if`(isTRUE(input$xmap_show_spot), xmap_spot())
-    )
+    })
     
     ## X-ray maps: histogram
     
@@ -100,24 +90,66 @@ shiny_server <- function() {
     
     # Spot
     
-    observeEvent(input$qnt_phase_list_cell_edit, {
-      qnt_phase_list_mod(
-        editData(phase_list(), input$qnt_phase_list_cell_edit, "qnt_phase_list")
-      )
-    })
-    
     qnt_elint <- reactive(qnt_data()$elm$elint)
     
-    phase_list <- reactive(mutate(qnt_data()$cnd[c("id", "phase", "use")]))
+    phase_list <- reactive(mutate(qnt_data()$cnd[c("phase", "use")]))
     
     output$qnt_phase_list <- renderDT(
       dt(
-        phase_list(),
-        editable = list(target = "column", disable = list(columns = 0:1)),
-        options = DT_options(scrollY = "calc(100vh - 400px)")
+        phase_list(), editable = list(target = "all"),
+        options = DT_options(scrollY = "calc(100vh - 470px)")
       )
     )
     
+    observeEvent(input$qnt_phase_list_cell_edit, {
+      qnt_data(
+        modify_at(qnt_data(), "cnd", function(.x) {
+          bind_cols(
+            mutate(.x, phase = NULL, use = NULL),
+            # Suppress Warning in DT::coerceValue(v, data[i, j, drop = TRUE]) :
+            #   The data type is not supported: logical
+            suppressWarnings(editData(
+              phase_list(),
+              filter(input$qnt_phase_list_cell_edit, .data$col != 0), 
+              "qnt_phase_list"
+            )) %>>%
+              modify_at("use", as.logical)
+          )
+        })
+      )
+    })
+    
+    qnt_elem <- reactive(prioritize(qnt_data()$elm$elem, .component))
+    output$qnt_ui_x <- renderUI(
+      picker_input(
+        "qnt_x", label = NULL, choices = qnt_elem(), inline = FALSE,
+        selected = qnt_elem()[[1L]]
+      )
+    )
+    output$qnt_ui_y <- renderUI({
+      choices <- setdiff(qnt_elem(), input$qnt_x)
+      picker_input(
+        "qnt_y", label = NULL, choices = qnt_elem(), inline = FALSE,
+        selected = qnt_elem()[[2L]]
+      )
+    })
+    
+    output$qnt_plot <- plotly::renderPlotly({
+      req(qnt_data(), input$qnt_x, input$qnt_y)
+      plotly::ggplotly(
+        bind_cols(
+          qnt_data()$cnd[c("id", "phase", "use")],
+          qnt_data()$cmp$wt[c(input$qnt_x, input$qnt_y)]
+        ) %>>%
+          filter(.data$use) %>>%
+          ggplot(aes(
+            x = !!sym(input$qnt_x), y = !!sym(input$qnt_y),
+            id = !!quo(id), color = !!quo(phase)
+          )) +
+          geom_point() +
+          theme_bw(base_size = 16)
+      )
+    })
     output$qnt_elm <- renderDT(dt(qnt_data()$elm))
     output$qnt_cnd <- renderDT(dt(qnt_data()$cnd))
     output$qnt_wt <- renderDT(dt(qnt_data()$cmp$wt))
@@ -258,7 +290,7 @@ shiny_server <- function() {
 DT_options <- function(
   ...,
   scrollX = TRUE, scrollY = "calc(100vh - 300px)", scrollCollapse = TRUE,
-  paging = FALSE, searching = FALSE, dom = "Bft", buttons = c("csv", "excel")
+  paging = FALSE, searching = TRUE, dom = "ftB", buttons = c("csv", "excel")
 ) {
   list(
     scrollX = scrollX,

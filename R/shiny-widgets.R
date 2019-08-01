@@ -37,10 +37,12 @@ drop_map <- function(id, ...) {
 }
 
 select_action <- function(id) {
+  choices = c("Zoom", "Move", "Summarize")
   shinyWidgets::radioGroupButtons(
     inputId = id,
     label = "Mouse actions",
-    choices = c("Zoom", "Move", "Summarize"),
+    choiceNames = map2(choices, message_action[choices], tippy::tippy, arrow = TRUE),
+    choiceValues = choices,
     selected = "Zoom",
     status = "secondary",
     individual = TRUE
@@ -48,7 +50,7 @@ select_action <- function(id) {
 }
 
 message_action <- c(
-  Zoom = "Zoom by double click selected area. Pan by double click again.",
+  Zoom = "Zoom by double click selected area.<br />Pan by double click again.",
   Move = "Move by double click within zoomed area.",
   Summarize = "Double click or select area to save data."
 )
