@@ -42,6 +42,8 @@ a.action-button { background: none; }
 
 /* tippy.js */
 .tippy-tooltip { font-size: 1.5rem; }
+
+.js-plotly-plot .plotly .modebar{left: 10px}
 "
 )
 

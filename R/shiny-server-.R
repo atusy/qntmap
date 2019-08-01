@@ -136,7 +136,7 @@ shiny_server <- function() {
     
     output$qnt_plot <- plotly::renderPlotly({
       req(qnt_data(), input$qnt_x, input$qnt_y)
-      plotly::ggplotly(
+      ggplotly2(
         bind_cols(
           qnt_data()$cnd[c("id", "phase", "use")],
           qnt_data()$cmp$wt[c(input$qnt_x, input$qnt_y)]
@@ -289,7 +289,7 @@ shiny_server <- function() {
 
 DT_options <- function(
   ...,
-  scrollX = TRUE, scrollY = "calc(100vh - 300px)", scrollCollapse = TRUE,
+  scrollX = TRUE, scrollY = "calc(100vh - 330px)", scrollCollapse = TRUE,
   paging = FALSE, searching = TRUE, dom = "ftB", buttons = c("csv", "excel")
 ) {
   list(
@@ -355,4 +355,22 @@ xmap_meta <- function(xmap_data, input) {
     "Instrument", attr(xmap_data(), "instrument"), "",
     "Path", input$xmap_dir, ""
   )
+}
+
+ggplotly2 <- function(p, dynamicTicks = TRUE, ...) {
+  plotly::ggplotly(p, dynamicTicks = dynamicTicks, ...) %>>%
+    plotly::config(
+      displaylogo = FALSE,
+      modeBarButtonsToRemove = list(
+        'lasso2d',
+        'select2d', # box select
+        'sendDataToCloud',
+        'toImage',
+        'autoScale2d',
+        'hoverClosestCartesian',
+        'hoverCompareCartesian',
+        'zoomOut2d',
+        'zoomIn2d'
+      )
+    )
 }
