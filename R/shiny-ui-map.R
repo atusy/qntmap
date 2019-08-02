@@ -35,8 +35,7 @@ shiny_ui_map <- function() {
           "Histogram",
           plotOutput("xmap_histogram", height = "100%")
         ),
-        tab_panel("Summary", DTOutput("xmap_summary")),
-        tab_panel("Metadata", DTOutput("xmap_meta"))
+        tab_panel("Summary", DTOutput("xmap_summary"))
       )
     )
   )

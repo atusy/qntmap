@@ -27,7 +27,6 @@ shiny_ui_qnt <- function() {
       ),
       main_tabset_panel(
         tab_panel("Scatter plot", plotly::plotlyOutput("qnt_plot", height = "100%")),
-        tab_panel("Analytical conditions", DTOutput("qnt_elm")),
         tab_panel("Spots", DTOutput("qnt_cnd")),
         tab_panel("Wt%", DTOutput("qnt_wt")),
         tab_panel("Net", DTOutput("qnt_net")),

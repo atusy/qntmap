@@ -26,6 +26,8 @@ shiny_server <- function() {
       ))
     })
 
+    output$xmap_meta <- renderDT(dt(xmap_meta(xmap_data, input), options = DT_options()))
+    
     epma_data <- reactive(tidy_epma(qnt_data(), xmap_data()))
     
     # X-ray maps
@@ -33,8 +35,6 @@ shiny_server <- function() {
     xmap_elint <- reactive(setdiff(names(xmap_data()), c("x", "y")))
     
     output$xmap_elem_selecter <- renderUI(select_elem("xmap", "Element", xmap_elint))
-    
-    output$xmap_meta <- renderDT(dt(xmap_meta(xmap_data, input), options = DT_options()))
     
     ## X-ray mpas: action
     
