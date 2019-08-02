@@ -127,7 +127,6 @@ shiny_server <- function() {
       )
     )
     output$qnt_ui_y <- renderUI({
-      choices <- setdiff(qnt_elem(), input$qnt_x)
       picker_input(
         "qnt_y", label = NULL, choices = qnt_elem(), inline = FALSE,
         selected = qnt_elem()[[2L]]
