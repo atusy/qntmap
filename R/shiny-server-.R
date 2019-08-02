@@ -352,8 +352,7 @@ xmap_meta <- function(xmap_data, input) {
     "Start Z", attr(xmap_data(), "start")[[3L]], "mm",
     "Pixel size", attr(xmap_data(), "pixel")[[1L]], "\u00b5m",
     "Step size", attr(xmap_data(), "step")[[1L]], "\u00b5m",
-    "Instrument", attr(xmap_data(), "instrument"), "",
-    "Path", input$xmap_dir, ""
+    "Instrument", attr(xmap_data(), "instrument"), ""
   )
 }
 
