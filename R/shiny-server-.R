@@ -167,8 +167,11 @@ shiny_server <- function() {
     ))
     outlier_phase_all <- reactive(sort(unique(qnt_data()$cnd$phase)))
     output$outlier_phase <- renderUI(select_phase(outlier_phase_all()))
-    outlier_plot_reactive <- outlier_gg_react(epma_data, input)
-    output$outlier_plot <- renderPlot(outlier_plot_reactive())
+    outlier_plot_reactive <- reactive(outlier_gg(epma_data(), input))
+    output$outlier_plot <- renderPlot({
+      req(epma_data(), input$outlier_elem)
+      outlier_plot_reactive()
+    })
 
     centroid <- reactive(find_centers(
       xmap_data(), qnt_data(), saveas = FALSE,

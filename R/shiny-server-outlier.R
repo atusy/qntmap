@@ -1,18 +1,18 @@
 #' @importFrom ggAtusy stat_err
 #' @noRd
-outlier_gg_react <- function(
+outlier_gg <- function(
   epma, input, percentile = .99, interval = "prediction"
-) {reactive({
-  .phase_all <- unique(epma()$phase)
+) {
+  .phase_all <- unique(epma$phase)
   .phase <- setdiff(.phase_all, input$outlier_phase)
   bind_rows(
-    epma() %>>%
+    epma %>>%
       filter(.data$elint == !!input$outlier_elem) %>>%
       find_poisson_prediction_intervals(
         percentile = percentile, phase = .phase_all
       ) %>>%
       mutate(facet = "All"),
-    epma() %>>%
+    epma %>>%
       find_outlier(
         phase = !!.phase, percentile = percentile, interval = interval
       ) %>>% 
@@ -45,4 +45,4 @@ outlier_gg_react <- function(
     scale_alpha_identity() +
     theme_bw(base_size = 16) +
     labs(x = "Mapped peak intensity [cps/uA]", y = "Spot peak intensity [cps/uA]")
-})}
+}
