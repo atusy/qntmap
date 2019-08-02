@@ -279,7 +279,7 @@ shiny_server <- function() {
       qmap_img, ranges, range_x, range_y, .margin, qmap_zlim, input, "qmap"
     )
     output$qmap_heatmap <- renderPlot({
-      req(qmap_out())
+      req(qmap_out(), input$qmap_elem)
       qmap_heatmap()
     })
     
