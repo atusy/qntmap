@@ -187,7 +187,7 @@ shiny_server <- function(
     show_full_summary("cluster", input)
     
     observeEvent(input$cluster_run, {
-      cluster_out(cluster_xmap(xmap_data(), centroid()))
+      cluster_out(cluster_xmap(xmap_data(), centroid(), saving = FALSE))
     })
     
     cluster_z <- reactive({
@@ -246,7 +246,9 @@ shiny_server <- function(
     
     observeEvent(input$qmap_run, {
       req(cluster_out())
-      qmap_out(quantify(xmap_data(), qnt_data(), cluster_out(), fine_phase = input$outlier))
+      qmap_out(quantify(
+        xmap_data(), qnt_data(), cluster_out(), fine_phase = input$outlier, saving = FALSE
+      ))
     })
     
     observe_action("qmap", input, ranges, range_x, range_y, summary, cluster_out)
