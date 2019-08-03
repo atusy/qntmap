@@ -190,8 +190,7 @@ shiny_server <- function(
       cluster_out(cluster_xmap(xmap_data(), centroid(), saving = FALSE))
     })
     
-    cluster_z <- reactive({
-      req(cluster_out())
+    cluster_z <- reactive(
       as.factor(
         if (input$cluster_subcluster == "Asis") {
           cluster_out()$cluster
@@ -199,23 +198,22 @@ shiny_server <- function(
           gsub(input$cluster_suffix, "", cluster_out()$cluster)
         }
       )
-    })
+    )
     
-    cluster_zlim <- reactive({
-      req(cluster_out())
-      levels(cluster_z())
-    })
+    cluster_zlim <- reactive(levels(cluster_z()))
     
-    cluster_img <- reactive({
-      req(cluster_out())
+    cluster_img <- reactive(
       as_img(lookup[["discrete"]](cluster_z()), range_y()[2L], range_x()[2L])
-    })
+    )
     
     cluster_heatmap <- raster_react(
       cluster_img, ranges, range_x, range_y, .margin, cluster_zlim, input, "cluster"
     )
     
-    output$cluster_heatmap <- renderPlot(cluster_heatmap())
+    output$cluster_heatmap <- renderPlot({
+      req(cluster_out())
+      cluster_heatmap()
+    })
     output$cluster_membership <- renderDT({
       req(cluster_out())
       dt(
