@@ -1,7 +1,9 @@
 #' @importFrom shiny
 #' reactive reactiveVal reactiveValues
 
-shiny_server <- function() {
+shiny_server <- function(
+  xmap_dir, qnt_dir, deadtime, phase_list
+) {
   .margin <- c(-.5, .5)
   qnt_phase_list_csv <- tempfile()
 
@@ -9,15 +11,9 @@ shiny_server <- function() {
     
     # Input
 
-    xmap_data <- reactiveVal()
-    qnt_data <- reactiveVal()
-    isolate({
-      xmap_data(read_xmap(input$xmap_dir, DT = input$xmap_deadtime))
-      qnt_data(read_qnt(
-        input$qnt_dir, saving = FALSE, 
-        phase_list = `if`(identical(input$phase_list, ""), NULL, input$phase_list)
-      ))
-    })
+    xmap_data <- reactiveVal(read_xmap(xmap_dir, DT = deadtime))
+    qnt_data <- reactiveVal(read_qnt(qnt_dir, saving = FALSE, phase_list))
+
     observeEvent(input$input_load, {
       xmap_data(read_xmap(input$xmap_dir, DT = input$xmap_deadtime))
       qnt_data(read_qnt(

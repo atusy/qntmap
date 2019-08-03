@@ -1,0 +1,177 @@
+```{r}
+# library(qntmap)
+devtools::load_all()
+library(ggplot2)
+example <- "/home/rstudio/Documents/Univ/Data_ND/epma/WDX/JGb1a_170912/"
+xmap_dir <- file.path(example, ".map/1")
+qnt_dir <- file.path(example, ".qnt")
+xm <- read_xmap(xmap_dir, 1100)
+qn <- read_qnt(qnt_dir)
+ep <- tidy_epma_for_quantify(qn, xm)
+find_interval(ep) %>% str
+cn <- find_centers(xm, qn)
+cls <- cluster_xmap(xm, cn, saving = FALSE)
+
+cls %>% 
+  select(-x, -y, -cluster, -membership) %>%
+  reduce(`+`) %>%
+  unique -> x
+dput(x)
+```
+
+
+```{r}
+fine_phase <- c("Kfs", "Bt")#, "Amp")
+ignored_element = "K"
+elint = "Cr"
+percentile = .95
+interval = "prediction"
+ep %>>% 
+  mutate(fine_phase = phase %in% !!fine_phase) %>>%
+  find_outlier(
+    phase = -fine_phase, element = -ignored_element,
+    percentile = percentile, interval = interval
+  ) %>% 
+  filter(elint == !!elint, is.finite(mapint * pkint)) %>>%
+  mutate(facet = "All") %>>%
+  bind_rows(
+    filter(., !outlier & !fine_phase) %>>% 
+      find_outlier(
+        percentile = percentile, interval = interval
+      ) %>>% 
+      mutate(facet = "Filtered")
+  ) %>>%
+  ggplot(aes(mapint, pkint)) +
+  geom_ribbon(
+    aes(ymin = pkint.L_est, ymax = pkint.H_est),
+    color = "transparent", fill = "gray80"
+  ) +
+  ggAtusy::stat_err(aes(
+    xmin = mapint.L, xmax = mapint.H, ymin = pkint.L, ymax = pkint.H,
+    color = phase
+  )) +
+  geom_smooth(formula = y ~ 0 + x, se = FALSE, color = "red", method = "lm") +
+  geom_quantile(formula = y ~ 0 + x, quantiles = .5, color = "blue") +
+  facet_wrap(vars(.data$facet)) +
+  scale_color_discrete(name = "Phase") +
+  scale_alpha_identity() +
+  theme_bw() +
+  labs(x = "Mapped peak intensity [cps/uA]", y = "Spot peak intensity [cps/uA]")
+```
+
+```{r}
+ep %>>% 
+  mutate(fine_phase = phase %in% !!fine_phase) %>>%
+  find_outlier(
+    phase = -fine_phase, element = -ignored_element,
+    percentile = percentile, interval = interval
+  ) %>% 
+  filter(elint == !!elint, is.finite(mapint * pkint)) %>>%
+  mutate(facet = "All") %>>%
+  bind_rows(
+    filter(., !outlier & !fine_phase) %>>% 
+      find_outlier(
+        percentile = percentile, interval = interval
+      ) %>>% 
+      mutate(facet = "Filtered")
+  ) %>>%
+  ggplot(aes(mapint, pkint)) +
+  geom_ribbon(
+    aes(ymin = pkint.L_est, ymax = pkint.H_est),
+    color = "transparent", fill = "gray80"
+  ) +
+  ggAtusy::stat_err(aes(
+    xmin = mapint.L, xmax = mapint.H, ymin = pkint.L, ymax = pkint.H,
+    color = phase
+  )) +
+  geom_smooth(formula = y ~ 0 + x, se = FALSE, color = "red", method = "lm") +
+  geom_quantile(formula = y ~ 0 + x, quantiles = .5, color = "blue") +
+  facet_wrap(vars(.data$facet)) +
+  scale_color_discrete(name = "Phase") +
+  scale_alpha_identity() +
+  theme_bw() +
+  labs(x = "Mapped peak intensity [cps/uA]", y = "Spot peak intensity [cps/uA]")
+```
+
+
+# alpha
+
+```{r}
+lo = .005
+hi = .995
+ep %>>%
+  mutate(
+    temp = .data$beam * .data$pk_t * 1e+6,
+    pk = .data$pkint * temp
+  ) %>>%
+  mutate_at(
+    c("pk", "bgm", "bgp"),
+    list(
+      H = function(x) qnbinom(hi, x, .5) - x,
+      L = function(x) x - qnbinom(lo, x, .5)
+    )
+  ) %>>%
+  mutate(
+    pkint_H = pk_H / temp,
+    pkint_L = pk_L / temp,
+    temp = (bgp_pos + bgm_pos) * .data$beam * .data$bg_t * 1e+6,
+    bgint_H = propagate_add(
+      bgp * bgm_pos, bgp_H * bgm_pos,
+      bgm * bgp_pos, bgm_H * bgp_pos
+    ) / temp,
+    bgint_L = propagate_add(
+      bgp * bgm_pos, bgp_L * bgm_pos,
+      bgm * bgp_pos, bgm_L * bgp_pos
+    ) / temp,
+    net.H2 = net + propagate_add(pkint, pkint_H, bgint, bgint_H),
+    net.L2 = net - propagate_add(pkint, pkint_L, bgint, bgint_L),
+    temp = NULL
+  ) -> x
+
+x %>>% filter(elint == "Mg") %>>%
+  ggplot(aes(wt, net)) +
+  # geom_point() +
+  geom_linerange(aes(ymin = net.L, ymax = net.H)) +
+  geom_smooth(formula = y ~ 0 + x, method = "lm", se = FALSE) +
+  geom_quantile(formula = y ~ 0 + x, color = "red", quantiles = .5) +
+  facet_wrap(~ phase, scales = 'free')
+```
+
+```{r, fig.width = 16, fig.height = 10}
+library(furrr)
+plan(multiprocess)
+ep %>>%
+  filter(is.finite(.data$wt)) %>>%
+  select("id", "phase3", "elm", "elint", "wt", starts_with("net"), starts_with("bgint")) %>>%
+  group_by(.data$phase3, .data$elint) %>>%
+  mutate(net_est = suppressWarnings(rq(net ~ 0 + wt)$coefficients * .data$wt)) %>>%
+  ungroup() %>>%
+  mutate(outlier = .data$net_est < .data$net.L | .data$net.H < .data$net_est & wt != 0) %>>%
+  group_by(.data$id) %>>%
+  mutate(outlier = any(.data$outlier)) %>>%
+  ungroup %>>%
+  mutate(facet = paste(.data$phase3, .data$elint)) %>>%
+  mutate(w = as.integer(!.data$outlier)) %>>%
+  group_split(.data$phase3) %>>%
+  future_map(~ {
+    ggplot(.x, aes(x = wt, y = net)) +
+      geom_errorbar(aes(ymin = net.L, ymax = net.H, color = outlier)) +
+      geom_smooth(formula = y ~ 0 + x, method = "lm", se = FALSE) +
+      geom_quantile(formula = y ~ 0 + x, quantiles = .5) +
+      facet_wrap(~ elm, scales = 'free') +
+      ggtitle(.x$phase3[[1L]])
+  }) %>>%
+  walk(print)
+    
+```
+
+# tidy
+
+```{r}
+bench::mark(a = tidy(qnt, xmap), tidy_epma(qnt, xmap), check = FALSE, min_iterations = 30L) %>>%
+  print %>>%
+  autoplot
+```
+
+
+
