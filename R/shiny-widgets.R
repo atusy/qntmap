@@ -55,3 +55,18 @@ message_action <- c(
   Summarize = "Double click or select area to save data."
 )
 
+#' @importFrom shinyFiles shinyDirButton
+shiny_dir_btn <- function(id, title) {
+  shinyDirButton(
+    id, label = NULL, title = title, icon = icon("folder-open"),
+    style = "margin-bottom: 15px"
+  )  
+}
+
+#' @importFrom shinyFiles shinyFilesButton
+shiny_files_btn <- function(id, title) {
+  shinyFilesButton(
+    id, label = NULL, title = title, icon = icon("folder-open"),
+    style = "margin-bottom: 15px", multiple = FALSE
+  )
+}

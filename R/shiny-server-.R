@@ -1,16 +1,44 @@
 #' @importFrom shiny
-#' reactive reactiveVal reactiveValues
-
+#'  reactive reactiveVal reactiveValues
+#' @importFrom shinyFiles
+#'  getVolumes parseDirPath parseFilePaths shinyDirChoose shinyFileChoose
 shiny_server <- function(
   xmap_dir, qnt_dir, deadtime, phase_list
 ) {
   .margin <- c(-.5, .5)
   qnt_phase_list_csv <- tempfile()
+  roots <- c("Working directory" = '.', getVolumes()())
 
   function(input, output, session) {
     
     # Input
-
+    
+    shiny_dir_choose(input, "xmap")
+    observeEvent(input$xmap_dir_btn, {
+      req(is.list(input$xmap_dir_btn))
+      updateTextInput(
+        session, "xmap_dir", label = NULL,
+        value = parseDirPath(roots, input$xmap_dir_btn)
+      )
+    })
+    shiny_dir_choose(input, "qnt")
+    observeEvent(input$qnt_dir_btn, {
+      req(is.list(input$qnt_dir_btn))
+      updateTextInput(
+        session, "qnt_dir", label = NULL,
+        value = parseDirPath(roots, input$qnt_dir_btn)
+      )
+    })
+    shiny_csv_choose(input, "phase_list_btn")
+    observeEvent(input$phase_list_btn, {
+      req(is.list(input$phase_list_btn))
+      str(parseFilePaths(roots, input$phase_list_btn))
+      updateTextInput(
+        session, "phase_list", label = NULL,
+        value = parseFilePaths(roots, input$phase_list_btn)[["datapath"]]
+      )
+    })
+    
     xmap_data <- reactiveVal(read_xmap(xmap_dir, DT = deadtime))
     qnt_data <- reactiveVal(read_qnt(qnt_dir, saving = FALSE, phase_list))
 
@@ -370,4 +398,16 @@ ggplotly2 <- function(p, dynamicTicks = TRUE, ...) {
         'zoomIn2d'
       )
     )
+}
+
+shiny_dir_choose <- function(
+  input, id, roots = c("Working directory" = ".", getVolumes()())
+) {
+  shinyDirChoose(input, paste0(id, '_dir_btn'), root = roots, hidden = TRUE)
+}
+
+shiny_csv_choose <- function(
+  input, id, roots = c("Working directory" = ".", getVolumes()())
+) {
+  shinyFileChoose(input, id, root = roots, filetypes = "csv", hidden = TRUE)
 }
