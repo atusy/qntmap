@@ -55,10 +55,15 @@ message_action <- c(
   Summarize = "Double click or select area to save data."
 )
 
+icons <- list(
+  info = icon("info-circle"),
+  open = icon("folder-open")
+)
+
 #' @importFrom shinyFiles shinyDirButton
 shiny_dir_btn <- function(id, title) {
   shinyDirButton(
-    id, label = NULL, title = title, icon = icon("folder-open"),
+    id, label = NULL, title = title, icon = icons$open,
     style = "margin-bottom: 15px"
   )  
 }
@@ -66,7 +71,17 @@ shiny_dir_btn <- function(id, title) {
 #' @importFrom shinyFiles shinyFilesButton
 shiny_files_btn <- function(id, title) {
   shinyFilesButton(
-    id, label = NULL, title = title, icon = icon("folder-open"),
+    id, label = NULL, title = title, icon = icons$open,
     style = "margin-bottom: 15px", multiple = FALSE
   )
 }
+
+#' @importFrom tippy tippy_this
+tippy_icon <- function(id, tooltip, ..., type = "info") {
+  tagList(
+    tags$span(icons[[type]], id = id),
+    tippy_this(id, tooltip, ...)
+  )
+}
+
+tippy_info <- tippy_icon

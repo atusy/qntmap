@@ -16,8 +16,8 @@ shiny_ui_qnt <- function() {
           tags$hr(),
           tags$p(
             tags$strong("Edit phase list"),
-            tippy::tippy(
-              "\U1F6C8", 
+            tippy_info(
+              "info-spot-editor",
               "Double click to start edit.<br />Ctrl + Enter to Confirm.",
               placement = "bottom"
             )

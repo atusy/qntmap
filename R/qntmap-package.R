@@ -54,7 +54,7 @@
 #' @importFrom shiny
 #'   actionButton
 #'   checkboxInput
-#'   isolate
+#'   icon isolate
 #'   observeEvent
 #'   mainPanel
 #'   navbarPage numericInput
