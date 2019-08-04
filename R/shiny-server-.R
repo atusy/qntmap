@@ -12,33 +12,16 @@ shiny_server <- function(
   function(input, output, session) {
     
     # Input
-    
+
     shiny_dir_choose(input, "xmap")
-    observeEvent(input$xmap_dir_btn, {
-      req(is.list(input$xmap_dir_btn))
-      updateTextInput(
-        session, "xmap_dir", label = NULL,
-        value = parseDirPath(roots, input$xmap_dir_btn)
-      )
-    })
-    shiny_dir_choose(input, "qnt")
-    observeEvent(input$qnt_dir_btn, {
-      req(is.list(input$qnt_dir_btn))
-      updateTextInput(
-        session, "qnt_dir", label = NULL,
-        value = parseDirPath(roots, input$qnt_dir_btn)
-      )
-    })
-    shiny_csv_choose(input, "phase_list_btn")
-    observeEvent(input$phase_list_btn, {
-      req(is.list(input$phase_list_btn))
-      str(parseFilePaths(roots, input$phase_list_btn))
-      updateTextInput(
-        session, "phase_list", label = NULL,
-        value = parseFilePaths(roots, input$phase_list_btn)[["datapath"]]
-      )
-    })
+    update_path("xmap_dir_btn", "xmap_dir", input, session, roots)
     
+    shiny_dir_choose(input, "qnt")
+    update_path("qnt_dir_btn", "qnt_dir", input, session, roots)
+    
+    shiny_csv_choose(input, "phase_list_btn")
+    update_path("phase_list_btn", "phase_list", input, session, roots, "file")
+
     xmap_data <- reactiveVal(read_xmap(xmap_dir, DT = deadtime))
     qnt_data <- reactiveVal(read_qnt(qnt_dir, saving = FALSE, phase_list))
 
@@ -50,7 +33,7 @@ shiny_server <- function(
       ))
     })
 
-    output$xmap_meta <- renderDT(dt(xmap_meta(xmap_data, input), options = DT_options()))
+    output$xmap_meta <- renderDT(dt(xmap_meta(xmap_data, input)))
     
     epma_data <- reactive(tidy_epma(qnt_data(), xmap_data()))
     
@@ -410,4 +393,22 @@ shiny_csv_choose <- function(
   input, id, roots = c("Working directory" = ".", getVolumes()())
 ) {
   shinyFileChoose(input, id, root = roots, filetypes = "csv", hidden = TRUE)
+}
+
+parse_path <- function(roots, selection, type = c("dir", "file")) {
+  f <- list(dir = parseDirPath, file = parseFilePaths)[[type]]
+  i <- list(dir = 1, file = "datapath")[[type]]
+  f(roots, selection)[[i]]
+}
+
+update_path <- function(
+  id_event, id_text, input, session, roots, type = "dir"
+) {
+  observeEvent(input[[id_event]], {
+    req(is.list(input[[id_event]]))
+    updateTextInput(
+      session, id_text, label = NULL,
+      value = parse_path(roots, input[[id_event]], type = type)
+    )
+  })
 }
