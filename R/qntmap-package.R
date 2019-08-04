@@ -47,12 +47,13 @@
 #'   scale_y_reverse
 #'   stat
 #'   theme theme_bw theme_classic theme_minimal
+#' @importFrom glue glue
 #' @importFrom htmltools tagList tags
 #' @importFrom pipeR %>>%
 #' @importFrom purrr map map2 map_at map_dbl map_if modify_at modify_if pmap walk2
 #' @importFrom rlang !! .data enquo quo
 #' @importFrom shiny
-#'   actionButton
+#'   actionButton actionLink
 #'   checkboxInput
 #'   icon isolate
 #'   observeEvent

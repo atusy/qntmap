@@ -5,8 +5,8 @@ shiny_ui_check <- function() {
       sidebar_tabset_panel(
         # Find outliers
         tab_panel(
-          "Find outliers",
-          ui_check_instruction,
+          "Menu",
+          tags$h1("Find outliers"),
           uiOutput("outlier_elem_selecter"),
           uiOutput("outlier_phase"),
           shinyWidgets::radioGroupButtons(
@@ -17,6 +17,24 @@ shiny_ui_check <- function() {
             status = "secondary",
             individual = TRUE
           )
+        ),
+        tab_panel(
+          "Detail",
+          tags$h1("Multi-phase pixels and outliers"),
+          tags$p(
+            "To compare data of spot analysis and mapping from the same pixels,",
+            "it is important that both are analyzing the same phase.",
+            "However, mapping data inevitably contain pixels analyzing",
+            "multiple phases because",
+            "coordinates of pixels are automatically determined, and",
+            "probe diameter is generally larger on mapping than on spot analysis."
+          ),
+          tags$p(
+            "Mapping on multi-phase pixels cause lower or higher intensities of signals from certain elements than spot analysis on corresponding coordinates.",
+            "In other words, multi-phase pixels appear as horizontally scattered outliers on the scatter plot on the right pane."
+          ),
+          
+          tags$h1("Algorithm of removing outliers")
         )
       ),
       main_tabset_panel(

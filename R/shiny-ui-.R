@@ -16,6 +16,7 @@ css_page <- tags$style(
 .well.sidebar {padding: 0; margin: 0;}
 .sidebar .tab-pane { overflow: auto; }
 .tab-pane {padding: 10px;}
+h1 {font-size: 2.56rem; font-weight: bold;}
 p {margin-top: 10px;}
 
 /* dropdown */
@@ -44,6 +45,8 @@ a.action-button { background: none; }
 .tippy-tooltip { font-size: 1.5rem; }
 
 .js-plotly-plot .plotly .modebar{left: 10px}
+
+.tippy-tooltip a { color: skyblue}
 "
 )
 
@@ -58,7 +61,8 @@ shiny_ui <- function(xmap_dir, qnt_dir, deadtime, phase_list) {
     header = css_page,
     selected = "Map",
     shiny_ui_input(
-      xmap_dir = xmap_dir, deadtime = deadtime, qnt_dir = qnt_dir, phase_list = phase_list
+      xmap_dir = xmap_dir, deadtime = deadtime, qnt_dir = qnt_dir,
+      phase_list = phase_list
     ),
     shiny_ui_map(),
     shiny_ui_qnt(),

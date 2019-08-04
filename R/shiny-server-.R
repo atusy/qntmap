@@ -22,6 +22,11 @@ shiny_server <- function(
     shiny_csv_choose(input, "phase_list_btn")
     update_path("phase_list_btn", "phase_list", input, session, roots, "file")
 
+    observeEvent(input$navbar_spot, {
+      str(input$navbar_spot)
+      showTab("nav", "Spot", select = TRUE)
+    })
+    
     xmap_data <- reactiveVal(read_xmap(xmap_dir, DT = deadtime))
     qnt_data <- reactiveVal(read_qnt(qnt_dir, saving = FALSE, phase_list))
 
@@ -53,11 +58,6 @@ shiny_server <- function(
     
     ## X-ray maps: summary
     
-    show_full_summary <- function(id, input) {
-      observeEvent(input[[paste0(id, "_tab_summary")]], {
-        shiny::showTab(paste0("main_tabset_", id), target = "Summary", select = TRUE)
-      })
-    }
     show_full_summary("xmap", input)
 
     output$xmap_summary <- renderDT(dt(
@@ -410,5 +410,11 @@ update_path <- function(
       session, id_text, label = NULL,
       value = parse_path(roots, input[[id_event]], type = type)
     )
+  })
+}
+
+show_full_summary <- function(id, input) {
+  observeEvent(input[[paste0(id, "_tab_summary")]], {
+    shiny::showTab(paste0("main_tabset_", id), target = "Summary", select = TRUE)
   })
 }
