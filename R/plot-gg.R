@@ -67,15 +67,22 @@ gghist_theme <- function(xlim = NULL, ylim = NULL, base_size = 11) {
   )
 }
 
-#' Color palette
 #' @importFrom scales gradient_n_pal viridis_pal
-#' @importFrom grDevices colorRamp col2rgb
+#' @importFrom grDevices col2rgb
+#' @noRd
+viridis_palette <- function(option = "D") {
+  t(col2rgb(unique(gradient_n_pal(viridis_pal(
+    alpha = 1, begin = 0, end = 1, direction = 1, option = option
+  )(6))(seq(0, 1, 1e-4))))) / 255
+}
+
+#' Color palette
+#' @importFrom grDevices colorRamp
 #' @noRd
 palette <- list(
   # A rgb matrix
-  viridis = t(col2rgb(unique(gradient_n_pal(viridis_pal(
-    alpha = 1, begin = 0, end = 1, direction = 1, option = "D"
-  )(6))(seq(0, 1, 1e-4))))) / 255,
+  viridis = viridis_palette("D"),
+  magma = viridis_palette("A"),
   # A function returning rgb matrix according to 0--1 input
   discrete = colorRamp(
     c("#000000",
@@ -93,6 +100,7 @@ palette <- list(
 #' @importFrom scales rescale
 #' @noRd
 lookup <- list(
+  magma = function(x, to, ...) palette$magma[rescale(x, to = to, ...), , drop = FALSE],
   viridis  = function(x, to, ...) palette$viridis[rescale(x, to = to, ...), , drop = FALSE],
   gray     = function(x, ...) rep(rescale(x, ...), 3L),
   discrete = function(x, ...) {
@@ -101,6 +109,7 @@ lookup <- list(
   }
 )
 formals(lookup$viridis)$to <- c(1L, nrow(palette$viridis))
+formals(lookup$magma)$to <- c(1L, nrow(palette$magma))
 
 #' Convert to array
 #' @param x A value returned by `lookup()`
@@ -116,6 +125,7 @@ as_img <- function(x, row, col) {
 scale_fill <- list(
   gray = function(...) scale_fill_gradient(..., low = "black", high = "white"),
   viridis = scale_fill_viridis_c,
+  magma = function(..., option = "A") scale_fill_viridis_c(..., option = option),
   discrete = scale_fill_manual
 )
 
@@ -124,6 +134,7 @@ scale_fill <- list(
 scale_color <- list(
   gray = function(...) scale_color_gradient(..., low = "black", high = "white"),
   viridis = scale_color_viridis_c,
+  magma = function(..., option = "A") scale_color_viridis_c(..., option = option),
   discrete = scale_color_manual
 )
 
@@ -144,7 +155,7 @@ gg_img <- function(
   ylim = c(0, NROW(img)) + 0.5,
   zlim = c(0, 1),
   zname = NULL,
-  colors = c("viridis", "gray", "discrete"),
+  colors = c("viridis", "magma", "gray", "discrete"),
   barheight = unit(1, "npc") - unit(5, "line"),
   base_size = 11,
   ...

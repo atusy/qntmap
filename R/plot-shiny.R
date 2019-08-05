@@ -34,7 +34,7 @@ ui <- function(elm, selected = elm[[1L]], pcol = TRUE) {
 
     mainPanel(
       # shiny::verbatimTextOutput("debug"),
-      tags$head(tags$style("\n       #tip {\n        position: absolute;\n        width: auto;\n        z-index: 100;\n       }\n    ")),
+      tags$head(tags$style("#tip {position: absolute; width: auto; z-index: 100;}")),
       tags$script('
       $(document).ready(function(){
         // id of the plot

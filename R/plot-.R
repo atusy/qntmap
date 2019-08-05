@@ -39,7 +39,7 @@ plot.qntmap <- function(
                         y = setdiff(names(x), c("x", "y"))[1L],
                         zname = y,
                         zlim = NULL,
-                        colors = c("viridis", "gray"),
+                        colors = c("magma", "viridis", "gray"),
                         interactive = TRUE,
                         ...
 ) {

@@ -8,13 +8,15 @@
 \title{Create a ggplot object for objects created by qntmap package}
 \usage{
 \method{autoplot}{qntmap}(object, zname = setdiff(names(object), c("x",
-  "y"))[[1L]], zlim = NULL, colors = c("viridis", "gray"), ...)
+  "y"))[[1L]], zlim = NULL, colors = c("magma", "viridis", "gray"),
+  ...)
 
 \method{autoplot}{qm_xmap}(object, zname = setdiff(names(object), c("x",
-  "y"))[[1L]], zlim = NULL, colors = c("viridis", "gray"), ...)
+  "y"))[[1L]], zlim = NULL, colors = c("magma", "viridis", "gray"),
+  ...)
 
 \method{autoplot}{qm_cluster}(object, zname = "cluster", zlim = NULL,
-  colors = c("viridis", "gray"), ...)
+  colors = c("magma", "viridis", "gray"), ...)
 }
 \arguments{
 \item{object}{an object, whose class will determine the behaviour of autoplot}

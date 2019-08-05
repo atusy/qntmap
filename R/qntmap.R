@@ -1,12 +1,18 @@
 #' Interactively quantify X-ray maps
 #' 
+#' By default, it starts browser to open web-based UI. All arguments are optional.
+#' 
 #' @param xmap_dir,qnt_dir
 #'  Paths to the directories containing data from mapping and spot analysis.
 #' @param deadtime
 #'  Dead time in nano seconds.
 #' @inheritParams read_xmap
 #' @inheritParams read_qnt
-#' @param shiny Wheter to use shiny ui (default: `TRUE`)
+#' @param selected
+#'  A starting page of shiny UI. One of the "auto", "Input", "Map" or "Spot".
+#'  If auto (default), "Map" is chosen when `xmap_dir` is specified, or "Spot"
+#'  when `qnt_dir` is specified, or "Input" when both are not specified.
+#' @param shiny Wheter to use shiny UI (default: `TRUE`)
 #'
 #' @importFrom easycsv choose_dir
 #' @importFrom utils menu select.list
@@ -14,12 +20,18 @@
 qntmap <- function(
   xmap_dir = NULL, qnt_dir = NULL,
   deadtime = 1100, phase_list = NULL,
-  shiny = TRUE
+  shiny = TRUE, selected = c("auto", "Input", "Map", "Spot")
 ) {
   if (shiny) {
     example <- system.file(package = "qntmap", "extdata", "minimal")
-    # example <- "/home/rstudio/Documents/Univ/Data_ND/epma/WDX/JGb1a_170912/"
     
+    selected <- match.arg(selected)
+    if (selected == "auto") {
+      selected <- c(
+          "Map", "Spot", "Input"
+        )[c(!is.null(xmap_dir), !is.null(qnt_dir), TRUE)][[1L]]
+    }
+
     if (is.null(xmap_dir)) {
       deadtime <- 0
       xmap_dir <- file.path(example, ".map/1")
@@ -29,7 +41,7 @@ qntmap <- function(
     shiny::shinyApp(
       shiny_ui(
         xmap_dir = xmap_dir, qnt_dir = qnt_dir, deadtime = deadtime,
-        phase_list = phase_list
+        phase_list = phase_list, selected = selected
       ), 
       shiny_server(
         xmap_dir = xmap_dir, qnt_dir = qnt_dir, deadtime = deadtime,

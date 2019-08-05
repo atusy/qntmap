@@ -6,9 +6,20 @@ shiny_ui_cluster <- function() {
         # Find outliers
         tab_panel(
           "Menu",
-          actionButton(
-            "cluster_run", label = "Run cluster analysis", width = "100%",
-            class = "btn-run"
+          tippy::tippy_this("cluster_run", "It may take a few minutes."),
+          cssgrid::grid_rowwise(
+            actionButton(
+              "cluster_run",
+              label = "Run cluster analysis",
+              width = "100%",
+              class = "btn-run"
+            ),
+            shinyWidgets::dropdown(
+              uiOutput("cluster_elint"),
+              circle = FALSE, right = TRUE, width = "200px"
+            ),
+            cols = ("1fr auto"),
+            gap = "3px"
           ),
           shinyWidgets::radioGroupButtons(
             inputId = "cluster_subcluster",

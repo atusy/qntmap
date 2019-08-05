@@ -17,7 +17,7 @@ ggplot2::autoplot
 #' @importFrom scales squish
 autoplot.qntmap <- function(
   object, zname = setdiff(names(object), c("x", "y"))[[1L]], 
-  zlim = NULL, colors = c("viridis", "gray"), ...
+  zlim = NULL, colors = c("magma", "viridis", "gray"), ...
 ) {
 
   z <- object[[zname]]

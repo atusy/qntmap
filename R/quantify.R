@@ -61,7 +61,7 @@ quantify <- function(
   TF_inherit_params <- check_ABG(params, xmap, cluster) # © 2018 JAMSTEC
 
   X <- select(cluster, -"x", -"y", -"cluster", -"membership")
-print(TRUE)
+  
   # Find alpha (A), beta (B), and gamma (G)
   if (TF_inherit_params) {                              # © 2018 JAMSTEC
     AG <- fix_AG(params)                                # © 2018 JAMSTEC

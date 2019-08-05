@@ -48,13 +48,15 @@
 #'   stat
 #'   theme theme_bw theme_classic theme_minimal
 #' @importFrom glue glue
-#' @importFrom htmltools tagList tags
+#' @importFrom htmltools tagList tag tags
 #' @importFrom pipeR %>>%
 #' @importFrom purrr map map2 map_at map_dbl map_if modify_at modify_if pmap walk2
-#' @importFrom rlang !! .data enquo quo
+#' @importFrom rlang !! .data enquo quo sym
 #' @importFrom shiny
 #'   actionButton actionLink
 #'   checkboxInput
+#'   eventReactive
+#'   HTML
 #'   icon isolate
 #'   observeEvent
 #'   mainPanel
@@ -65,6 +67,7 @@
 #'   sidebarLayout sidebarPanel
 #'   tabPanel tableOutput tabsetPanel textInput textOutput
 #'   uiOutput
+#'   withMathJax
 #' @importFrom stringr 
 #'   str_c str_detect str_extract str_replace str_replace_all str_subset
 #' @importFrom tibble tribble

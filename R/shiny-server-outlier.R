@@ -1,7 +1,7 @@
 #' @importFrom ggAtusy stat_err
 #' @noRd
 outlier_gg <- function(
-  epma, input, percentile = .99, interval = "prediction"
+  epma, input, percentile = .99, interval = "prediction", coords = NULL
 ) {
   .phase_all <- unique(epma$phase)
   .phase <- setdiff(.phase_all, input$outlier_phase)
@@ -37,10 +37,8 @@ outlier_gg <- function(
     )) +
     geom_smooth(formula = y ~ 0 + x, se = FALSE, color = "red", method = "lm") +
     geom_quantile(formula = y ~ 0 + x, quantiles = .5, color = "blue") +
-    facet_wrap(
-      vars(.data$facet), 
-      scales = if (input$outlier_scales == "Shared") "fixed" else "free"
-    ) +
+    facet_wrap(vars(.data$facet)) +
+    coords +
     scale_color_discrete(name = "Phase") +
     scale_alpha_identity() +
     theme_bw(base_size = 16) +

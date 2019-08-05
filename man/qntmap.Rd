@@ -5,7 +5,8 @@
 \title{Interactively quantify X-ray maps}
 \usage{
 qntmap(xmap_dir = NULL, qnt_dir = NULL, deadtime = 1100,
-  phase_list = NULL, shiny = TRUE)
+  phase_list = NULL, shiny = TRUE, selected = c("auto", "Input",
+  "Map", "Spot"))
 }
 \arguments{
 \item{xmap_dir, qnt_dir}{Paths to the directories containing data from mapping and spot analysis.}
@@ -15,8 +16,12 @@ qntmap(xmap_dir = NULL, qnt_dir = NULL, deadtime = 1100,
 \item{phase_list}{A path to a csv file containing columns indicating
 phase of each analysis and \code{TRUE} or \code{FALSE} to use it for quantifying.}
 
-\item{shiny}{Wheter to use shiny ui (default: \code{TRUE})}
+\item{shiny}{Wheter to use shiny UI (default: \code{TRUE})}
+
+\item{selected}{A starting page of shiny UI. One of the "auto", "Input", "Map" or "Spot".
+If auto (default), "Map" is chosen when \code{xmap_dir} is specified, or "Spot"
+when \code{qnt_dir} is specified, or "Input" when both are not specified.}
 }
 \description{
-Interactively quantify X-ray maps
+By default, it starts browser to open web-based UI. All arguments are optional.
 }

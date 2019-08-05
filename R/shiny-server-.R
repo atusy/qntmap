@@ -46,7 +46,7 @@ shiny_server <- function(
     
     xmap_elint <- reactive(setdiff(names(xmap_data()), c("x", "y")))
     
-    output$xmap_elem_selecter <- renderUI(select_elem("xmap", "Element", xmap_elint))
+    output$xmap_elem_selecter <- renderUI(select_elem("xmap", "Element", xmap_elint()))
     
     ## X-ray mpas: action
     
@@ -80,7 +80,7 @@ shiny_server <- function(
     )
     xmap_spot <- reactive(
       geom_point(
-        aes(.data$y_px, .data$x_px), inherit.aes = FALSE, color = "red",
+        aes(.data$y_px, .data$x_px), inherit.aes = FALSE, color = "green",
         filter(epma_data(), .data$elint == .data$elint[[1L]])[c("x_px", "y_px")]
       )
     )
@@ -140,22 +140,43 @@ shiny_server <- function(
       )
     })
     
-    output$qnt_plot <- plotly::renderPlotly({
+    qnt_coords <- reactiveVal(NULL)
+    observe_brush("qnt", input, qnt_coords)
+    
+    qnt_data_wt <- reactive(
+      bind_cols(
+        qnt_data()$cnd[c("id", "phase", "use")],
+        qnt_data()$cmp$wt[c(input$qnt_x, input$qnt_y)]
+      ) %>>%
+        filter(.data$use)
+    )
+    
+    output$qnt_plot <- renderPlot({
       req(qnt_data(), input$qnt_x, input$qnt_y)
-      ggplotly2(
-        bind_cols(
-          qnt_data()$cnd[c("id", "phase", "use")],
-          qnt_data()$cmp$wt[c(input$qnt_x, input$qnt_y)]
-        ) %>>%
-          filter(.data$use) %>>%
-          ggplot(aes(
-            x = !!sym(input$qnt_x), y = !!sym(input$qnt_y),
-            id = !!quo(id), color = !!quo(phase)
-          )) +
-          geom_point() +
-          theme_bw(base_size = 16)
-      )
+      ggplot(qnt_data_wt(), aes(
+        x = !!sym(input$qnt_x), y = !!sym(input$qnt_y),
+        id = .data$id, color = .data$phase
+      )) +
+        scale_color_discrete(name = "Phase") +
+        geom_point(size = 2) +
+        theme_bw(base_size = 16) +
+        qnt_coords()
     })
+    
+    qnt_plot_tooltip <- reactiveVal("Here shows IDs of points withn 5 px from a click.")
+    
+    observeEvent(input$qnt_click_single, {
+      pts <- shiny::nearPoints(qnt_data_wt(), input$qnt_click_single)
+      req(nrow(pts) > 0L)
+      qnt_plot_tooltip(paste0("ID: ", paste(pts$id, collapse = ", ")))
+    })
+
+    output$qnt_plot_id <- renderPrint(cat(qnt_plot_tooltip()))
+    
+    output$qnt_plot_tooltip <- renderUI(verbatimTextOutput("qnt_plot_id"))
+    
+    
+    
     output$qnt_elm <- renderDT(dt(qnt_data()$elm))
     output$qnt_cnd <- renderDT(dt(qnt_data()$cnd))
     output$qnt_wt <- renderDT(dt(qnt_data()$cmp$wt))
@@ -170,16 +191,24 @@ shiny_server <- function(
     
     outlier_elint <- reactive(intersect(xmap_elint(), qnt_elint()))
     output$outlier_elem_selecter <- renderUI(select_elem(
-      "outlier", "Element to plot", outlier_elint
+      "outlier", "Element to plot", outlier_elint()
     ))
+    
     outlier_phase_all <- reactive(sort(unique(qnt_data()$cnd$phase)))
     output$outlier_phase <- renderUI(select_phase(outlier_phase_all()))
-    outlier_plot_reactive <- reactive(outlier_gg(epma_data(), input))
+    
+    outlier_coords <- reactiveVal(NULL)
+    observe_brush("outlier", input, outlier_coords)
+
+    outlier_plot_reactive <- reactive(
+      outlier_gg(epma_data(), input, coords = outlier_coords())
+    )
+    
     output$outlier_plot <- renderPlot({
       req(epma_data(), input$outlier_elem)
       outlier_plot_reactive()
     })
-
+    
     centroid <- reactive(find_centers(
       xmap_data(), qnt_data(), saveas = FALSE,
       phase = !!quo(setdiff(outlier_phase_all(), input$outlier_phase))
@@ -191,15 +220,32 @@ shiny_server <- function(
     
     # Cluster
     
-    cluster_out <- reactiveVal()
+    output$cluster_elint <- renderUI({
+      choices <- xmap_elint()
+      req(choices)
+      shiny::checkboxGroupInput(
+        "cluster_elint",
+        "Elements to be used",
+        choices = choices,
+        selected = choices
+      )
+    })
+    
+    cluster_out <- eventReactive(input$cluster_run, {
+      elements <- `if`(
+        is.null(input$cluster_elint),
+        intersect(names(xmap_data()), colnames(centroid())),
+        input$cluster_elint
+      )
+      
+      if (length(elements) < 2) stop("At least 2 elements must be chosen")
+        
+      cluster_xmap(xmap_data(), centroid(), saving = FALSE, elements = elements)
+    })
     
     observe_action("cluster", input, ranges, range_x, range_y, summary, cluster_out)
     
     show_full_summary("cluster", input)
-    
-    observeEvent(input$cluster_run, {
-      cluster_out(cluster_xmap(xmap_data(), centroid(), saving = FALSE))
-    })
     
     cluster_z <- reactive(
       as.factor(
@@ -247,18 +293,20 @@ shiny_server <- function(
     
     # Quantify
     
-    qmap_out <- reactiveVal()
+    qmap_out <- eventReactive(input$qmap_run, {
+      req(cluster_out())
+      quantify(
+        xmap_data(), qnt_data(), cluster_out(), fine_phase = input$outlier,
+        saving = FALSE
+      )
+    })
 
     qmap_elint <- reactive(setdiff(names(qmap_out()), c("x", "y")))
     
-    output$qmap_elem_selecter <- renderUI(select_elem("qmap", "Element", qmap_elint))
-    
-    observeEvent(input$qmap_run, {
-      req(cluster_out())
-      qmap_out(quantify(
-        xmap_data(), qnt_data(), cluster_out(), fine_phase = input$outlier, saving = FALSE
-      ))
-    })
+    output$qmap_elem_selecter <- renderUI(select_elem(
+      "qmap", "Element",
+      `if`(input$cluster_run == 0L || input$qmap_run == 0L, NULL, qmap_elint())
+    ))
     
     observe_action("qmap", input, ranges, range_x, range_y, summary, cluster_out)
 
@@ -334,8 +382,8 @@ select_elem <- function(id, label, choices) {
   picker_input(
     paste0(id, "_elem"),
     label = label,
-    choices = choices(),
-    selected = choices()[[1L]],
+    choices = choices,
+    selected = choices[[1L]],
     width = "100%"
   )
 }
@@ -416,5 +464,14 @@ update_path <- function(
 show_full_summary <- function(id, input) {
   observeEvent(input[[paste0(id, "_tab_summary")]], {
     shiny::showTab(paste0("main_tabset_", id), target = "Summary", select = TRUE)
+  })
+}
+
+observe_brush <- function(id, input, reactive_value) {
+  observeEvent(input[[paste0(id, "_click")]], {
+    i <- input[[paste0(id, "_brush")]]
+    reactive_value(
+      coord_cartesian(xlim = c(i$xmin, i$xmax), ylim = c(i$ymin, i$ymax))
+    )
   })
 }

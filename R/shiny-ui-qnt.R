@@ -26,7 +26,19 @@ shiny_ui_qnt <- function() {
         )
       ),
       main_tabset_panel(
-        tab_panel("Scatter plot", plotly::plotlyOutput("qnt_plot", height = "100%")),
+        tab_panel(
+          "Scatter plot",
+          tags$div(
+            plotOutput(
+              "qnt_plot", height = "100%",
+              click = "qnt_click_single",
+              dblclick = "qnt_click",
+              brush = brushOpts(id = "qnt_brush", resetOnNew = TRUE)
+            ),
+            style = "height: calc(100% - 2em)"
+          ),
+          uiOutput("qnt_plot_tooltip")
+        ),
         tab_panel("Spots", DTOutput("qnt_cnd")),
         tab_panel("Wt%", DTOutput("qnt_wt")),
         tab_panel("Net", DTOutput("qnt_net")),

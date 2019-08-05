@@ -10,7 +10,7 @@ shiny_ui_input <- function(xmap_dir, deadtime, qnt_dir, phase_list) {
           # Map
           tags$h1("Mapping"),
           tags$p(
-            "Directory containing mapping data.",
+            tags$strong("Directory containing mapping data."),
             tippy_info(
               "xmap_dir_tippy_info",
               'The directory is typically saved under ".map"'
@@ -18,11 +18,11 @@ shiny_ui_input <- function(xmap_dir, deadtime, qnt_dir, phase_list) {
           ),
           cssgrid::grid_rowwise(
             textInput("xmap_dir", label = NULL, value = xmap_dir),
-            shiny_dir_btn("xmap_dir_btn", "Choose a directory"),
+            shiny_dir_btn("xmap_dir_btn"),
             cols = c("1fr auto"), gap = "2px"
           ),
           tags$p(
-            "Dead time in nanoseconds.",
+            tags$strong("Dead time in nanoseconds."),
             tippy_info(
               "deadtime_tippy_info",
               "1100 is the default value of JXA-8800"
@@ -33,7 +33,7 @@ shiny_ui_input <- function(xmap_dir, deadtime, qnt_dir, phase_list) {
           # Spot
           tags$h1("Spot analysis"),
           tags$p(
-            "Directory containing spot analysis data.",
+            tags$strong("Directory containing spot analysis data."),
             tippy_info(
               "qnt_dir_tippy_info",
               'The directory is typically named as ".qnt"'
@@ -41,11 +41,11 @@ shiny_ui_input <- function(xmap_dir, deadtime, qnt_dir, phase_list) {
           ),
           cssgrid::grid_rowwise(
             textInput("qnt_dir", label = NULL, value = qnt_dir),
-            shiny_dir_btn("qnt_dir_btn", "Choose a directory"),
+            shiny_dir_btn("qnt_dir_btn"),
             cols = c("1fr auto"), gap = "2px"
           ),
           tags$p(
-            "Optional csv file identifying phases",
+            tags$strong("Optional csv file identifying phases"),
             tippy_info(
               "phase_list_tippy_info",
               htmltools::doRenderTags(tagList(
@@ -54,9 +54,8 @@ shiny_ui_input <- function(xmap_dir, deadtime, qnt_dir, phase_list) {
                   "comments on each spots are regarded as phase names."
                 ),
                 tags$p(
-                  "In order to get template,",
-                  "Leave here blank and load once.",
-                  "Then go see a table on the left pane of the Spot page"
+                  "To get a template, leave here blank and load once.",
+                  "Then go to the Spot page and download a table on the left pane."
                 )
               ))
             )

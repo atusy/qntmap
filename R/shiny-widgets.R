@@ -24,16 +24,23 @@ picker_input <- function(
 }
 
 drop_map <- function(id, ...) {
-  #div(
   shinyWidgets::dropdown(
+    tags$p(
+      "Color",
+      tippy_info(
+        "colors_tippyinfo",
+        "Choices are perceptually uniform palletes.<br />cf. <a href='https://cran.r-project.org/web/packages/viridis/vignettes/intro-to-viridis.html', target = _blank>https://cran.r-project.org/web/packages/viridis/vignettes/intro-to-viridis.html</a>",
+        interactive = TRUE
+      )
+    ),
     picker_input(
-      paste0(id, "_color"), label = "Color", 
-      choices = c("viridis", "gray"),
-      selected = "viridis", width = "100%"
+      paste0(id, "_color"), label = NULL, 
+      choices = setdiff(names(lookup), "discrete"),
+      selected = "magma", width = "100%"
     ),
     ...,
     circle = FALSE, right = TRUE, width = "200px"
-  )#, style = "align-self: end; margin-bottom: 15px;")
+  )
 }
 
 select_action <- function(id) {
@@ -50,9 +57,9 @@ select_action <- function(id) {
 }
 
 message_action <- c(
-  Zoom = "Zoom by double click selected area.<br />Pan by double click again.",
+  Zoom = "Zoom by double click selected area.<br />Unzoom by double click without selecting area..",
   Move = "Move by double click within zoomed area.",
-  Summarize = "Double click or select area to save data."
+  Summarize = "Double click or select area to summarize data."
 )
 
 icons <- list(
@@ -61,7 +68,7 @@ icons <- list(
 )
 
 #' @importFrom shinyFiles shinyDirButton
-shiny_dir_btn <- function(id, title) {
+shiny_dir_btn <- function(id, title = "Choose a directory from the left pane") {
   shinyDirButton(
     id, label = NULL, title = title, icon = icons$open,
     style = "margin-bottom: 15px"
@@ -69,10 +76,10 @@ shiny_dir_btn <- function(id, title) {
 }
 
 #' @importFrom shinyFiles shinyFilesButton
-shiny_files_btn <- function(id, title) {
+shiny_files_btn <- function(id, title = "Choose a file", multiple = FALSE) {
   shinyFilesButton(
     id, label = NULL, title = title, icon = icons$open,
-    style = "margin-bottom: 15px", multiple = FALSE
+    style = "margin-bottom: 15px", multiple = multiple
   )
 }
 
