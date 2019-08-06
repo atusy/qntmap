@@ -17,14 +17,15 @@ squish_react <- function(id, map_reactive, zlim_reactive, input) {reactive({
   squish(map_reactive()[[z]], zlim_reactive())
 })}
 
-raster_react <- function(x, ranges, range_x, range_y, .margin, zlim, input, id) {reactive({
-  ids <- paste0(id, "_", c("elem", "color"))
-  rx <- if (is.null(ranges$x)) range_x() else ranges$x
-  ry <- if (is.null(ranges$y)) range_y() else ranges$y
+raster <- function(x, ranges, range_x, range_y, .margin, zlim, input, id, step_size = NULL) {
+  ids <- paste0(id, "_", c("elem", "color", "scale"))
+  rx <- if (is.null(ranges$x)) range_x else ranges$x
+  ry <- if (is.null(ranges$y)) range_y else ranges$y
   gg_img(
-    x()[ry[[1L]]:ry[[2L]], rx[[1L]]:rx[[2L]], ],
+    x[ry[[1L]]:ry[[2L]], rx[[1L]]:rx[[2L]], ],
     xlim = rx + .margin, ylim = ry + .margin,
-    zlim = zlim(), zname = input[[ids[[1L]]]],
-    colors = input[[ids[[2L]]]], base_size = 16
+    zlim = zlim, zname = input[[ids[[1L]]]],
+    colors = input[[ids[[2L]]]], base_size = 16,
+    scale = input[[ids[[3L]]]], step_size = step_size
   )
-})}
+}

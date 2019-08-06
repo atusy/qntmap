@@ -17,7 +17,8 @@ ggplot2::autoplot
 #' @importFrom scales squish
 autoplot.qntmap <- function(
   object, zname = setdiff(names(object), c("x", "y"))[[1L]], 
-  zlim = NULL, colors = c("magma", "viridis", "gray"), ...
+  zlim = NULL, colors = c("magma", "viridis", "gray"),
+  scale = c("px", "um", "nm", "cm"), ...
 ) {
 
   z <- object[[zname]]
@@ -33,7 +34,8 @@ autoplot.qntmap <- function(
 
   gg_img(
     as_img(lookup[[colors]](z, from = zlim), max(object$y), max(object$x)),
-    zlim = zlim, zname = zname, colors = colors, ...
+    zlim = zlim, zname = zname, colors = colors,
+    scale = scale, step_size = attr(object, "step")[[1L]], ...
   )
 }
 

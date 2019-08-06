@@ -13,21 +13,17 @@ shiny_server <- function(
     
     # Input
 
-    shiny_dir_choose(input, "xmap")
+    shiny_dir_choose(input, "xmap", roots = roots)
     update_path("xmap_dir_btn", "xmap_dir", input, session, roots)
     
-    shiny_dir_choose(input, "qnt")
+    shiny_dir_choose(input, "qnt", roots = roots)
     update_path("qnt_dir_btn", "qnt_dir", input, session, roots)
     
-    shiny_csv_choose(input, "phase_list_btn")
+    shiny_csv_choose(input, "phase_list_btn", roots = roots)
     update_path("phase_list_btn", "phase_list", input, session, roots, "file")
-
-    observeEvent(input$navbar_spot, {
-      str(input$navbar_spot)
-      showTab("nav", "Spot", select = TRUE)
-    })
     
     xmap_data <- reactiveVal(read_xmap(xmap_dir, DT = deadtime))
+    
     qnt_data <- reactiveVal(read_qnt(qnt_dir, saving = FALSE, phase_list))
 
     observeEvent(input$input_load, {
@@ -41,12 +37,32 @@ shiny_server <- function(
     output$xmap_meta <- renderDT(dt(xmap_meta(xmap_data, input)))
     
     epma_data <- reactive(tidy_epma(qnt_data(), xmap_data()))
+    step_size <- reactive(attr(xmap_data(), "step")[[1L]])
     
     # X-ray maps
     
     xmap_elint <- reactive(setdiff(names(xmap_data()), c("x", "y")))
     
     output$xmap_elem_selecter <- renderUI(select_elem("xmap", "Element", xmap_elint()))
+    
+    observeEvent(input$xmap_color, {
+      shinyWidgets::updatePickerInput(session, "qmap_color", selected = input$xmap_color)
+    })
+    observeEvent(input$qmap_color, {
+      shinyWidgets::updatePickerInput(session, "xmap_color", selected = input$qmap_color)
+    })
+    
+    observeEvent(input$xmap_scale, {
+      shinyWidgets::updatePickerInput(session, "qmap_scale", selected = input$xmap_scale)
+      shinyWidgets::updatePickerInput(session, "cluster_scale", selected = input$xmap_scale)
+    })
+    observeEvent(input$cluster_scale, {
+      shinyWidgets::updatePickerInput(session, "xmap_scale", selected = input$cluster_scale)
+    })
+    observeEvent(input$qmap_scale, {
+      shinyWidgets::updatePickerInput(session, "xmap_scale", selected = input$qmap_scale)
+    })
+    
     
     ## X-ray mpas: action
     
@@ -75,9 +91,9 @@ shiny_server <- function(
       lookup[[input$xmap_color]](xmap_squished(), from = xmap_zlim()),
       range_y()[2L], range_x()[2L]
     ))
-    xmap_heatmap <- raster_react(
-      xmap_img, ranges, range_x, range_y, .margin, xmap_zlim, input, "xmap"
-    )
+    xmap_heatmap <- reactive(raster(
+      xmap_img(), ranges, range_x(), range_y(), .margin, xmap_zlim(), input, "xmap", step_size()
+    ))
     xmap_spot <- reactive(
       geom_point(
         aes(.data$y_px, .data$x_px), inherit.aes = FALSE, color = "green",
@@ -249,7 +265,7 @@ shiny_server <- function(
     
     cluster_z <- reactive(
       as.factor(
-        if (input$cluster_subcluster == "Asis") {
+        if (input$cluster_subcluster == "Separated") {
           cluster_out()$cluster
         } else {
           gsub(input$cluster_suffix, "", cluster_out()$cluster)
@@ -263,9 +279,9 @@ shiny_server <- function(
       as_img(lookup[["discrete"]](cluster_z()), range_y()[2L], range_x()[2L])
     )
     
-    cluster_heatmap <- raster_react(
-      cluster_img, ranges, range_x, range_y, .margin, cluster_zlim, input, "cluster"
-    )
+    cluster_heatmap <- reactive(raster(
+      cluster_img(), ranges, range_x(), range_y(), .margin, cluster_zlim(), input, "cluster", step_size()
+    ))
     
     output$cluster_heatmap <- renderPlot({
       req(cluster_out())
@@ -330,9 +346,9 @@ shiny_server <- function(
       range_y()[2L], range_x()[2L]
     ))
     
-    qmap_heatmap <- raster_react(
-      qmap_img, ranges, range_x, range_y, .margin, qmap_zlim, input, "qmap"
-    )
+    qmap_heatmap <- reactive(raster(
+      qmap_img(), ranges, range_x(), range_y(), .margin, qmap_zlim(), input, "qmap", step_size()
+    ))
     output$qmap_heatmap <- renderPlot({
       req(qmap_out(), input$qmap_elem)
       qmap_heatmap()

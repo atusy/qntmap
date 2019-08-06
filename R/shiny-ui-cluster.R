@@ -21,19 +21,26 @@ shiny_ui_cluster <- function() {
             cols = ("1fr auto"),
             gap = "3px"
           ),
-          shinyWidgets::radioGroupButtons(
-            inputId = "cluster_subcluster",
-            label = "Appearance of subclusters",
-            choices = c("Asis", "Integrated"),
-            selected = "Asis",
-            status = "secondary",
-            individual = TRUE
-          ),
-          textInput(
-            "cluster_suffix", 
-            "Suffix of subclusters in Regex",
-            value = "_.*",
-            width = "100%"
+          cssgrid::grid_layout(
+            picker_scale("cluster", label = "Scale", width =  "auto"),
+            picker_input(
+              inputId = "cluster_subcluster",
+              label = "Subclusters",
+              choices = c("Separated", "Integrated"),
+              selected = "Separated"
+            ),
+            drop_menu(
+              textInput(
+                "cluster_suffix", 
+                "Suffix of subclusters in Regex",
+                value = "_.*",
+                width = "100%"
+              )
+            ),
+            cols = "auto 1fr auto",
+            column_gap = "3px",
+            style = "width: 100%;",
+            class = "cssgrid"
           ),
           select_action("cluster_action"),
           tags$strong(

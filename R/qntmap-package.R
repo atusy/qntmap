@@ -44,7 +44,7 @@
 #'   scale_alpha_identity scale_color_discrete
 #'   scale_color_gradient scale_color_manual scale_color_viridis_c
 #'   scale_fill_gradient scale_fill_manual scale_fill_viridis_c
-#'   scale_y_reverse
+#'   scale_x_continuous scale_y_reverse
 #'   stat
 #'   theme theme_bw theme_classic theme_minimal
 #' @importFrom glue glue

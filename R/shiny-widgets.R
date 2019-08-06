@@ -23,23 +23,38 @@ picker_input <- function(
   )
 }
 
+drop_menu <- function(..., circle = FALSE, right = TRUE, width = "200px") {
+  shinyWidgets::dropdown(..., circle = circle, right = right, width = width)
+}
+
 drop_map <- function(id, ...) {
-  shinyWidgets::dropdown(
-    tags$p(
-      "Color",
-      tippy_info(
-        "colors_tippyinfo",
-        "Choices are perceptually uniform palletes.<br />cf. <a href='https://cran.r-project.org/web/packages/viridis/vignettes/intro-to-viridis.html', target = _blank>https://cran.r-project.org/web/packages/viridis/vignettes/intro-to-viridis.html</a>",
-        interactive = TRUE
+  drop_menu(
+    tagList(
+      tags$p(
+        "Color",
+        tippy_info(
+          "colors_tippyinfo",
+          "Choices are perceptually uniform palletes.<br />cf. <a href='https://cran.r-project.org/web/packages/viridis/vignettes/intro-to-viridis.html', target = _blank>https://cran.r-project.org/web/packages/viridis/vignettes/intro-to-viridis.html</a>",
+          interactive = TRUE
+        )
+      ),
+      picker_input(
+        paste0(id, "_color"), label = NULL, 
+        choices = setdiff(names(lookup), "discrete"),
+        selected = "magma", width = "100%"
       )
     ),
-    picker_input(
-      paste0(id, "_color"), label = NULL, 
-      choices = setdiff(names(lookup), "discrete"),
-      selected = "magma", width = "100%"
-    ),
-    ...,
-    circle = FALSE, right = TRUE, width = "200px"
+    tags$p("Scale"),
+    picker_scale(id),
+    ...
+  )
+}
+
+picker_scale <- function(id, label = NULL, width = "100%") {
+  picker_input(
+    paste0(id, "_scale"), label = label,
+    choices = c(px = "px", "\u00b5m" = "um", mm = "mm", cm = "cm"),
+    selected = "px", width = width
   )
 }
 
