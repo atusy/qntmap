@@ -10,10 +10,12 @@
 
 ## Biggest NEWS
 
-- **Graphical user interface is ready!**
+- **Graphical user interface is ready!** Run `qntmap()` to enjoy it.
 
 ## Breaking changes
 
+- `qntmap()` default to use `shiny` web app. Specify `shiny = FALSE` to use legacy
+  console-based intearactive mode. Note that the legacy one is no more maintained.
 - `read_qnt()`
     - omits the `renew` option
     - uses the `saving` option only to save phase list, no more to cache data
@@ -24,6 +26,8 @@
 - `cluster_xmap()`
     - returns a data frame with the `center` attribute unlike older one returned
       a list
+    - omits `group_cluster` option. Instead, apply `group_subclusters()` to the
+      result to integrate subclusters.
     - saves the result
         - as is in the formats of 
           RDS, png (dot-by-dot phase map), and svg (phase map with legend)
@@ -32,19 +36,31 @@
     - is defined to defunct `group_cluster()`
     - returns a data frame in the same format as `cluster_xmap()` but lacks the
       `center` attribute.
+- `pick()` changed its first argument to `.df` from `.data`.
+- The `magma` color scale become the default one to plot of mapping data instead of the `viridis`.
+- Use `message` rather than `cat` so that they can be suppressed by users.
 
-## Major changes
+## Major changes and new features
 
+- `autoplot()` methods are implemented to follow the best practice of `ggplot2`.
+  From now on, `plot()` methods are wrappers of `autoplot`.
+- `find_outlier()` is implemented to detect outliers cause mainly by mapping
+  fine grained phases.
 - `find_outlier()` is implemented to detect unexpectedly high or low mapping
   intensities compared to spot intenstieis, which typically occurs due to
   outliers are analysing multi-phase pixels
 - `find_centers()`
     - has more robust approach to find centroids powered by `find_outlier()`
-    - has additional arguments `phase` and `element`. Specifying them controls
-      which phases and elements are used to find outliers. They suppot tidyeval.
-      For example `element = c(Si, Ti, Al)` indicates the 3 elements are used,
-      and `element = c(-Si, -Ti, -Al)` indicates the 3 elements are NOT used.
+    - has additional arguments
+        - `phase` and `element`: Specifying them controls
+          which phases and elements are used to find outliers. They suppot
+          tidyeval. For example `element = c(Si, Ti, Al)` indicates the 3
+          elements are used, and `element = c(-Si, -Ti, -Al)` indicates the 3
+          elements are NOT used.
+        - `epma`: If `tidy_epma` is already performed, then specify the result
+          here to save time.
     - deprecates `fine_phase` which is generalized by `phase`.
+- `tidy_epma` has new arguments `subcluster` and `suffix`.
 - `hmean()` and `vmean()` supports the objects with class `qntmap`, `qm_xmap`,
   and `qm_cluster`.mPreviously they only supported the `qntmap` class object.
 - All layers for `ggplot2` are no longer pre-compiled at installation stage.
@@ -58,6 +74,10 @@
     - supports a histogram with a single column.
 - `correct_deadtime()` supports re-calculation of dead time.
 - `prioritize()` accepts unnamed vector.
+- `save4qm()` methods, `summary()` methods, `pick()`, `mean()`, `vmean()`, and
+  `hmean()` are re-written to support new data structures.
+- `correct_deadtime()` is factored out from `read_xmap()`, but not exported currently.
+- Themes for plot supports modifying `base_size`, so that the appearance can be optimized in Shiny App.
 - Full support of tidyeval
 - Tidyverse and r-lib related functions are imported in `qntmap-package.R` to
   avoid importing the same funcions in multiple files.
