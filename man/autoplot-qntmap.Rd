@@ -9,14 +9,15 @@
 \usage{
 \method{autoplot}{qntmap}(object, zname = setdiff(names(object), c("x",
   "y"))[[1L]], zlim = NULL, colors = c("magma", "viridis", "gray"),
-  ...)
+  scale = c("px", "um", "nm", "cm"), ...)
 
 \method{autoplot}{qm_xmap}(object, zname = setdiff(names(object), c("x",
   "y"))[[1L]], zlim = NULL, colors = c("magma", "viridis", "gray"),
-  ...)
+  scale = c("px", "um", "nm", "cm"), ...)
 
 \method{autoplot}{qm_cluster}(object, zname = "cluster", zlim = NULL,
-  colors = c("magma", "viridis", "gray"), ...)
+  colors = c("magma", "viridis", "gray"), scale = c("px", "um", "nm",
+  "cm"), ...)
 }
 \arguments{
 \item{object}{an object, whose class will determine the behaviour of autoplot}

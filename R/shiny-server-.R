@@ -179,17 +179,16 @@ shiny_server <- function(
         qnt_coords()
     })
     
-    qnt_plot_tooltip <- reactiveVal("Here shows IDs of points withn 5 px from a click.")
+    qnt_plot_id <- reactiveVal("Here shows IDs of points withn 5 px from a click.")
     
     observeEvent(input$qnt_click_single, {
       pts <- shiny::nearPoints(qnt_data_wt(), input$qnt_click_single)
       req(nrow(pts) > 0L)
-      qnt_plot_tooltip(paste0("ID: ", paste(pts$id, collapse = ", ")))
+      qnt_plot_id(paste0("ID: ", paste(pts$id, collapse = ", ")))
     })
 
-    output$qnt_plot_id <- renderPrint(cat(qnt_plot_tooltip()))
-    
-    output$qnt_plot_tooltip <- renderUI(verbatimTextOutput("qnt_plot_id"))
+    output$qnt_plot_id <- renderPrint(cat(qnt_plot_id()))
+
     
     
     

@@ -37,7 +37,7 @@ shiny_ui_qnt <- function() {
             ),
             style = "height: calc(100% - 2em)"
           ),
-          uiOutput("qnt_plot_tooltip")
+          verbatimTextOutput("qnt_plot_id")
         ),
         tab_panel("Spots", DTOutput("qnt_cnd")),
         tab_panel("Wt%", DTOutput("qnt_wt")),

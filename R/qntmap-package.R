@@ -67,6 +67,7 @@
 #'   sidebarLayout sidebarPanel
 #'   tabPanel tableOutput tabsetPanel textInput textOutput
 #'   uiOutput
+#'   verbatimTextOutput
 #'   withMathJax
 #' @importFrom stringr 
 #'   str_c str_detect str_extract str_replace str_replace_all str_subset
