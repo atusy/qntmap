@@ -12,7 +12,9 @@
 #'  A starting page of shiny UI. One of the "auto", "Input", "Map" or "Spot".
 #'  If auto (default), "Map" is chosen when `xmap_dir` is specified, or "Spot"
 #'  when `qnt_dir` is specified, or "Input" when both are not specified.
-#' @param shiny Wheter to use shiny UI (default: `TRUE`)
+#' @param console
+#'  Wheter to use console-based interactive mode (default: `FALSE`).
+#'  Notet hat the console-based one is retiring and no more maintained.
 #'
 #' @importFrom easycsv choose_dir
 #' @importFrom utils menu select.list
@@ -20,37 +22,36 @@
 qntmap <- function(
   xmap_dir = NULL, qnt_dir = NULL,
   deadtime = 1100, phase_list = NULL,
-  shiny = TRUE, selected = c("auto", "Input", "Map", "Spot")
+  console = FALSE, selected = c("auto", "Input", "Map", "Spot")
 ) {
-  if (shiny) {
-    example <- system.file(package = "qntmap", "extdata", "minimal")
-    
-    selected <- match.arg(selected)
-    if (selected == "auto") {
-      selected <- c(
-          "Map", "Spot", "Input"
-        )[c(!is.null(xmap_dir), !is.null(qnt_dir), TRUE)][[1L]]
-    }
-
-    if (is.null(xmap_dir)) {
-      deadtime <- 0
-      xmap_dir <- file.path(example, ".map/1")
-    }
-    if (is.null(qnt_dir)) qnt_dir <- file.path(example, ".qnt")
-    
-    shiny::shinyApp(
-      shiny_ui(
-        xmap_dir = xmap_dir, qnt_dir = qnt_dir, deadtime = deadtime,
-        phase_list = phase_list, selected = selected
-      ), 
-      shiny_server()
-    )
-  } else {
-    qntmap_console()
+  if (console) return(qntmap_console())
+  
+  example <- system.file(package = "qntmap", "extdata", "minimal")
+  
+  selected <- match.arg(selected)
+  if (selected == "auto") {
+    selected <- c(
+        "Map", "Spot", "Input"
+      )[c(!is.null(xmap_dir), !is.null(qnt_dir), TRUE)][[1L]]
   }
+
+  if (is.null(xmap_dir)) {
+    deadtime <- 0
+    xmap_dir <- file.path(example, ".map/1")
+  }
+  if (is.null(qnt_dir)) qnt_dir <- file.path(example, ".qnt")
+  
+  shiny::shinyApp(
+    shiny_ui(
+      xmap_dir = xmap_dir, qnt_dir = qnt_dir, deadtime = deadtime,
+      phase_list = phase_list, selected = selected
+    ), 
+    shiny_server()
+  )
 }
 
 qntmap_console <- function() {
+  
   cd <- getwd()
   on.exit(setwd(cd))
   

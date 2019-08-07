@@ -5,7 +5,7 @@
 \title{Interactively quantify X-ray maps}
 \usage{
 qntmap(xmap_dir = NULL, qnt_dir = NULL, deadtime = 1100,
-  phase_list = NULL, shiny = TRUE, selected = c("auto", "Input",
+  phase_list = NULL, console = FALSE, selected = c("auto", "Input",
   "Map", "Spot"))
 }
 \arguments{
@@ -16,7 +16,8 @@ qntmap(xmap_dir = NULL, qnt_dir = NULL, deadtime = 1100,
 \item{phase_list}{A path to a csv file containing columns indicating
 phase of each analysis and \code{TRUE} or \code{FALSE} to use it for quantifying.}
 
-\item{shiny}{Wheter to use shiny UI (default: \code{TRUE})}
+\item{console}{Wheter to use console-based interactive mode (default: \code{FALSE}).
+Notet hat the console-based one is retiring and no more maintained.}
 
 \item{selected}{A starting page of shiny UI. One of the "auto", "Input", "Map" or "Spot".
 If auto (default), "Map" is chosen when \code{xmap_dir} is specified, or "Spot"
