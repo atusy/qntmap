@@ -20,18 +20,20 @@ shiny_server <- function() {
     shiny_csv_choose(input, "phase_list_btn", roots = roots)
     update_path("phase_list_btn", "phase_list", input, session, roots, "file")
     
-    xmap_data <- reactive({
-      input$input_load
-      isolate(read_xmap(input$xmap_dir, DT = input$xmap_deadtime))
-    })
+    xmap_data <- eventReactive(
+      input$input_load,
+      read_xmap(input$xmap_dir, DT = input$xmap_deadtime),
+      ignoreNULL = FALSE
+    )
 
-    qnt_data <- reactive({
-      input$input_load
-      isolate(read_qnt(
+    qnt_data <- eventReactive(
+      input$input_load,
+      read_qnt(
         input$qnt_dir, saving = FALSE, 
         phase_list = `if`(identical(input$phase_list, ""), NULL, input$phase_list)
-      ))
-    })
+      ),
+      ignoreNULL = FALSE
+    )
 
     output$xmap_meta <- renderDT(dt(xmap_meta(xmap_data, input)))
     
