@@ -2,9 +2,7 @@
 #'  reactive reactiveVal reactiveValues
 #' @importFrom shinyFiles
 #'  getVolumes parseDirPath parseFilePaths shinyDirChoose shinyFileChoose
-shiny_server <- function(
-  xmap_dir, qnt_dir, deadtime, phase_list
-) {
+shiny_server <- function() {
   .margin <- c(-.5, .5)
   qnt_phase_list_csv <- tempfile()
   roots <- c("Working directory" = '.', getVolumes()())
@@ -22,13 +20,14 @@ shiny_server <- function(
     shiny_csv_choose(input, "phase_list_btn", roots = roots)
     update_path("phase_list_btn", "phase_list", input, session, roots, "file")
     
-    xmap_data <- reactiveVal(read_xmap(xmap_dir, DT = deadtime))
-    
-    qnt_data <- reactiveVal(read_qnt(qnt_dir, saving = FALSE, phase_list))
+    xmap_data <- reactive({
+      input$input_load
+      isolate(read_xmap(input$xmap_dir, DT = input$xmap_deadtime))
+    })
 
-    observeEvent(input$input_load, {
-      xmap_data(read_xmap(input$xmap_dir, DT = input$xmap_deadtime))
-      qnt_data(read_qnt(
+    qnt_data <- reactive({
+      input$input_load
+      isolate(read_qnt(
         input$qnt_dir, saving = FALSE, 
         phase_list = `if`(identical(input$phase_list, ""), NULL, input$phase_list)
       ))
