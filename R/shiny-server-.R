@@ -35,7 +35,8 @@ shiny_server <- function() {
       ignoreNULL = FALSE
     )
 
-    output$xmap_meta <- renderDT(dt(xmap_meta(xmap_data, input)))
+    output$xmap_cnd <- renderDT(dt(xmap_meta(xmap_data, input)))
+    output$qnt_elm <- renderDT(dt(qnt_data()$elm))
     
     epma_data <- reactive(tidy_epma(qnt_data(), xmap_data()))
     step_size <- reactive(attr(xmap_data(), "step")[[1L]])
@@ -192,14 +193,13 @@ shiny_server <- function() {
 
     
     
-    
-    output$qnt_elm <- renderDT(dt(qnt_data()$elm))
+    dt_qnt <- function(x, ...)  dt(prioritize(x, .component), ...)
     output$qnt_cnd <- renderDT(dt(qnt_data()$cnd))
-    output$qnt_wt <- renderDT(dt(qnt_data()$cmp$wt))
-    output$qnt_net <- renderDT(dt(qnt_data()$cmp$net))
-    output$qnt_pkint <- renderDT(dt(qnt_data()$cmp$pkint))
-    output$qnt_bgp <- renderDT(dt(qnt_data()$cmp$bgp))
-    output$qnt_bgm <- renderDT(dt(qnt_data()$cmp$bgm))
+    output$qnt_wt <- renderDT(dt_qnt(qnt_data()$cmp$wt))
+    output$qnt_net <- renderDT(dt_qnt(qnt_data()$cmp$net))
+    output$qnt_pkint <- renderDT(dt_qnt(qnt_data()$cmp$pkint))
+    output$qnt_bgp <- renderDT(dt_qnt(qnt_data()$cmp$bgp))
+    output$qnt_bgm <- renderDT(dt_qnt(qnt_data()$cmp$bgm))
     
     
     
@@ -427,24 +427,6 @@ xmap_meta <- function(xmap_data, input) {
     "Step size", attr(xmap_data(), "step")[[1L]], "\u00b5m",
     "Instrument", attr(xmap_data(), "instrument"), ""
   )
-}
-
-ggplotly2 <- function(p, dynamicTicks = TRUE, ...) {
-  plotly::ggplotly(p, dynamicTicks = dynamicTicks, ...) %>>%
-    plotly::config(
-      displaylogo = FALSE,
-      modeBarButtonsToRemove = list(
-        'lasso2d',
-        'select2d', # box select
-        'sendDataToCloud',
-        'toImage',
-        'autoScale2d',
-        'hoverClosestCartesian',
-        'hoverCompareCartesian',
-        'zoomOut2d',
-        'zoomIn2d'
-      )
-    )
 }
 
 shiny_dir_choose <- function(

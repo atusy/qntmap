@@ -47,7 +47,6 @@
 #'   scale_x_continuous scale_y_reverse
 #'   stat
 #'   theme theme_bw theme_classic theme_minimal
-#' @importFrom glue glue
 #' @importFrom htmltools tagList tag tags
 #' @importFrom pipeR %>>%
 #' @importFrom purrr map map2 map_at map_dbl map_if modify_at modify_if pmap walk2
@@ -66,7 +65,7 @@
 #'   renderTable renderText
 #'   sidebarLayout sidebarPanel
 #'   tabPanel tableOutput tabsetPanel textInput textOutput
-#'   uiOutput
+#'   uiOutput updateTextInput
 #'   verbatimTextOutput
 #'   withMathJax
 #' @importFrom stringr 

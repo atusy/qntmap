@@ -41,12 +41,16 @@ plot.qntmap <- function(
                         zlim = NULL,
                         colors = c("magma", "viridis", "gray"),
                         interactive = TRUE,
+                        scale = c("px", "um", "mm", "cm"),
                         ...
 ) {
   if (interactive) return(plot_shiny(x, y, pcol = colors == "viridis", ...))
 
+  scale <- match.arg(scale)
+  
   print(autoplot(
-    object = x, zname = zname, zlim = zlim, colors = match.arg(colors), ...
+    object = x, zname = zname, zlim = zlim,
+    colors = match.arg(colors), scale = scale, ...
   ))
 }
 

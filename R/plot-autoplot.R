@@ -12,7 +12,8 @@ ggplot2::autoplot
 #'   `qm_xmap` or `qntmap` classes, and "cluster" is chosen for the `qm_cluster`
 #'   class object.
 #' @param zlim Range limit of z-coordinates. This is neglected if z is discrete.
-#' @param colors If z is numeric, "viridis" or "gray" are the choice.
+#' @param colors
+#'  One of "magma", "viridis", or "gray". Applicable when z-coordinates is numeric.
 #' 
 #' @importFrom scales squish
 autoplot.qntmap <- function(
@@ -20,7 +21,7 @@ autoplot.qntmap <- function(
   zlim = NULL, colors = c("magma", "viridis", "gray"),
   scale = c("px", "um", "nm", "cm"), ...
 ) {
-
+  scale <- match.arg(scale)
   z <- object[[zname]]
 
   if (is.numeric(z)) {

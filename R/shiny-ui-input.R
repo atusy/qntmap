@@ -71,7 +71,7 @@ shiny_ui_input <- function(xmap_dir, deadtime, qnt_dir, phase_list) {
         )
       ),
       main_tabset_panel(
-        tab_panel("Mapping conditions", DTOutput("xmap_meta")),
+        tab_panel("Mapping conditions", DTOutput("xmap_cnd")),
         tab_panel("Spot analysis conditions", DTOutput("qnt_elm"))
       )
     )

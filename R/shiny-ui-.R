@@ -42,10 +42,7 @@ a.action-button { background: none; }
 .dt-buttons {margin-top: 5px; }
 
 /* tippy.js */
-.tippy-tooltip { font-size: 1.5rem; }
-
-.js-plotly-plot .plotly .modebar{left: 10px}
-
+.tippy-tooltip { font-size: 1.6rem; }
 .tippy-tooltip a { color: skyblue}
 "
 )
@@ -96,7 +93,7 @@ shiny_ui <- function(xmap_dir, qnt_dir, deadtime, phase_list, selected = NULL) {
   navbarPage(
     title = shiny_title,
     id = "nav",
-    header = list(css_page),
+    header = list(css_page, tags$title("qntmap")),
     footer = list(katex),
     selected = selected,
     shiny_ui_input(
