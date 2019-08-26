@@ -33,7 +33,7 @@ drop_map <- function(id, ...) {
       tags$p(
         "Color",
         tippy_info(
-          "colors_tippyinfo",
+          paste0(id, "_colors_tippyinfo"),
           "Choices are perceptually uniform palletes.<br />cf. <a href='https://cran.r-project.org/web/packages/viridis/vignettes/intro-to-viridis.html', target = _blank>https://cran.r-project.org/web/packages/viridis/vignettes/intro-to-viridis.html</a>",
           interactive = TRUE
         )
