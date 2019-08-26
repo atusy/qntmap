@@ -210,8 +210,8 @@ shiny_server <- function() {
       "outlier", "Element to plot", outlier_elint()
     ))
     
-    outlier_phase_all <- reactive(sort(unique(qnt_data()$cnd$phase)))
-    output$outlier_phase <- renderUI(select_phase(outlier_phase_all()))
+    phase_all <- reactive(sort(unique(qnt_data()$cnd$phase)))
+    output$outlier_phase <- renderUI(select_phase(phase_all()))
     
     outlier_coords <- reactiveVal(NULL)
     observe_brush("outlier", input, outlier_coords)
@@ -227,7 +227,7 @@ shiny_server <- function() {
     
     centroid <- reactive(find_centers(
       xmap_data(), qnt_data(), saveas = FALSE,
-      phase = !!quo(setdiff(outlier_phase_all(), input$outlier_phase))
+      phase = !!quo(setdiff(phase_all(), input$outlier_phase))
     ))
     
     output$centroid <- renderDT(dt(modify_if(centroid(), is.double, round, 2)))
@@ -357,6 +357,31 @@ shiny_server <- function() {
     qmap_histogram <- hist_react("qmap", qmap_out, input)
     output$qmap_histogram <- renderPlot(qmap_histogram())
     
+    qmap_density <- reactiveVal()
+    
+    shiny::observeEvent(phase_all(), {
+      qmap_density(data.frame(phase = phase_all(), density = 1))
+    })
+    
+    output$qmap_density <- renderDT(
+      dt(
+        qmap_density(), editable = list(target = "all"),
+        options = DT_options(scrollY = "calc(100vh - 470px)")
+      )
+    )
+    
+    
+    observeEvent(input$qmap_density_cell_edit, {
+      qmap_density(
+        suppressWarnings(editData(
+          qmap_density(),
+          filter(input$qmap_density_cell_edit, .data$col == 2), 
+          "qmap_density"
+        )) %>>%
+          modify_at("density", as.numeric)
+      )
+    })
+
   }
 }
 
