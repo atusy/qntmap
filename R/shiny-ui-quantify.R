@@ -16,7 +16,15 @@ shiny_ui_quantify <- function() {
             "Latest summary",
             shiny::actionLink("qmap_tab_summary", "(view full)")
           ),
-          tableOutput("qmap_summary_latest")
+          tableOutput("qmap_summary_latest"),
+          tags$p(
+            "For density correction, go to",
+            shiny::actionLink("qmap_menu_adv", "advanced menu.")
+          )
+        ),
+        tab_panel(
+          "Adv.",
+          DT::DTOutput("qmap_density")
         )
       ),
       main_tabset_panel(

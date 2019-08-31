@@ -381,7 +381,20 @@ shiny_server <- function() {
           modify_at("density", as.numeric)
       )
     })
-
+    
+    # Misc
+    
+    params <- reactive(retrieve_params(qmap_out()))
+    # params <- reactive({
+    #   req(qmap_out())
+    #   mutate(attr(qmap_out(), "params"), beta = beta / 100)
+    # })
+    
+    output$params_qmap <- DT::renderDT(params())
+    output$params_alpha <- shiny::renderPlot(
+      autoplot_tidy_epma_alpha(epma_data(), params = params())
+    )
+    
   }
 }
 

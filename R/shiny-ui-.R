@@ -104,7 +104,11 @@ shiny_ui <- function(xmap_dir, qnt_dir, deadtime, phase_list, selected = NULL) {
     shiny_ui_qnt(),
     shiny_ui_check(),
     shiny_ui_cluster(),
-    shiny_ui_quantify()
+    shiny_ui_quantify(),
+    shiny::navbarMenu(
+      "Misc.",
+      shiny_ui_params()
+    )
   )
 }
 
