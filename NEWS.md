@@ -66,6 +66,8 @@
 - All layers for `ggplot2` are no longer pre-compiled at installation stage.
   This is to avoid possible conflicts on updates on `ggplot2` after installing
   `qntmap`.
+- `quantify()` get the `params` attribute showing the parameters, $alpha$,
+  $beta$, and $gamma$.
 
 ## Internal changes
 

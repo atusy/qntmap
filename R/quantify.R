@@ -113,8 +113,10 @@ quantify <- function(
   dir_qntmap <- paste0(dir_map, "/qntmap")
   dir.create(dir_qntmap, FALSE)
   
+  params <- tidy_params(AG, B, qnt)
+
   if (is.null(fix) && saving) # © 2018 JAMSTEC
-    save4qm(tidy_params(AG, B, qnt), nm = file.path(dir_qntmap, "parameters.csv")) # © 2018 JAMSTEC
+    save4qm(params, nm = file.path(dir_qntmap, "parameters.csv")) # © 2018 JAMSTEC
   
   rm(AG, B)
   
@@ -150,7 +152,8 @@ quantify <- function(
     structure(
       pixel = attributes(xmap)$pixel,
       step  = attributes(xmap)$step,
-      class = c("qntmap", class(.))
+      class = c("qntmap", class(.)),
+      params = params
     ) %>>%
     save4qm(nm = dir_qntmap, saving = saving)
 }
