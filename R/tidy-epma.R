@@ -127,7 +127,8 @@ tidy_epma <- function(
       net.H = .data$net + 
         propagate_add(.data$pkint, .data$pkint.H, .data$bgint, .data$bgint.H)
     ) %>>%
-    as.data.frame
+    as.data.frame %>>%
+    structure(class = c("qm_epma", class(.)))
 }
 
 
