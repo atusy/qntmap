@@ -384,16 +384,31 @@ shiny_server <- function() {
     
     # Misc
     
+    ## Params
+    
     params <- reactive(retrieve_params(qmap_out()))
-    # params <- reactive({
-    #   req(qmap_out())
-    #   mutate(attr(qmap_out(), "params"), beta = beta / 100)
-    # })
+    
+    output$params_elem_selecter <- renderUI(select_elem(
+      "params", "Elements to plot", outlier_elint(), multiple = TRUE
+    ))
+    output$params_phase_selecter <- renderUI(picker_input(
+      "params_phase", label = "Phases to plot", multiple = TRUE,
+      choices = phase_all(), selected = phase_all()[1L]
+    ))
     
     output$params_qmap <- DT::renderDT(params())
-    output$params_alpha <- shiny::renderPlot(
-      autoplot_tidy_epma_alpha(epma_data(), params = params())
-    )
+    output$params_alpha <- shiny::renderPlot(autoplot_params_alpha(
+      epma_data(), params = params(), origin = input$params_origin,
+      element = input$params_elem, phase = input$params_phase
+    ))
+    output$params_beta <- shiny::renderPlot(autoplot_params_beta(
+      epma_data(), params = params(), origin = input$params_origin,
+      element = input$params_elem, phase = input$params_phase
+    ))
+    output$params_gamma <- shiny::renderPlot(autoplot_params_gamma(
+      epma_data(), params = params(), origin = input$params_origin,
+      element = input$params_elem, phase = input$params_phase
+    ))
     
   }
 }
@@ -432,13 +447,14 @@ dt <- function(
   )
 }
 
-select_elem <- function(id, label, choices) {
+select_elem <- function(id, label, choices, selected = choices[[1L]], ...) {
   picker_input(
     paste0(id, "_elem"),
     label = label,
     choices = choices,
-    selected = choices[[1L]],
-    width = "100%"
+    selected = selected,
+    width = "100%",
+    ...
   )
 }
 
