@@ -324,7 +324,37 @@ shiny_server <- function() {
       `if`(input$cluster_run == 0L || input$qmap_run == 0L, NULL, qmap_elint())
     ))
     
-    observe_action("qmap", input, ranges, range_x, range_y, summary, cluster_out)
+    qmap_density_df <- reactiveVal()
+    
+    shiny::observeEvent(phase_all(), {
+      qmap_density_df(data.frame(phase = phase_all(), density = 1))
+    })
+    
+    output$qmap_density <- renderDT(
+      dt(
+        qmap_density_df(), editable = list(target = "all"),
+        options = DT_options(scrollY = "calc(100vh - 470px)")
+      )
+    )
+    
+    observeEvent(input$qmap_density_cell_edit, {
+      qmap_density_df(
+        suppressWarnings(editData(
+          qmap_density_df(),
+          filter(input$qmap_density_cell_edit, .data$col == 2), 
+          "qmap_density"
+        )) %>>%
+          modify_at("density", as.numeric)
+      )
+    })
+    
+    qmap_density <- shiny::reactive({
+      x <- setNames(qmap_density_df()$density, qmap_density_df()$phase)[cluster_out()$cluster]
+      str(x)
+      x
+    })
+    
+    observe_action("qmap", input, ranges, range_x, range_y, summary, qmap_out, qmap_density)
 
     show_full_summary("qmap", input)
     
@@ -357,30 +387,6 @@ shiny_server <- function() {
     qmap_histogram <- hist_react("qmap", qmap_out, input)
     output$qmap_histogram <- renderPlot(qmap_histogram())
     
-    qmap_density <- reactiveVal()
-    
-    shiny::observeEvent(phase_all(), {
-      qmap_density(data.frame(phase = phase_all(), density = 1))
-    })
-    
-    output$qmap_density <- renderDT(
-      dt(
-        qmap_density(), editable = list(target = "all"),
-        options = DT_options(scrollY = "calc(100vh - 470px)")
-      )
-    )
-    
-    
-    observeEvent(input$qmap_density_cell_edit, {
-      qmap_density(
-        suppressWarnings(editData(
-          qmap_density(),
-          filter(input$qmap_density_cell_edit, .data$col == 2), 
-          "qmap_density"
-        )) %>>%
-          modify_at("density", as.numeric)
-      )
-    })
     
     # Misc
     

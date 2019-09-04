@@ -11,11 +11,11 @@ move <- function(.axis, .input, .from, .to) {
   .to - mean(.to) + squish(.input[[.axis]], .range)
 }
 
-observe_action <- function(id, input, ranges, range_x, range_y, summary, data) {
+observe_action <- function(id, input, ranges, range_x, range_y, summary, data, density = function() NULL) {
   ids <- paste0(id, "_", c("click", "brush", "action"))
   observeEvent(input[[ids[[3L]]]], {
     if (is.null(summary[[id]]) && !is.null(data())) {
-      summary[[id]] <- summarize_whole(data, summary, id)
+      summary[[id]] <- summarize_whole(data(), summary, id)
     }
   })
   observeEvent(input[[ids[[1L]]]], {
@@ -29,9 +29,9 @@ observe_action <- function(id, input, ranges, range_x, range_y, summary, data) {
     }
     if (input[[ids[[3L]]]] == "Summarize" && !is.null(data())) {
       if (!is.null(input[[ids[[1L]]]]) && is.null(input[[ids[[2L]]]]))
-        summary[[id]] <- summarize_click(data, input[[ids[[1L]]]], summary, id)
+        summary[[id]] <- summarize_click(data(), input[[ids[[1L]]]], summary, id)
       if (!is.null(input[[ids[[2L]]]]))
-        summary[[id]] <- summarize_box(data, input[[ids[[2L]]]], summary, id)
+        summary[[id]] <- summarize_box(data(), input[[ids[[2L]]]], summary, id, density = density())
     }
   })
 }
