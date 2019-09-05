@@ -399,18 +399,15 @@ shiny_server <- function() {
     ))
     
     output$params_qmap <- DT::renderDT(params())
-    output$params_alpha <- shiny::renderPlot(autoplot_params_alpha(
-      epma_data(), params = params(), origin = input$params_origin,
-      element = input$params_elem, phase = input$params_phase
-    ))
-    output$params_beta <- shiny::renderPlot(autoplot_params_beta(
-      epma_data(), params = params(), origin = input$params_origin,
-      element = input$params_elem, phase = input$params_phase
-    ))
-    output$params_gamma <- shiny::renderPlot(autoplot_params_gamma(
-      epma_data(), params = params(), origin = input$params_origin,
-      element = input$params_elem, phase = input$params_phase
-    ))
+    autoplot_params <- function(type) {
+      autoplot.tidy_epma(
+        epma_data(), type = type, params = params(), origin = input$params_origin,
+        element = input$params_elem, phase = input$params_phase
+      )
+    }
+    output$params_alpha <- shiny::renderPlot(autoplot_params("alpha"))
+    output$params_beta <- shiny::renderPlot(autoplot_params("beta"))
+    output$params_gamma <- shiny::renderPlot(autoplot_params("gamma"))
     
   }
 }
