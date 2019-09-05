@@ -46,7 +46,7 @@ qntmap <- function(
       xmap_dir = xmap_dir, qnt_dir = qnt_dir, deadtime = deadtime,
       phase_list = phase_list, selected = selected
     ), 
-    shiny_server()
+    shiny_server
   )
 }
 
