@@ -78,9 +78,7 @@ shiny_server <- function() {
     
     show_full_summary("xmap", input)
 
-    output$xmap_summary <- renderDT(dt(
-      modify_if(summary$xmap, is.double, round, 2L)
-    ))
+    output$xmap_summary <- renderDT(dt(summary$xmap, digits = 2L))
     output$xmap_summary_latest <- renderTable(
       summarize_latest(summary$xmap), align = "r"
     )
@@ -230,7 +228,7 @@ shiny_server <- function() {
       phase = !!quo(setdiff(phase_all(), input$outlier_phase))
     ))
     
-    output$centroid <- renderDT(dt(modify_if(centroid(), is.double, round, 2)))
+    output$centroid <- renderDT(dt(centroid(), digits = 2))
     
     
     
@@ -290,17 +288,17 @@ shiny_server <- function() {
     output$cluster_membership <- renderDT({
       req(cluster_out())
       dt(
-        modify_if(cluster_out(), is.double, round, 2), 
+        cluster_out(), digits = 2, 
         options = DT_options()[c("scrollY", "scrollCollapse")]
       )
     })
     output$cluster_centroid <- renderDT({
       req(cluster_out())
-      dt(modify_if(attr(cluster_out(), "center"), is.double, round, 2))
+      dt(attr(cluster_out(), "center"), digits = 2)
     })
     output$cluster_summary <- renderDT({
       req(summary$cluster)
-      dt(modify_if(summary$cluster, is.double, round, 2))
+      dt(summary$cluster, digits = 2)
     })
     output$cluster_summary_latest <- renderTable(
       summarize_latest(summary$cluster),
@@ -330,12 +328,10 @@ shiny_server <- function() {
       qmap_density_df(data.frame(phase = phase_all(), density = 1))
     })
     
-    output$qmap_density <- renderDT(
-      dt(
-        qmap_density_df(), editable = list(target = "all"),
-        options = DT_options(scrollY = "calc(100vh - 470px)")
-      )
-    )
+    output$qmap_density <- renderDT(dt(
+      qmap_density_df(), editable = list(target = "all"),
+      options = DT_options(scrollY = "calc(100vh - 470px)")
+    ))
     
     observeEvent(input$qmap_density_cell_edit, {
       qmap_density_df(
@@ -360,7 +356,7 @@ shiny_server <- function() {
     
     output$qmap_summary <- renderDT({
       req(summary$qmap)
-      dt(modify_if(summary$qmap, is.double, round, 2L))
+      dt(summary$qmap, digits = 2L)
     })
     output$qmap_summary_latest <- renderTable(
       summarize_latest(summary$qmap), align = "r"
@@ -438,10 +434,11 @@ DT_options <- function(
 
 dt <- function(
   data, options = DT_options(), filter = 'top', extensions = 'Buttons',
-  rownames = FALSE, ...
+  rownames = FALSE, digits = NULL, ...
 ) {
   datatable(
     data %>>% 
+      round_if(digits = digits) %>%
       mutate(n = row_number()) %>>% 
       select("n", everything()) %>>%
       setNames(gsub("^n$", "", names(.))),
@@ -451,6 +448,11 @@ dt <- function(
     rownames = rownames,
     ...
   )
+}
+
+round_if <- function(x, .p = is.double, digits = NULL) {
+  if (is.null(digits)) return(x)
+  modify_if(x, .p, round, digits)
 }
 
 select_elem <- function(id, label, choices, selected = choices[[1L]], ...) {
