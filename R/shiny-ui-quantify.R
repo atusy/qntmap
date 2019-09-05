@@ -3,6 +3,7 @@ shiny_ui_quantify <- function() {
     "Quantify",
     sidebarLayout(
       sidebar_tabset_panel(
+        id = "menu_tabset_qmap",
         # Visual
         tab_panel(
           "Menu",
@@ -19,7 +20,7 @@ shiny_ui_quantify <- function() {
           tableOutput("qmap_summary_latest"),
           tags$p(
             "For density correction, go to",
-            shiny::actionLink("qmap_menu_adv", "advanced menu.")
+            shiny::actionLink("qmap_tab_adv", "advanced menu.")
           )
         ),
         tab_panel(

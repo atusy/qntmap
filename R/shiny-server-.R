@@ -309,6 +309,8 @@ shiny_server <- function() {
     observe_action("qmap", input, ranges, summary, qmap_out, qmap_density)
 
     show_full_summary("qmap", input)
+    # show_tab(input, id, "summary", "Summary", "main")
+    show_tab("qmap", input, "adv", "Adv.", "menu")
     
     output$qmap_summary <- DT::renderDT({
       shiny::req(summary$qmap)
@@ -484,10 +486,14 @@ update_path <- function(
   })
 }
 
-show_full_summary <- function(id, input) {
-  shiny::observeEvent(input[[paste0(id, "_tab_summary")]], {
-    shiny::showTab(paste0("main_tabset_", id), target = "Summary", select = TRUE)
+show_tab <- function(id, input, tab, target, pane = "main") {
+  shiny::observeEvent(input[[paste0(id, "_tab_", tab)]], {
+    shiny::showTab(paste0(pane, "_tabset_", id), target = target, select = TRUE)
   })
+}
+
+show_full_summary <- function(id, input) {
+  show_tab(id, input, "summary", "Summary", "main")
 }
 
 observe_click_and_zoom <- function(id, input, reactive_value) {
