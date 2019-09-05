@@ -4,7 +4,6 @@
 #'  getVolumes parseDirPath parseFilePaths shinyDirChoose shinyFileChoose
 shiny_server <- function() {
   .margin <- c(-.5, .5)
-  qnt_phase_list_csv <- tempfile()
 
   function(input, output, session) {
     
@@ -30,7 +29,7 @@ shiny_server <- function() {
       input$input_load,
       read_qnt(
         input$qnt_dir, saving = FALSE, 
-        phase_list = `if`(identical(input$phase_list, ""), NULL, input$phase_list)
+        phase_list = `if`(input$phase_list != "", input$phase_list)
       ),
       ignoreNULL = FALSE
     )
