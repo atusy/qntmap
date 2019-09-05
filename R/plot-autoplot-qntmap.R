@@ -1,6 +1,3 @@
-#' @export
-ggplot2::autoplot
-
 #' Create a ggplot object for objects created by qntmap package
 #' 
 #' @name autoplot-qntmap
