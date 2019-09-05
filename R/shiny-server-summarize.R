@@ -4,7 +4,7 @@ summarize_whole <- function(data, summary, id) {
   data %>>%
     summarize_if(is.numeric, mean) %>>%
     mutate(
-      Area = "Whole", size_x = max(data()$x), size_y = max(data()$y),
+      Area = "Whole", size_x = max(data$x), size_y = max(data$y),
       membership = NULL
     ) %>>%
     prioritize(priors_summary) %>>%
