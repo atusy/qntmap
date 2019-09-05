@@ -272,7 +272,7 @@ shiny_server <- function() {
     cluster_zlim <- reactive(levels(cluster_z()))
     
     cluster_img <- reactive(
-      as_img(lookup[["discrete"]](cluster_z()), ranges$y0()[2L], ranges$x0()[2L])
+      as_img(lookup[["discrete"]](cluster_z()), ranges$y0[2L], ranges$x0[2L])
     )
     
     cluster_heatmap <- reactive(raster(
