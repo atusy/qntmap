@@ -117,3 +117,10 @@ filter_tidy_epma <- function(x, phase = NULL, element = NULL) {
     `if`(is.null(!!phase), TRUE, .data$phase %in% !!phase)
   )
 }
+
+geom_point_qnt <- function(data) {
+  ggplot2::geom_point(
+    ggplot2::aes(.data$y_px, .data$x_px), inherit.aes = FALSE, color = "green",
+    dplyr::filter(data, .data$elint == .data$elint[[1L]])[c("x_px", "y_px")]
+  )
+}

@@ -1,23 +1,24 @@
-zlim_react <- function(id, map_reactive, input) {reactive({
-  req(map_reactive())
+zlim <- function(id, map, input) {
+  req(map)
   ids <- paste0(id, "_", c("elem", "min", "max"))
-  z <- range(map_reactive()[[input[[ids[[1L]]]]]])
+  z <- range(map[[input[[ids[[1L]]]]]])
   .min <- input[[ids[[2L]]]]
   .max <- input[[ids[[3L]]]]
   c(
     `if`(is.na(.min) || .min < z[1L], z[1L], .min),
     `if`(is.na(.max) || .max > z[2L], z[2L], .max)
   )
-})}
+}
 
-squish_react <- function(id, map_reactive, zlim_reactive, input) {reactive({
-  req(map_reactive())
+zquish <- function(id, map, zlim, input) {
+  req(map)
   z <- input[[paste0(id, "_elem")]]
   if (is.null(z)) z <- "cluster"
-  squish(map_reactive()[[z]], zlim_reactive())
-})}
+  squish(map[[z]], zlim)
+}
 
-raster <- function(x, ranges, .margin, zlim, input, id, step_size = NULL) {
+raster <- function(input, id, ranges, .margin, x, zlim, step_size = NULL) {
+  shiny::req(x)
   ids <- paste0(id, "_", c("elem", "color", "scale"))
   rx <- if (is.null(ranges$x)) ranges$x0 else ranges$x
   ry <- if (is.null(ranges$y)) ranges$y0 else ranges$y

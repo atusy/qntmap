@@ -78,6 +78,9 @@
 #'   
 NULL
 
+#' @export
+ggplot2::autoplot
+
 # 10 major oxides
 .oxide <- c(
   "SiO2", "TiO2", "Al2O3", "Cr2O3", "FeO", "MnO", "MgO", "CaO", "Na2O", "K2O"
