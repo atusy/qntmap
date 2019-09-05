@@ -11,21 +11,25 @@ move <- function(.axis, .input, .from, .to) {
   .to - mean(.to) + squish(.input[[.axis]], .range)
 }
 
-observe_action <- function(id, input, ranges, range_x, range_y, summary, data, density = function() NULL) {
+observe_action <- function(id, input, ranges, summary, data, density = function() NULL) {
   ids <- paste0(id, "_", c("click", "brush", "action"))
   observeEvent(input[[ids[[3L]]]], {
     if (is.null(summary[[id]]) && !is.null(data())) {
       summary[[id]] <- summarize_whole(data(), summary, id)
     }
   })
+  shiny::observeEvent(data(), {
+    ranges$x0 <- range(data()$x)
+    ranges$y0 <- range(data()$y)
+  })
   observeEvent(input[[ids[[1L]]]], {
     if (input[[ids[[3L]]]] == "Zoom") {
-      ranges$x <- zoom("x", input[[ids[[2L]]]], range_x())
-      ranges$y <- zoom("y", input[[ids[[2L]]]], range_y())
+      ranges$x <- zoom("x", input[[ids[[2L]]]], ranges$x0)
+      ranges$y <- zoom("y", input[[ids[[2L]]]], ranges$y0)
     }
     if (input[[ids[[3L]]]] == "Move" && !is.null(ranges$x)) {
-      ranges$x <- move("x", input[[ids[[1L]]]], range_x(), ranges$x)
-      ranges$y <- move("y", input[[ids[[1L]]]], range_y(), ranges$y)
+      ranges$x <- move("x", input[[ids[[1L]]]], ranges$x0, ranges$x)
+      ranges$y <- move("y", input[[ids[[1L]]]], ranges$y0, ranges$y)
     }
     if (input[[ids[[3L]]]] == "Summarize" && !is.null(data())) {
       if (!is.null(input[[ids[[1L]]]]) && is.null(input[[ids[[2L]]]]))

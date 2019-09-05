@@ -17,10 +17,10 @@ squish_react <- function(id, map_reactive, zlim_reactive, input) {reactive({
   squish(map_reactive()[[z]], zlim_reactive())
 })}
 
-raster <- function(x, ranges, range_x, range_y, .margin, zlim, input, id, step_size = NULL) {
+raster <- function(x, ranges, .margin, zlim, input, id, step_size = NULL) {
   ids <- paste0(id, "_", c("elem", "color", "scale"))
-  rx <- if (is.null(ranges$x)) range_x else ranges$x
-  ry <- if (is.null(ranges$y)) range_y else ranges$y
+  rx <- if (is.null(ranges$x)) ranges$x0 else ranges$x
+  ry <- if (is.null(ranges$y)) ranges$y0 else ranges$y
   gg_img(
     x[ry[[1L]]:ry[[2L]], rx[[1L]]:rx[[2L]], ],
     xlim = rx + .margin, ylim = ry + .margin,

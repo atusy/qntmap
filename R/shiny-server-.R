@@ -68,11 +68,9 @@ shiny_server <- function() {
     
     ## X-ray mpas: action
     
-    range_x <- reactive(range(xmap_data()$x))
-    range_y <- reactive(range(xmap_data()$y))
     ranges <- reactiveValues()
     summary <- reactiveValues()
-    observe_action("xmap", input, ranges, range_x, range_y, summary, xmap_data)
+    observe_action("xmap", input, ranges, summary, xmap_data)
     
     ## X-ray maps: summary
     
@@ -89,10 +87,10 @@ shiny_server <- function() {
     xmap_squished <- squish_react("xmap", xmap_data, xmap_zlim, input)
     xmap_img <- reactive(as_img(
       lookup[[input$xmap_color]](xmap_squished(), from = xmap_zlim()),
-      range_y()[2L], range_x()[2L]
+      ranges$y0[2L], ranges$x0[2L]
     ))
     xmap_heatmap <- reactive(raster(
-      xmap_img(), ranges, range_x(), range_y(), .margin, xmap_zlim(), input, "xmap", step_size()
+      xmap_img(), ranges, .margin, xmap_zlim(), input, "xmap", step_size()
     ))
     xmap_spot <- reactive(
       geom_point(
@@ -257,7 +255,7 @@ shiny_server <- function() {
       cluster_xmap(xmap_data(), centroid(), saving = FALSE, elements = elements)
     })
     
-    observe_action("cluster", input, ranges, range_x, range_y, summary, cluster_out)
+    observe_action("cluster", input, ranges, summary, cluster_out)
     
     show_full_summary("cluster", input)
     
@@ -274,11 +272,11 @@ shiny_server <- function() {
     cluster_zlim <- reactive(levels(cluster_z()))
     
     cluster_img <- reactive(
-      as_img(lookup[["discrete"]](cluster_z()), range_y()[2L], range_x()[2L])
+      as_img(lookup[["discrete"]](cluster_z()), ranges$y0()[2L], ranges$x0()[2L])
     )
     
     cluster_heatmap <- reactive(raster(
-      cluster_img(), ranges, range_x(), range_y(), .margin, cluster_zlim(), input, "cluster", step_size()
+      cluster_img(), ranges, .margin, cluster_zlim(), input, "cluster", step_size()
     ))
     
     output$cluster_heatmap <- renderPlot({
@@ -350,7 +348,7 @@ shiny_server <- function() {
       x
     })
     
-    observe_action("qmap", input, ranges, range_x, range_y, summary, qmap_out, qmap_density)
+    observe_action("qmap", input, ranges, summary, qmap_out, qmap_density)
 
     show_full_summary("qmap", input)
     
@@ -369,11 +367,11 @@ shiny_server <- function() {
     
     qmap_img <- reactive(as_img(
       lookup[[input$qmap_color]](qmap_squished(), from = qmap_zlim()),
-      range_y()[2L], range_x()[2L]
+      ranges$y0[2L], ranges$x0[2L]
     ))
     
     qmap_heatmap <- reactive(raster(
-      qmap_img(), ranges, range_x(), range_y(), .margin, qmap_zlim(), input, "qmap", step_size()
+      qmap_img(), ranges, .margin, qmap_zlim(), input, "qmap", step_size()
     ))
     output$qmap_heatmap <- renderPlot({
       req(qmap_out(), input$qmap_elem)
