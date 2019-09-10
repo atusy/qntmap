@@ -7,9 +7,20 @@ shiny_ui_quantify <- function() {
         # Visual
         tab_panel(
           "Menu",
-          actionButton(
-            "qmap_run", label = "Quantify Maps", width = "100%",
-            class = "btn-run"
+          cssgrid::grid_rowwise(
+            actionButton(
+              "qmap_run", label = "Quantify Maps", width = "100%",
+              class = "btn-run"
+            ),
+            shinyWidgets::dropdown(
+              shiny::numericInput(
+                "qmap_threshold", label = "Threshold of membership degree",
+                value = 0.5, min = 0, max = 1, step = 0.05
+              ),
+              circle = FALSE, right = TRUE, width = "200px"
+            ),
+            cols = ("1fr auto"),
+            gap = "3px"
           ),
           menu_map("qmap", dropdown = drop_map("qmap")),
           select_action("qmap_action"),

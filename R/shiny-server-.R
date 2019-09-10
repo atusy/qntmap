@@ -265,7 +265,8 @@ shiny_server <- function(input, output, session) {
   qmap_out <- shiny::eventReactive(input$qmap_run, {
     shiny::req(cluster_out())
     quantify(
-      xmap_data(), qnt_data(), cluster_out(), fine_phase = input$outlier,
+      xmap_data(), qnt_data(), cluster_out(),
+      fine_phase = input$outlier, fine_th = input$qmap_threshold,
       saving = FALSE
     )
   })
