@@ -389,7 +389,7 @@ DT <- function(
 ) {
   datatable(
     data %>>% 
-      round_if(digits = digits) %>%
+      round_if(digits = digits) %>>%
       mutate(n = row_number()) %>>% 
       select("n", everything()) %>>%
       setNames(gsub("^n$", "", names(.))),
