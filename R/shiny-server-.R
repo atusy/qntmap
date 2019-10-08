@@ -22,15 +22,20 @@ shiny_server <- function(input, output, session) {
     read_xmap(input$xmap_dir, DT = input$xmap_deadtime),
     ignoreNULL = FALSE
   )
-
-  qnt_data <- shiny::eventReactive(
-    input$input_load,
-    read_qnt(
-      input$qnt_dir, saving = FALSE, 
-      phase_list = `if`(input$phase_list != "", input$phase_list)
-    ),
-    ignoreNULL = FALSE
-  )
+  
+  qnt_data <- shiny::reactiveVal(isolate(read_qnt(
+    input$qnt_dir, saving = FALSE, 
+    phase_list = `if`(input$phase_list != "", input$phase_list)
+  )))
+  
+  shiny::observeEvent(input$input_load, {
+    qnt_data(
+      read_qnt(
+        input$qnt_dir, saving = FALSE, 
+        phase_list = `if`(input$phase_list != "", input$phase_list)
+      )
+    )
+  })
 
   output$xmap_cnd <- DT::renderDT(DT(xmap_meta(xmap_data, input)))
   output$qnt_elm <- DT::renderDT(DT(qnt_data()$elm))
