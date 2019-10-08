@@ -30,14 +30,17 @@ outlier_gg <- function(
       aes(ymin = .data$pkint.L_est, ymax = .data$pkint.H_est),
       color = "transparent", fill = "gray80"
     ) +
-    stat_err(aes(
-      xmin = .data$mapint.L, xmax = .data$mapint.H,
-      ymin = .data$pkint.L, ymax = .data$pkint.H,
-      color = .data$phase
-    )) +
+    stat_err(
+      aes(
+        xmin = .data$mapint.L, xmax = .data$mapint.H,
+        ymin = .data$pkint.L, ymax = .data$pkint.H,
+        color = .data$phase
+      ),
+      size = .8
+    ) +
     geom_smooth(formula = y ~ 0 + x, se = FALSE, color = "red", method = "lm") +
     geom_quantile(formula = y ~ 0 + x, quantiles = .5, color = "blue") +
-    facet_wrap(vars(.data$facet)) +
+    facet_wrap(vars(.data$facet), scales = 'fixed') +
     coords +
     scale_color_discrete(name = "Phase") +
     scale_alpha_identity() +
