@@ -271,7 +271,7 @@ shiny_server <- function(input, output, session) {
     shiny::req(cluster_out())
     quantify(
       xmap_data(), qnt_data(), cluster_out(),
-      fine_phase = input$outlier, fine_th = input$qmap_threshold,
+      fine_phase = input$outlier_phase, fine_th = input$qmap_threshold,
       saving = FALSE
     )
   })
