@@ -169,7 +169,7 @@ shiny_server <- function(input, output, session) {
     "outlier", "Element to plot", outlier_elint()
   ))
   
-  phase_all <- shiny::reactive(sort(unique(qnt_data()$cnd$phase)))
+  phase_all <- shiny::reactive(sort(unique(phase_list()$phase[phase_list()$use])))
   output$outlier_phase <- shiny::renderUI(select_phase(phase_all()))
   
   outlier_coords <- shiny::reactiveVal(NULL)
