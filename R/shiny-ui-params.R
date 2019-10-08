@@ -13,10 +13,10 @@ shiny_ui_params <- function() {
       ),
       main_tabset_panel(
         id = "main_tabset_params",
-        tab_panel("Alpha", shiny::plotOutput("params_alpha")),
-        tab_panel("Beta", shiny::plotOutput("params_beta")),
-        tab_panel("Gamma", shiny::plotOutput("params_gamma")),
-        tab_panel("Table", DT::DTOutput("params_qmap"))
+        tab_panel("Alpha", shiny::plotOutput("params_alpha", height = "100%",)),
+        tab_panel("Beta", shiny::plotOutput("params_beta", height = "100%",)),
+        tab_panel("Gamma", shiny::plotOutput("params_gamma", height = "100%",)),
+        tab_panel("Table", DT::DTOutput("params_qmap", height = "100%",))
       )
     )
   )

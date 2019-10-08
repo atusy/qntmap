@@ -363,7 +363,8 @@ shiny_server <- function(input, output, session) {
     autoplot.tidy_epma(
       epma_data(), type = type, params = params(), origin = input$params_origin,
       element = input$params_elem, phase = input$params_phase
-    )
+    ) +
+      ggplot2::theme_bw(base_size = 16)
   }
   output$params_alpha <- shiny::renderPlot(autoplot_params("alpha"))
   output$params_beta <- shiny::renderPlot(autoplot_params("beta"))
