@@ -358,7 +358,7 @@ shiny_server <- function(input, output, session) {
     choices = phase_all(), selected = phase_all()[1L]
   ))
   
-  output$params_qmap <- DT::renderDT(params())
+  output$params_qmap <- DT::renderDT(DT(params()))
   autoplot_params <- function(type) {
     autoplot.tidy_epma(
       epma_data(), type = type, params = params(), origin = input$params_origin,
