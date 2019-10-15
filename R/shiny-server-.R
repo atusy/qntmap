@@ -250,7 +250,7 @@ shiny_server <- function(input, output, session) {
     shiny::req(cluster_out())
     DT(
       cluster_out(), digits = 2, 
-      options = DT_options()[c("scrollY", "scrollCollapse")]
+      options = DT_options(paging = TRUE, pageLength = 100)
     )
   })
   output$cluster_centroid <- DT::renderDT({
@@ -274,6 +274,11 @@ shiny_server <- function(input, output, session) {
       fine_phase = input$outlier_phase, fine_th = input$qmap_threshold,
       saving = FALSE
     )
+  })
+  
+  output$qmap_dt <- DT::renderDT({
+    shiny::req(qmap_out())
+    DT(qmap_out(), digits = 2, options = DT_options(paging = TRUE, pageLength = 100))
   })
 
   qmap_elint <- shiny::reactive(setdiff(names(qmap_out()), c("x", "y")))

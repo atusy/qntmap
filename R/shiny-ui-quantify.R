@@ -50,8 +50,8 @@ shiny_ui_quantify <- function() {
           )
         ),
         tab_panel("Histogram", plotOutput("qmap_histogram", height = "100%")),
-        tab_panel("Summary", DTOutput("qmap_summary", height = "100%")
-        )
+        tab_panel("Summary", DTOutput("qmap_summary", height = "100%")),
+        tab_panel("Raw", DTOutput("qmap_dt", height = "100%"))
       )
     )
   )
