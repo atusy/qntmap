@@ -1,5 +1,5 @@
 autoplot.qm_qnt <- function(object, x = 1, y = 2, ..., .filter = TRUE) {
-  nm <- setdiff(names(object), "x", "y")
+  nm <- setdiff(names(object), c("x", "y"))
   x <- tidyselect::vars_select(nm, !!enquo(x))
   y <- tidyselect::vars_select(nm, !!enquo(y))
   dplyr::bind_cols(
