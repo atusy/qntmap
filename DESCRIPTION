@@ -1,7 +1,7 @@
 Package: qntmap
 Type: Package
 Title: Enhance quantitative analysis of EPMA map
-Version: 0.4.0
+Version: 1.0.0
 Authors@R: 
     c(
         person(
@@ -26,7 +26,7 @@ Authors@R:
 Author: Atsushi Yasumoto [aut, cph, cre]
 Maintainer: Atsushi Yasumoto <atusy.rpkg@gmail.com>
 Description: Generate and analyze chemical mass concentration map based on 
-    X-ray maps and some quantified points among the mapped area.
+    X-ray maps and referencial spot analyses within the mapped area.
 License: MIT + file LICENSE
 Encoding: UTF-8
 LazyData: true
