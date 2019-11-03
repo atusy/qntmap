@@ -158,15 +158,15 @@ gg_img <- function(
   colors = c("viridis", "magma", "gray", "discrete"),
   barheight = unit(1, "npc") - unit(5, "line"),
   base_size = 11,
-  scale = c("px", "um", "mm", "cm"),
+  unit = c("px", "um", "mm", "cm"),
   step_size = NULL,
   ...
 ) {
-  scale <- match.arg(scale)
+  unit <- match.arg(unit)
   
-  if (is.null(step_size) && scale != "px") {
-    warning("Step size is unknown. scale is coerced to px")
-    scale <- "px"
+  if (is.null(step_size) && unit != "px") {
+    warning("Step size is unknown. unit is coerced to px")
+    unit <- "px"
   }
   
   label_axis <- list(
@@ -174,8 +174,8 @@ gg_img <- function(
     um = function(x) x * step_size,
     mm = function(x) x * step_size * 1e-3,
     cm = function(x) x * step_size * 1e-4
-  )[[scale]]
-  if (scale == "um") scale <- "\u00b5m"
+  )[[unit]]
+  if (unit == "um") unit <- "\u00b5m"
   
   is_z_num <- is.numeric(zlim)
   colors <- `if`(is_z_num, match.arg(colors), "discrete")
@@ -186,8 +186,8 @@ gg_img <- function(
     annotation_raster(
       img, xmin = xlim[1L], xmax = xlim[2L], ymin = -ylim[2L], ymax = -ylim[1L]
     ) +
-    scale_x_continuous(name = paste0("x [", scale, "]"), labels = label_axis) +
-    scale_y_reverse(name = paste0("y [", scale, "]"), labels = label_axis) +
+    scale_x_continuous(name = paste0("x [", unit, "]"), labels = label_axis) +
+    scale_y_reverse(name = paste0("y [", unit, "]"), labels = label_axis) +
     `if`(
       is_z_num,
       list(

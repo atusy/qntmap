@@ -27,6 +27,6 @@ raster <- function(input, id, ranges, .margin, x, zlim, step_size = NULL) {
     xlim = rx + .margin, ylim = ry + .margin,
     zlim = zlim, zname = input[[ids[[1L]]]],
     colors = input[[ids[[2L]]]], base_size = 16,
-    scale = input[[ids[[3L]]]], step_size = step_size
+    unit = input[[ids[[3L]]]], step_size = step_size
   )
 }

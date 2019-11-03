@@ -11,14 +11,16 @@
 #' @param zlim Range limit of z-coordinates. This is neglected if z is discrete.
 #' @param colors
 #'  One of "magma", "viridis", or "gray". Applicable when z-coordinates is numeric.
+#' @param unit
+#'  Unit of x- and y-axis ("px", "um", "nm" or "cm").
 #' 
 #' @importFrom scales squish
 autoplot.qntmap <- function(
   object, zname = setdiff(names(object), c("x", "y"))[[1L]], 
   zlim = NULL, colors = c("magma", "viridis", "gray"),
-  scale = c("px", "um", "nm", "cm"), ...
+  unit = c("px", "um", "nm", "cm"), ...
 ) {
-  scale <- match.arg(scale)
+  unit <- match.arg(unit)
   z <- object[[zname]]
 
   if (is.numeric(z)) {
@@ -33,7 +35,7 @@ autoplot.qntmap <- function(
   gg_img(
     as_img(lookup[[colors]](z, from = zlim), max(object$y), max(object$x)),
     zlim = zlim, zname = zname, colors = colors,
-    scale = scale, step_size = attr(object, "step")[[1L]], ...
+    unit = unit, step_size = attr(object, "step")[[1L]], ...
   )
 }
 
