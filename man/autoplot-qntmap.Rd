@@ -9,14 +9,14 @@
 \usage{
 \method{autoplot}{qntmap}(object, zname = setdiff(names(object), c("x",
   "y"))[[1L]], zlim = NULL, colors = c("magma", "viridis", "gray"),
-  scale = c("px", "um", "nm", "cm"), ...)
+  unit = c("px", "um", "nm", "cm"), ...)
 
 \method{autoplot}{qm_xmap}(object, zname = setdiff(names(object), c("x",
   "y"))[[1L]], zlim = NULL, colors = c("magma", "viridis", "gray"),
-  scale = c("px", "um", "nm", "cm"), ...)
+  unit = c("px", "um", "nm", "cm"), ...)
 
 \method{autoplot}{qm_cluster}(object, zname = "cluster", zlim = NULL,
-  colors = c("magma", "viridis", "gray"), scale = c("px", "um", "nm",
+  colors = c("magma", "viridis", "gray"), unit = c("px", "um", "nm",
   "cm"), ...)
 }
 \arguments{
@@ -30,6 +30,8 @@ class object.}
 \item{zlim}{Range limit of z-coordinates. This is neglected if z is discrete.}
 
 \item{colors}{One of "magma", "viridis", or "gray". Applicable when z-coordinates is numeric.}
+
+\item{unit}{Unit of x- and y-axis ("px", "um", "nm" or "cm").}
 
 \item{...}{other arguments passed to specific methods}
 }

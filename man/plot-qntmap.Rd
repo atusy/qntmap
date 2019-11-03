@@ -9,15 +9,15 @@
 \usage{
 \method{plot}{qntmap}(x, y = setdiff(names(x), c("x", "y"))[1L],
   zname = y, zlim = NULL, colors = c("magma", "viridis", "gray"),
-  interactive = TRUE, scale = c("px", "um", "mm", "cm"), ...)
+  interactive = TRUE, unit = c("px", "um", "mm", "cm"), ...)
 
 \method{plot}{qm_xmap}(x, y = setdiff(names(x), c("x", "y"))[1L],
   zname = y, zlim = NULL, colors = c("magma", "viridis", "gray"),
-  interactive = TRUE, scale = c("px", "um", "mm", "cm"), ...)
+  interactive = TRUE, unit = c("px", "um", "mm", "cm"), ...)
 
 \method{plot}{qm_cluster}(x, y = "cluster", zname = y, zlim = NULL,
   colors = c("magma", "viridis", "gray"), interactive = TRUE,
-  scale = c("px", "um", "mm", "cm"), ...)
+  unit = c("px", "um", "mm", "cm"), ...)
 }
 \arguments{
 \item{x}{An object of class \code{qntmap}, \code{qm_cluster}, or \code{qm_xmap},
@@ -32,6 +32,8 @@ returned by \code{\link[=quantify]{quantify()}}, \code{\link[=qntmap]{qntmap()}}
 
 \item{interactive}{\code{TRUE} (default) produces plots with shiny WebUI, and
 \code{FALSE} produces plots with \code{\link[ggplot2:ggplot]{ggplot2::ggplot()}}.}
+
+\item{unit}{Unit of x- and y-axis ("px", "um", "nm" or "cm").}
 
 \item{...}{Arguments passed to internal functions.}
 }

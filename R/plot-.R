@@ -19,6 +19,8 @@
 #' @param interactive
 #'  `TRUE` (default) produces plots with shiny WebUI, and
 #'  `FALSE` produces plots with [`ggplot2::ggplot()`].
+#' @param unit
+#'  Unit of x- and y-axis ("px", "um", "nm" or "cm").
 #' @param ...
 #'  Arguments passed to internal functions.
 #'
