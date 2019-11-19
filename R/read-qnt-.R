@@ -86,7 +86,11 @@ read_qnt <- function(
   if (!is.null(phase_list)) {
     cnd <- left_join(
       select(cnd, -"phase", -"use"),
-      select(fread(phase_list), "id", "phase", "use"), 
+      phase_list %>>% 
+        fread() %>>%
+        rename_all(tolower) %>>%
+        mutate(id = `if`(is.null(.$id), row_number(), id)) %>>%
+        select("id", "phase", "use"), 
       by = "id"
     )
   }
