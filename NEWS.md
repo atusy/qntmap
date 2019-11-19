@@ -1,12 +1,13 @@
-# qntmap 0.4.0
+# qntmap 1.0.1
 
-## On going
+- Phase list csv can be without id column.
 
-- `lm_AG()` and `lm_B()` performs regressions after omitting outliers.
+## Planning
+
 - Add `remove_outliers` option to quantify and find_centers
-- `tidy_epma` returns `qm_epma` class object.
-- `autoplot.qm_epma`
 
+
+# qntmap 1.0.0
 
 ## Biggest NEWS
 
@@ -68,9 +69,11 @@
   `qntmap`.
 - `quantify()` get the `params` attribute showing the parameters, $alpha$,
   $beta$, and $gamma$.
+- `autoplot.qm_epma()` is defined for the result of `tidy_epma()`
 
 ## Internal changes
 
+- `tidy_epma()` returns `qm_epma` class object.
 - `gghist.numeric()`
     - draws border to be legible regardless of background colors.
     - supports a histogram with a single column.
