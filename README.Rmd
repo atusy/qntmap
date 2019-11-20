@@ -1,5 +1,5 @@
 ---
-title: Enhance quantitative analysis of EPMA maps with QntMap
+title: Enhance quantitative analysis of EPMA maps with qntmap
 output: github_document
 ---
 
@@ -38,7 +38,7 @@ source("https://install-github.me/atusy/qntmap")
 
 1. [EPMA analysis] (spot before map)
 1. [Export data] from EPMA to PC
-1. [Run QntMap on R] for data processing.
+1. [Run qntmap on R] for data processing.
 
 Details below.
 
@@ -74,7 +74,7 @@ Thus, [spot analysis][Spot analysis] must be done prior to [mapping][Mapping].
 
 |                     | Spot  | Map     | Comment                         |
 |:--------------------|------:|--------:|:--------------------------------|
-|Acceralating Voltate | 15 kV | 15 kV   | Must be same in spot and map    |
+|Acceralating Voltage | 15 kV | 15 kV   | Must be same in spot and map    |
 |Probe diameter       | 3 μm  | 20 μm   | Must be smaller in spot than map|
 |Probe current        | 10 nA | 100 nA  |                                 |
 |Peak dwell           | 10 sec| 120 msec|                                 |
@@ -119,7 +119,7 @@ kable(fread(system.file(package = "qntmap", "extdata", "files-map.csv")))
 
 `*` indicates wild cards.
 
-## Run QntMap on R
+## Run qntmap on R
 
 For data processing.
 
