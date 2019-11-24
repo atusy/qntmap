@@ -53,7 +53,7 @@ shiny_ui_cluster <- function() {
       main_tabset_panel(
         id = "main_tabset_cluster",
         tab_panel(
-          "Plot",
+          "Map",
           plotOutput(
             "cluster_heatmap", height = "100%",
             dblclick = "cluster_click",
