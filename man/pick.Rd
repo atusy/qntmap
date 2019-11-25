@@ -4,8 +4,14 @@
 \alias{pick}
 \title{Pick values from mapping data}
 \usage{
-pick(.df, x = NULL, y = NULL, phase = if (is.null(x)) NULL else
-  paste0("P", seq_along(x)), i = data.frame(x, y, phase), ...)
+pick(
+  .df,
+  x = NULL,
+  y = NULL,
+  phase = if (is.null(x)) NULL else paste0("P", seq_along(x)),
+  i = data.frame(x, y, phase),
+  ...
+)
 }
 \arguments{
 \item{.df}{Mapping data. Currentl version only supports \code{qm_xmap} object.}

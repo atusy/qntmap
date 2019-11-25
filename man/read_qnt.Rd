@@ -4,8 +4,12 @@
 \alias{read_qnt}
 \title{compile quantitative data}
 \usage{
-read_qnt(wd = dir(pattern = ("(.*_QNT|^\\\\.qnt)$"), all.files =
-  TRUE)[1], phase_list = NULL, conditions = NULL, saving = TRUE)
+read_qnt(
+  wd = dir(pattern = ("(.*_QNT|^\\\\.qnt)$"), all.files = TRUE)[1],
+  phase_list = NULL,
+  conditions = NULL,
+  saving = TRUE
+)
 }
 \arguments{
 \item{wd}{directory path containing .qnt files}
@@ -15,7 +19,7 @@ phase of each analysis and \code{TRUE} or \code{FALSE} to use it for quantifying
 
 \item{conditions}{A path to a csv file which records analytical conditions of elements.
 The csv file must have following columns while others are discarded:
-\code{Oxide}, \code{Element}, \code{Bg+ [mm]}, \code{Bg- [mm]}, \code{Peak [sec]}, and \code{Bg [sec]}.
+\code{Oxide}, \code{Element}, \verb{Bg+ [mm]}, \verb{Bg- [mm]}, \code{Peak [sec]}, and \code{Bg [sec]}.
 \code{NULL} (default) retrieves analytical conditions from
 \code{elem.qnt}, \code{elint.qnt}, and \code{.cnd/elemw.cnd} / \code{Pos_0001/data001.cnd}.}
 

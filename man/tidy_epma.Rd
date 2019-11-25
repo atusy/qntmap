@@ -4,8 +4,7 @@
 \alias{tidy_epma}
 \title{Compile epma data into a data frame}
 \usage{
-tidy_epma(qnt, xmap, cluster = NULL, subcluster = TRUE,
-  suffix = "_.*")
+tidy_epma(qnt, xmap, cluster = NULL, subcluster = TRUE, suffix = "_.*")
 }
 \arguments{
 \item{qnt}{object returned by read_qnt}

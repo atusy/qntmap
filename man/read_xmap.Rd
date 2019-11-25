@@ -4,9 +4,13 @@
 \alias{read_xmap}
 \title{Read X-ray map data}
 \usage{
-read_xmap(wd = ".map/1", DT = 0, conditions = NULL,
+read_xmap(
+  wd = ".map/1",
+  DT = 0,
+  conditions = NULL,
   .map = "(data[0-9]+\\\\.csv)|([1-9][0-9]*_map\\\\.txt)",
-  .cnd = "(data[0-9]+|[1-9][0-9]*)\\\\.cnd")
+  .cnd = "(data[0-9]+|[1-9][0-9]*)\\\\.cnd"
+)
 }
 \arguments{
 \item{wd}{directory path containing mapping data (e.g., ./.map/.1)}

@@ -4,10 +4,21 @@
 \alias{quantify}
 \title{Quantify X-ray maps}
 \usage{
-quantify(xmap, qnt, cluster, maps_x = attr(xmap, "pixel")[1L],
-  maps_y = attr(xmap, "pixel")[2L], phase = everything(),
-  element = everything(), fine_phase = NULL, fine_th = 0.9,
-  fix = NULL, se = FALSE, saving = TRUE, ...)
+quantify(
+  xmap,
+  qnt,
+  cluster,
+  maps_x = attr(xmap, "pixel")[1L],
+  maps_y = attr(xmap, "pixel")[2L],
+  phase = everything(),
+  element = everything(),
+  fine_phase = NULL,
+  fine_th = 0.9,
+  fix = NULL,
+  se = FALSE,
+  saving = TRUE,
+  ...
+)
 }
 \arguments{
 \item{xmap}{Object returned by \code{\link[=read_xmap]{read_xmap()}}.}
@@ -40,18 +51,19 @@ some elements in some phases (default: \code{NULL}).}
 \item{saving}{\code{TRUE} (default) saves the results into \code{qntmap} directory under
 the directory \code{xmap} is read from. \code{FALSE} does not save.`}
 
-\item{...}{Arguments passed on to \code{find_outlier}
-\describe{
-  \item{interval}{A type of the interval. Data points outside intervals are treated as outliers.
+\item{...}{
+  Arguments passed on to \code{\link[=find_outlier]{find_outlier}}
+  \describe{
+    \item{\code{interval}}{A type of the interval. Data points outside intervals are treated as outliers.
 If \code{"prediction"} (default), prediction intervals are used based on Poisson process.
 If `"tukey"``, conditional lower and upper whiskers are used where the lower is
 $Q_{1/4} - 1.5 IQR$ and the upper is $Q_{3/4} + 1.5 IQR$.}
-  \item{method}{Applicable when \code{interval = "prediction"}.
+    \item{\code{method}}{Applicable when \code{interval = "prediction"}.
 If \code{"rq"} (default), quantile regression is performed (\code{\link[quantreg:rq]{quantreg::rq()}}).
 If \code{"lsfit"}, least square regression is performed (\code{\link[stats:lsfit]{stats::lsfit()}}).}
-  \item{percentile}{A percentile of predictive interaval.
+    \item{\code{percentile}}{A percentile of predictive interaval.
 Applicable when \code{interval = "prediction"}.}
-}}
+  }}
 }
 \description{
 Quantify X-ray maps

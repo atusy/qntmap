@@ -37,15 +37,15 @@ find_AB <- function(AG, B, se = TRUE) {
 #' @param stg stg
 #'
 #' @note
-#' > AB
+#' \> AB
 #'   elm stg phase3         ab        ab_se
 #' 1  Mg  11     Ol 0.01008873 4.055329e-08
 #' 2  Mg  11    Qtz 0.01008873 4.055329e-08
 #' 3  Si  11     Ol 0.01010103 3.816024e-08
 #' 4  Si  11    Qtz 0.01008730 3.810836e-08
-#' > stg
+#' \> stg
 #' c("11", "11")
-#' > expand_AB(AB, stg)
+#' \> expand_AB(AB, stg)
 #' List of 2
 #' $ Mg:List of 2
 #' ..$ ab   :'data.frame':	2 obs. of  2 variables:

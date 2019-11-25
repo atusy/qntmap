@@ -16,10 +16,10 @@
 \item{...}{additional arguments affecting the summary produced.}
 
 \item{digits}{integer, used for number formatting with
-    \code{\link{signif}()} (for \code{summary.default}) or
-    \code{\link{format}()} (for \code{summary.data.frame}).  In
+    \code{\link[base]{signif}()} (for \code{summary.default}) or
+    \code{\link[base]{format}()} (for \code{summary.data.frame}).  In
     \code{summary.default}, if not specified (i.e.,
-    \code{\link{missing}(.)}), \code{signif()} will \emph{not} be called
+    \code{\link[base]{missing}(.)}), \code{signif()} will \emph{not} be called
     anymore (since \R >= 3.4.0, where the default has been changed to
     only round in the \code{print} and \code{format} methods).}
 }
@@ -29,29 +29,29 @@ The form of the value returned by \code{summary} depends on the
     methods for details of what is produced by that method.
 
     The default method returns an object of class
-    \code{c("summaryDefault", "\link{table}")} which has specialized
-    \code{\link{format}} and \code{\link{print}} methods.  The
-    \code{\link{factor}} method returns an integer vector.
+    \code{c("summaryDefault", "\link[base]{table}")} which has specialized
+    \code{\link[base]{format}} and \code{\link[base]{print}} methods.  The
+    \code{\link[base]{factor}} method returns an integer vector.
 
     The matrix and data frame methods return a matrix of class
-    \code{"\link{table}"}, obtained by applying \code{summary} to each
+    \code{"\link[base]{table}"}, obtained by applying \code{summary} to each
     column and collating the results.
 }
 \description{
 \code{summary} is a generic function used to produce result summaries
   of the results of various model fitting functions.  The function
-  invokes particular \code{\link{methods}} which depend on the
-  \code{\link{class}} of the first argument.
+  invokes particular \code{\link[base]{methods}} which depend on the
+  \code{\link[base]{class}} of the first argument.
 }
 \details{
-For \code{\link{factor}}s, the frequency of the first \code{maxsum - 1}
+For \code{\link[base]{factor}}s, the frequency of the first \code{maxsum - 1}
     most frequent levels is shown, and the less frequent levels are
     summarized in \code{"(Others)"} (resulting in at most \code{maxsum}
     frequencies).
 
     The functions \code{summary.lm} and \code{summary.glm} are examples
     of particular methods which summarize the results produced by
-    \code{\link{lm}} and \code{\link{glm}}.
+    \code{\link[base]{lm}} and \code{\link[base]{glm}}.
 }
 \examples{
 summary(attenu, digits = 4) #-> summary.data.frame(...), default precision
@@ -68,7 +68,7 @@ Chambers, J. M. and Hastie, T. J. (1992)
   Wadsworth & Brooks/Cole.
 }
 \seealso{
-\code{\link{anova}},
-  \code{\link{summary.glm}},
-  \code{\link{summary.lm}}.
+\code{\link[base]{anova}},
+  \code{\link[base]{summary.glm}},
+  \code{\link[base]{summary.lm}}.
 }

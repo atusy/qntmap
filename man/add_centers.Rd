@@ -4,9 +4,16 @@
 \alias{add_centers}
 \title{Add centroids manually}
 \usage{
-add_centers(centers, xmap, x = NULL, y = NULL, phase = if
-  (is.null(x)) NULL else paste0("P", seq_along(x)), i = data.frame(x, y,
-  phase), ..., saveas = "center_add.csv")
+add_centers(
+  centers,
+  xmap,
+  x = NULL,
+  y = NULL,
+  phase = if (is.null(x)) NULL else paste0("P", seq_along(x)),
+  i = data.frame(x, y, phase),
+  ...,
+  saveas = "center_add.csv"
+)
 }
 \arguments{
 \item{centers}{c-by-p matrix returned by \code{\link[=find_centers]{find_centers()}} or by manually;

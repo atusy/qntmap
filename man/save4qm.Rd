@@ -14,8 +14,7 @@ save4qm(x, nm = "", saving = TRUE, ...)
 
 \method{save4qm}{data.frame}(x, nm, saving, ...)
 
-\method{save4qm}{qm_cluster}(x, nm, saving, dir_out = ".",
-  suffix = "_.*", elements = "", ...)
+\method{save4qm}{qm_cluster}(x, nm, saving, dir_out = ".", suffix = "_.*", elements = "", ...)
 
 \method{save4qm}{qntmap}(x, nm, saving, ...)
 }

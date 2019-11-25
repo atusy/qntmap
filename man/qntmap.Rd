@@ -4,9 +4,14 @@
 \alias{qntmap}
 \title{Interactively quantify X-ray maps}
 \usage{
-qntmap(xmap_dir = NULL, qnt_dir = NULL, deadtime = 1100,
-  phase_list = NULL, console = FALSE, selected = c("auto", "Input",
-  "Map", "Spot"))
+qntmap(
+  xmap_dir = NULL,
+  qnt_dir = NULL,
+  deadtime = 1100,
+  phase_list = NULL,
+  console = FALSE,
+  selected = c("auto", "Input", "Map", "Spot")
+)
 }
 \arguments{
 \item{xmap_dir, qnt_dir}{Paths to the directories containing data from mapping and spot analysis.}

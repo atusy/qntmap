@@ -4,9 +4,15 @@
 \alias{find_outlier}
 \title{Find outliers caused by multi-phase pixels}
 \usage{
-find_outlier(epma, phase = everything(), element = everything(),
-  interval = c("prediction", "tukey"), method = c("rq", "lsfit",
-  "median"), percentile = 0.99, fine_phase = NULL)
+find_outlier(
+  epma,
+  phase = everything(),
+  element = everything(),
+  interval = c("prediction", "tukey"),
+  method = c("rq", "lsfit", "median"),
+  percentile = 0.99,
+  fine_phase = NULL
+)
 }
 \arguments{
 \item{epma}{A value returned by \code{\link[=tidy_epma]{tidy_epma()}}}

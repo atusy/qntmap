@@ -4,8 +4,14 @@
 \alias{cluster_xmap}
 \title{Cluster mapping data into mineral species}
 \usage{
-cluster_xmap(xmap, centers, elements = intersect(names(xmap),
-  colnames(centers)), saving = TRUE, suffix = "_.*", ...)
+cluster_xmap(
+  xmap,
+  centers,
+  elements = intersect(names(xmap), colnames(centers)),
+  saving = TRUE,
+  suffix = "_.*",
+  ...
+)
 }
 \arguments{
 \item{xmap}{A \code{qm_xmap} class object returned by \code{\link[=read_xmap]{read_xmap()}}}
@@ -28,32 +34,33 @@ Clusters with the same prefix comprise a super cluster.
 For example, "Pl_NaRich" and "Pl_NaPoor" becomes "Pl" cluster if
 \code{suffix = "_.*"} (default).}
 
-\item{...}{Arguments passed on to \code{PoiClaClu::Classify}
-\describe{
-  \item{xte}{
+\item{...}{
+  Arguments passed on to \code{\link[PoiClaClu:Classify]{PoiClaClu::Classify}}
+  \describe{
+    \item{\code{xte}}{
 A m-by-p data matrix: m test observations and p features. The classifier
 fit on the training data set x will be tested on this data set. If NULL,
 then testing will be performed on the training set.
 }
-  \item{rho}{
+    \item{\code{rho}}{
 Tuning parameter controlling the amount of soft thresholding performed,
 i.e. the level of sparsity, i.e. number of nonzero features in
 classifier. Rho=0 means that there is no soft-thresolding, i.e. all
 features used in classifier. Larger rho means that fewer features will
 be used.
 }
-  \item{beta}{
+    \item{\code{beta}}{
     A smoothing term. A Gamma(beta,beta) prior is used to fit the
     Poisson model.
     Recommendation is to just leave it at 1, the default value.
 }
-  \item{rhos}{
+    \item{\code{rhos}}{
 A vector of tuning parameters that control the amount of soft thresholding
 performed. If "rhos" is provided then a number of
 models will be fit (one for each element of "rhos"), and a number of
 predicted class labels will be output (one for each element of "rhos").
 }
-  \item{type}{
+    \item{\code{type}}{
     How should the observations be normalized within the
     Poisson model, i.e. how should the size factors be estimated?
     Options are "quantile" or "deseq" (more robust) or "mle" (less
@@ -68,13 +75,13 @@ predicted class labels will be output (one for each element of "rhos").
     under a simple Poisson model.
                    
 }
-  \item{prior}{
+    \item{\code{prior}}{
     Vector of length equal to the number of classes, representing prior
     probabilities
     for each class. If NULL then uniform priors are used (i.e. each
     class is equally likely).
   }
-  \item{transform}{
+    \item{\code{transform}}{
         Should data matrices x and xte first be power transformed so that it more
         closely fits
         the Poisson model? TRUE or FALSE. Power transformation is
@@ -82,7 +89,7 @@ predicted class labels will be output (one for each element of "rhos").
         useful if the data are overdispersed relative to the Poisson
         model.
       }
-  \item{alpha}{
+    \item{\code{alpha}}{
         If transform=TRUE, this determines the power to which the data
         matrices x and xte are transformed.
         If alpha=NULL then the transformation that
@@ -91,7 +98,7 @@ predicted class labels will be output (one for each element of "rhos").
         xte). Or a value of
         alpha, 0<alpha<=1, can be entered by the user.
  }
-}}
+  }}
 }
 \description{
 Cluster mapping data into mineral species

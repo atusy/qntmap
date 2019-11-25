@@ -26,7 +26,7 @@
 #'   left_join
 #'   mutate mutate_at
 #'   n
-#'   rename rename_at right_join row_number
+#'   rename rename_all rename_at right_join row_number
 #'   select select_if semi_join summarize summarize_all summarize_if
 #'   transmute transmute_at
 #'   ungroup

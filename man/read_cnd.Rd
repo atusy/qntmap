@@ -13,7 +13,7 @@ read_cnd(x, pattern = NULL, ...)
 
 \method{read_cnd}{map_cnd}(x, pattern = NULL, ...)
 
-\method{read_cnd}{0_cnd}(x, pattern = NULL, n = NULL, ...)
+\method{read_cnd}{`0_cnd`}(x, pattern = NULL, n = NULL, ...)
 }
 \arguments{
 \item{x}{A path to the file (e.g., '0.cnd', 'map.cnd', ...)}
@@ -40,7 +40,7 @@ with additional class according to the content of the file.
 
 \section{read_cnd.0_cnd}{
 
-A method for \code{0_cnd} class object.
+A method for \verb{0_cnd} class object.
 Used to extract rows which contains phrase matching pattern.
 }
 

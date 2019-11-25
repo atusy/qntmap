@@ -7,17 +7,38 @@
 \alias{plot.qm_cluster}
 \title{Plot methods for \code{qntmap} package}
 \usage{
-\method{plot}{qntmap}(x, y = setdiff(names(x), c("x", "y"))[1L],
-  zname = y, zlim = NULL, colors = c("magma", "viridis", "gray"),
-  interactive = TRUE, unit = c("px", "um", "mm", "cm"), ...)
+\method{plot}{qntmap}(
+  x,
+  y = setdiff(names(x), c("x", "y"))[1L],
+  zname = y,
+  zlim = NULL,
+  colors = c("magma", "viridis", "gray"),
+  interactive = TRUE,
+  unit = c("px", "um", "mm", "cm"),
+  ...
+)
 
-\method{plot}{qm_xmap}(x, y = setdiff(names(x), c("x", "y"))[1L],
-  zname = y, zlim = NULL, colors = c("magma", "viridis", "gray"),
-  interactive = TRUE, unit = c("px", "um", "mm", "cm"), ...)
+\method{plot}{qm_xmap}(
+  x,
+  y = setdiff(names(x), c("x", "y"))[1L],
+  zname = y,
+  zlim = NULL,
+  colors = c("magma", "viridis", "gray"),
+  interactive = TRUE,
+  unit = c("px", "um", "mm", "cm"),
+  ...
+)
 
-\method{plot}{qm_cluster}(x, y = "cluster", zname = y, zlim = NULL,
-  colors = c("magma", "viridis", "gray"), interactive = TRUE,
-  unit = c("px", "um", "mm", "cm"), ...)
+\method{plot}{qm_cluster}(
+  x,
+  y = "cluster",
+  zname = y,
+  zlim = NULL,
+  colors = c("magma", "viridis", "gray"),
+  interactive = TRUE,
+  unit = c("px", "um", "mm", "cm"),
+  ...
+)
 }
 \arguments{
 \item{x}{An object of class \code{qntmap}, \code{qm_cluster}, or \code{qm_xmap},
