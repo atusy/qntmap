@@ -22,7 +22,7 @@ shiny_ui_cluster <- function() {
             gap = "3px"
           ),
           cssgrid::grid_layout(
-            picker_scale("cluster", label = "Scale", width =  "auto"),
+            picker_scale("cluster", label = "Scale", width =  "100%"),
             picker_input(
               inputId = "cluster_subcluster",
               label = "Subclusters",
