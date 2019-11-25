@@ -89,7 +89,7 @@ read_qnt <- function(
       phase_list %>>% 
         fread() %>>%
         rename_all(tolower) %>>%
-        mutate(id = `if`(is.null(.$id), row_number(), id)) %>>%
+        mutate(id = `if`(is.null(.$id), row_number(), .data$id)) %>>%
         select("id", "phase", "use"), 
       by = "id"
     )
