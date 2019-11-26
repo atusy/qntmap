@@ -1,3 +1,5 @@
+# © 2019 JAMSTEC
+
 #' @importFrom ggAtusy stat_err
 #' @noRd
 outlier_gg <- function(

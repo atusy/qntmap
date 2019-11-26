@@ -167,7 +167,7 @@ shiny_server <- function(input, output, session) {
   
   
   
-  # Check
+  # Check © 2019 JAMSTEC
   
   outlier_elint <- shiny::reactive(intersect(xmap_elint(), qnt_elint()))
   output$outlier_elem_selecter <- shiny::renderUI(select_elem(
@@ -288,18 +288,18 @@ shiny_server <- function(input, output, session) {
     `if`(input$cluster_run == 0L || input$qmap_run == 0L, NULL, qmap_elint())
   ))
   
-  qmap_density_df <- shiny::reactiveVal()
+  qmap_density_df <- shiny::reactiveVal() # © 2019 JAMSTEC
   
-  shiny::observeEvent(phase_all(), {
+  shiny::observeEvent(phase_all(), { # © 2019 JAMSTEC
     qmap_density_df(data.frame(phase = phase_all(), density = 1))
   })
   
-  output$qmap_density <- DT::renderDT(DT(
+  output$qmap_density <- DT::renderDT(DT( # © 2019 JAMSTEC
     qmap_density_df(), editable = list(target = "all"),
     options = DT_options(scrollY = "calc(100vh - 470px)")
   ))
   
-  shiny::observeEvent(input$qmap_density_cell_edit, {
+  shiny::observeEvent(input$qmap_density_cell_edit, { # © 2019 JAMSTEC
     qmap_density_df(
       suppressWarnings(DT::editData(
         qmap_density_df(),
@@ -351,9 +351,9 @@ shiny_server <- function(input, output, session) {
   
   # Misc
   
-  ## Params
+  ## Params © 2019 JAMSTEC
   
-  params <- shiny::reactive(retrieve_params(qmap_out()))
+  params <- shiny::reactive(retrieve_params(qmap_out(), xmap_data()))
   
   output$params_elem_selecter <- shiny::renderUI(select_elem(
     "params", "Elements to plot", outlier_elint(), multiple = TRUE

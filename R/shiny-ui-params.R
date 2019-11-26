@@ -1,3 +1,4 @@
+# © 2019 JAMSTEC
 shiny_ui_params <- function() {
   tabPanel(
     "Params for Quantify",

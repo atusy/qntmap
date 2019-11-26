@@ -34,10 +34,7 @@ shiny_ui_quantify <- function() {
             shiny::actionLink("qmap_tab_adv", "advanced menu.")
           )
         ),
-        tab_panel(
-          "Adv.",
-          DT::DTOutput("qmap_density")
-        )
+        tab_panel("Adv.", DT::DTOutput("qmap_density")) # © 2019 JAMSTEC
       ),
       main_tabset_panel(
         id = "main_tabset_qmap",

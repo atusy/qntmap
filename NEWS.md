@@ -2,6 +2,10 @@
 
 - Phase list csv can be without id column.
 
+## Bug fix
+
+- Fix beta being wrong in the *Params for Quantify* page.
+
 ## Planning
 
 - Add `remove_outliers` option to quantify and find_centers
