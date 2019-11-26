@@ -1,4 +1,4 @@
-priors_summary <- c("Area", "x", "y", "size_x", "size_y", "cluster")
+priors_summary <- c("Area", "x", "y", "size_x", "size_y", "cluster", "density")
 
 summarize_whole <- function(data, summary, id) {
   data %>>%
@@ -7,7 +7,7 @@ summarize_whole <- function(data, summary, id) {
       Area = "Whole", size_x = max(data$x), size_y = max(data$y),
       membership = NULL
     ) %>>%
-    prioritize(priors_summary) %>>%
+    prioritize(union(priors_summary, .component)) %>>%
     bind_rows(summary[[id]])
 }
 

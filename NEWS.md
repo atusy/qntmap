@@ -1,6 +1,7 @@
 # qntmap 1.0.1
 
 - Phase list csv can be without id column.
+- Reorder summarized tables in the shiny GUI.
 
 ## Bug fix
 
