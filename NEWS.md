@@ -2,6 +2,7 @@
 
 - Phase list csv can be without id column.
 - Reorder summarized tables in the shiny GUI.
+- `autoplot.qm_xmap()` supports data with unknown step size.
 
 ## Bug fix
 

@@ -35,7 +35,7 @@ autoplot.qntmap <- function(
   gg_img(
     as_img(lookup[[colors]](z, from = zlim), max(object$y), max(object$x)),
     zlim = zlim, zname = zname, colors = colors,
-    unit = unit, step_size = attr(object, "step")[[1L]], ...
+    unit = unit, step_size = attr(object, "step")[1L], ...
   )
 }
 
