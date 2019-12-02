@@ -12,13 +12,13 @@
 #' @param colors
 #'  One of "magma", "viridis", or "gray". Applicable when z-coordinates is numeric.
 #' @param unit
-#'  Unit of x- and y-axis ("px", "um", "nm" or "cm").
+#'  Unit of x- and y-axis ("px", "um", "mm" or "cm").
 #' 
 #' @importFrom scales squish
 autoplot.qntmap <- function(
   object, zname = setdiff(names(object), c("x", "y"))[[1L]], 
   zlim = NULL, colors = c("magma", "viridis", "gray"),
-  unit = c("px", "um", "nm", "cm"), ...
+  unit = c("px", "um", "mm", "cm"), ...
 ) {
   unit <- match.arg(unit)
   z <- object[[zname]]

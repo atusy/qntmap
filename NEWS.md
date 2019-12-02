@@ -6,6 +6,7 @@
 
 ## Bug fix
 
+- The `unit` argument in `autoplot.qm_xmap()` contained `"nm"` instead of `"mm"` as a choice.
 - Fix beta being wrong in the *Params for Quantify* page.
 
 ## Planning

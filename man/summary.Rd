@@ -40,7 +40,7 @@ The form of the value returned by \code{summary} depends on the
 \description{
 \code{summary} is a generic function used to produce result summaries
   of the results of various model fitting functions.  The function
-  invokes particular \code{\link[base]{methods}} which depend on the
+  invokes particular \code{\link{methods}} which depend on the
   \code{\link[base]{class}} of the first argument.
 }
 \details{
@@ -51,7 +51,7 @@ For \code{\link[base]{factor}}s, the frequency of the first \code{maxsum - 1}
 
     The functions \code{summary.lm} and \code{summary.glm} are examples
     of particular methods which summarize the results produced by
-    \code{\link[base]{lm}} and \code{\link[base]{glm}}.
+    \code{\link{lm}} and \code{\link{glm}}.
 }
 \examples{
 summary(attenu, digits = 4) #-> summary.data.frame(...), default precision
@@ -68,7 +68,7 @@ Chambers, J. M. and Hastie, T. J. (1992)
   Wadsworth & Brooks/Cole.
 }
 \seealso{
-\code{\link[base]{anova}},
-  \code{\link[base]{summary.glm}},
-  \code{\link[base]{summary.lm}}.
+\code{\link{anova}},
+  \code{\link{summary.glm}},
+  \code{\link{summary.lm}}.
 }

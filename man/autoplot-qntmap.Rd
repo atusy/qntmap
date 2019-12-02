@@ -12,7 +12,7 @@
   zname = setdiff(names(object), c("x", "y"))[[1L]],
   zlim = NULL,
   colors = c("magma", "viridis", "gray"),
-  unit = c("px", "um", "nm", "cm"),
+  unit = c("px", "um", "mm", "cm"),
   ...
 )
 
@@ -21,7 +21,7 @@
   zname = setdiff(names(object), c("x", "y"))[[1L]],
   zlim = NULL,
   colors = c("magma", "viridis", "gray"),
-  unit = c("px", "um", "nm", "cm"),
+  unit = c("px", "um", "mm", "cm"),
   ...
 )
 
@@ -30,7 +30,7 @@
   zname = "cluster",
   zlim = NULL,
   colors = c("magma", "viridis", "gray"),
-  unit = c("px", "um", "nm", "cm"),
+  unit = c("px", "um", "mm", "cm"),
   ...
 )
 }
@@ -46,7 +46,7 @@ class object.}
 
 \item{colors}{One of "magma", "viridis", or "gray". Applicable when z-coordinates is numeric.}
 
-\item{unit}{Unit of x- and y-axis ("px", "um", "nm" or "cm").}
+\item{unit}{Unit of x- and y-axis ("px", "um", "mm" or "cm").}
 
 \item{...}{other arguments passed to specific methods}
 }
