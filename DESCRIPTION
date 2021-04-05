@@ -30,7 +30,7 @@ Description: Generate and analyze chemical mass concentration map based on
 License: MIT + file LICENSE
 Encoding: UTF-8
 LazyData: true
-RoxygenNote: 7.0.1
+RoxygenNote: 7.1.1
 Depends: R(>= 3.1.2)
 Imports: 
     curl,
@@ -45,6 +45,7 @@ Imports:
     htmltools,
     knitr,
     matrixStats,
+    methods,
     pipeR,
     png,
     PoiClaClu,
@@ -62,7 +63,8 @@ Imports:
     tippy,
     tidyr,
     tidyselect,
-    utils
+    utils,
+    yaml
 Suggests:
     captioner,
     covr,
