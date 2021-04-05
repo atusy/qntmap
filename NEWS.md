@@ -1,3 +1,7 @@
+# qntmap 1.0.2
+
+- Fix `qntmap::qntmap()` raising error on the **Mapping conditions** pane of the **Input** page, "Can't create column `Values`: Can't combine `..1` <character> and `..2` <integer>."
+
 # qntmap 1.0.1
 
 - Phase list csv can be without id column.
