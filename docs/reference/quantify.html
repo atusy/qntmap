@@ -8,11 +8,13 @@
 
 <title>Quantify X-ray maps — quantify • qntmap</title>
 
+
 <!-- jquery -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
 <!-- Bootstrap -->
 
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha256-916EbMg70RQy9LHiGkXzG8hSg9EdNy97GazNG/aiY1w=" crossorigin="anonymous" />
+
 <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha256-U5ZEeKfGNOja007MMD3YBI0A3OSZOQbeG6z2f2Y0hu8=" crossorigin="anonymous"></script>
 
 <!-- Font Awesome icons -->
@@ -36,10 +38,11 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/mark.js/8.11.1/jquery.mark.min.js" integrity="sha256-4HLtjeVgH0eIB3aZ9mLYF6E8oU5chNdjU6p6rrXpl9U=" crossorigin="anonymous"></script>
 
 
-<meta property="og:title" content="Quantify X-ray maps — quantify" />
 
+<meta property="og:title" content="Quantify X-ray maps — quantify" />
 <meta property="og:description" content="Quantify X-ray maps" />
 <meta name="twitter:card" content="summary" />
+
 
 
 
@@ -63,6 +66,7 @@
   gtag('config', 'UA-133172060-1');
 </script>
 
+
   </head>
 
   <body>
@@ -79,7 +83,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">qntmap</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.3.4</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.0.0</span>
       </span>
     </div>
 
@@ -87,7 +91,7 @@
       <ul class="nav navbar-nav">
         <li>
   <a href="../index.html">
-    <span class="fa fa-home fa-lg"></span>
+    <span class="fas fa-home fa-lg"></span>
      
   </a>
 </li>
@@ -119,11 +123,10 @@
   <a href="../news/index.html">Changelog</a>
 </li>
       </ul>
-      
       <ul class="nav navbar-nav navbar-right">
         <li>
-  <a href="https://github.com/atusy/qntmap">
-    <span class="fa fa-github fa-lg"></span>
+  <a href="https://github.com/atusy/qntmap/">
+    <span class="fab fa-github fa-lg"></span>
      
   </a>
 </li>
@@ -140,6 +143,7 @@
 </div><!--/.navbar -->
 
       
+
       </header>
 
 <div class="row">
@@ -151,29 +155,39 @@
     </div>
 
     <div class="ref-description">
-    
     <p>Quantify X-ray maps</p>
-    
     </div>
 
-    <pre class="usage"><span class='fu'>quantify</span>(<span class='no'>xmap</span>, <span class='no'>qnt</span>, <span class='no'>cluster</span>, <span class='kw'>maps_x</span> <span class='kw'>=</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/attr'>attr</a></span>(<span class='no'>xmap</span>, <span class='st'>"pixel"</span>)[<span class='fl'>1L</span>],
-  <span class='kw'>maps_y</span> <span class='kw'>=</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/attr'>attr</a></span>(<span class='no'>xmap</span>, <span class='st'>"pixel"</span>)[<span class='fl'>2L</span>], <span class='kw'>fine_phase</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>fine_th</span> <span class='kw'>=</span> <span class='fl'>0.9</span>,
-  <span class='kw'>fix</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>se</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='kw'>saving</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)</pre>
-    
+    <pre class="usage"><span class='fu'>quantify</span><span class='op'>(</span>
+  <span class='va'>xmap</span>,
+  <span class='va'>qnt</span>,
+  <span class='va'>cluster</span>,
+  maps_x <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/attr.html'>attr</a></span><span class='op'>(</span><span class='va'>xmap</span>, <span class='st'>"pixel"</span><span class='op'>)</span><span class='op'>[</span><span class='fl'>1L</span><span class='op'>]</span>,
+  maps_y <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/attr.html'>attr</a></span><span class='op'>(</span><span class='va'>xmap</span>, <span class='st'>"pixel"</span><span class='op'>)</span><span class='op'>[</span><span class='fl'>2L</span><span class='op'>]</span>,
+  phase <span class='op'>=</span> <span class='fu'>everything</span><span class='op'>(</span><span class='op'>)</span>,
+  element <span class='op'>=</span> <span class='fu'>everything</span><span class='op'>(</span><span class='op'>)</span>,
+  fine_phase <span class='op'>=</span> <span class='cn'>NULL</span>,
+  fine_th <span class='op'>=</span> <span class='fl'>0.9</span>,
+  fix <span class='op'>=</span> <span class='cn'>NULL</span>,
+  se <span class='op'>=</span> <span class='cn'>FALSE</span>,
+  saving <span class='op'>=</span> <span class='cn'>TRUE</span>,
+  <span class='va'>...</span>
+<span class='op'>)</span></pre>
+
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
       <th>xmap</th>
-      <td><p><code>qm_xmap</code> class object returned by <code><a href='read_xmap.html'>read_xmap()</a></code>.</p></td>
+      <td><p>Object returned by <code><a href='read_xmap.html'>read_xmap()</a></code>.</p></td>
     </tr>
     <tr>
       <th>qnt</th>
-      <td><p><code>qm_qnt</code> class object returned by <code><a href='read_qnt.html'>read_qnt()</a></code>.</p></td>
+      <td><p>Object returned by <code><a href='read_qnt.html'>read_qnt()</a></code>.</p></td>
     </tr>
     <tr>
       <th>cluster</th>
-      <td><p><code>qm_cluster</code> class object returned by <code><a href='cluster_xmap.html'>cluster_xmap()</a></code>.</p></td>
+      <td><p>Object returned by <code><a href='cluster_xmap.html'>cluster_xmap()</a></code>.</p></td>
     </tr>
     <tr>
       <th>maps_x, maps_y</th>
@@ -181,10 +195,20 @@
 (default: <code>NULL</code>).</p></td>
     </tr>
     <tr>
+      <th>phase</th>
+      <td><p>Selected ones are referenced to detect outliers. Default selects everything.
+Tidy selection is available. For example <code><a href='https://rdrr.io/r/base/c.html'>c(Si, Ti)</a></code> selects them, and
+<code><a href='https://rdrr.io/r/base/c.html'>c(-Si, -Ti)</a></code> selects everything except them.</p></td>
+    </tr>
+    <tr>
+      <th>element</th>
+      <td><p>Selected ones are referenced to detect outliers. Default selects everything.
+Tidy selection is available. For example <code><a href='https://rdrr.io/r/base/c.html'>c(Si, Ti)</a></code> selects them, and
+<code><a href='https://rdrr.io/r/base/c.html'>c(-Si, -Ti)</a></code> selects everything except them.</p></td>
+    </tr>
+    <tr>
       <th>fine_phase</th>
-      <td><p>A character vector to specify fine grained phases
-which tend to comprise multi-phase pixels.
-See <a href='#multi-phase-pixels'>"Multi-phase pixels"</a> section for details.</p></td>
+      <td><p>Deprecated as of qntmap &gt; 0.4.0. Use <code>phase</code> instead.</p></td>
     </tr>
     <tr>
       <th>fine_th</th>
@@ -205,18 +229,34 @@ some elements in some phases (default: <code>NULL</code>).</p></td>
       <td><p><code>TRUE</code> (default) saves the results into <code>qntmap</code> directory under
 the directory <code>xmap</code> is read from. <code>FALSE</code> does not save.`</p></td>
     </tr>
+    <tr>
+      <th>...</th>
+      <td><p>Arguments passed on to <code><a href='find_outlier.html'>find_outlier</a></code></p><dl>
+    <dt><code>interval</code></dt><dd><p>A type of the interval. Data points outside intervals are treated as outliers.
+If <code>"prediction"</code> (default), prediction intervals are used based on Poisson process.
+If `"tukey"``, conditional lower and upper whiskers are used where the lower is
+$Q_1/4 - 1.5 IQR$ and the upper is $Q_3/4 + 1.5 IQR$.</p></dd>
+    <dt><code>method</code></dt><dd><p>Applicable when <code>interval = "prediction"</code>.
+If <code>"rq"</code> (default), quantile regression is performed (<code><a href='https://rdrr.io/pkg/quantreg/man/rq.html'>quantreg::rq()</a></code>).
+If <code>"lsfit"</code>, least square regression is performed (<code><a href='https://rdrr.io/r/stats/lsfit.html'>stats::lsfit()</a></code>).</p></dd>
+    <dt><code>percentile</code></dt><dd><p>A percentile of predictive interaval.
+Applicable when <code>interval = "prediction"</code>.</p></dd>
+  
+</dl></td>
+    </tr>
     </table>
-    
+
 
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
     <h2>Contents</h2>
     <ul class="nav nav-pills nav-stacked">
       <li><a href="#arguments">Arguments</a></li>
-                </ul>
+    </ul>
 
   </div>
 </div>
+
 
       <footer>
       <div class="copyright">
@@ -224,8 +264,9 @@ the directory <code>xmap</code> is read from. <code>FALSE</code> does not save.`
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.3.0.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.1.</p>
 </div>
+
       </footer>
    </div>
 
@@ -248,6 +289,8 @@ the directory <code>xmap</code> is read from. <code>FALSE</code> does not save.`
 </script>
 
 
+
   </body>
 </html>
+
 

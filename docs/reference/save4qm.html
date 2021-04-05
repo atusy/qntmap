@@ -8,11 +8,13 @@
 
 <title>Save objects created by qntmap package. — save4qm • qntmap</title>
 
+
 <!-- jquery -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
 <!-- Bootstrap -->
 
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha256-916EbMg70RQy9LHiGkXzG8hSg9EdNy97GazNG/aiY1w=" crossorigin="anonymous" />
+
 <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha256-U5ZEeKfGNOja007MMD3YBI0A3OSZOQbeG6z2f2Y0hu8=" crossorigin="anonymous"></script>
 
 <!-- Font Awesome icons -->
@@ -36,10 +38,11 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/mark.js/8.11.1/jquery.mark.min.js" integrity="sha256-4HLtjeVgH0eIB3aZ9mLYF6E8oU5chNdjU6p6rrXpl9U=" crossorigin="anonymous"></script>
 
 
-<meta property="og:title" content="Save objects created by qntmap package. — save4qm" />
 
+<meta property="og:title" content="Save objects created by qntmap package. — save4qm" />
 <meta property="og:description" content="Save objects created by qntmap package." />
 <meta name="twitter:card" content="summary" />
+
 
 
 
@@ -63,6 +66,7 @@
   gtag('config', 'UA-133172060-1');
 </script>
 
+
   </head>
 
   <body>
@@ -79,7 +83,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">qntmap</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.3.4</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.0.0</span>
       </span>
     </div>
 
@@ -87,7 +91,7 @@
       <ul class="nav navbar-nav">
         <li>
   <a href="../index.html">
-    <span class="fa fa-home fa-lg"></span>
+    <span class="fas fa-home fa-lg"></span>
      
   </a>
 </li>
@@ -119,11 +123,10 @@
   <a href="../news/index.html">Changelog</a>
 </li>
       </ul>
-      
       <ul class="nav navbar-nav navbar-right">
         <li>
-  <a href="https://github.com/atusy/qntmap">
-    <span class="fa fa-github fa-lg"></span>
+  <a href="https://github.com/atusy/qntmap/">
+    <span class="fab fa-github fa-lg"></span>
      
   </a>
 </li>
@@ -140,6 +143,7 @@
 </div><!--/.navbar -->
 
       
+
       </header>
 
 <div class="row">
@@ -151,26 +155,23 @@
     </div>
 
     <div class="ref-description">
-    
     <p>Save objects created by qntmap package.</p>
-    
     </div>
 
-    <pre class="usage"><span class='fu'>save4qm</span>(<span class='no'>x</span>, <span class='kw'>nm</span> <span class='kw'>=</span> <span class='st'>""</span>, <span class='kw'>saving</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='no'>...</span>)
+    <pre class="usage"><span class='fu'>save4qm</span><span class='op'>(</span><span class='va'>x</span>, nm <span class='op'>=</span> <span class='st'>""</span>, saving <span class='op'>=</span> <span class='cn'>TRUE</span>, <span class='va'>...</span><span class='op'>)</span>
 
 <span class='co'># S3 method for default</span>
-<span class='fu'>save4qm</span>(<span class='no'>x</span>, <span class='no'>nm</span>, <span class='no'>saving</span>, <span class='no'>...</span>)
+<span class='fu'>save4qm</span><span class='op'>(</span><span class='va'>x</span>, <span class='va'>nm</span>, <span class='va'>saving</span>, <span class='va'>...</span><span class='op'>)</span>
 
 <span class='co'># S3 method for data.frame</span>
-<span class='fu'>save4qm</span>(<span class='no'>x</span>, <span class='no'>nm</span>, <span class='no'>saving</span>, <span class='no'>...</span>)
+<span class='fu'>save4qm</span><span class='op'>(</span><span class='va'>x</span>, <span class='va'>nm</span>, <span class='va'>saving</span>, <span class='va'>...</span><span class='op'>)</span>
 
 <span class='co'># S3 method for qm_cluster</span>
-<span class='fu'>save4qm</span>(<span class='no'>x</span>, <span class='no'>nm</span>, <span class='no'>saving</span>, <span class='kw'>dir_out</span> <span class='kw'>=</span> <span class='st'>"."</span>,
-  <span class='kw'>suffix</span> <span class='kw'>=</span> <span class='st'>"_.*"</span>, <span class='kw'>elements</span> <span class='kw'>=</span> <span class='st'>""</span>, <span class='no'>...</span>)
+<span class='fu'>save4qm</span><span class='op'>(</span><span class='va'>x</span>, <span class='va'>nm</span>, <span class='va'>saving</span>, dir_out <span class='op'>=</span> <span class='st'>"."</span>, suffix <span class='op'>=</span> <span class='st'>"_.*"</span>, elements <span class='op'>=</span> <span class='st'>""</span>, <span class='va'>...</span><span class='op'>)</span>
 
 <span class='co'># S3 method for qntmap</span>
-<span class='fu'>save4qm</span>(<span class='no'>x</span>, <span class='no'>nm</span>, <span class='no'>saving</span>, <span class='no'>...</span>)</pre>
-    
+<span class='fu'>save4qm</span><span class='op'>(</span><span class='va'>x</span>, <span class='va'>nm</span>, <span class='va'>saving</span>, <span class='va'>...</span><span class='op'>)</span></pre>
+
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
@@ -207,54 +208,49 @@ For example, "Pl_NaRich" and "Pl_NaPoor" becomes "Pl" cluster if
 <code>NULL</code> (default) selects as much elements as possible.</p></td>
     </tr>
     </table>
-    
+
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <p><code><a href='https://www.rdocumentation.org/packages/base/topics/invisible'>invisible(x)</a></code></p>
-    
+    <p><code><a href='https://rdrr.io/r/base/invisible.html'>invisible(x)</a></code></p>
     <h2 class="hasAnchor" id="save-qm-default"><a class="anchor" href="#save-qm-default"></a><code>save4qm.default</code></h2>
 
     
-    <p>A default method saves an object as a binary RDS file.</p>
-    
+
+<p>A default method saves an object as a binary RDS file.</p>
     <h2 class="hasAnchor" id="save-qm-data-frame"><a class="anchor" href="#save-qm-data-frame"></a><code>save4qm.data.frame</code></h2>
 
     
-    <p>A data frame object is saved as a csv.</p>
-    
+
+<p>A data frame object is saved as a csv.</p>
     <h2 class="hasAnchor" id="save-qm-qm-cluster"><a class="anchor" href="#save-qm-qm-cluster"></a><code>save4qm.qm_cluster</code></h2>
 
     
-    <p>A value returned by <code><a href='cluster_xmap.html'>cluster_xmap()</a></code> or <code><a href='defunct.html'>group_cluster()</a></code> is
+
+<p>A value returned by <code><a href='cluster_xmap.html'>cluster_xmap()</a></code> or <code><a href='defunct.html'>group_cluster()</a></code> is
 saved as binary RDS file, dot-by-dot png file, and as svg file with a legend.
 The png and svg files show distribution of phases among a mapped area.</p>
-    
     <h2 class="hasAnchor" id="save-qm-qntmap"><a class="anchor" href="#save-qm-qntmap"></a><code>save4qm.qntmap</code></h2>
 
     
-    <p>A value returned by <code><a href='qntmap.html'>qntmap()</a></code> or <code><a href='quantify.html'>quantify()</a></code> is saved as
+
+<p>A value returned by <code><a href='qntmap.html'>qntmap()</a></code> or <code><a href='quantify.html'>quantify()</a></code> is saved as
 a binary RDS file, and csv files.</p>
-    
 
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
     <h2>Contents</h2>
     <ul class="nav nav-pills nav-stacked">
       <li><a href="#arguments">Arguments</a></li>
-      
       <li><a href="#value">Value</a></li>
-
       <li><a href="#save-qm-default"><code>save4qm.default</code></a></li>
-
       <li><a href="#save-qm-data-frame"><code>save4qm.data.frame</code></a></li>
-
       <li><a href="#save-qm-qm-cluster"><code>save4qm.qm_cluster</code></a></li>
-
       <li><a href="#save-qm-qntmap"><code>save4qm.qntmap</code></a></li>
-          </ul>
+    </ul>
 
   </div>
 </div>
+
 
       <footer>
       <div class="copyright">
@@ -262,8 +258,9 @@ a binary RDS file, and csv files.</p>
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.3.0.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.1.</p>
 </div>
+
       </footer>
    </div>
 
@@ -286,6 +283,8 @@ a binary RDS file, and csv files.</p>
 </script>
 
 
+
   </body>
 </html>
+
 

@@ -60,7 +60,7 @@ returned by \code{\link[=quantify]{quantify()}}, \code{\link[=qntmap]{qntmap()}}
 }
 \description{
 S3 methods to plot object with original classes in \code{qntmap} package.
-See \code{\link[graphics:plot]{graphics::plot()}} for general use of \code{plot}.
+See \code{\link[graphics:plot.default]{graphics::plot()}} for general use of \code{plot}.
 Mapping data (\code{qm_xmap} and \code{qm_qntmap} classes) are visualized by heat maps.
 }
 \examples{
@@ -70,5 +70,5 @@ class(d) <- c("qm_raster", class(d))
 plot(d, "fill", interactive = FALSE)
 }
 \seealso{
-\code{\link[graphics:plot]{graphics::plot()}}
+\code{\link[graphics:plot.default]{graphics::plot()}}
 }

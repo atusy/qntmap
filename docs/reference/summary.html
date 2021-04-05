@@ -8,11 +8,13 @@
 
 <title>Object Summaries — summary • qntmap</title>
 
+
 <!-- jquery -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
 <!-- Bootstrap -->
 
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha256-916EbMg70RQy9LHiGkXzG8hSg9EdNy97GazNG/aiY1w=" crossorigin="anonymous" />
+
 <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha256-U5ZEeKfGNOja007MMD3YBI0A3OSZOQbeG6z2f2Y0hu8=" crossorigin="anonymous"></script>
 
 <!-- Font Awesome icons -->
@@ -36,13 +38,14 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/mark.js/8.11.1/jquery.mark.min.js" integrity="sha256-4HLtjeVgH0eIB3aZ9mLYF6E8oU5chNdjU6p6rrXpl9U=" crossorigin="anonymous"></script>
 
 
-<meta property="og:title" content="Object Summaries — summary" />
 
+<meta property="og:title" content="Object Summaries — summary" />
 <meta property="og:description" content="summary is a generic function used to produce result summaries
   of the results of various model fitting functions.  The function
   invokes particular methods which depend on the
   class of the first argument." />
 <meta name="twitter:card" content="summary" />
+
 
 
 
@@ -66,6 +69,7 @@
   gtag('config', 'UA-133172060-1');
 </script>
 
+
   </head>
 
   <body>
@@ -82,7 +86,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">qntmap</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.3.4</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.0.0</span>
       </span>
     </div>
 
@@ -90,7 +94,7 @@
       <ul class="nav navbar-nav">
         <li>
   <a href="../index.html">
-    <span class="fa fa-home fa-lg"></span>
+    <span class="fas fa-home fa-lg"></span>
      
   </a>
 </li>
@@ -122,11 +126,10 @@
   <a href="../news/index.html">Changelog</a>
 </li>
       </ul>
-      
       <ul class="nav navbar-nav navbar-right">
         <li>
-  <a href="https://github.com/atusy/qntmap">
-    <span class="fa fa-github fa-lg"></span>
+  <a href="https://github.com/atusy/qntmap/">
+    <span class="fab fa-github fa-lg"></span>
      
   </a>
 </li>
@@ -143,6 +146,7 @@
 </div><!--/.navbar -->
 
       
+
       </header>
 
 <div class="row">
@@ -154,20 +158,18 @@
     </div>
 
     <div class="ref-description">
-    
     <p><code>summary</code> is a generic function used to produce result summaries
   of the results of various model fitting functions.  The function
-  invokes particular <code><a href='https://www.rdocumentation.org/packages/utils/topics/methods'>methods</a></code> which depend on the
-  <code><a href='https://www.rdocumentation.org/packages/base/topics/class'>class</a></code> of the first argument.</p>
-    
+  invokes particular <code><a href='https://rdrr.io/r/utils/methods.html'>methods</a></code> which depend on the
+  <code><a href='https://rdrr.io/r/base/class.html'>class</a></code> of the first argument.</p>
     </div>
 
     <pre class="usage"><span class='co'># S3 method for qm_cluster</span>
-<span class='fu'>summary</span>(<span class='no'>object</span>, <span class='no'>...</span>)
+<span class='fu'>summary</span><span class='op'>(</span><span class='va'>object</span>, <span class='va'>...</span><span class='op'>)</span>
 
 <span class='co'># S3 method for qntmap</span>
-<span class='fu'>summary</span>(<span class='no'>object</span>, <span class='kw'>digits</span> <span class='kw'>=</span> <span class='fl'>2L</span>, <span class='no'>...</span>)</pre>
-    
+<span class='fu'>summary</span><span class='op'>(</span><span class='va'>object</span>, digits <span class='op'>=</span> <span class='fl'>2L</span>, <span class='va'>...</span><span class='op'>)</span></pre>
+
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
@@ -182,53 +184,50 @@
     <tr>
       <th>digits</th>
       <td><p>integer, used for number formatting with
-    <code><a href='https://www.rdocumentation.org/packages/base/topics/Round'>signif</a>()</code> (for <code>summary.default</code>) or
-    <code><a href='https://www.rdocumentation.org/packages/base/topics/format'>format</a>()</code> (for <code>summary.data.frame</code>).  In
+    <code><a href='https://rdrr.io/r/base/Round.html'>signif</a>()</code> (for <code>summary.default</code>) or
+    <code><a href='https://rdrr.io/r/base/format.html'>format</a>()</code> (for <code>summary.data.frame</code>).  In
     <code>summary.default</code>, if not specified (i.e.,
-    <code><a href='https://www.rdocumentation.org/packages/base/topics/missing'>missing</a>(.)</code>), <code><a href='https://www.rdocumentation.org/packages/base/topics/Round'>signif()</a></code> will <em>not</em> be called
+    <code><a href='https://rdrr.io/r/base/missing.html'>missing</a>(.)</code>), <code><a href='https://rdrr.io/r/base/Round.html'>signif()</a></code> will <em>not</em> be called
     anymore (since <span style="R">R</span> &gt;= 3.4.0, where the default has been changed to
     only round in the <code>print</code> and <code>format</code> methods).</p></td>
     </tr>
     </table>
-    
+
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
     <p>The form of the value returned by <code>summary</code> depends on the
     class of its argument.  See the documentation of the particular
     methods for details of what is produced by that method.</p>
 <p>The default method returns an object of class
-    <code><a href='https://www.rdocumentation.org/packages/base/topics/c'>c("summaryDefault", "<a href='https://www.rdocumentation.org/packages/base/topics/table'>table</a>")</a></code> which has specialized
-    <code><a href='https://www.rdocumentation.org/packages/base/topics/format'>format</a></code> and <code><a href='https://www.rdocumentation.org/packages/base/topics/print'>print</a></code> methods.  The
-    <code><a href='https://www.rdocumentation.org/packages/base/topics/factor'>factor</a></code> method returns an integer vector.</p>
+    <code><a href='https://rdrr.io/r/base/c.html'>c("summaryDefault", "<a href='https://rdrr.io/r/base/table.html'>table</a>")</a></code> which has specialized
+    <code><a href='https://rdrr.io/r/base/format.html'>format</a></code> and <code><a href='https://rdrr.io/r/base/print.html'>print</a></code> methods.  The
+    <code><a href='https://rdrr.io/r/base/factor.html'>factor</a></code> method returns an integer vector.</p>
 <p>The matrix and data frame methods return a matrix of class
-    <code>"<a href='https://www.rdocumentation.org/packages/base/topics/table'>table</a>"</code>, obtained by applying <code>summary</code> to each
+    <code>"<a href='https://rdrr.io/r/base/table.html'>table</a>"</code>, obtained by applying <code>summary</code> to each
     column and collating the results.</p>
-    
     <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
 
-    <p>For <code><a href='https://www.rdocumentation.org/packages/base/topics/factor'>factor</a></code>s, the frequency of the first <code>maxsum - 1</code>
+    <p>For <code><a href='https://rdrr.io/r/base/factor.html'>factor</a></code>s, the frequency of the first <code>maxsum - 1</code>
     most frequent levels is shown, and the less frequent levels are
     summarized in <code>"(Others)"</code> (resulting in at most <code>maxsum</code>
     frequencies).</p>
 <p>The functions <code>summary.lm</code> and <code>summary.glm</code> are examples
     of particular methods which summarize the results produced by
-    <code><a href='https://www.rdocumentation.org/packages/stats/topics/lm'>lm</a></code> and <code><a href='https://www.rdocumentation.org/packages/stats/topics/glm'>glm</a></code>.</p>
-    
+    <code><a href='https://rdrr.io/r/stats/lm.html'>lm</a></code> and <code><a href='https://rdrr.io/r/stats/glm.html'>glm</a></code>.</p>
     <h2 class="hasAnchor" id="references"><a class="anchor" href="#references"></a>References</h2>
 
     <p>Chambers, J. M. and Hastie, T. J. (1992)
   <em>Statistical Models in S</em>.
   Wadsworth &amp; Brooks/Cole.</p>
-    
     <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
 
-    <div class='dont-index'><p><code><a href='https://www.rdocumentation.org/packages/stats/topics/anova'>anova</a></code>,
-  <code><a href='https://www.rdocumentation.org/packages/stats/topics/summary.glm'>summary.glm</a></code>,
-  <code><a href='https://www.rdocumentation.org/packages/stats/topics/summary.lm'>summary.lm</a></code>.</p></div>
-    
+    <div class='dont-index'><p><code><a href='https://rdrr.io/r/stats/anova.html'>anova</a></code>,
+  <code><a href='https://rdrr.io/r/stats/summary.glm.html'>summary.glm</a></code>,
+  <code><a href='https://rdrr.io/r/stats/summary.lm.html'>summary.lm</a></code>.</p></div>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='fu'>summary</span>(<span class='no'>attenu</span>, <span class='kw'>digits</span> <span class='kw'>=</span> <span class='fl'>4</span>) <span class='co'>#-&gt; summary.data.frame(...), default precision</span></div><div class='output co'>#&gt;      event            mag           station         dist       
+    <pre class="examples"><div class='input'><span class='fu'>summary</span><span class='op'>(</span><span class='va'>attenu</span>, digits <span class='op'>=</span> <span class='fl'>4</span><span class='op'>)</span> <span class='co'>#-&gt; summary.data.frame(...), default precision</span>
+</div><div class='output co'>#&gt;      event            mag           station         dist       
 #&gt;  Min.   : 1.00   Min.   :5.000   117    :  5   Min.   :  0.50  
 #&gt;  1st Qu.: 9.00   1st Qu.:5.300   1028   :  4   1st Qu.: 11.32  
 #&gt;  Median :18.00   Median :6.100   113    :  4   Median : 23.40  
@@ -243,34 +242,33 @@
 #&gt;  Mean   :0.15422  
 #&gt;  3rd Qu.:0.21925  
 #&gt;  Max.   :0.81000  
-#&gt;                   </div><div class='input'><span class='fu'>summary</span>(<span class='no'>attenu</span> $ <span class='no'>station</span>, <span class='kw'>maxsum</span> <span class='kw'>=</span> <span class='fl'>20</span>) <span class='co'>#-&gt; summary.factor(...)</span></div><div class='output co'>#&gt;     117    1028     113     112     135     475    1030    1083    1093    1095 
+#&gt;                   </div><div class='input'><span class='fu'>summary</span><span class='op'>(</span><span class='va'>attenu</span> <span class='op'>$</span> <span class='va'>station</span>, maxsum <span class='op'>=</span> <span class='fl'>20</span><span class='op'>)</span> <span class='co'>#-&gt; summary.factor(...)</span>
+</div><div class='output co'>#&gt;     117    1028     113     112     135     475    1030    1083    1093    1095 
 #&gt;       5       4       4       3       3       3       2       2       2       2 
 #&gt;     111     116    1219    1299     130    1308    1377    1383 (Other)    NA's 
 #&gt;       2       2       2       2       2       2       2       2     120      16 </div><div class='input'>
-<span class='no'>lst</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/class'>unclass</a></span>(<span class='no'>attenu</span>$<span class='no'>station</span>) <span class='kw'>&gt;</span> <span class='fl'>20</span> <span class='co'># logical with NAs</span>
+<span class='va'>lst</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/class.html'>unclass</a></span><span class='op'>(</span><span class='va'>attenu</span><span class='op'>$</span><span class='va'>station</span><span class='op'>)</span> <span class='op'>&gt;</span> <span class='fl'>20</span> <span class='co'># logical with NAs</span>
 <span class='co'>## summary.default() for logicals -- different from *.factor:</span>
-<span class='fu'>summary</span>(<span class='no'>lst</span>)</div><div class='output co'>#&gt;    Mode   FALSE    TRUE    NA's 
-#&gt; logical      28     138      16 </div><div class='input'><span class='fu'>summary</span>(<span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/factor'>as.factor</a></span>(<span class='no'>lst</span>))</div><div class='output co'>#&gt; FALSE  TRUE  NA's 
+<span class='fu'>summary</span><span class='op'>(</span><span class='va'>lst</span><span class='op'>)</span>
+</div><div class='output co'>#&gt;    Mode   FALSE    TRUE    NA's 
+#&gt; logical      28     138      16 </div><div class='input'><span class='fu'>summary</span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/factor.html'>as.factor</a></span><span class='op'>(</span><span class='va'>lst</span><span class='op'>)</span><span class='op'>)</span>
+</div><div class='output co'>#&gt; FALSE  TRUE  NA's 
 #&gt;    28   138    16 </div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
     <h2>Contents</h2>
     <ul class="nav nav-pills nav-stacked">
       <li><a href="#arguments">Arguments</a></li>
-      
       <li><a href="#value">Value</a></li>
-
       <li><a href="#details">Details</a></li>
-
       <li><a href="#references">References</a></li>
-
       <li><a href="#see-also">See also</a></li>
-      
       <li><a href="#examples">Examples</a></li>
     </ul>
 
   </div>
 </div>
+
 
       <footer>
       <div class="copyright">
@@ -278,8 +276,9 @@
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.3.0.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.1.</p>
 </div>
+
       </footer>
    </div>
 
@@ -302,6 +301,8 @@
 </script>
 
 
+
   </body>
 </html>
+
 

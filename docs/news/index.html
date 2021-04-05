@@ -8,11 +8,13 @@
 
 <title>Changelog • qntmap</title>
 
+
 <!-- jquery -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
 <!-- Bootstrap -->
 
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha256-916EbMg70RQy9LHiGkXzG8hSg9EdNy97GazNG/aiY1w=" crossorigin="anonymous" />
+
 <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha256-U5ZEeKfGNOja007MMD3YBI0A3OSZOQbeG6z2f2Y0hu8=" crossorigin="anonymous"></script>
 
 <!-- Font Awesome icons -->
@@ -36,7 +38,9 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/mark.js/8.11.1/jquery.mark.min.js" integrity="sha256-4HLtjeVgH0eIB3aZ9mLYF6E8oU5chNdjU6p6rrXpl9U=" crossorigin="anonymous"></script>
 
 
+
 <meta property="og:title" content="Changelog" />
+
 
 
 
@@ -60,6 +64,7 @@
   gtag('config', 'UA-133172060-1');
 </script>
 
+
   </head>
 
   <body>
@@ -76,7 +81,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">qntmap</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.3.4</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.0.0</span>
       </span>
     </div>
 
@@ -84,7 +89,7 @@
       <ul class="nav navbar-nav">
         <li>
   <a href="../index.html">
-    <span class="fa fa-home fa-lg"></span>
+    <span class="fas fa-home fa-lg"></span>
      
   </a>
 </li>
@@ -116,11 +121,10 @@
   <a href="../news/index.html">Changelog</a>
 </li>
       </ul>
-      
       <ul class="nav navbar-nav navbar-right">
         <li>
-  <a href="https://github.com/atusy/qntmap">
-    <span class="fa fa-github fa-lg"></span>
+  <a href="https://github.com/atusy/qntmap/">
+    <span class="fab fa-github fa-lg"></span>
      
   </a>
 </li>
@@ -137,6 +141,7 @@
 </div><!--/.navbar -->
 
       
+
       </header>
 
 <div class="row">
@@ -146,13 +151,67 @@
       <small>Source: <a href='https://github.com/atusy/qntmap/blob/master/NEWS.md'><code>NEWS.md</code></a></small>
     </div>
 
-    <div id="qntmap-040" class="section level1">
-<h1 class="page-header">
-<a href="#qntmap-040" class="anchor"></a>qntmap 0.4.0</h1>
+    <div id="qntmap-102" class="section level1">
+<h1 class="page-header" data-toc-text="1.0.2">
+<a href="#qntmap-102" class="anchor"></a>qntmap 1.0.2</h1>
+<div id="bug-fix" class="section level2">
+<h2 class="hasAnchor">
+<a href="#bug-fix" class="anchor"></a>Bug fix</h2>
+<ul>
+<li><p>Fix <code><a href="../reference/qntmap.html">qntmap()</a></code> raising error on the <strong>Mapping conditions</strong> pane of the <strong>Input</strong> page, “Can’t create column <code>Values</code>: Can’t combine <code>..1</code> <character> and <code>..2</code> <integer>” (<a href='https://github.com/atusy/qntmap/issues/34'>#34</a>).</integer></character></p></li>
+<li><p>Fix <code><a href="../reference/cluster_xmap.html">cluster_xmap()</a></code> raising error when checking unit of pixels (<a href='https://github.com/atusy/qntmap/issues/36'>#36</a>)</p></li>
+</ul>
+</div>
+<div id="internal-changes" class="section level2">
+<h2 class="hasAnchor">
+<a href="#internal-changes" class="anchor"></a>Internal changes</h2>
+<ul>
+<li>Use GitHub Actions for CI (<a href='https://github.com/atusy/qntmap/issues/35'>#35</a>)</li>
+<li>Updated tests and <code>DESCRIPTION</code> to pass CI (<a href='https://github.com/atusy/qntmap/issues/37'>#37</a>)</li>
+</ul>
+</div>
+</div>
+    <div id="qntmap-101" class="section level1">
+<h1 class="page-header" data-toc-text="1.0.1">
+<a href="#qntmap-101" class="anchor"></a>qntmap 1.0.1</h1>
+<ul>
+<li>Phase list csv can be without id column.</li>
+<li>Reorder summarized tables in the shiny GUI.</li>
+<li>
+<code><a href="../reference/autoplot-qntmap.html">autoplot.qm_xmap()</a></code> supports data with unknown step size.</li>
+</ul>
+<div id="bug-fix-1" class="section level2">
+<h2 class="hasAnchor">
+<a href="#bug-fix-1" class="anchor"></a>Bug fix</h2>
+<ul>
+<li>Fix beta being wrong in the <em>Params for Quantify</em> page.</li>
+</ul>
+</div>
+<div id="planning" class="section level2">
+<h2 class="hasAnchor">
+<a href="#planning" class="anchor"></a>Planning</h2>
+<ul>
+<li>Add <code>remove_outliers</code> option to quantify and find_centers</li>
+</ul>
+</div>
+</div>
+    <div id="qntmap-100" class="section level1">
+<h1 class="page-header" data-toc-text="1.0.0">
+<a href="#qntmap-100" class="anchor"></a>qntmap 1.0.0</h1>
+<div id="biggest-news" class="section level2">
+<h2 class="hasAnchor">
+<a href="#biggest-news" class="anchor"></a>Biggest NEWS</h2>
+<ul>
+<li>
+<strong>Graphical user interface is ready!</strong> Run <code><a href="../reference/qntmap.html">qntmap()</a></code> to enjoy it.</li>
+</ul>
+</div>
 <div id="breaking-changes" class="section level2">
 <h2 class="hasAnchor">
 <a href="#breaking-changes" class="anchor"></a>Breaking changes</h2>
 <ul>
+<li>
+<code><a href="../reference/qntmap.html">qntmap()</a></code> default to use <code>shiny</code> web app. Specify <code>shiny = FALSE</code> to use legacy console-based intearactive mode. Note that the legacy one is no more maintained.</li>
 <li>
 <code><a href="../reference/read_qnt.html">read_qnt()</a></code>
 <ul>
@@ -170,7 +229,8 @@
 <li>
 <code><a href="../reference/cluster_xmap.html">cluster_xmap()</a></code>
 <ul>
-<li>returns data frame with the <code>center</code> attribute instead of list with too much data</li>
+<li>returns a data frame with the <code>center</code> attribute unlike older one returned a list</li>
+<li>omits <code>group_cluster</code> option. Instead, apply <code><a href="../reference/group_subclusters.html">group_subclusters()</a></code> to the result to integrate subclusters.</li>
 <li>saves the result
 <ul>
 <li>as is in the formats of RDS, png (dot-by-dot phase map), and svg (phase map with legend)</li>
@@ -184,39 +244,90 @@
 <ul>
 <li>is defined to defunct <code><a href="../reference/defunct.html">group_cluster()</a></code>
 </li>
-<li>returns a value similar to <code><a href="../reference/cluster_xmap.html">cluster_xmap()</a></code> whreas omitting the <code>center</code> attribute.</li>
+<li>returns a data frame in the same format as <code><a href="../reference/cluster_xmap.html">cluster_xmap()</a></code> but lacks the <code>center</code> attribute.</li>
 </ul>
+</li>
+<li>
+<code><a href="../reference/pick.html">pick()</a></code> changed its first argument to <code>.df</code> from <code>.data</code>.</li>
+<li>The <code>magma</code> color scale become the default one to plot of mapping data instead of the <code>viridis</code>.</li>
+<li>Use <code>message</code> rather than <code>cat</code> so that they can be suppressed by users.</li>
+</ul>
+</div>
+<div id="major-changes-and-new-features" class="section level2">
+<h2 class="hasAnchor">
+<a href="#major-changes-and-new-features" class="anchor"></a>Major changes and new features</h2>
+<ul>
+<li>
+<code><a href="https://ggplot2.tidyverse.org/reference/autoplot.html">autoplot()</a></code> methods are implemented to follow the best practice of <code>ggplot2</code>. From now on, <code><a href="https://rdrr.io/r/graphics/plot.default.html">plot()</a></code> methods are wrappers of <code>autoplot</code>.</li>
+<li>
+<code><a href="../reference/find_outlier.html">find_outlier()</a></code> is implemented to detect outliers cause mainly by mapping fine grained phases.</li>
+<li>
+<code><a href="../reference/find_outlier.html">find_outlier()</a></code> is implemented to detect unexpectedly high or low mapping intensities compared to spot intenstieis, which typically occurs due to outliers are analysing multi-phase pixels</li>
+<li>
+<code><a href="../reference/find_centers.html">find_centers()</a></code>
+<ul>
+<li>has more robust approach to find centroids powered by <code><a href="../reference/find_outlier.html">find_outlier()</a></code>
+</li>
+<li>has additional arguments
+<ul>
+<li>
+<code>phase</code> and <code>element</code>: Specifying them controls which phases and elements are used to find outliers. They suppot tidyeval. For example <code>element = c(Si, Ti, Al)</code> indicates the 3 elements are used, and <code>element = c(-Si, -Ti, -Al)</code> indicates the 3 elements are NOT used.</li>
+<li>
+<code>epma</code>: If <code>tidy_epma</code> is already performed, then specify the result here to save time.</li>
+</ul>
+</li>
+<li>deprecates <code>fine_phase</code> which is generalized by <code>phase</code>.</li>
+</ul>
+</li>
+<li>
+<code>tidy_epma</code> has new arguments <code>subcluster</code> and <code>suffix</code>.</li>
+<li>
+<code><a href="../reference/hmean.html">hmean()</a></code> and <code><a href="../reference/hmean.html">vmean()</a></code> supports the objects with class <code>qntmap</code>, <code>qm_xmap</code>, and <code>qm_cluster</code>.mPreviously they only supported the <code>qntmap</code> class object.</li>
+<li>All layers for <code>ggplot2</code> are no longer pre-compiled at installation stage. This is to avoid possible conflicts on updates on <code>ggplot2</code> after installing <code>qntmap</code>.</li>
+<li>
+<code><a href="../reference/quantify.html">quantify()</a></code> get the <code>params</code> attribute showing the parameters, <span class="math inline"><em>a</em><em>l</em><em>p</em><em>h</em><em>a</em></span>, <span class="math inline"><em>b</em><em>e</em><em>t</em><em>a</em></span>, and <span class="math inline"><em>g</em><em>a</em><em>m</em><em>m</em><em>a</em></span>.</li>
+<li>
+<code>autoplot.qm_epma()</code> is defined for the result of <code><a href="../reference/tidy_epma.html">tidy_epma()</a></code>
 </li>
 </ul>
 </div>
-<div id="major-changes" class="section level2">
+<div id="internal-changes-1" class="section level2">
 <h2 class="hasAnchor">
-<a href="#major-changes" class="anchor"></a>Major changes</h2>
+<a href="#internal-changes-1" class="anchor"></a>Internal changes</h2>
 <ul>
 <li>
-<code><a href="../reference/hmean.html">hmean()</a></code> and <code><a href="../reference/hmean.html">vmean()</a></code> supports the objects with class <code>qntmap</code>, <code>qm_xmap</code>, and <code>qm_cluster</code>. Previously they only supported the <code>qntmap</code> class object.</li>
+<code><a href="../reference/tidy_epma.html">tidy_epma()</a></code> returns <code>qm_epma</code> class object.</li>
+<li>
+<code>gghist.numeric()</code>
+<ul>
+<li>draws border to be legible regardless of background colors.</li>
+<li>supports a histogram with a single column.</li>
 </ul>
-</div>
-<div id="internal-changes" class="section level2">
-<h2 class="hasAnchor">
-<a href="#internal-changes" class="anchor"></a>Internal changes</h2>
-<ul>
+</li>
 <li>
-<code><a href="../reference/pick.html">pick()</a></code>, <code><a href="../reference/mean.html">mean()</a></code>,</li>
-<li>Fully follow tidyeval</li>
-<li>Tidyverse related functions are imported in <code>qntmap-package.R</code> to avoid importing the same funcions in multiple files.</li>
+<code>correct_deadtime()</code> supports re-calculation of dead time.</li>
+<li>
+<code>prioritize()</code> accepts unnamed vector.</li>
+<li>
+<code><a href="../reference/save4qm.html">save4qm()</a></code> methods, <code><a href="../reference/summary.html">summary()</a></code> methods, <code><a href="../reference/pick.html">pick()</a></code>, <code><a href="../reference/mean.html">mean()</a></code>, <code><a href="../reference/hmean.html">vmean()</a></code>, and <code><a href="../reference/hmean.html">hmean()</a></code> are re-written to support new data structures.</li>
+<li>
+<code>correct_deadtime()</code> is factored out from <code><a href="../reference/read_xmap.html">read_xmap()</a></code>, but not exported currently.</li>
+<li>Themes for plot supports modifying <code>base_size</code>, so that the appearance can be optimized in Shiny App.</li>
+<li>Full support of tidyeval</li>
+<li>Tidyverse and r-lib related functions are imported in <code>qntmap-package.R</code> to avoid importing the same funcions in multiple files.</li>
+<li>Tests run faster by exporting duplicated codes to <code>setup.R</code>.</li>
 </ul>
 </div>
 </div>
     <div id="qntmap-034" class="section level1">
-<h1 class="page-header">
+<h1 class="page-header" data-toc-text="0.3.4">
 <a href="#qntmap-034" class="anchor"></a>qntmap 0.3.4</h1>
 <div id="new-features" class="section level2">
 <h2 class="hasAnchor">
 <a href="#new-features" class="anchor"></a>New features</h2>
 <ul>
 <li>
-<code><a href="../reference/cluster_xmap.html">cluster_xmap()</a></code> passes <code>...</code> to <code><a href="https://www.rdocumentation.org/packages/PoiClaClu/topics/Classify">PoiClaClu::Classify()</a></code>, enabling
+<code><a href="../reference/cluster_xmap.html">cluster_xmap()</a></code> passes <code>...</code> to <code><a href="https://rdrr.io/pkg/PoiClaClu/man/Classify.html">PoiClaClu::Classify()</a></code>, enabling
 <ul>
 <li>training with selected data</li>
 <li>testing with selected data</li>
@@ -227,11 +338,11 @@
 <li>Added <code><a href="../reference/hmean.html">vmean()</a></code> and <code><a href="../reference/hmean.html">hmean()</a></code> to calculate profile of mean values of mapping data. <code><a href="../reference/hmean.html">vmean()</a></code> stands for vertical mean and <code><a href="../reference/hmean.html">hmean()</a></code> for horizontal mean.</li>
 </ul>
 </div>
-<div id="major-changes-1" class="section level2">
+<div id="major-changes" class="section level2">
 <h2 class="hasAnchor">
-<a href="#major-changes-1" class="anchor"></a>Major changes</h2>
+<a href="#major-changes" class="anchor"></a>Major changes</h2>
 <ul>
-<li>Drastically improved performance of <code><a href="https://www.rdocumentation.org/packages/graphics/topics/plot">plot()</a></code>
+<li>Drastically improved performance of <code><a href="https://rdrr.io/r/graphics/plot.default.html">plot()</a></code>
 </li>
 <li>Clustering results will be saved as an RDS file, a dot-by-dot <code>png</code> image without legend, and a ggplot2 plot with legend saved as <code>svg</code>.
 <ul>
@@ -243,7 +354,7 @@
 </div>
 </div>
     <div id="qntmap-033" class="section level1">
-<h1 class="page-header">
+<h1 class="page-header" data-toc-text="0.3.3">
 <a href="#qntmap-033" class="anchor"></a>qntmap 0.3.3</h1>
 <div id="breaking-changes-1" class="section level2">
 <h2 class="hasAnchor">
@@ -294,20 +405,20 @@
 </li>
 </ul>
 </div>
-<div id="bug-fix" class="section level2">
+<div id="bug-fix-2" class="section level2">
 <h2 class="hasAnchor">
-<a href="#bug-fix" class="anchor"></a>Bug fix</h2>
+<a href="#bug-fix-2" class="anchor"></a>Bug fix</h2>
 <ul>
 <li>Calculation of standard errors for compositions of pixels were wrong.</li>
 </ul>
 </div>
 </div>
     <div id="qntmap-032" class="section level1">
-<h1 class="page-header">
+<h1 class="page-header" data-toc-text="0.3.2">
 <a href="#qntmap-032" class="anchor"></a>qntmap 0.3.2</h1>
-<div id="major-changes-2" class="section level2">
+<div id="major-changes-1" class="section level2">
 <h2 class="hasAnchor">
-<a href="#major-changes-2" class="anchor"></a>Major changes</h2>
+<a href="#major-changes-1" class="anchor"></a>Major changes</h2>
 <ul>
 <li>
 <code><a href="../reference/quantify.html">quantify()</a></code> saves parameters alpha, beta, gamma, and their standard errors when <code>saving = TRUE</code>.</li>
@@ -315,16 +426,16 @@
 <code><a href="../reference/quantify.html">quantify()</a></code> loads parameters from a csv file by giving its path to <code>fix</code> parameter.</li>
 <li>
 <code><a href="../reference/read_qnt.html">read_qnt()</a></code> and <code><a href="../reference/read_xmap.html">read_xmap()</a></code> supports to retrieve analytical conditions from manually prepared csv files. This feature is implemented to avoid failures in reading data caused by difference in formats output by different EPMA instruments.</li>
-<li>Hover on <code><a href="https://www.rdocumentation.org/packages/graphics/topics/plot">plot()</a></code> of mapping data shows coordinates and a chemical composition of a selected element.</li>
+<li>Hover on <code><a href="https://rdrr.io/r/graphics/plot.default.html">plot()</a></code> of mapping data shows coordinates and a chemical composition of a selected element.</li>
 </ul>
 </div>
 </div>
     <div id="qntmap-031" class="section level1">
-<h1 class="page-header">
+<h1 class="page-header" data-toc-text="0.3.1">
 <a href="#qntmap-031" class="anchor"></a>qntmap 0.3.1</h1>
-<div id="major-changes-3" class="section level2">
+<div id="major-changes-2" class="section level2">
 <h2 class="hasAnchor">
-<a href="#major-changes-3" class="anchor"></a>Major changes</h2>
+<a href="#major-changes-2" class="anchor"></a>Major changes</h2>
 <ul>
 <li>
 <code><a href="../reference/quantify.html">quantify()</a></code> supports fixing compositions of certain components of phases.</li>
@@ -369,14 +480,14 @@
 </div>
 </div>
     <div id="qntmap-030" class="section level1">
-<h1 class="page-header">
+<h1 class="page-header" data-toc-text="0.3.0">
 <a href="#qntmap-030" class="anchor"></a>qntmap 0.3.0</h1>
-<div id="major-changes-4" class="section level2">
+<div id="major-changes-3" class="section level2">
 <h2 class="hasAnchor">
-<a href="#major-changes-4" class="anchor"></a>Major changes</h2>
+<a href="#major-changes-3" class="anchor"></a>Major changes</h2>
 <ul>
 <li>
-<code><a href="https://www.rdocumentation.org/packages/graphics/topics/plot">plot()</a></code>
+<code><a href="https://rdrr.io/r/graphics/plot.default.html">plot()</a></code>
 <ul>
 <li>Interactive plot is a combination of shiny, ggplot2, and more. No more using plotly.
 <ul>
@@ -410,11 +521,11 @@
 </div>
 </div>
     <div id="qntmap-022" class="section level1">
-<h1 class="page-header">
+<h1 class="page-header" data-toc-text="0.2.2">
 <a href="#qntmap-022" class="anchor"></a>qntmap 0.2.2</h1>
-<div id="major-changes-5" class="section level2">
+<div id="major-changes-4" class="section level2">
 <h2 class="hasAnchor">
-<a href="#major-changes-5" class="anchor"></a>Major changes</h2>
+<a href="#major-changes-4" class="anchor"></a>Major changes</h2>
 <div id="new-features-2" class="section level3">
 <h3 class="hasAnchor">
 <a href="#new-features-2" class="anchor"></a>New features</h3>
@@ -435,7 +546,7 @@
 <li>step: step size of pixels</li>
 <li>ver: version of qntmap package</li>
 <li>instrument: version of EPMA</li>
-<li>class: <code><a href="https://www.rdocumentation.org/packages/base/topics/c">c('qm_xmap', 'list')</a></code>
+<li>class: <code><a href="https://rdrr.io/r/base/c.html">c('qm_xmap', 'list')</a></code>
 </li>
 </ul>
 </li>
@@ -466,7 +577,7 @@
 </div>
 </div>
     <div id="qntmap-021" class="section level1">
-<h1 class="page-header">
+<h1 class="page-header" data-toc-text="0.2.1">
 <a href="#qntmap-021" class="anchor"></a>qntmap 0.2.1</h1>
 <div id="new-features-3" class="section level2">
 <h2 class="hasAnchor">
@@ -488,7 +599,7 @@
 </div>
 </div>
     <div id="qntmap-020" class="section level1">
-<h1 class="page-header">
+<h1 class="page-header" data-toc-text="0.2.0">
 <a href="#qntmap-020" class="anchor"></a>qntmap 0.2.0</h1>
 <p>Check NEWS as 0.2.0 have lots of breaking changes.</p>
 <div id="breaking-changes-2" class="section level2">
@@ -506,13 +617,13 @@
 <li>The above change cause <code>read_qnt</code> to save its result (<code>qnt.RDS</code>) and semi-product (<code>phase_list0.csv</code>) in the directory containing <code>.qnt</code> files unlike <code>qnt_load</code> saved them under the working directory.</li>
 </ul>
 </div>
-<div id="major-changes-6" class="section level2">
+<div id="major-changes-5" class="section level2">
 <h2 class="hasAnchor">
-<a href="#major-changes-6" class="anchor"></a>Major changes</h2>
+<a href="#major-changes-5" class="anchor"></a>Major changes</h2>
 <ul>
 <li>Monster functions are separated into smaller functions.
 <ul>
-<li>A wrapper part of <code><a href="https://www.rdocumentation.org/packages/PoiClaClu/topics/Classify">PoiClaClu::Classify</a></code> in <code>cluster_xmap</code> (formerly <code>qltmap_cls_pois</code>) is isolated as <code>cluster</code>
+<li>A wrapper part of <code><a href="https://rdrr.io/pkg/PoiClaClu/man/Classify.html">PoiClaClu::Classify</a></code> in <code>cluster_xmap</code> (formerly <code>qltmap_cls_pois</code>) is isolated as <code>cluster</code>
 </li>
 <li>Internal parameters for <code>quantify</code> are calculated using <code>find_AB</code>, <code>find_AG</code>, and <code>find_B</code>
 </li>
@@ -605,7 +716,9 @@
     <div id="tocnav">
       <h2>Contents</h2>
       <ul class="nav nav-pills nav-stacked">
-        <li><a href="#qntmap-040">0.4.0</a></li>
+        <li><a href="#qntmap-102">1.0.2</a></li>
+        <li><a href="#qntmap-101">1.0.1</a></li>
+        <li><a href="#qntmap-100">1.0.0</a></li>
         <li><a href="#qntmap-034">0.3.4</a></li>
         <li><a href="#qntmap-033">0.3.3</a></li>
         <li><a href="#qntmap-032">0.3.2</a></li>
@@ -620,14 +733,16 @@
 
 </div>
 
+
       <footer>
       <div class="copyright">
   <p>Developed by Atsushi Yasumoto, Japan Agency for Marine-Earth Science and Technology (JAMSTEC), JST PRESTO (Grant No. JPMJPR1676).</p>
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.3.0.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.1.</p>
 </div>
+
       </footer>
    </div>
 
@@ -650,6 +765,8 @@
 </script>
 
 
+
   </body>
 </html>
+
 

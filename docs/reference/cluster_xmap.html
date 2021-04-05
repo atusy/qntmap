@@ -8,11 +8,13 @@
 
 <title>Cluster mapping data into mineral species — cluster_xmap • qntmap</title>
 
+
 <!-- jquery -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
 <!-- Bootstrap -->
 
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha256-916EbMg70RQy9LHiGkXzG8hSg9EdNy97GazNG/aiY1w=" crossorigin="anonymous" />
+
 <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha256-U5ZEeKfGNOja007MMD3YBI0A3OSZOQbeG6z2f2Y0hu8=" crossorigin="anonymous"></script>
 
 <!-- Font Awesome icons -->
@@ -36,10 +38,11 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/mark.js/8.11.1/jquery.mark.min.js" integrity="sha256-4HLtjeVgH0eIB3aZ9mLYF6E8oU5chNdjU6p6rrXpl9U=" crossorigin="anonymous"></script>
 
 
-<meta property="og:title" content="Cluster mapping data into mineral species — cluster_xmap" />
 
+<meta property="og:title" content="Cluster mapping data into mineral species — cluster_xmap" />
 <meta property="og:description" content="Cluster mapping data into mineral species" />
 <meta name="twitter:card" content="summary" />
+
 
 
 
@@ -63,6 +66,7 @@
   gtag('config', 'UA-133172060-1');
 </script>
 
+
   </head>
 
   <body>
@@ -79,7 +83,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">qntmap</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.3.4</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.0.0</span>
       </span>
     </div>
 
@@ -87,7 +91,7 @@
       <ul class="nav navbar-nav">
         <li>
   <a href="../index.html">
-    <span class="fa fa-home fa-lg"></span>
+    <span class="fas fa-home fa-lg"></span>
      
   </a>
 </li>
@@ -119,11 +123,10 @@
   <a href="../news/index.html">Changelog</a>
 </li>
       </ul>
-      
       <ul class="nav navbar-nav navbar-right">
         <li>
-  <a href="https://github.com/atusy/qntmap">
-    <span class="fa fa-github fa-lg"></span>
+  <a href="https://github.com/atusy/qntmap/">
+    <span class="fab fa-github fa-lg"></span>
      
   </a>
 </li>
@@ -140,6 +143,7 @@
 </div><!--/.navbar -->
 
       
+
       </header>
 
 <div class="row">
@@ -151,14 +155,18 @@
     </div>
 
     <div class="ref-description">
-    
     <p>Cluster mapping data into mineral species</p>
-    
     </div>
 
-    <pre class="usage"><span class='fu'>cluster_xmap</span>(<span class='no'>xmap</span>, <span class='no'>centers</span>, <span class='kw'>elements</span> <span class='kw'>=</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/sets'>intersect</a></span>(<span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/names'>names</a></span>(<span class='no'>xmap</span>),
-  <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/colnames'>colnames</a></span>(<span class='no'>centers</span>)), <span class='kw'>saving</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='kw'>suffix</span> <span class='kw'>=</span> <span class='st'>"_.*"</span>, <span class='no'>...</span>)</pre>
-    
+    <pre class="usage"><span class='fu'>cluster_xmap</span><span class='op'>(</span>
+  <span class='va'>xmap</span>,
+  <span class='va'>centers</span>,
+  elements <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/sets.html'>intersect</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/names.html'>names</a></span><span class='op'>(</span><span class='va'>xmap</span><span class='op'>)</span>, <span class='fu'><a href='https://rdrr.io/r/base/colnames.html'>colnames</a></span><span class='op'>(</span><span class='va'>centers</span><span class='op'>)</span><span class='op'>)</span>,
+  saving <span class='op'>=</span> <span class='cn'>TRUE</span>,
+  suffix <span class='op'>=</span> <span class='st'>"_.*"</span>,
+  <span class='va'>...</span>
+<span class='op'>)</span></pre>
+
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
@@ -171,7 +179,7 @@
       <td><p>c-by-p matrix returned by <code><a href='find_centers.html'>find_centers()</a></code> or by manually;
 c clusters and p features.
 Used to guess initial centers (or centroids) of clusters.
-A value returned by , typically <code><a href='https://www.rdocumentation.org/packages/base/topics/data.frame'>data.frame</a></code> or <code><a href='https://www.rdocumentation.org/packages/base/topics/matrix'>matrix</a></code>,
+A value returned by , typically <code><a href='https://rdrr.io/r/base/data.frame.html'>data.frame</a></code> or <code><a href='https://rdrr.io/r/base/matrix.html'>matrix</a></code>,
 indicating initial guess centers (or centroids) or clusters.
 See <code><a href='find_centers.html'>find_centers()</a></code>.</p></td>
     </tr>
@@ -194,65 +202,65 @@ For example, "Pl_NaRich" and "Pl_NaPoor" becomes "Pl" cluster if
     </tr>
     <tr>
       <th>...</th>
-      <td><p>Arguments passed on to <code><a href='https://www.rdocumentation.org/packages/PoiClaClu/topics/Classify'>PoiClaClu::Classify</a></code></p><dl class='dl-horizontal'>
-  <dt>xte</dt><dd><p>A m-by-p data matrix: m test observations and p features. The classifier
+      <td><p>Arguments passed on to <code><a href='https://rdrr.io/pkg/PoiClaClu/man/Classify.html'>PoiClaClu::Classify</a></code></p><dl>
+    <dt><code>xte</code></dt><dd><p>A m-by-p data matrix: m test observations and p features. The classifier
 fit on the training data set x will be tested on this data set. If NULL,
 then testing will be performed on the training set.</p></dd>
-  <dt>rho</dt><dd><p>Tuning parameter controlling the amount of soft thresholding performed,
+    <dt><code>rho</code></dt><dd><p>Tuning parameter controlling the amount of soft thresholding performed,
 i.e. the level of sparsity, i.e. number of nonzero features in
 classifier. Rho=0 means that there is no soft-thresolding, i.e. all
 features used in classifier. Larger rho means that fewer features will
 be used.</p></dd>
-  <dt>beta</dt><dd><p>A smoothing term. A Gamma(beta,beta) prior is used to fit the
+    <dt><code>beta</code></dt><dd><p>A smoothing term. A Gamma(beta,beta) prior is used to fit the
     Poisson model.
     Recommendation is to just leave it at 1, the default value.</p></dd>
-  <dt>rhos</dt><dd><p>A vector of tuning parameters that control the amount of soft thresholding
+    <dt><code>rhos</code></dt><dd><p>A vector of tuning parameters that control the amount of soft thresholding
 performed. If "rhos" is provided then a number of
 models will be fit (one for each element of "rhos"), and a number of
 predicted class labels will be output (one for each element of "rhos").</p></dd>
-  <dt>type</dt><dd><p>How should the observations be normalized within the
+    <dt><code>type</code></dt><dd><p>How should the observations be normalized within the
     Poisson model, i.e. how should the size factors be estimated?
     Options are "quantile" or "deseq" (more robust) or "mle" (less
-    robust).
-
-    In greater detail: "quantile" is quantile normalization approach
+    robust).    In greater detail: "quantile" is quantile normalization approach
     of Bullard et al 2010 BMC Bioinformatics, "deseq"  is median of the
     ratio of an observation to a pseudoreference obtained by taking the
     geometric mean, described in Anders and Huber 2010 Genome Biology and
     implemented in Bioconductor package "DESeq", and "mle" is the sum of
     counts for each sample; this is the maximum likelihood estimate
     under a simple Poisson model.</p></dd>
-  <dt>prior</dt><dd><p>Vector of length equal to the number of classes, representing prior
+    <dt><code>prior</code></dt><dd><p>Vector of length equal to the number of classes, representing prior
     probabilities
     for each class. If NULL then uniform priors are used (i.e. each
     class is equally likely).</p></dd>
-  <dt>transform</dt><dd><p>Should data matrices x and xte first be power transformed so that it more
+    <dt><code>transform</code></dt><dd><p>Should data matrices x and xte first be power transformed so that it more
         closely fits
         the Poisson model? TRUE or FALSE. Power transformation is
         especially
         useful if the data are overdispersed relative to the Poisson
         model.</p></dd>
-  <dt>alpha</dt><dd><p>If transform=TRUE, this determines the power to which the data
+    <dt><code>alpha</code></dt><dd><p>If transform=TRUE, this determines the power to which the data
         matrices x and xte are transformed.
         If alpha=NULL then the transformation that
         makes the Poisson model best fit the data matrix x is
         computed. (Note that alpha is computed based on x, not based on
         xte). Or a value of
         alpha, 0&lt;alpha&lt;=1, can be entered by the user.</p></dd>
+  
 </dl></td>
     </tr>
     </table>
-    
+
 
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
     <h2>Contents</h2>
     <ul class="nav nav-pills nav-stacked">
       <li><a href="#arguments">Arguments</a></li>
-                </ul>
+    </ul>
 
   </div>
 </div>
+
 
       <footer>
       <div class="copyright">
@@ -260,8 +268,9 @@ predicted class labels will be output (one for each element of "rhos").</p></dd>
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.3.0.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.1.</p>
 </div>
+
       </footer>
    </div>
 
@@ -284,6 +293,8 @@ predicted class labels will be output (one for each element of "rhos").</p></dd>
 </script>
 
 
+
   </body>
 </html>
+
 

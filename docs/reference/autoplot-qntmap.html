@@ -8,11 +8,13 @@
 
 <title>Create a ggplot object for objects created by qntmap package — autoplot-qntmap • qntmap</title>
 
+
 <!-- jquery -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
 <!-- Bootstrap -->
 
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha256-916EbMg70RQy9LHiGkXzG8hSg9EdNy97GazNG/aiY1w=" crossorigin="anonymous" />
+
 <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha256-U5ZEeKfGNOja007MMD3YBI0A3OSZOQbeG6z2f2Y0hu8=" crossorigin="anonymous"></script>
 
 <!-- Font Awesome icons -->
@@ -36,10 +38,11 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/mark.js/8.11.1/jquery.mark.min.js" integrity="sha256-4HLtjeVgH0eIB3aZ9mLYF6E8oU5chNdjU6p6rrXpl9U=" crossorigin="anonymous"></script>
 
 
-<meta property="og:title" content="Create a ggplot object for objects created by qntmap package — autoplot-qntmap" />
 
+<meta property="og:title" content="Create a ggplot object for objects created by qntmap package — autoplot-qntmap" />
 <meta property="og:description" content="Create a ggplot object for objects created by qntmap package" />
 <meta name="twitter:card" content="summary" />
+
 
 
 
@@ -63,6 +66,7 @@
   gtag('config', 'UA-133172060-1');
 </script>
 
+
   </head>
 
   <body>
@@ -79,7 +83,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">qntmap</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.3.4</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.0.0</span>
       </span>
     </div>
 
@@ -87,7 +91,7 @@
       <ul class="nav navbar-nav">
         <li>
   <a href="../index.html">
-    <span class="fa fa-home fa-lg"></span>
+    <span class="fas fa-home fa-lg"></span>
      
   </a>
 </li>
@@ -119,11 +123,10 @@
   <a href="../news/index.html">Changelog</a>
 </li>
       </ul>
-      
       <ul class="nav navbar-nav navbar-right">
         <li>
-  <a href="https://github.com/atusy/qntmap">
-    <span class="fa fa-github fa-lg"></span>
+  <a href="https://github.com/atusy/qntmap/">
+    <span class="fab fa-github fa-lg"></span>
      
   </a>
 </li>
@@ -140,34 +143,51 @@
 </div><!--/.navbar -->
 
       
+
       </header>
 
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
     <h1>Create a ggplot object for objects created by qntmap package</h1>
-    <small class="dont-index">Source: <a href='https://github.com/atusy/qntmap/blob/master/R/plot-autoplot.R'><code>R/plot-autoplot.R</code></a></small>
+    <small class="dont-index">Source: <a href='https://github.com/atusy/qntmap/blob/master/R/plot-autoplot-qntmap.R'><code>R/plot-autoplot-qntmap.R</code></a></small>
     <div class="hidden name"><code>autoplot-qntmap.Rd</code></div>
     </div>
 
     <div class="ref-description">
-    
     <p>Create a ggplot object for objects created by qntmap package</p>
-    
     </div>
 
     <pre class="usage"><span class='co'># S3 method for qntmap</span>
-<span class='fu'><a href='https://www.rdocumentation.org/packages/ggplot2/topics/autoplot'>autoplot</a></span>(<span class='no'>object</span>, <span class='kw'>zname</span> <span class='kw'>=</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/sets'>setdiff</a></span>(<span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/names'>names</a></span>(<span class='no'>object</span>), <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/c'>c</a></span>(<span class='st'>"x"</span>,
-  <span class='st'>"y"</span>))<span class='kw'>[[</span><span class='fl'>1L</span>]], <span class='kw'>zlim</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>colors</span> <span class='kw'>=</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/c'>c</a></span>(<span class='st'>"viridis"</span>, <span class='st'>"gray"</span>), <span class='no'>...</span>)
+<span class='fu'><a href='https://ggplot2.tidyverse.org/reference/autoplot.html'>autoplot</a></span><span class='op'>(</span>
+  <span class='va'>object</span>,
+  zname <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/sets.html'>setdiff</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/names.html'>names</a></span><span class='op'>(</span><span class='va'>object</span><span class='op'>)</span>, <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"x"</span>, <span class='st'>"y"</span><span class='op'>)</span><span class='op'>)</span><span class='op'>[[</span><span class='fl'>1L</span><span class='op'>]</span><span class='op'>]</span>,
+  zlim <span class='op'>=</span> <span class='cn'>NULL</span>,
+  colors <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"magma"</span>, <span class='st'>"viridis"</span>, <span class='st'>"gray"</span><span class='op'>)</span>,
+  unit <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"px"</span>, <span class='st'>"um"</span>, <span class='st'>"mm"</span>, <span class='st'>"cm"</span><span class='op'>)</span>,
+  <span class='va'>...</span>
+<span class='op'>)</span>
 
 <span class='co'># S3 method for qm_xmap</span>
-<span class='fu'><a href='https://www.rdocumentation.org/packages/ggplot2/topics/autoplot'>autoplot</a></span>(<span class='no'>object</span>, <span class='kw'>zname</span> <span class='kw'>=</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/sets'>setdiff</a></span>(<span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/names'>names</a></span>(<span class='no'>object</span>), <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/c'>c</a></span>(<span class='st'>"x"</span>,
-  <span class='st'>"y"</span>))<span class='kw'>[[</span><span class='fl'>1L</span>]], <span class='kw'>zlim</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>colors</span> <span class='kw'>=</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/c'>c</a></span>(<span class='st'>"viridis"</span>, <span class='st'>"gray"</span>), <span class='no'>...</span>)
+<span class='fu'><a href='https://ggplot2.tidyverse.org/reference/autoplot.html'>autoplot</a></span><span class='op'>(</span>
+  <span class='va'>object</span>,
+  zname <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/sets.html'>setdiff</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/names.html'>names</a></span><span class='op'>(</span><span class='va'>object</span><span class='op'>)</span>, <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"x"</span>, <span class='st'>"y"</span><span class='op'>)</span><span class='op'>)</span><span class='op'>[[</span><span class='fl'>1L</span><span class='op'>]</span><span class='op'>]</span>,
+  zlim <span class='op'>=</span> <span class='cn'>NULL</span>,
+  colors <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"magma"</span>, <span class='st'>"viridis"</span>, <span class='st'>"gray"</span><span class='op'>)</span>,
+  unit <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"px"</span>, <span class='st'>"um"</span>, <span class='st'>"mm"</span>, <span class='st'>"cm"</span><span class='op'>)</span>,
+  <span class='va'>...</span>
+<span class='op'>)</span>
 
 <span class='co'># S3 method for qm_cluster</span>
-<span class='fu'><a href='https://www.rdocumentation.org/packages/ggplot2/topics/autoplot'>autoplot</a></span>(<span class='no'>object</span>, <span class='kw'>zname</span> <span class='kw'>=</span> <span class='st'>"cluster"</span>, <span class='kw'>zlim</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
-  <span class='kw'>colors</span> <span class='kw'>=</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/c'>c</a></span>(<span class='st'>"viridis"</span>, <span class='st'>"gray"</span>), <span class='no'>...</span>)</pre>
-    
+<span class='fu'><a href='https://ggplot2.tidyverse.org/reference/autoplot.html'>autoplot</a></span><span class='op'>(</span>
+  <span class='va'>object</span>,
+  zname <span class='op'>=</span> <span class='st'>"cluster"</span>,
+  zlim <span class='op'>=</span> <span class='cn'>NULL</span>,
+  colors <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"magma"</span>, <span class='st'>"viridis"</span>, <span class='st'>"gray"</span><span class='op'>)</span>,
+  unit <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"px"</span>, <span class='st'>"um"</span>, <span class='st'>"mm"</span>, <span class='st'>"cm"</span><span class='op'>)</span>,
+  <span class='va'>...</span>
+<span class='op'>)</span></pre>
+
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
@@ -188,24 +208,29 @@ class object.</p></td>
     </tr>
     <tr>
       <th>colors</th>
-      <td><p>If z is numeric, "viridis" or "gray" are the choice.</p></td>
+      <td><p>One of "magma", "viridis", or "gray". Applicable when z-coordinates is numeric.</p></td>
+    </tr>
+    <tr>
+      <th>unit</th>
+      <td><p>Unit of x- and y-axis ("px", "um", "mm" or "cm").</p></td>
     </tr>
     <tr>
       <th>...</th>
       <td><p>other arguments passed to specific methods</p></td>
     </tr>
     </table>
-    
+
 
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
     <h2>Contents</h2>
     <ul class="nav nav-pills nav-stacked">
       <li><a href="#arguments">Arguments</a></li>
-                </ul>
+    </ul>
 
   </div>
 </div>
+
 
       <footer>
       <div class="copyright">
@@ -213,8 +238,9 @@ class object.</p></td>
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.3.0.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.1.</p>
 </div>
+
       </footer>
    </div>
 
@@ -237,6 +263,8 @@ class object.</p></td>
 </script>
 
 
+
   </body>
 </html>
+
 

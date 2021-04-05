@@ -13,7 +13,7 @@
 <link href="docsearch.css" rel="stylesheet">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/mark.js/8.11.1/jquery.mark.min.js" integrity="sha256-4HLtjeVgH0eIB3aZ9mLYF6E8oU5chNdjU6p6rrXpl9U=" crossorigin="anonymous"></script><meta property="og:title" content="Enhance quantitative analysis of EPMA map">
 <meta property="og:description" content="Generate and analyze chemical mass concentration map based on 
-    X-ray maps and some quantified points among the mapped area.">
+    X-ray maps and referencial spot analyses within the mapped area.">
 <meta name="twitter:card" content="summary">
 <!-- mathjax --><script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js" integrity="sha256-nvJJv9wWKEm88qvoQl9ekL2J+k/RWIsaSScxxlsrv8k=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/config/TeX-AMS-MML_HTMLorMML.js" integrity="sha256-84DKXVJXs0/F8OTMzX4UR909+jtl4G7SPypPavF+GfA=" crossorigin="anonymous"></script><!--[if lt IE 9]>
 <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
@@ -27,7 +27,7 @@
 </script>
 </head>
 <body>
-    <div class="container template-article">
+    <div class="container template-home">
       <header><div class="navbar navbar-default navbar-fixed-top" role="navigation">
   <div class="container">
     <div class="navbar-header">
@@ -39,7 +39,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="index.html">qntmap</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.3.4</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.0.0</span>
       </span>
     </div>
 
@@ -47,7 +47,7 @@
       <ul class="nav navbar-nav">
 <li>
   <a href="index.html">
-    <span class="fa fa-home fa-lg"></span>
+    <span class="fas fa-home fa-lg"></span>
      
   </a>
 </li>
@@ -81,8 +81,8 @@
       </ul>
 <ul class="nav navbar-nav navbar-right">
 <li>
-  <a href="https://github.com/atusy/qntmap">
-    <span class="fa fa-github fa-lg"></span>
+  <a href="https://github.com/atusy/qntmap/">
+    <span class="fab fa-github fa-lg"></span>
      
   </a>
 </li>
@@ -101,15 +101,18 @@
 <!--/.navbar -->
 
       
+
       </header><div class="row">
-  <div class="col-md-9 contents">
-    
+  <div class="contents col-md-9">
 
-    
-    
+<div id="enhance-quantitative-analysis-of-epma-maps-with-qntmap" class="section level1">
 
+<!-- badges: start -->
+
+</div>
 <div id="overview" class="section level1">
-
+<h1 class="hasAnchor">
+<a href="#overview" class="anchor"></a>Overview</h1>
 <p>This package generates mass concentration maps and phase distribution maps based on X-ray mapping data and spot analysis data from EPMA.</p>
 <p>See “<a href="#how-to">How to</a>” for a usage and <a href="https://doi.org/10.2138/am-2018-6323CCBY">Yasumoto et al. (2018)</a> for implementations.</p>
 <p>Current version supports data from JEOL-style EPMA.</p>
@@ -118,18 +121,19 @@
 <h1 class="hasAnchor">
 <a href="#installation" class="anchor"></a>Installation</h1>
 <p>Copy &amp; paste a following command to R.</p>
-<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb1-1" title="1"><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/source">source</a></span>(<span class="st">"https://install-github.me/atusy/qntmap"</span>)</a></code></pre></div>
+<div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/source.html">source</a></span><span class="op">(</span><span class="st">"https://install-github.me/atusy/qntmap"</span><span class="op">)</span></code></pre></div>
 </div>
 <div id="how-to" class="section level1">
 <h1 class="hasAnchor">
 <a href="#how-to" class="anchor"></a>How to</h1>
-<ol style="list-style-type: decimal">
+<ol>
 <li>
 <a href="#epma-analysis">EPMA analysis</a> (spot before map)</li>
 <li>
 <a href="#Export">Export data</a> from EPMA to PC</li>
 <li>
-<a href="#run-qntmap-on-r">Run QntMap on R</a> for data processing.</li>
+<a href="#run-qntmap-on-r">Run qntmap on R</a> for data processing.</li>
 </ol>
 <p>Details below.</p>
 <div id="epma-analysis" class="section level2">
@@ -183,7 +187,7 @@
 <div id="example-of-analytical-conditions" class="section level3">
 <h3 class="hasAnchor">
 <a href="#example-of-analytical-conditions" class="anchor"></a>Example of analytical conditions</h3>
-<table class="table table">
+<table class="table">
 <thead><tr class="header">
 <th align="left"></th>
 <th align="right">Spot</th>
@@ -192,7 +196,7 @@
 </tr></thead>
 <tbody>
 <tr class="odd">
-<td align="left">Acceralating Voltate</td>
+<td align="left">Acceralating Voltage</td>
 <td align="right">15 kV</td>
 <td align="right">15 kV</td>
 <td align="left">Must be same in spot and map</td>
@@ -225,10 +229,10 @@
 </table>
 </div>
 </div>
-<div id="Export" class="section level2">
+<div id="export-data" class="section level2">
 <h2 class="hasAnchor">
-<a href="#Export" class="anchor"></a>Export data</h2>
-<ol style="list-style-type: decimal">
+<a href="#export-data" class="anchor"></a>Export data</h2>
+<ol>
 <li>
 <strong>ASCII convert</strong> mapping data into matrix format, and save the result in the directory where raw data is stored (e.g., <code>.map/1</code>).</li>
 <li>Export whole directory of analysis containing <code>.map</code> directory and <code>.qnt</code> directory</li>
@@ -240,7 +244,11 @@
 <h4 class="hasAnchor">
 <a href="#spot-analysis-1" class="anchor"></a>Spot analysis</h4>
 <p>The exported data are stored in a directory named by <code>.qnt</code> in most environments. If using JXA-8230, a directory’s name is <code>{PROJECT}_{#}_QNT</code> where <code>{PROJECT}</code> is name of a project’s name defined by user or “PROJECT” if undefined, and<code>{#}</code> is a variable integer (e.g., <code>PROJECT_0001_QNT</code>).</p>
-<table class="table table">
+<table class="table">
+<colgroup>
+<col width="10%">
+<col width="89%">
+</colgroup>
 <thead><tr class="header">
 <th align="left">File name</th>
 <th align="left">Descriptions</th>
@@ -284,7 +292,8 @@
 </tr>
 <tr class="even">
 <td align="left">wt.qnt</td>
-<td align="left">Mass concentrations [wt%]</td>
+<td align="left">Mass concentrations <span class="math display"><em>w</em><em>t</em></span>
+</td>
 </tr>
 </tbody>
 </table>
@@ -293,7 +302,11 @@
 <h4 class="hasAnchor">
 <a href="#map-analysis" class="anchor"></a>Map analysis</h4>
 <p>The exported data are stored in a directory <code>.map/{#}</code> where <code>{#}</code> is a variable integer in most environments (e.g., <code>.map/1</code>). If using JXA-8230, a directory name is <code>{PROJECT}_{#1}_MAP_{#2}_csv</code> where <code>{PROJECT}</code> is name of a project’s name defined by user or “PROJECT” if undefined, and<code>{#1}</code> and <code>{#2}</code> are variable integers (e.g., <code>PROJECT_0001_MAP_0001_csv</code>).</p>
-<table class="table table">
+<table class="table">
+<colgroup>
+<col width="13%">
+<col width="86%">
+</colgroup>
 <thead><tr class="header">
 <th align="left">File name</th>
 <th align="left">Descriptions</th>
@@ -309,20 +322,21 @@
 </tr>
 </tbody>
 </table>
-<p><code>*</code> indicates wild cards.</p>
+<p><code><a href="https://rdrr.io/r/base/Arithmetic.html">*</a></code> indicates wild cards.</p>
 </div>
 </div>
 </div>
 <div id="run-qntmap-on-r" class="section level2">
 <h2 class="hasAnchor">
-<a href="#run-qntmap-on-r" class="anchor"></a>Run QntMap on R</h2>
+<a href="#run-qntmap-on-r" class="anchor"></a>Run qntmap on R</h2>
 <p>For data processing.</p>
 <div id="interactive-mode" class="section level3">
 <h3 class="hasAnchor">
 <a href="#interactive-mode" class="anchor"></a>Interactive mode</h3>
 <p>Follow instructions shown by running the following code.</p>
-<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb2-1" title="1"><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/library">library</a></span>(qntmap)</a>
-<a class="sourceLine" id="cb2-2" title="2"><span class="kw"><a href="reference/qntmap.html">qntmap</a></span>()</a></code></pre></div>
+<div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/atusy/qntmap/">qntmap</a></span><span class="op">)</span>
+<span class="fu"><a href="reference/qntmap.html">qntmap</a></span><span class="op">(</span><span class="op">)</span></code></pre></div>
 <p>As a result, phase identification result is saved in “<code>clustering</code>” directory and mass concentration data as csv files in “<code>qntmap</code>” directory both under the directory contaning mapping data.</p>
 <p>Note that interactive mode has limited functions. Use <a href="#manual-mode">manual mode</a> for full functionality.</p>
 </div>
@@ -333,13 +347,14 @@
 </div>
 </div>
 </div>
+
   </div>
 
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
     <div class="links">
 <h2>Links</h2>
 <ul class="list-unstyled">
-<li>Browse source code at <br><a href="https://github.com/atusy/qntmap">https://​github.com/​atusy/​qntmap</a>
+<li>Browse source code at <br><a href="https://github.com/atusy/qntmap/">https://​github.com/​atusy/​qntmap/​</a>
 </li>
 <li>Report a bug at <br><a href="https://github.com/atusy/qntmap/issues">https://​github.com/​atusy/​qntmap/​issues</a>
 </li>
@@ -360,24 +375,14 @@
 <div class="developers">
 <h2>Developers</h2>
 <ul class="list-unstyled">
-<li>Atsushi Yasumoto <br><small class="roles"> Author, copyright holder, maintainer </small> <a href="https://orcid.org/0000-0002-8335-495X" target="orcid.widget"><img src="https://members.orcid.org/sites/default/files/vector_iD_icon.svg" class="orcid" alt="ORCID" height="16"></a> </li>
+<li>Atsushi Yasumoto <br><small class="roles"> Author, copyright holder, maintainer </small> <a href="https://orcid.org/0000-0002-8335-495X" target="orcid.widget" aria-label="ORCID"><span class="fab fa-orcid orcid" aria-hidden="true"></span></a> </li>
 <li>Japan Agency for Marine-Earth Science and Technology (JAMSTEC) <br><small class="roles"> Copyright holder, funder </small>  </li>
 <li>JST PRESTO (Grant No. JPMJPR1676) <br><small class="roles"> Funder </small>  </li>
 <li><a href="authors.html">All authors...</a></li>
 </ul>
 </div>
 
-      <div class="dev-status">
-<h2>Dev status</h2>
-<ul class="list-unstyled">
-<li><a href="https://travis-ci.org/atusy/qntmap"><img src="https://travis-ci.org/atusy/qntmap.svg?branch=master" alt="Travis build status"></a></li>
-<li><a href="https://ci.appveyor.com/project/atusy/qntmap"><img src="https://ci.appveyor.com/api/projects/status/github/atusy/qntmap?branch=master&amp;svg=true" alt="AppVeyor build status"></a></li>
-<li><a href="https://codecov.io/github/atusy/qntmap?branch=master"><img src="https://codecov.io/gh/atusy/qntmap/branch/master/graph/badge.svg" alt="Coverage status"></a></li>
-<li><a href="https://qntmap.atusy.net/LICENSE-text.html"><img src="https://img.shields.io/badge/license-MIT-blue.svg" alt="license"></a></li>
-</ul>
-</div>
-</div>
-
+  </div>
 </div>
 
 
@@ -386,8 +391,9 @@
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.3.0.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.1.</p>
 </div>
+
       </footer>
 </div>
 

@@ -6,13 +6,15 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Plot methods for <code>qntmap</code> package — plot-qntmap • qntmap</title>
+<title>Plot methods for qntmap package — plot-qntmap • qntmap</title>
+
 
 <!-- jquery -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
 <!-- Bootstrap -->
 
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha256-916EbMg70RQy9LHiGkXzG8hSg9EdNy97GazNG/aiY1w=" crossorigin="anonymous" />
+
 <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha256-U5ZEeKfGNOja007MMD3YBI0A3OSZOQbeG6z2f2Y0hu8=" crossorigin="anonymous"></script>
 
 <!-- Font Awesome icons -->
@@ -36,12 +38,13 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/mark.js/8.11.1/jquery.mark.min.js" integrity="sha256-4HLtjeVgH0eIB3aZ9mLYF6E8oU5chNdjU6p6rrXpl9U=" crossorigin="anonymous"></script>
 
 
-<meta property="og:title" content="Plot methods for <code>qntmap</code> package — plot-qntmap" />
 
+<meta property="og:title" content="Plot methods for qntmap package — plot-qntmap" />
 <meta property="og:description" content="S3 methods to plot object with original classes in qntmap package.
 See graphics::plot() for general use of plot.
 Mapping data (qm_xmap and qm_qntmap classes) are visualized by heat maps." />
 <meta name="twitter:card" content="summary" />
+
 
 
 
@@ -65,6 +68,7 @@ Mapping data (qm_xmap and qm_qntmap classes) are visualized by heat maps." />
   gtag('config', 'UA-133172060-1');
 </script>
 
+
   </head>
 
   <body>
@@ -81,7 +85,7 @@ Mapping data (qm_xmap and qm_qntmap classes) are visualized by heat maps." />
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">qntmap</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.3.4</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.0.0</span>
       </span>
     </div>
 
@@ -89,7 +93,7 @@ Mapping data (qm_xmap and qm_qntmap classes) are visualized by heat maps." />
       <ul class="nav navbar-nav">
         <li>
   <a href="../index.html">
-    <span class="fa fa-home fa-lg"></span>
+    <span class="fas fa-home fa-lg"></span>
      
   </a>
 </li>
@@ -121,11 +125,10 @@ Mapping data (qm_xmap and qm_qntmap classes) are visualized by heat maps." />
   <a href="../news/index.html">Changelog</a>
 </li>
       </ul>
-      
       <ul class="nav navbar-nav navbar-right">
         <li>
-  <a href="https://github.com/atusy/qntmap">
-    <span class="fa fa-github fa-lg"></span>
+  <a href="https://github.com/atusy/qntmap/">
+    <span class="fab fa-github fa-lg"></span>
      
   </a>
 </li>
@@ -142,6 +145,7 @@ Mapping data (qm_xmap and qm_qntmap classes) are visualized by heat maps." />
 </div><!--/.navbar -->
 
       
+
       </header>
 
 <div class="row">
@@ -153,27 +157,47 @@ Mapping data (qm_xmap and qm_qntmap classes) are visualized by heat maps." />
     </div>
 
     <div class="ref-description">
-    
     <p>S3 methods to plot object with original classes in <code>qntmap</code> package.
-See <code><a href='https://www.rdocumentation.org/packages/graphics/topics/plot'>graphics::plot()</a></code> for general use of <code>plot</code>.
+See <code><a href='https://rdrr.io/r/graphics/plot.default.html'>graphics::plot()</a></code> for general use of <code>plot</code>.
 Mapping data (<code>qm_xmap</code> and <code>qm_qntmap</code> classes) are visualized by heat maps.</p>
-    
     </div>
 
     <pre class="usage"><span class='co'># S3 method for qntmap</span>
-<span class='fu'><a href='https://www.rdocumentation.org/packages/graphics/topics/plot'>plot</a></span>(<span class='no'>x</span>, <span class='kw'>y</span> <span class='kw'>=</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/sets'>setdiff</a></span>(<span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/names'>names</a></span>(<span class='no'>x</span>), <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/c'>c</a></span>(<span class='st'>"x"</span>, <span class='st'>"y"</span>))[<span class='fl'>1L</span>],
-  <span class='kw'>zname</span> <span class='kw'>=</span> <span class='no'>y</span>, <span class='kw'>zlim</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>colors</span> <span class='kw'>=</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/c'>c</a></span>(<span class='st'>"viridis"</span>, <span class='st'>"gray"</span>),
-  <span class='kw'>interactive</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='no'>...</span>)
+<span class='fu'><a href='https://rdrr.io/r/graphics/plot.default.html'>plot</a></span><span class='op'>(</span>
+  <span class='va'>x</span>,
+  y <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/sets.html'>setdiff</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/names.html'>names</a></span><span class='op'>(</span><span class='va'>x</span><span class='op'>)</span>, <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"x"</span>, <span class='st'>"y"</span><span class='op'>)</span><span class='op'>)</span><span class='op'>[</span><span class='fl'>1L</span><span class='op'>]</span>,
+  zname <span class='op'>=</span> <span class='va'>y</span>,
+  zlim <span class='op'>=</span> <span class='cn'>NULL</span>,
+  colors <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"magma"</span>, <span class='st'>"viridis"</span>, <span class='st'>"gray"</span><span class='op'>)</span>,
+  interactive <span class='op'>=</span> <span class='cn'>TRUE</span>,
+  unit <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"px"</span>, <span class='st'>"um"</span>, <span class='st'>"mm"</span>, <span class='st'>"cm"</span><span class='op'>)</span>,
+  <span class='va'>...</span>
+<span class='op'>)</span>
 
 <span class='co'># S3 method for qm_xmap</span>
-<span class='fu'><a href='https://www.rdocumentation.org/packages/graphics/topics/plot'>plot</a></span>(<span class='no'>x</span>, <span class='kw'>y</span> <span class='kw'>=</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/sets'>setdiff</a></span>(<span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/names'>names</a></span>(<span class='no'>x</span>), <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/c'>c</a></span>(<span class='st'>"x"</span>, <span class='st'>"y"</span>))[<span class='fl'>1L</span>],
-  <span class='kw'>zname</span> <span class='kw'>=</span> <span class='no'>y</span>, <span class='kw'>zlim</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>colors</span> <span class='kw'>=</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/c'>c</a></span>(<span class='st'>"viridis"</span>, <span class='st'>"gray"</span>),
-  <span class='kw'>interactive</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='no'>...</span>)
+<span class='fu'><a href='https://rdrr.io/r/graphics/plot.default.html'>plot</a></span><span class='op'>(</span>
+  <span class='va'>x</span>,
+  y <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/sets.html'>setdiff</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/names.html'>names</a></span><span class='op'>(</span><span class='va'>x</span><span class='op'>)</span>, <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"x"</span>, <span class='st'>"y"</span><span class='op'>)</span><span class='op'>)</span><span class='op'>[</span><span class='fl'>1L</span><span class='op'>]</span>,
+  zname <span class='op'>=</span> <span class='va'>y</span>,
+  zlim <span class='op'>=</span> <span class='cn'>NULL</span>,
+  colors <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"magma"</span>, <span class='st'>"viridis"</span>, <span class='st'>"gray"</span><span class='op'>)</span>,
+  interactive <span class='op'>=</span> <span class='cn'>TRUE</span>,
+  unit <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"px"</span>, <span class='st'>"um"</span>, <span class='st'>"mm"</span>, <span class='st'>"cm"</span><span class='op'>)</span>,
+  <span class='va'>...</span>
+<span class='op'>)</span>
 
 <span class='co'># S3 method for qm_cluster</span>
-<span class='fu'><a href='https://www.rdocumentation.org/packages/graphics/topics/plot'>plot</a></span>(<span class='no'>x</span>, <span class='kw'>y</span> <span class='kw'>=</span> <span class='st'>"cluster"</span>, <span class='kw'>zname</span> <span class='kw'>=</span> <span class='no'>y</span>, <span class='kw'>zlim</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
-  <span class='kw'>colors</span> <span class='kw'>=</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/c'>c</a></span>(<span class='st'>"viridis"</span>, <span class='st'>"gray"</span>), <span class='kw'>interactive</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='no'>...</span>)</pre>
-    
+<span class='fu'><a href='https://rdrr.io/r/graphics/plot.default.html'>plot</a></span><span class='op'>(</span>
+  <span class='va'>x</span>,
+  y <span class='op'>=</span> <span class='st'>"cluster"</span>,
+  zname <span class='op'>=</span> <span class='va'>y</span>,
+  zlim <span class='op'>=</span> <span class='cn'>NULL</span>,
+  colors <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"magma"</span>, <span class='st'>"viridis"</span>, <span class='st'>"gray"</span><span class='op'>)</span>,
+  interactive <span class='op'>=</span> <span class='cn'>TRUE</span>,
+  unit <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"px"</span>, <span class='st'>"um"</span>, <span class='st'>"mm"</span>, <span class='st'>"cm"</span><span class='op'>)</span>,
+  <span class='va'>...</span>
+<span class='op'>)</span></pre>
+
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
@@ -198,37 +222,40 @@ returned by <code><a href='quantify.html'>quantify()</a></code>, <code><a href='
     <tr>
       <th>interactive</th>
       <td><p><code>TRUE</code> (default) produces plots with shiny WebUI, and
-<code>FALSE</code> produces plots with <code><a href='https://www.rdocumentation.org/packages/ggplot2/topics/ggplot'>ggplot2::ggplot()</a></code>.</p></td>
+<code>FALSE</code> produces plots with <code><a href='https://ggplot2.tidyverse.org/reference/ggplot.html'>ggplot2::ggplot()</a></code>.</p></td>
+    </tr>
+    <tr>
+      <th>unit</th>
+      <td><p>Unit of x- and y-axis ("px", "um", "nm" or "cm").</p></td>
     </tr>
     <tr>
       <th>...</th>
       <td><p>Arguments passed to internal functions.</p></td>
     </tr>
     </table>
-    
+
     <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
 
-    <div class='dont-index'><p><code><a href='https://www.rdocumentation.org/packages/graphics/topics/plot'>graphics::plot()</a></code></p></div>
-    
+    <div class='dont-index'><p><code><a href='https://rdrr.io/r/graphics/plot.default.html'>graphics::plot()</a></code></p></div>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><div class='input'><span class='co'># qm_raster class object</span>
-<span class='no'>d</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/data.frame'>data.frame</a></span>(<span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/expand.grid'>expand.grid</a></span>(<span class='kw'>x</span> <span class='kw'>=</span> <span class='fl'>1</span>:<span class='fl'>5</span>, <span class='kw'>y</span> <span class='kw'>=</span> <span class='fl'>1</span>:<span class='fl'>5</span>), <span class='kw'>fill</span> <span class='kw'>=</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/stats/topics/Uniform'>runif</a></span>(<span class='fl'>5</span>))
-<span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/class'>class</a></span>(<span class='no'>d</span>) <span class='kw'>&lt;-</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/c'>c</a></span>(<span class='st'>"qm_raster"</span>, <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/class'>class</a></span>(<span class='no'>d</span>))
-<span class='fu'><a href='https://www.rdocumentation.org/packages/graphics/topics/plot'>plot</a></span>(<span class='no'>d</span>, <span class='st'>"fill"</span>, <span class='kw'>interactive</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>)</div><div class='output co'>#&gt; <span class='warning'>Warning: "interactive" is not a graphical parameter</span></div><div class='output co'>#&gt; <span class='warning'>Warning: "interactive" is not a graphical parameter</span></div><div class='output co'>#&gt; <span class='warning'>Warning: "interactive" is not a graphical parameter</span></div><div class='output co'>#&gt; <span class='warning'>Warning: "interactive" is not a graphical parameter</span></div><div class='output co'>#&gt; <span class='warning'>Warning: "interactive" is not a graphical parameter</span></div><div class='output co'>#&gt; <span class='warning'>Warning: "interactive" is not a graphical parameter</span></div><div class='output co'>#&gt; <span class='warning'>Warning: "interactive" is not a graphical parameter</span></div><div class='output co'>#&gt; <span class='warning'>Warning: "interactive" is not a graphical parameter</span></div><div class='output co'>#&gt; <span class='warning'>Warning: "interactive" is not a graphical parameter</span></div><div class='output co'>#&gt; <span class='warning'>Warning: "interactive" is not a graphical parameter</span></div><div class='output co'>#&gt; <span class='warning'>Warning: "interactive" is not a graphical parameter</span></div><div class='output co'>#&gt; <span class='warning'>Warning: "interactive" is not a graphical parameter</span></div><div class='output co'>#&gt; <span class='warning'>Warning: "interactive" is not a graphical parameter</span></div><div class='output co'>#&gt; <span class='warning'>Warning: "interactive" is not a graphical parameter</span></div><div class='output co'>#&gt; <span class='warning'>Warning: "interactive" is not a graphical parameter</span></div><div class='output co'>#&gt; <span class='warning'>Warning: "interactive" is not a graphical parameter</span></div><div class='output co'>#&gt; <span class='warning'>Warning: "interactive" is not a graphical parameter</span></div><div class='output co'>#&gt; <span class='warning'>Warning: "interactive" is not a graphical parameter</span></div><div class='output co'>#&gt; <span class='warning'>Warning: "interactive" is not a graphical parameter</span></div><div class='output co'>#&gt; <span class='warning'>Warning: "interactive" is not a graphical parameter</span></div><div class='output co'>#&gt; <span class='warning'>Warning: "interactive" is not a graphical parameter</span></div><div class='output co'>#&gt; <span class='warning'>Warning: "interactive" is not a graphical parameter</span></div><div class='output co'>#&gt; <span class='warning'>Warning: "interactive" is not a graphical parameter</span></div><div class='output co'>#&gt; <span class='warning'>Warning: "interactive" is not a graphical parameter</span></div><div class='output co'>#&gt; <span class='warning'>Warning: "interactive" is not a graphical parameter</span></div><div class='output co'>#&gt; <span class='warning'>Warning: "interactive" is not a graphical parameter</span></div><div class='output co'>#&gt; <span class='warning'>Warning: "interactive" is not a graphical parameter</span></div><div class='output co'>#&gt; <span class='warning'>Warning: "interactive" is not a graphical parameter</span></div><div class='output co'>#&gt; <span class='warning'>Warning: "interactive" is not a graphical parameter</span></div><div class='output co'>#&gt; <span class='warning'>Warning: "interactive" is not a graphical parameter</span></div><div class='output co'>#&gt; <span class='warning'>Warning: "interactive" is not a graphical parameter</span></div><div class='output co'>#&gt; <span class='warning'>Warning: "interactive" is not a graphical parameter</span></div><div class='output co'>#&gt; <span class='warning'>Warning: "interactive" is not a graphical parameter</span></div><div class='output co'>#&gt; <span class='warning'>Warning: "interactive" is not a graphical parameter</span></div><div class='output co'>#&gt; <span class='warning'>Warning: "interactive" is not a graphical parameter</span></div><div class='output co'>#&gt; <span class='warning'>Warning: "interactive" is not a graphical parameter</span></div><div class='output co'>#&gt; <span class='warning'>Warning: "interactive" is not a graphical parameter</span></div><div class='output co'>#&gt; <span class='warning'>Warning: "interactive" is not a graphical parameter</span></div><div class='output co'>#&gt; <span class='warning'>Warning: "interactive" is not a graphical parameter</span></div><div class='img'><img src='plot-qntmap-1.png' alt='' width='700' height='433' /></div></pre>
+<span class='va'>d</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/data.frame.html'>data.frame</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/expand.grid.html'>expand.grid</a></span><span class='op'>(</span>x <span class='op'>=</span> <span class='fl'>1</span><span class='op'>:</span><span class='fl'>5</span>, y <span class='op'>=</span> <span class='fl'>1</span><span class='op'>:</span><span class='fl'>5</span><span class='op'>)</span>, fill <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/stats/Uniform.html'>runif</a></span><span class='op'>(</span><span class='fl'>5</span><span class='op'>)</span><span class='op'>)</span>
+<span class='fu'><a href='https://rdrr.io/r/base/class.html'>class</a></span><span class='op'>(</span><span class='va'>d</span><span class='op'>)</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"qm_raster"</span>, <span class='fu'><a href='https://rdrr.io/r/base/class.html'>class</a></span><span class='op'>(</span><span class='va'>d</span><span class='op'>)</span><span class='op'>)</span>
+<span class='fu'><a href='https://rdrr.io/r/graphics/plot.default.html'>plot</a></span><span class='op'>(</span><span class='va'>d</span>, <span class='st'>"fill"</span>, interactive <span class='op'>=</span> <span class='cn'>FALSE</span><span class='op'>)</span>
+</div><div class='output co'>#&gt; <span class='warning'>Warning: "interactive" is not a graphical parameter</span></div><div class='output co'>#&gt; <span class='warning'>Warning: "interactive" is not a graphical parameter</span></div><div class='output co'>#&gt; <span class='warning'>Warning: "interactive" is not a graphical parameter</span></div><div class='output co'>#&gt; <span class='warning'>Warning: "interactive" is not a graphical parameter</span></div><div class='output co'>#&gt; <span class='warning'>Warning: "interactive" is not a graphical parameter</span></div><div class='output co'>#&gt; <span class='warning'>Warning: "interactive" is not a graphical parameter</span></div><div class='output co'>#&gt; <span class='warning'>Warning: "interactive" is not a graphical parameter</span></div><div class='output co'>#&gt; <span class='warning'>Warning: "interactive" is not a graphical parameter</span></div><div class='output co'>#&gt; <span class='warning'>Warning: "interactive" is not a graphical parameter</span></div><div class='output co'>#&gt; <span class='warning'>Warning: "interactive" is not a graphical parameter</span></div><div class='output co'>#&gt; <span class='warning'>Warning: "interactive" is not a graphical parameter</span></div><div class='output co'>#&gt; <span class='warning'>Warning: "interactive" is not a graphical parameter</span></div><div class='output co'>#&gt; <span class='warning'>Warning: "interactive" is not a graphical parameter</span></div><div class='output co'>#&gt; <span class='warning'>Warning: "interactive" is not a graphical parameter</span></div><div class='output co'>#&gt; <span class='warning'>Warning: "interactive" is not a graphical parameter</span></div><div class='output co'>#&gt; <span class='warning'>Warning: "interactive" is not a graphical parameter</span></div><div class='output co'>#&gt; <span class='warning'>Warning: "interactive" is not a graphical parameter</span></div><div class='output co'>#&gt; <span class='warning'>Warning: "interactive" is not a graphical parameter</span></div><div class='output co'>#&gt; <span class='warning'>Warning: "interactive" is not a graphical parameter</span></div><div class='output co'>#&gt; <span class='warning'>Warning: "interactive" is not a graphical parameter</span></div><div class='output co'>#&gt; <span class='warning'>Warning: "interactive" is not a graphical parameter</span></div><div class='output co'>#&gt; <span class='warning'>Warning: "interactive" is not a graphical parameter</span></div><div class='output co'>#&gt; <span class='warning'>Warning: "interactive" is not a graphical parameter</span></div><div class='output co'>#&gt; <span class='warning'>Warning: "interactive" is not a graphical parameter</span></div><div class='output co'>#&gt; <span class='warning'>Warning: "interactive" is not a graphical parameter</span></div><div class='output co'>#&gt; <span class='warning'>Warning: "interactive" is not a graphical parameter</span></div><div class='output co'>#&gt; <span class='warning'>Warning: "interactive" is not a graphical parameter</span></div><div class='output co'>#&gt; <span class='warning'>Warning: "interactive" is not a graphical parameter</span></div><div class='output co'>#&gt; <span class='warning'>Warning: "interactive" is not a graphical parameter</span></div><div class='output co'>#&gt; <span class='warning'>Warning: "interactive" is not a graphical parameter</span></div><div class='output co'>#&gt; <span class='warning'>Warning: "interactive" is not a graphical parameter</span></div><div class='output co'>#&gt; <span class='warning'>Warning: "interactive" is not a graphical parameter</span></div><div class='output co'>#&gt; <span class='warning'>Warning: "interactive" is not a graphical parameter</span></div><div class='output co'>#&gt; <span class='warning'>Warning: "interactive" is not a graphical parameter</span></div><div class='output co'>#&gt; <span class='warning'>Warning: "interactive" is not a graphical parameter</span></div><div class='output co'>#&gt; <span class='warning'>Warning: "interactive" is not a graphical parameter</span></div><div class='output co'>#&gt; <span class='warning'>Warning: "interactive" is not a graphical parameter</span></div><div class='output co'>#&gt; <span class='warning'>Warning: "interactive" is not a graphical parameter</span></div><div class='output co'>#&gt; <span class='warning'>Warning: "interactive" is not a graphical parameter</span></div><div class='img'><img src='plot-qntmap-1.png' alt='' width='700' height='433' /></div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
     <h2>Contents</h2>
     <ul class="nav nav-pills nav-stacked">
       <li><a href="#arguments">Arguments</a></li>
-      
       <li><a href="#see-also">See also</a></li>
-      
       <li><a href="#examples">Examples</a></li>
     </ul>
 
   </div>
 </div>
+
 
       <footer>
       <div class="copyright">
@@ -236,8 +263,9 @@ returned by <code><a href='quantify.html'>quantify()</a></code>, <code><a href='
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.3.0.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.1.</p>
 </div>
+
       </footer>
    </div>
 
@@ -260,6 +288,8 @@ returned by <code><a href='quantify.html'>quantify()</a></code>, <code><a href='
 </script>
 
 
+
   </body>
 </html>
+
 

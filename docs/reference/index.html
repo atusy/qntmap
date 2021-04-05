@@ -8,11 +8,13 @@
 
 <title>Function reference • qntmap</title>
 
+
 <!-- jquery -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
 <!-- Bootstrap -->
 
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha256-916EbMg70RQy9LHiGkXzG8hSg9EdNy97GazNG/aiY1w=" crossorigin="anonymous" />
+
 <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha256-U5ZEeKfGNOja007MMD3YBI0A3OSZOQbeG6z2f2Y0hu8=" crossorigin="anonymous"></script>
 
 <!-- Font Awesome icons -->
@@ -36,7 +38,9 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/mark.js/8.11.1/jquery.mark.min.js" integrity="sha256-4HLtjeVgH0eIB3aZ9mLYF6E8oU5chNdjU6p6rrXpl9U=" crossorigin="anonymous"></script>
 
 
+
 <meta property="og:title" content="Function reference" />
+
 
 
 
@@ -60,6 +64,7 @@
   gtag('config', 'UA-133172060-1');
 </script>
 
+
   </head>
 
   <body>
@@ -76,7 +81,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">qntmap</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.3.4</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.0.0</span>
       </span>
     </div>
 
@@ -84,7 +89,7 @@
       <ul class="nav navbar-nav">
         <li>
   <a href="../index.html">
-    <span class="fa fa-home fa-lg"></span>
+    <span class="fas fa-home fa-lg"></span>
      
   </a>
 </li>
@@ -116,11 +121,10 @@
   <a href="../news/index.html">Changelog</a>
 </li>
       </ul>
-      
       <ul class="nav navbar-nav navbar-right">
         <li>
-  <a href="https://github.com/atusy/qntmap">
-    <span class="fa fa-github fa-lg"></span>
+  <a href="https://github.com/atusy/qntmap/">
+    <span class="fab fa-github fa-lg"></span>
      
   </a>
 </li>
@@ -137,6 +141,7 @@
 </div><!--/.navbar -->
 
       
+
       </header>
 
 <div class="row">
@@ -153,163 +158,17 @@
       <col class="title" />
     </colgroup>
 
-    <tbody>
-      <tr>
-        <th colspan="2">
-          <h2 id="section-all-functions" class="hasAnchor"><a href="#section-all-functions" class="anchor"></a>All functions</h2>
-          <p class="section-desc"></p>
-        </th>
-      </tr>
-      <tr>
-        
-        <td>
-          <p><code><a href="add_centers.html">add_centers()</a></code> </p>
-        </td>
-        <td><p>Add centroids manually</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="autoplot-qntmap.html">autoplot(<i>&lt;qntmap&gt;</i>)</a></code> <code><a href="autoplot-qntmap.html">autoplot(<i>&lt;qm_xmap&gt;</i>)</a></code> <code><a href="autoplot-qntmap.html">autoplot(<i>&lt;qm_cluster&gt;</i>)</a></code> </p>
-        </td>
-        <td><p>Create a ggplot object for objects created by qntmap package</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="cluster.html">cluster()</a></code> </p>
-        </td>
-        <td><p>Poisson distribution based custering based on <code><a href='https://www.rdocumentation.org/packages/PoiClaClu/topics/Classify'>PoiClaClu::Classify()</a></code></p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="cluster_xmap.html">cluster_xmap()</a></code> </p>
-        </td>
-        <td><p>Cluster mapping data into mineral species</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="defunct.html">group_cluster()</a></code> <code><a href="defunct.html">qntmap_quantify()</a></code> <code><a href="defunct.html">qltmap_cls_centers()</a></code> <code><a href="defunct.html">qltmap_load()</a></code> <code><a href="defunct.html">qntmap_cls_pois()</a></code> <code><a href="defunct.html">qnt_load()</a></code> </p>
-        </td>
-        <td><p>Defunct functions</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="find_centers.html">find_centers()</a></code> </p>
-        </td>
-        <td><p>Initialize centroids for <code>cluster_xmap()</code></p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="find_centers_kpp.html">find_centers_kpp()</a></code> </p>
-        </td>
-        <td><p>Generate initial centroids for clustering randomly</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="group_subclusters.html">group_subclusters()</a></code> </p>
-        </td>
-        <td><p>Group sub-clusters who share same prefix</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="hmean.html">hmean()</a></code> <code><a href="hmean.html">vmean()</a></code> </p>
-        </td>
-        <td><p>Calculate means for horizontal and vertical directions</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="mean.html">mean(<i>&lt;qntmap&gt;</i>)</a></code> <code><a href="mean.html">mean(<i>&lt;qm_xmap&gt;</i>)</a></code> <code><a href="mean.html">mean(<i>&lt;qm_cluster&gt;</i>)</a></code> </p>
-        </td>
-        <td><p>Arithmetric mean for objects generated by <code>qntmap</code> package</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="pick.html">pick()</a></code> </p>
-        </td>
-        <td><p>Pick values from mapping data</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="plot-qntmap.html">plot(<i>&lt;qntmap&gt;</i>)</a></code> <code><a href="plot-qntmap.html">plot(<i>&lt;qm_xmap&gt;</i>)</a></code> <code><a href="plot-qntmap.html">plot(<i>&lt;qm_cluster&gt;</i>)</a></code> </p>
-        </td>
-        <td><p>Plot methods for <code>qntmap</code> package</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="print.qntmap.html">print(<i>&lt;qntmap&gt;</i>)</a></code> </p>
-        </td>
-        <td><p><code>print</code> method for <code>qntmap</code> class object</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="qntmap-package.html">qntmap-package</a></code> </p>
-        </td>
-        <td><p>Enhance quantitative analysis of EPMA maps with QntMap</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="qntmap.html">qntmap()</a></code> </p>
-        </td>
-        <td><p>Interactively quantify X-ray maps</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="quantify.html">quantify()</a></code> </p>
-        </td>
-        <td><p>Quantify X-ray maps</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="read_cnd.html">read_cnd</a></code> </p>
-        </td>
-        <td><p>Read .cnd files</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="read_qnt.html">read_qnt()</a></code> </p>
-        </td>
-        <td><p>compile quantitative data</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="read_xmap.html">read_xmap()</a></code> </p>
-        </td>
-        <td><p>Read X-ray map data</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="save4qm.html">save4qm()</a></code> </p>
-        </td>
-        <td><p>Save objects created by qntmap package.</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="segment.html">segment()</a></code> </p>
-        </td>
-        <td><p>Segment mapping area</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="summary.html">summary(<i>&lt;qm_cluster&gt;</i>)</a></code> <code><a href="summary.html">summary(<i>&lt;qntmap&gt;</i>)</a></code> </p>
-        </td>
-        <td><p>Object Summaries</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="tidy_epma.html">tidy_epma()</a></code> </p>
-        </td>
-        <td><p>Compile epma data into a data frame</p></td>
-      </tr>
-    </tbody>
+    
     </table>
   </div>
 
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
     <h2>Contents</h2>
     <ul class="nav nav-pills nav-stacked">
-      <li><a href="#section-all-functions">All functions</a></li>
     </ul>
   </div>
 </div>
+
 
       <footer>
       <div class="copyright">
@@ -317,8 +176,9 @@
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.3.0.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.1.</p>
 </div>
+
       </footer>
    </div>
 
@@ -341,6 +201,8 @@
 </script>
 
 
+
   </body>
 </html>
+
 
