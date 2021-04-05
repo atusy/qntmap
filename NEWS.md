@@ -1,6 +1,16 @@
 # qntmap 1.0.2
 
-- Fix `qntmap::qntmap()` raising error on the **Mapping conditions** pane of the **Input** page, "Can't create column `Values`: Can't combine `..1` <character> and `..2` <integer>."
+## Bug fix
+
+- Fix `qntmap()` raising error on the **Mapping conditions** pane of the **Input** page, "Can't create column `Values`: Can't combine `..1` <character> and `..2` <integer>" (#34).
+
+- Fix `cluster_xmap()` raising error when checking unit of pixels (#36)
+
+## Internal changes
+
+- Use GitHub Actions for CI (#35)
+
+
 
 # qntmap 1.0.1
 
@@ -10,7 +20,6 @@
 
 ## Bug fix
 
-- The `unit` argument in `autoplot.qm_xmap()` contained `"nm"` instead of `"mm"` as a choice.
 - Fix beta being wrong in the *Params for Quantify* page.
 
 ## Planning

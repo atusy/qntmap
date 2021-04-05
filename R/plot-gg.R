@@ -164,7 +164,7 @@ gg_img <- function(
 ) {
   unit <- match.arg(unit)
   
-  if (unit != "px" && is.null(step_size) || is.na(step_size)) {
+  if (unit != "px" && (is.null(step_size) || is.na(step_size))) {
     warning("Step size is unknown. unit is coerced to px")
     unit <- "px"
   }
