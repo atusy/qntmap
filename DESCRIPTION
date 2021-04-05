@@ -1,7 +1,7 @@
 Package: qntmap
 Type: Package
 Title: Enhance quantitative analysis of EPMA map
-Version: 1.0.0
+Version: 1.0.2
 Authors@R: 
     c(
         person(
