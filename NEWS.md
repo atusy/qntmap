@@ -9,7 +9,7 @@
 ## Internal changes
 
 - Use GitHub Actions for CI (#35)
-
+- Updated tests and `DESCRIPTION` to pass CI (#37)
 
 
 # qntmap 1.0.1

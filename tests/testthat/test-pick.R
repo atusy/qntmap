@@ -4,7 +4,10 @@ context("test-pick.R")
 d <- cbind(expand.grid(y = 1:2, x = 1:2), A = 1:4)
 
 test_that("Pixels to be picked can be specified by parameters x, y, and phase", {
-  expect_equal(pick(d, 1:2, 1:2), data.frame(phase = c("P1", "P2"), A = c(1, 4)))
+  object <- pick(d, 1:2, 1:2)
+  expected = data.frame(phase = c("P1", "P2"), A = c(1, 4))
+  expect_named(object, names(expected))
+  Map(expect_equal, object, expected)
 })
 
 test_that("Pixels to be picked can be specified by data frame", {
