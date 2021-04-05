@@ -18,3 +18,4 @@ docs
 ^\.\.Rcheck
 ^\.Rproj.user
 ^vignettes/*\.csv
+^\.github$
