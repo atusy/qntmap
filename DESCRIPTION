@@ -39,7 +39,6 @@ Imports:
     dplyr,
     DT,
     easycsv,
-    flexdashboard,
     ggplot2,
     ggAtusy,
     htmltools,
@@ -52,14 +51,12 @@ Imports:
     purrr,
     quantreg,
     rlang,
-    rmarkdown,
     R.utils,
     scales,
     shiny,
     shinyFiles,
     shinyWidgets,
     stringr,
-    tibble,
     tippy,
     tidyr,
     tidyselect,
@@ -70,9 +67,11 @@ Suggests:
     covr,
     here,
     pkgdown,
+    rmarkdown,
     roxygen2,
     svglite,
-    testthat (>= 2.1.0)
+    testthat (>= 2.1.0),
+    tibble
 Remotes:
     atusy/cssgrid,
     atusy/ggAtusy
