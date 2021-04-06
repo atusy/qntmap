@@ -3,7 +3,7 @@
 #' @param AG AG
 #' @param B B
 #' @examples
-#' library(tibble)
+#' if (require(tibble)) {
 #' AG <- tribble(
 #'   ~elm,  ~phase3,     ~g,    ~g_se,           ~a ,       ~a_se,
 #'   "Mg",     "Ol", 5797.0, 16.15739, 0.0001011356, 1.200497e-14,
@@ -22,6 +22,7 @@
 #' # 2  Mg  11    Qtz 0.01008873 4.055329e-08
 #' # 3  Si  11     Ol 0.01010103 3.816024e-08
 #' # 4  Si  11    Qtz 0.01008730 3.810836e-08
+#' }
 find_AB <- function(AG, B, se = TRUE) {
   mutate(
     right_join(AG[, c("elm", "phase3", "a", "a_se"[se])], B, by = "elm"),

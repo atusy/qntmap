@@ -442,18 +442,24 @@ attr_chr <- function(...) {
 }
 
 xmap_meta <- function(xmap_data, input) {
-  tribble(
-    ~ Variables, ~ Values, ~ Units,
-    "Elements", paste(setdiff(names(xmap_data()), c("x", "y")), collapse = ", "), "",
-    "Dead time", attr_chr(xmap_data(), "deadtime"), "nsec",
-    "Dwell", attr_chr(xmap_data(), "dwell"), "msec",
-    "Probe current", attr_chr(xmap_data(), "current"), "A",
-    "Start X", attr_chr(xmap_data(), "start")[[1L]], "mm",
-    "Start Y", attr_chr(xmap_data(), "start")[[2L]], "mm",
-    "Start Z", attr_chr(xmap_data(), "start")[[3L]], "mm",
-    "Pixel size", attr_chr(xmap_data(), "pixel")[[1L]], "\u00b5m",
-    "Step size", attr_chr(xmap_data(), "step")[[1L]], "\u00b5m",
-    "Instrument", attr_chr(xmap_data(), "instrument"), ""
+  attr_xmap <- function(x) attr_chr(xmap_data(), x)
+  mm <- "mm"
+  um <- "\u00b5m"
+  data.frame(
+    Variables = c("Elements", "Dead time", "Dwell", "Probe current",
+                  "Start X", "Start Y", "Start Z", "Pixel size", "Step size",
+                  "Instrument"),
+    Values = c(paste(setdiff(names(xmap_data()), c("x", "y")), collapse = ", "),
+               attr_xmap("dwell"),
+               attr_xmap("current"),
+               attr_xmap("start")[[1L]],
+               attr_xmap("start")[[2L]],
+               attr_xmap("start")[[3L]],
+               attr_xmap("pixel")[[1L]],
+               attr_xmap("step")[[1L]],
+               attr_xmap("instrument")),
+    Units = c("nsec", "msec", "A", mm, mm, mm, um, um, ""),
+    stringsAsFactors = FALSE
   )
 }
 

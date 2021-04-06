@@ -1,3 +1,9 @@
+# qntmap 1.0.3
+
+## Internal changes
+
+- Reduced dependencies (#38)
+
 # qntmap 1.0.2
 
 ## Bug fix
