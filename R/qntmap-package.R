@@ -69,8 +69,7 @@
 #'   verbatimTextOutput
 #'   withMathJax
 #' @importFrom stringr 
-#'   str_c str_detect str_extract str_replace str_replace_all str_subset
-#' @importFrom tibble tribble
+#'   str_detect str_replace str_replace_all str_subset
 #' @importFrom tidyr
 #'   gather separate spread unnest
 #' @importFrom tidyselect
